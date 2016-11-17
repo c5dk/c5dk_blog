@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<schema version="0.3">
+
+	<table name="C5dkBlogRootPermissions">
+		<field name="rootID" type="I">
+			<key />
+			<unsigned />
+		</field>
+		<field name="groupID" type="I">
+			<key />
+			<unsigned />
+		</field>
+		<field name="pageTypeID" type="I">
+			<unsigned />
+		</field>
+		<field name="topicAttributeID" type="I">
+			<unsigned />
+		</field>
+	</table>
+
+</schema>

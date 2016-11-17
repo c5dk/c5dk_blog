@@ -1,0 +1,654 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: C5DK Blog v1.2\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-02-19 14:19+0100\n"
+"PO-Revision-Date: 2016-02-19 14:19+0100\n"
+"Last-Translator: Concrete5 Danmark <info@concrete5.dk>\n"
+"Language-Team: Concrete5 Danmark <info@concrete5.dk>\n"
+"Language: de_DE\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Poedit-KeywordsList: _;t;t2:1,2\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Generator: Poedit 1.8.7\n"
+"X-Poedit-Basepath: ../../..\n"
+"X-Poedit-SearchPath-0: .\n"
+
+#: blocks/c5dk_blog_buttons/controller.php:18
+msgid "Blog Button"
+msgstr "Blog Button"
+
+#: blocks/c5dk_blog_buttons/controller.php:19
+msgid "Display relevant blog buttons."
+msgstr "Relevante Blog Buttons anzeigen"
+
+#: blocks/c5dk_blog_buttons/view.php:6
+msgid "Blog Editor Control"
+msgstr "Blog Editor Adminbereich"
+
+#: blocks/c5dk_blog_buttons/view.php:10
+msgid "New Post"
+msgstr "Neuer Beitrag"
+
+#: blocks/c5dk_blog_buttons/view.php:14
+msgid "Edit Post"
+msgstr "Beitrag bearbeiten"
+
+#: blocks/c5dk_blog_buttons/view.php:17
+msgid "Delete Post"
+msgstr "Beitrag löschen"
+
+#: blocks/c5dk_blog_buttons/view.php:26
+msgid "Are you sure you want to Delete this post?"
+msgstr "Soll dieser Beitrag wirklich gelöscht werden?"
+
+#: blocks/c5dk_blog_buttons/view.php:29 single_pages/blog_post.php:17
+#: single_pages/blog_post.php:123 single_pages/blog_post.php:158
+#: single_pages/dashboard/c5dk_blog/blog_roots/add.php:10
+#: single_pages/dashboard/c5dk_blog/blog_settings.php:26
+msgid "Cancel"
+msgstr "Abbrechen"
+
+#: blocks/c5dk_blog_buttons/view.php:30 single_pages/blog_post.php:157
+msgid "Delete"
+msgstr "Löschen"
+
+#: blocks/c5dk_blog_buttons/view.php:50 single_pages/blog_post.php:289
+msgid "Confirm Delete"
+msgstr "Löschen bestätigen"
+
+#: blocks/c5dk_blog_buttons/view.php:81
+msgid "C5DK Blogging Buttons: Only visible for users with blogging permissions"
+msgstr "C5DK Blogger Buttons: Nur sichtbar für Anwender mit Blogger-Rechten"
+
+#: blocks/c5dk_blog_goback/controller.php:17
+msgid "Blog Go Back"
+msgstr "Blog Zurück"
+
+#: blocks/c5dk_blog_goback/controller.php:18
+msgid "Go back to blog root page."
+msgstr "Zurück zur Stammseite des Blogs"
+
+#: blocks/c5dk_blog_goback/templates/c5dk_animated/view.php:3
+#: blocks/c5dk_blog_goback/view.php:3
+msgid "Back to blog list"
+msgstr "Zurück zur Blogliste"
+
+#: blocks/c5dk_blog_header/controller.php:18
+msgid "Blog Header"
+msgstr "Blog Überschrift"
+
+#: blocks/c5dk_blog_header/controller.php:19
+msgid "Display blog header information."
+msgstr "Blog Titel Informationen anzeigen"
+
+#: blocks/c5dk_blog_header/view.php:3
+msgid "Posted by"
+msgstr "gepostet von"
+
+#: blocks/date_navigation/templates/c5dk_date_navigation/view.php:11
+msgid "All"
+msgstr "Alle"
+
+#: blocks/date_navigation/templates/c5dk_date_navigation/view.php:21
+msgid "None."
+msgstr "Keine"
+
+#: blocks/page_list/templates/c5dk_blog_page_list/view.php:18
+msgid "Empty Page List Block."
+msgstr "Leerer Block Seitenliste"
+
+#: blocks/page_list/templates/c5dk_blog_page_list/view.php:129
+msgid "Postet by"
+msgstr "gepostet von"
+
+#: blocks/topic_list/templates/c5dk_topic_list/view.php:15
+msgid "Show All Topics"
+msgstr "Alle Themen anzeigen"
+
+#: blocks/topic_list/templates/c5dk_topic_list/view.php:47
+msgid "No topics."
+msgstr "Keine Themen"
+
+#: controller.php:37 controller.php:138 controller.php:168
+msgid "C5DK Blog"
+msgstr "C5DK Blog"
+
+#: controller.php:38
+msgid "A blog application for your C5 site, so even normal users can blog."
+msgstr ""
+"Eine Blog-Applikation für C5, die es jedem Anwender auf einfache Weise "
+"ermöglicht, einen Blog zu führen"
+
+#: controller.php:138
+msgid "Blog system for your website"
+msgstr "Ein Blog-System für Ihre Webseite"
+
+#: controller.php:142
+msgid "Settings"
+msgstr "Einstellungen"
+
+#: controller.php:142
+msgid "Manage Settings"
+msgstr "Einstellungen bearbeiten"
+
+#: controller.php:146
+msgid "Blog Roots"
+msgstr "Blog Stammseiten"
+
+#: controller.php:146
+msgid "Manage Roots"
+msgstr "Stammseiten bearbeiten"
+
+#: controller.php:150
+msgid "Add"
+msgstr "Hinzufügen"
+
+#: controller.php:150
+msgid "Add an existing page as a Blog Root"
+msgstr "Eine bestehende Seite als Blog-Stammseite hinzufügen"
+
+#: controller.php:156
+msgid "Blog Post"
+msgstr "Blog-Eintrag"
+
+#: controller.php:156
+msgid "Add/Edit a blog post"
+msgstr "Blog Eintrag hinzufügen/bearbeiten"
+
+#: controller.php:176
+msgid "Blog Root"
+msgstr "Blog Stammseite"
+
+#: controller.php:187
+msgid "Blog Author ID"
+msgstr "Blog Autoren ID"
+
+#: controllers/single_page/blog_post.php:143
+msgid "The Blog Title field is a required field and cannot be empty."
+msgstr "Das Feld Blog Titel muss aufgefüllt werden."
+
+#: controllers/single_page/blog_post.php:144
+msgid "The Blog Content field is a required field and cannot be empty."
+msgstr "Das Feld Blog Inhalt muss ausgefüllt werden."
+
+#: controllers/single_page/dashboard/c5dk_blog/blog_roots.php:63
+msgid "Root values saved."
+msgstr "Einstellungen Stammseite gespeichert"
+
+#: controllers/single_page/dashboard/c5dk_blog/blog_roots.php:101
+msgid "None"
+msgstr "Keine"
+
+#: controllers/single_page/dashboard/c5dk_blog/blog_settings.php:30
+msgid "Settings saved."
+msgstr "Eingestellungen wurden gespeichert."
+
+#: single_pages/blog_post.php:16 single_pages/blog_post.php:122
+msgid "Post"
+msgstr "Veröffentlichen"
+
+#: single_pages/blog_post.php:16 single_pages/blog_post.php:122
+msgid "Update"
+msgstr "Aktualisieren"
+
+#: single_pages/blog_post.php:34
+msgid "Post your blog under"
+msgstr "Block veröffentlichen unter"
+
+#: single_pages/blog_post.php:43
+msgid "Blog Title"
+msgstr "Blog Titel"
+
+#: single_pages/blog_post.php:51
+msgid "Blog Description"
+msgstr "Blog Beschreibung"
+
+#: single_pages/blog_post.php:59
+msgid "Blog Content"
+msgstr "Blog Inhalt"
+
+#: single_pages/blog_post.php:72
+msgid "Tags"
+msgstr "Tags"
+
+#: single_pages/blog_post.php:77
+msgid "Topics"
+msgstr "Themen"
+
+#: single_pages/blog_post.php:96
+msgid "Thumbnail"
+msgstr "Vorschaubild"
+
+#: single_pages/blog_post.php:97
+msgid "Select"
+msgstr "Wählen"
+
+#: single_pages/blog_post.php:98
+msgid "Remove"
+msgstr "Entfernen"
+
+#: single_pages/blog_post.php:108
+msgid "Preview"
+msgstr "Vorschau"
+
+#: single_pages/blog_post.php:143
+msgid "Only .jpg or .jpeg is supported at the moment."
+msgstr "Im Moment werden nur Bilder im .jpg oder .jpeg Format unterstützt."
+
+#: single_pages/blog_post.php:154
+msgid "Are you sure you want to delete this image?"
+msgstr "Sind Sie sicher, dass Sie dieses Bild löschen möchten?"
+
+#: single_pages/blog_post.php:332
+msgid "Image Manager"
+msgstr "Bildverwaltung"
+
+#: single_pages/dashboard/c5dk_blog/blog_roots.php:4
+msgid ""
+"On the \"Blog Roots\" settings page, is where you control where your blog "
+"pages will be placed on your site. It is also here you will set up blog "
+"writer permissions, which page type you will use as blog pages and you can "
+"also define which topics list to use for your blog root."
+msgstr ""
+"In den  \"Blog Stammseiten\" Einstellungen legen Sie fest, wo innerhalb "
+"Ihrer Seite Ihre Blogseiten erscheinen sollen. Zudem legen Sie hier die "
+"Zugriffsrechte für Blogger fest und bestimmen den Seitentyp für die "
+"Blogseiten sowie die Themenliste, die für die Stammseite Ihres Blogs "
+"verwendet werden soll. "
+
+#: single_pages/dashboard/c5dk_blog/blog_roots.php:8
+msgid "Add Blog Root"
+msgstr "Blog Stammseite hinzufügen"
+
+#: single_pages/dashboard/c5dk_blog/blog_roots.php:16
+msgid ""
+"No Topics list defined. Please consider creating a topic list and a Topic "
+"List Page Attribute."
+msgstr ""
+"Es wurde noch keine Themenliste definiert. Bitte zuerst eine Themenliste und "
+"ein Themenliste-Seitenattribut erstellen."
+
+#: single_pages/dashboard/c5dk_blog/blog_roots.php:28
+msgid "Title"
+msgstr "Titel"
+
+#: single_pages/dashboard/c5dk_blog/blog_roots.php:29
+msgid "Path"
+msgstr "Pfad"
+
+#: single_pages/dashboard/c5dk_blog/blog_roots.php:30
+msgid "Group(s) who can blog"
+msgstr "Gruppe(n), die bloggen darf/dürfen"
+
+#: single_pages/dashboard/c5dk_blog/blog_roots.php:31
+msgid "Page Type"
+msgstr "Seitentyp"
+
+#: single_pages/dashboard/c5dk_blog/blog_roots.php:32
+msgid "Topic Attribute"
+msgstr "Themenattribut"
+
+#: single_pages/dashboard/c5dk_blog/blog_roots.php:53
+#: single_pages/dashboard/c5dk_blog/blog_roots/add.php:9
+#: single_pages/dashboard/c5dk_blog/blog_settings.php:25
+msgid "Save"
+msgstr "Speichern"
+
+#: single_pages/dashboard/c5dk_blog/blog_roots.php:78
+msgid "No Blog Roots found."
+msgstr "Keine Blog Stammseite gefunden!"
+
+#: single_pages/dashboard/c5dk_blog/blog_settings.php:4
+msgid ""
+"Here in the Blog settings page, you have the options to control the images "
+"used by blog writers on your site. First you set the \"Picture Save Size\". "
+"That will make the system resize images when uploaded.<br><br>The "
+"\"Thumbnail Save Size\" controls the picture cropper, embedded in the blog "
+"editor page. This makes it easy to set the picture size to accommodate your "
+"site layout."
+msgstr ""
+"In den Einstellungen des Blogs haben Sie die Möglichkeit, die Bilder, die "
+"Blogger auf Ihrer Seite verwenden, zu kontrollieren.  Legen  Sie zuerst "
+"unter  \"Bildgrössen bestimmen\" die Bildabmessungen fest. Beim Upload "
+"werden die Bilder entsprechend umgerechnet. <br> <br> Mit den Einstellungen "
+"unter \"Abmessungen Vorschaubild speichern\" kontrollieren Sie die Auswahl "
+"des Bildausschnitts für das Vorschaubild des Blog auf der Blog Editor Seite. "
+"Dies vereinfacht Anpassungen an Ihr Seitenlayout."
+
+#: single_pages/dashboard/c5dk_blog/blog_settings.php:9
+msgid "Picture Save Size"
+msgstr "Bildgrössen bestimmen"
+
+#: single_pages/dashboard/c5dk_blog/blog_settings.php:10
+msgid "Blog Picture Max Width in Pixels"
+msgstr "Max. Breite Blog Bild in Pixel"
+
+#: single_pages/dashboard/c5dk_blog/blog_settings.php:14
+msgid "Thumbnail Save Size"
+msgstr "Abmessungen Vorschaubild speichern"
+
+#: single_pages/dashboard/c5dk_blog/blog_settings.php:15
+msgid "Blog Thumbnail Width in Pixels"
+msgstr "Blog Vorschaubild Breite in Pixel"
+
+#: single_pages/dashboard/c5dk_blog/blog_settings.php:18
+msgid "Blog Thumbnail Height in Pixels"
+msgstr "Blog Vorschaubild Höhe in Pixel"
+
+#~ msgid ""
+#~ "No Blog Roots found. Please add the \"Blog Root\" page attribute to the "
+#~ "page where your blog will live!"
+#~ msgstr ""
+#~ "Ingen blog Rødder fundet. Venligst tilføje en \"Blog Rod\" side attribut "
+#~ "til den side, hvor din blog vil ligge!"
+
+#~ msgid "Adds a before and after images with slide control."
+#~ msgstr "Tilføjer et før og efter billeder med slide kontrol."
+
+#~ msgid "C5DK TwentyTwenty Image"
+#~ msgstr "C5DK TwentyTwenty Billede"
+
+#~ msgid "Before Image is required."
+#~ msgstr "Før billedet er påkrævet."
+
+#~ msgid "After Image is required."
+#~ msgstr "Efter billedet er påkrævet."
+
+#~ msgid "Files"
+#~ msgstr "Filer"
+
+#~ msgid "Image Before"
+#~ msgstr "Billede Før"
+
+#~ msgid "Choose Before Image"
+#~ msgstr "Vælg før billede"
+
+#~ msgid "Image After"
+#~ msgstr "Billede Efter"
+
+#~ msgid "Choose After Image"
+#~ msgstr "Vælg efter billede"
+
+#~ msgid "Options"
+#~ msgstr "Indstillinger"
+
+#~ msgid "Orientation"
+#~ msgstr "Retning"
+
+#~ msgid "Horizontal"
+#~ msgstr "Vandret"
+
+#~ msgid "Vertical"
+#~ msgstr "Lodret"
+
+#~ msgid "Offset"
+#~ msgstr "Forskydning"
+
+#~ msgid "HTML"
+#~ msgstr "HTML"
+
+#~ msgid "Alt. Text"
+#~ msgstr "Alt. Tekst"
+
+#~ msgid "Before"
+#~ msgstr "Før"
+
+#~ msgid "After"
+#~ msgstr "Efter"
+
+#~ msgid "Access Denied."
+#~ msgstr "Adgang Nægtet."
+
+#~ msgid "Manage and display testmonials."
+#~ msgstr "Administrere og få vist testmonials."
+
+#~ msgid "Studio Testimonials Pro"
+#~ msgstr "Studio Testimonials Pro"
+
+#~ msgid "Manage Testimonials"
+#~ msgstr "Administrere Testimonials"
+
+#~ msgid "Advanced"
+#~ msgstr "Avanceret"
+
+#~ msgid "Display Type"
+#~ msgstr "Visningstype"
+
+#~ msgid "# to display"
+#~ msgstr "# at vise"
+
+#~ msgid ""
+#~ "Display pagination interface if more items are available than are "
+#~ "displayed."
+#~ msgstr ""
+#~ "Vis sidetals brugerflade, hvis flere elementer er tilgængelige, end der "
+#~ "vises."
+
+#~ msgid "Speed"
+#~ msgstr "Hastighed"
+
+#~ msgid "In milliseconds."
+#~ msgstr "I millisekunder."
+
+#~ msgid "Effect"
+#~ msgstr "Effekt"
+
+#~ msgid "Fade"
+#~ msgstr "Fade"
+
+#~ msgid "Slide"
+#~ msgstr "Slide"
+
+#~ msgid "Filter"
+#~ msgstr "Filter"
+
+#~ msgid "No categories have been added yet."
+#~ msgstr "Ingen kategorier er blevet føjet endnu."
+
+#~ msgid "Select Testimonials"
+#~ msgstr "Vælg Testimonials"
+
+#~ msgid "Sort By"
+#~ msgstr "Sorter Efter"
+
+#~ msgid "Display Image"
+#~ msgstr "Vis Thumbnail Billede"
+
+#~ msgid "Image Size"
+#~ msgstr "Billedstørrelse."
+
+#~ msgid "(width)"
+#~ msgstr "(Bredde)"
+
+#~ msgid "(height)"
+#~ msgstr "(Højde)"
+
+#~ msgid "User Submissions"
+#~ msgstr "Indsendte af Brugere"
+
+#~ msgid "Enable User Submissions"
+#~ msgstr "Aktivere brugerindlæg"
+
+#~ msgid "Any submission must be approved before it will be displayed."
+#~ msgstr "Enhver indsendelse skal godkendes, før det vises."
+
+#~ msgid "Submit Link Text"
+#~ msgstr "Indsendelse Linktekst"
+
+#~ msgid "Notify by email on submission"
+#~ msgstr "Give besked via e-mail om indsendelse"
+
+#~ msgid "Access Denied"
+#~ msgstr "Adgang Nægtet"
+
+#~ msgid "Submit Testimonial"
+#~ msgstr "Indsend Testimonial"
+
+#~ msgid "Testimonial Submission"
+#~ msgstr "Testimonial Indsendelse"
+
+#~ msgid "Single"
+#~ msgstr "Single"
+
+#~ msgid "Single Rotating"
+#~ msgstr "Enkelt Roterende"
+
+#~ msgid "Multiple"
+#~ msgstr "Flere"
+
+#~ msgid "All Testimonies"
+#~ msgstr "Alle Testimonials"
+
+#~ msgid "By Category"
+#~ msgstr "Efter Kategori"
+
+#~ msgid "Choose Testimonials"
+#~ msgstr "Vælg Testimonials"
+
+#~ msgid "Random"
+#~ msgstr "Tilfældig"
+
+#~ msgid "Most Recent First"
+#~ msgstr "Nyeste Først"
+
+#~ msgid "Most Recent Last"
+#~ msgstr "Nyeste Sidst"
+
+#~ msgid "Author"
+#~ msgstr "Forfatter"
+
+#~ msgid "Testimonial"
+#~ msgstr "Testimonial"
+
+#~ msgid "Choose Selected"
+#~ msgstr "Vælg Valgte"
+
+#~ msgid "Name"
+#~ msgstr "Navn"
+
+#~ msgid "Content"
+#~ msgstr "Indhold"
+
+#~ msgid "Extra"
+#~ msgstr "Ekstra"
+
+#~ msgid ""
+#~ "Anything entered here will appear below the author (eg. Title, Company, "
+#~ "etc.). Anything beginning with http:// will automatically be linked.."
+#~ msgstr ""
+#~ "Alt der angives her vises under forfatter (f.eks. Titel, virksomhed, "
+#~ "osv.). Alt der begynder med http:// vil automatisk blive linket..."
+
+#~ msgid "Please enter an author."
+#~ msgstr "Angiv en forfatter."
+
+#~ msgid "Please enter a testimonial."
+#~ msgstr "Skriv din testimonial."
+
+#~ msgid "Testimonial has been submitted for approval."
+#~ msgstr "Testimonial er blevet sendt til godkendelse."
+
+#~ msgid "Please enter the testimonial content."
+#~ msgstr "Skriv din testimonial."
+
+#~ msgid "Category added!"
+#~ msgstr "Kategori tilføjet!"
+
+#~ msgid "The category %s already exists!"
+#~ msgstr "Kategori %s findes allerede!"
+
+#~ msgid "Category cannot be blank!"
+#~ msgstr "Kategori må ikke være tomt!"
+
+#~ msgid ""
+#~ "\n"
+#~ "There has been a testimonial submission on your Concrete5 website.\n"
+#~ "\n"
+#~ "To view and/or approve this testimonial, visit %s \n"
+#~ "\n"
+#~ msgstr ""
+#~ "\n"
+#~ "Der har været en testimonial indsendelse på dine Concrete5 website.\n"
+#~ "\n"
+#~ "For visning og/eller godkende denne testimonial, besøge %s \n"
+#~ "\n"
+
+#~ msgid "%s Testimonial"
+#~ msgstr "%s Testimonial"
+
+#~ msgid "Date Added"
+#~ msgstr "Dato tilføjet"
+
+#~ msgid ""
+#~ "Anything entered here will appear below the author (eg. Title, Company, "
+#~ "etc.). Anything beginning with http:// will automatically be linked."
+#~ msgstr ""
+#~ "Alt der angives her vises under forfatter (f.eks. Titel, virksomhed, "
+#~ "osv.). Alt der begynder med http:// vil automatisk blive linket..."
+
+#~ msgid "Approved"
+#~ msgstr "Godkendt"
+
+#~ msgid "Image"
+#~ msgstr "Billede"
+
+#~ msgid "Yes"
+#~ msgstr "Ja"
+
+#~ msgid "No"
+#~ msgstr "Nej"
+
+#~ msgid "Select Image"
+#~ msgstr "Vælg Billede"
+
+#~ msgid "Add to Categories"
+#~ msgstr "Tilføje til Kategorier"
+
+#~ msgid "**Category"
+#~ msgstr "**Kategori"
+
+#~ msgid "search..."
+#~ msgstr "Søg..."
+
+#~ msgid "Search"
+#~ msgstr "Søg"
+
+#~ msgid "Reset Search"
+#~ msgstr "Nulstille Søgning"
+
+#~ msgid "Add New Testimonial"
+#~ msgstr "Tilføj ny Testimonial"
+
+#~ msgid "Testimonials"
+#~ msgstr "Testimonials"
+
+#~ msgid "Category"
+#~ msgstr "Kategori"
+
+#~ msgid "Date"
+#~ msgstr "Dato"
+
+#~ msgid "Edit"
+#~ msgstr "Rediger"
+
+#~ msgid "Are you sure you want to delete this testimonial?"
+#~ msgstr "Er du sikker på du vil slette denne testimonial?"
+
+#~ msgid "Unapprove"
+#~ msgstr "Fjern Godkendelse"
+
+#~ msgid "Approve"
+#~ msgstr "Godkend"
+
+#~ msgid "Manage Categories"
+#~ msgstr "Administrer Kategorier"
+
+#~ msgid "Are you sure you want to delete this category?"
+#~ msgstr "Er du sikker på du vil slette denne kategori?"
+
+#~ msgid "Add Category"
+#~ msgstr "Tilføj Kategori"

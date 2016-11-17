@@ -1,0 +1,23 @@
+.ccm-tag-list li {
+	display: inline;
+	color: #fff !important;
+	padding: 5px 8px 6px 8px;
+	margin: 3px 6px 3px 0;
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
+	float: left;
+	line-height: 13px;
+	height: 13px;
+}
+
+canvas#c5dkCanvasImageBackground {
+	background-color:#20BDE8;
+	background-image:url('images/c5-bg-320.jpg');
+	background-repeat: no-repeat;
+	background-size: auto auto;
+	margin-bottom: 10px;
+	border: 2px solid #DDD;
+	border-radius:6px;
+	font-size:14px;
+	margin-top:5px;
+}

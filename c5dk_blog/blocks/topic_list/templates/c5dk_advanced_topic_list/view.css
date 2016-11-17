@@ -1,0 +1,22 @@
+#c5dk-blog-package.c5dk_topic_list_wrapper {
+    margin: 10px 0;
+}
+
+#c5dk-blog-package .list-unstyled {
+    padding-left: 0;
+    list-style: none;
+}
+
+#c5dk-blog-package .ccm-block-topic-list-topic-selected {
+    font-weight: bold;
+}
+
+#c5dk-blog-package ul.c5dk-topic-list-list {
+    list-style-type: none;
+    margin-left: 8px;
+    margin-bottom: 0;
+    padding-left: 8px;
+}
+#c5dk-blog-package .c5dk_folder {
+		cursor: pointer;
+}

@@ -1,0 +1,780 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: C5DK Blog v1.4.3\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-07-31 10:05+0200\n"
+"PO-Revision-Date: 2016-07-31 10:20+0200\n"
+"Last-Translator: Michael Jensen-Maar <info@concrete5.dk>\n"
+"Language-Team: Concrete5 Danmark <info@concrete5.dk>\n"
+"Language: da_DK\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Poedit-KeywordsList: _;t;t2:1,2\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Generator: Poedit 1.8.8\n"
+"X-Poedit-Basepath: ../../..\n"
+"X-Poedit-SearchPath-0: .\n"
+
+#: blocks/c5dk_blog_buttons/controller.php:18
+msgid "Blog Button"
+msgstr "Blog Knap"
+
+#: blocks/c5dk_blog_buttons/controller.php:19
+msgid "Display relevant blog buttons."
+msgstr "Vise relevante blog knapper."
+
+#: blocks/c5dk_blog_buttons/templates/c5dk_old/view.php:6
+#: blocks/c5dk_blog_buttons/templates/c5dk_simple_one/view.php:6
+msgid "Blog Editor Control"
+msgstr "Blog Editor Kontrol"
+
+#: blocks/c5dk_blog_buttons/templates/c5dk_old/view.php:10
+#: blocks/c5dk_blog_buttons/templates/c5dk_simple_one/view.php:10
+#: blocks/c5dk_blog_buttons/templates/c5dk_simple_two/view.php:9
+#: blocks/c5dk_blog_buttons/view.php:10
+msgid "New Post"
+msgstr "Nyt Indlæg"
+
+#: blocks/c5dk_blog_buttons/templates/c5dk_old/view.php:14
+#: blocks/c5dk_blog_buttons/templates/c5dk_simple_one/view.php:14
+#: blocks/c5dk_blog_buttons/templates/c5dk_simple_two/view.php:13
+#: blocks/c5dk_blog_buttons/view.php:14
+msgid "Edit Post"
+msgstr "Redigér Indlæg"
+
+#: blocks/c5dk_blog_buttons/templates/c5dk_old/view.php:17
+#: blocks/c5dk_blog_buttons/templates/c5dk_simple_one/view.php:17
+#: blocks/c5dk_blog_buttons/templates/c5dk_simple_two/view.php:16
+#: blocks/c5dk_blog_buttons/view.php:17
+msgid "Delete Post"
+msgstr "Slet dette Indlæg"
+
+#: blocks/c5dk_blog_buttons/templates/c5dk_old/view.php:26
+#: blocks/c5dk_blog_buttons/templates/c5dk_simple_one/view.php:26
+#: blocks/c5dk_blog_buttons/templates/c5dk_simple_two/view.php:25
+#: blocks/c5dk_blog_buttons/view.php:26
+msgid "Are you sure you want to Delete this post?"
+msgstr "Er du sikker på, du vil slette dette indlæg?"
+
+#: blocks/c5dk_blog_buttons/templates/c5dk_old/view.php:29
+#: blocks/c5dk_blog_buttons/templates/c5dk_simple_one/view.php:29
+#: blocks/c5dk_blog_buttons/templates/c5dk_simple_two/view.php:28
+#: blocks/c5dk_blog_buttons/view.php:29 single_pages/blog_post.php:17
+#: single_pages/blog_post.php:123 single_pages/blog_post.php:158
+#: single_pages/dashboard/c5dk_blog/blog_roots/add.php:10
+#: single_pages/dashboard/c5dk_blog/blog_settings.php:49
+#: single_pages/dashboard/c5dk_blog/user_deletion.php:40
+msgid "Cancel"
+msgstr "Annuller"
+
+#: blocks/c5dk_blog_buttons/templates/c5dk_old/view.php:30
+#: blocks/c5dk_blog_buttons/templates/c5dk_simple_one/view.php:30
+#: blocks/c5dk_blog_buttons/templates/c5dk_simple_two/view.php:29
+#: blocks/c5dk_blog_buttons/view.php:30 single_pages/blog_post.php:157
+msgid "Delete"
+msgstr "Slet"
+
+#: blocks/c5dk_blog_buttons/templates/c5dk_old/view.php:50
+#: blocks/c5dk_blog_buttons/templates/c5dk_simple_one/view.php:50
+#: blocks/c5dk_blog_buttons/templates/c5dk_simple_two/view.php:49
+#: blocks/c5dk_blog_buttons/view.php:50 single_pages/blog_post.php:323
+msgid "Confirm Delete"
+msgstr "Bekræft sletning"
+
+#: blocks/c5dk_blog_buttons/templates/c5dk_old/view.php:81
+#: blocks/c5dk_blog_buttons/templates/c5dk_simple_one/view.php:81
+#: blocks/c5dk_blog_buttons/templates/c5dk_simple_two/view.php:80
+#: blocks/c5dk_blog_buttons/view.php:82
+msgid "C5DK Blogging Buttons: Only visible for users with blogging permissions"
+msgstr "C5DK Blogging Knapper: Kan kun ses af brugere med tilladelser til at blogge"
+
+#: blocks/c5dk_blog_buttons/view.php:6
+msgid "Blog Editor"
+msgstr "Blog Editor"
+
+#: blocks/c5dk_blog_goback/controller.php:17
+msgid "Blog Go Back"
+msgstr "Blog Gå tilbage"
+
+#: blocks/c5dk_blog_goback/controller.php:18
+msgid "Go back to blog root page."
+msgstr "Tilbage til blog rod side."
+
+#: blocks/c5dk_blog_goback/templates/c5dk_animated/view.php:3
+#: blocks/c5dk_blog_goback/view.php:3
+msgid "Back to blog list"
+msgstr "Tilbage til blog liste"
+
+#: blocks/c5dk_blog_header/controller.php:19
+msgid "Blog Header"
+msgstr "Blog Header"
+
+#: blocks/c5dk_blog_header/controller.php:20
+msgid "Display blog header information."
+msgstr "Vis blog header information."
+
+#: blocks/c5dk_blog_header/view.php:3
+#: blocks/page_list/templates/c5dk_blog_page_list/view.php:136
+#: blocks/page_list/templates/c5dk_blog_page_list_full_content/view.php:140
+msgid "Posted by"
+msgstr "Skrevet af"
+
+#: blocks/date_navigation/templates/c5dk_date_navigation/view.php:11
+msgid "All"
+msgstr "Alle"
+
+#: blocks/date_navigation/templates/c5dk_date_navigation/view.php:21
+msgid "None."
+msgstr "Ingen."
+
+#: blocks/page_list/templates/c5dk_blog_page_list/view.php:24
+#: blocks/page_list/templates/c5dk_blog_page_list_full_content/view.php:24
+msgid "Empty Page List Block."
+msgstr "Tom Sideliste Block."
+
+#: blocks/page_list/templates/c5dk_blog_page_list/view.php:115
+#: blocks/page_list/templates/c5dk_blog_page_list/view.php:116
+#: blocks/page_list/templates/c5dk_blog_page_list_full_content/view.php:119
+#: blocks/page_list/templates/c5dk_blog_page_list_full_content/view.php:120
+msgid "Thumbnail for"
+msgstr "Thumbnail for"
+
+#: blocks/topic_list/templates/c5dk_topic_list/view.php:15
+msgid "Show All Topics"
+msgstr "Vis alle emner"
+
+#: blocks/topic_list/templates/c5dk_topic_list/view.php:47
+msgid "No topics."
+msgstr "Ingen emner."
+
+#: controller.php:39 controller.php:144 controller.php:190
+msgid "C5DK Blog"
+msgstr "C5DK Blog"
+
+#: controller.php:40
+msgid "A blog application for your C5 site, so even normal users can blog."
+msgstr "Et blog applikation til din C5 hjemmeside, så selv almindelige brugere kan blogge."
+
+#: controller.php:144
+msgid "Blog system for your website"
+msgstr "Blog system til din hjemmeside"
+
+#: controller.php:150
+msgid "Settings"
+msgstr "Indstillinger"
+
+#: controller.php:150
+msgid "Manage Settings"
+msgstr "Administrer Indstillinger"
+
+#: controller.php:156
+msgid "Blog Roots"
+msgstr "Blog Rødder"
+
+#: controller.php:156
+msgid "Manage Roots"
+msgstr "Administrer Rødder"
+
+#: controller.php:162
+msgid "Add"
+msgstr "Tilføj"
+
+#: controller.php:162
+msgid "Add an existing page as a Blog Root"
+msgstr "Føj en eksisterende side til som en blog Rod"
+
+#: controller.php:169
+msgid "User Deletion"
+msgstr "Bruger Sletning"
+
+#: controller.php:169
+msgid "What should we do with the users blog posts?"
+msgstr "Hvad skal vi gøre med brugerens blogindlæg?"
+
+#: controller.php:177
+msgid "Blog Post"
+msgstr "Blogindlæg"
+
+#: controller.php:177
+msgid "Add/Edit a blog post"
+msgstr "Tilføj/Rediger et blogindlæg"
+
+#: controller.php:198
+msgid "Blog Root"
+msgstr "Blog Rod"
+
+#: controller.php:209
+msgid "Blog Author ID"
+msgstr "Blog Forfatter ID"
+
+#: controller.php:224
+msgid "Full Name"
+msgstr "Fulde Navn"
+
+#: controllers/single_page/blog_post.php:143
+msgid "The Blog Title field is a required field and cannot be empty."
+msgstr "Titelfeltet er et obligatorisk felt, og kan ikke være tomt."
+
+#: controllers/single_page/blog_post.php:144
+msgid "The Blog Content field is a required field and cannot be empty."
+msgstr "Blog indholdsfeltet er et obligatorisk felt, og kan ikke være tomt."
+
+#: controllers/single_page/dashboard/c5dk_blog/blog_roots.php:64
+msgid "Root values saved."
+msgstr "Rod værdier gemt."
+
+#: controllers/single_page/dashboard/c5dk_blog/blog_roots.php:73
+msgid "Blog Root has been removed"
+msgstr "Blog Rod er blevet fjernet"
+
+#: controllers/single_page/dashboard/c5dk_blog/blog_roots.php:110
+msgid "None"
+msgstr "Ingen"
+
+#: controllers/single_page/dashboard/c5dk_blog/blog_settings.php:37
+msgid "Settings saved."
+msgstr "Indstillinger gemt."
+
+#: single_pages/blog_post.php:16 single_pages/blog_post.php:122
+msgid "Post"
+msgstr "Udgiv"
+
+#: single_pages/blog_post.php:16 single_pages/blog_post.php:122
+msgid "Update"
+msgstr "Opdater"
+
+#: single_pages/blog_post.php:34
+msgid "Post your blog under"
+msgstr "Skriv din blog under"
+
+#: single_pages/blog_post.php:43
+msgid "Blog Title"
+msgstr "Blog Titel"
+
+#: single_pages/blog_post.php:43 single_pages/blog_post.php:51
+msgid "Characters Left ("
+msgstr "Karakterer tilbage ("
+
+#: single_pages/blog_post.php:51
+msgid "Blog Description"
+msgstr "Blog Beskrivelse"
+
+#: single_pages/blog_post.php:59
+msgid "Blog Content"
+msgstr "Blog Indhold"
+
+#: single_pages/blog_post.php:72
+msgid "Tags"
+msgstr "Tags"
+
+#: single_pages/blog_post.php:77
+msgid "Topics"
+msgstr "Emner"
+
+#: single_pages/blog_post.php:96
+msgid "Thumbnail"
+msgstr "Thumbnail"
+
+#: single_pages/blog_post.php:97
+msgid "Select"
+msgstr "Vælg"
+
+#: single_pages/blog_post.php:98
+msgid "Remove"
+msgstr "Fjern"
+
+#: single_pages/blog_post.php:108
+msgid "Preview"
+msgstr "Preview"
+
+#: single_pages/blog_post.php:143
+msgid "Only .jpg or .jpeg is supported at the moment."
+msgstr "Kun .jpg eller .jpeg understøttes i øjeblikket."
+
+#: single_pages/blog_post.php:154
+msgid "Are you sure you want to delete this image?"
+msgstr "Er du sikker på, at du vil slette dette billede?"
+
+#: single_pages/blog_post.php:366
+msgid "Image Manager"
+msgstr "Billede Manager"
+
+#: single_pages/dashboard/c5dk_blog/blog_roots.php:4
+msgid "On the \"Blog Roots\" settings page, is where you control where your blog pages will be placed on your site. It is also here you will set up blog writer permissions, which page type you will use as blog pages and you can also define which topics list to use for your blog root."
+msgstr "På \"Blog Rødder\" Indstillings siden, er hvor du styrer hvor dine blog sider vil blive placeret på din hjemmeside. Det er også her, du skal oprette blog forfatter tilladelser, hvilken sidetype du vil bruge som blog-side, og du kan også her definere hvilken emneliste der skal bruges på den enkelte blog rod."
+
+#: single_pages/dashboard/c5dk_blog/blog_roots.php:8
+msgid "Add Blog Root"
+msgstr "Tilføj Blog Rod"
+
+#: single_pages/dashboard/c5dk_blog/blog_roots.php:16
+msgid "No Topics list defined. Please consider creating a topic list and a Topic List Page Attribute."
+msgstr "Ingen emner liste defineret. Venligst overveje at oprette en emneliste, og en emneliste Side Attribut."
+
+#: single_pages/dashboard/c5dk_blog/blog_roots.php:28
+msgid "Title"
+msgstr "Titel"
+
+#: single_pages/dashboard/c5dk_blog/blog_roots.php:29
+msgid "Path"
+msgstr "Sti"
+
+#: single_pages/dashboard/c5dk_blog/blog_roots.php:30
+msgid "Group(s) who can blog"
+msgstr "Gruppe(r), der kan blogge"
+
+#: single_pages/dashboard/c5dk_blog/blog_roots.php:31
+msgid "Page Type"
+msgstr "Side Type"
+
+#: single_pages/dashboard/c5dk_blog/blog_roots.php:32
+msgid "Topic Attribute"
+msgstr "Emne Attribut"
+
+#: single_pages/dashboard/c5dk_blog/blog_roots.php:33
+msgid "Action"
+msgstr "Handling"
+
+#: single_pages/dashboard/c5dk_blog/blog_roots.php:44
+msgid "Delete root"
+msgstr "Slette rod"
+
+#: single_pages/dashboard/c5dk_blog/blog_roots.php:55
+#: single_pages/dashboard/c5dk_blog/blog_roots/add.php:9
+#: single_pages/dashboard/c5dk_blog/blog_settings.php:48
+msgid "Save"
+msgstr "Gem"
+
+#: single_pages/dashboard/c5dk_blog/blog_roots.php:64
+msgid "Are you sure you want to delete this root?"
+msgstr "Er du sikker på du vil slette denne rod?"
+
+#: single_pages/dashboard/c5dk_blog/blog_roots.php:88
+msgid "No Blog Roots found."
+msgstr "Ingen Blog rødder fundet."
+
+#: single_pages/dashboard/c5dk_blog/blog_settings.php:4
+msgid "Here in the Blog settings page, you have the options to control the images used by blog writers on your site. First you set the \"Picture Save Size\". That will make the system resize images when uploaded.<br><br>The \"Thumbnail Save Size\" controls the picture cropper, embedded in the blog editor page. This makes it easy to set the picture size to accommodate your site layout."
+msgstr "Her på siden, indstillinger, har du muligheder for at kontrollere de billeder, der bruges af blog forfattere på din hjemmeside. Først sætte du \"Billede Gem Størrelse\". Det vil få systemet til at ændre størrelse på billeder, når uploadet.<br><br>\"Thumbnail Gem Størrelse\" styrer billede beskæringsværktøjet, indlejret i blogges editor side. Dette gør det nemt at indstille billedstørrelsen for at imødekomme din hjemmeside layout."
+
+#: single_pages/dashboard/c5dk_blog/blog_settings.php:10
+msgid "Picture Save Size"
+msgstr "Billede Gem Størrelse"
+
+#: single_pages/dashboard/c5dk_blog/blog_settings.php:11
+msgid "Blog Picture Max Width in Pixels"
+msgstr "Blog Billede Max Bredde i pixels"
+
+#: single_pages/dashboard/c5dk_blog/blog_settings.php:15
+msgid "Thumbnail Save Size"
+msgstr "Thumbnail Gem Størrelse"
+
+#: single_pages/dashboard/c5dk_blog/blog_settings.php:16
+msgid "Blog Thumbnail Width in Pixels"
+msgstr "Blog Thumbnail Bredde i pixels"
+
+#: single_pages/dashboard/c5dk_blog/blog_settings.php:19
+msgid "Blog Thumbnail Height in Pixels"
+msgstr "Blog Thumbnail højde i pixel"
+
+#: single_pages/dashboard/c5dk_blog/blog_settings.php:23
+msgid "CSS Style Customization for Header and Pagelist blocks"
+msgstr "CSS stil tilpasning til Header- og Sideliste blocke"
+
+#: single_pages/dashboard/c5dk_blog/blog_settings.php:24
+msgid "\"Posted By\" Font Size"
+msgstr "\"Skrevet af\" skriftstørrelse"
+
+#: single_pages/dashboard/c5dk_blog/blog_settings.php:27
+msgid "\"Posted By\" Color"
+msgstr "\"Skrevet af\" farve"
+
+#: single_pages/dashboard/c5dk_blog/blog_settings.php:30
+msgid "\"Posted By\" Margin"
+msgstr "\"Skrevet af\" Margin"
+
+#: single_pages/dashboard/c5dk_blog/blog_settings.php:33
+msgid "\"Posted By\" Icons Color"
+msgstr "\"Skrevet af\" ikoner farve"
+
+#: single_pages/dashboard/c5dk_blog/blog_settings.php:37
+msgid "Other Settings"
+msgstr "Andre Indstillinger"
+
+#: single_pages/dashboard/c5dk_blog/blog_settings.php:39
+msgid "Make title field editable"
+msgstr "Gør titel felt redigerbare"
+
+#: single_pages/dashboard/c5dk_blog/user_deletion.php:4
+msgid "You have requested deletion of a user that is the owner of some blog pages. We have made it possible to control what to do with these blog pages.<br><br>You can either choose to delete alle the blog pages that belong to this user, or you can assign a new user as the owner of these blog pages."
+msgstr "Du har bedt om sletning af en bruger, der er ejer af nogle blog sider. Vi har gjort det muligt at styre, hvad du skal gøre med disse blog sider. <br><br> Du kan enten vælge at slette alle de blog sider, der tilhører denne bruger, eller du kan knytte en ny bruger som ejer af disse blog sider."
+
+#: single_pages/dashboard/c5dk_blog/user_deletion.php:8
+msgid "Please be careful here!"
+msgstr "Vær forsigtig her!"
+
+#: single_pages/dashboard/c5dk_blog/user_deletion.php:9
+msgid "You have chosen to delete a blog user. This user previously wrote some blog pages and this user is the owner of these blog pages."
+msgstr "Du har valgt at slette en blog bruger. Denne bruger skrev tidligere nogle blog sider, og denne bruger er ejer af disse blog sider."
+
+#: single_pages/dashboard/c5dk_blog/user_deletion.php:10
+msgid "If you are going to delete this user, the blog pages owned by this user will fail."
+msgstr "Hvis du sletter denne bruger, vil blog sider, der ejes af denne bruger fejle."
+
+#: single_pages/dashboard/c5dk_blog/user_deletion.php:11
+msgid "So to help you to solve this, we are giving you some choices."
+msgstr "Så for at hjælpe dig med at løse dette, giver vi dig nogle valg."
+
+#: single_pages/dashboard/c5dk_blog/user_deletion.php:12
+msgid "1. You can choose to assign a new owner for these blog pages (BLUE BUTTON)."
+msgstr "1. Du kan vælge at tildele en ny ejer til disse blog sider (BLÅ KNAP)."
+
+#: single_pages/dashboard/c5dk_blog/user_deletion.php:13
+msgid "2. You can decide to delete all blog pages that belong to the user you want to delete (RED BUTTON)."
+msgstr "2. Du kan vælge at slette alle blog sider, der hører til den bruger, du vil slette (røde knap)."
+
+#: single_pages/dashboard/c5dk_blog/user_deletion.php:14
+msgid "But be sure that you understand what will happen if you decide to delete all the blog pages that belong to this user."
+msgstr "Men vær sikker på, at du forstår, hvad der vil ske, hvis du beslutter at slette alle blog sider, der hører til denne bruger."
+
+#: single_pages/dashboard/c5dk_blog/user_deletion.php:18
+msgid "Transfer Blog Page Ownership"
+msgstr "Overfør Blog Side Ejerforhold"
+
+#: single_pages/dashboard/c5dk_blog/user_deletion.php:19
+msgid "Default we have chosen \"<strong>admin</strong>\" as the user that will own the blog pages from the user you are going to delete. But you can choose whatever user that you want to own these blog pages by clicking on the \"<strong>Select User</strong>\" link."
+msgstr "Som standard har vi valgt <strong>\"admin\"</strong> som den bruger, der vil eje de blog sider fra den bruger, du vil slette. Men du kan vælge hvilken som helst bruger, du ønsker skal eje disse blog sider ved at klikke på linket <strong>\"Vælg bruger\".</strong>"
+
+#: single_pages/dashboard/c5dk_blog/user_deletion.php:22
+msgid "Delete User and Transfer Ownership of the Blog Pages!"
+msgstr "Slet Bruger og Overføre Ejerskabet af Blog Siderne!"
+
+#: single_pages/dashboard/c5dk_blog/user_deletion.php:29
+msgid "Delete the User and Delete Blog Pages owned by the deleted user"
+msgstr "Slet brugeren og Slet Blog Sider der ejes af den slettede bruger"
+
+#: single_pages/dashboard/c5dk_blog/user_deletion.php:30
+msgid "If you click on this button, the user and all the blog pages the user wrote will be deleted. <strong>BE CAREFUL!</strong>"
+msgstr "Hvis du klikker på denne knap, vil brugeren og alle blog sider brugeren skrev blive slettet. <strong>PAS PÅ!</strong>"
+
+#: single_pages/dashboard/c5dk_blog/user_deletion.php:32
+msgid "Delete User and Delete All Blog Pages This User Wrote!"
+msgstr "Slet Bruger og Slette Alle Blog Sider Denne Bruger Skrev!"
+
+#~ msgid "Delete the Blog Pages owned by the deleted user"
+#~ msgstr "Slet Blog Sider der ejes af den slettede bruger"
+
+#~ msgid "Headline Size"
+#~ msgstr "Overskrift Størrelse"
+
+#~ msgid "Headline Color"
+#~ msgstr "Overskrift Farve"
+
+#~ msgid "Headline Margin"
+#~ msgstr "Overskrift Margin"
+
+#~ msgid "Headline Icons Color"
+#~ msgstr "Overskrift Ikoner Farve"
+
+#~ msgid "Postet by"
+#~ msgstr "Skrevet af"
+
+#~ msgid "No Blog Roots found. Please add the \"Blog Root\" page attribute to the page where your blog will live!"
+#~ msgstr "Ingen blog Rødder fundet. Venligst tilføje en \"Blog Rod\" side attribut til den side, hvor din blog vil ligge!"
+
+#~ msgid "Adds a before and after images with slide control."
+#~ msgstr "Tilføjer et før og efter billeder med slide kontrol."
+
+#~ msgid "C5DK TwentyTwenty Image"
+#~ msgstr "C5DK TwentyTwenty Billede"
+
+#~ msgid "Before Image is required."
+#~ msgstr "Før billedet er påkrævet."
+
+#~ msgid "After Image is required."
+#~ msgstr "Efter billedet er påkrævet."
+
+#~ msgid "Files"
+#~ msgstr "Filer"
+
+#~ msgid "Image Before"
+#~ msgstr "Billede Før"
+
+#~ msgid "Choose Before Image"
+#~ msgstr "Vælg før billede"
+
+#~ msgid "Image After"
+#~ msgstr "Billede Efter"
+
+#~ msgid "Choose After Image"
+#~ msgstr "Vælg efter billede"
+
+#~ msgid "Options"
+#~ msgstr "Indstillinger"
+
+#~ msgid "Orientation"
+#~ msgstr "Retning"
+
+#~ msgid "Horizontal"
+#~ msgstr "Vandret"
+
+#~ msgid "Vertical"
+#~ msgstr "Lodret"
+
+#~ msgid "Offset"
+#~ msgstr "Forskydning"
+
+#~ msgid "HTML"
+#~ msgstr "HTML"
+
+#~ msgid "Alt. Text"
+#~ msgstr "Alt. Tekst"
+
+#~ msgid "Before"
+#~ msgstr "Før"
+
+#~ msgid "After"
+#~ msgstr "Efter"
+
+#~ msgid "Access Denied."
+#~ msgstr "Adgang Nægtet."
+
+#~ msgid "Manage and display testmonials."
+#~ msgstr "Administrere og få vist testmonials."
+
+#~ msgid "Studio Testimonials Pro"
+#~ msgstr "Studio Testimonials Pro"
+
+#~ msgid "Manage Testimonials"
+#~ msgstr "Administrere Testimonials"
+
+#~ msgid "Advanced"
+#~ msgstr "Avanceret"
+
+#~ msgid "Display Type"
+#~ msgstr "Visningstype"
+
+#~ msgid "# to display"
+#~ msgstr "# at vise"
+
+#~ msgid "Display pagination interface if more items are available than are displayed."
+#~ msgstr "Vis sidetals brugerflade, hvis flere elementer er tilgængelige, end der vises."
+
+#~ msgid "Speed"
+#~ msgstr "Hastighed"
+
+#~ msgid "In milliseconds."
+#~ msgstr "I millisekunder."
+
+#~ msgid "Effect"
+#~ msgstr "Effekt"
+
+#~ msgid "Fade"
+#~ msgstr "Fade"
+
+#~ msgid "Slide"
+#~ msgstr "Slide"
+
+#~ msgid "Filter"
+#~ msgstr "Filter"
+
+#~ msgid "No categories have been added yet."
+#~ msgstr "Ingen kategorier er blevet føjet endnu."
+
+#~ msgid "Select Testimonials"
+#~ msgstr "Vælg Testimonials"
+
+#~ msgid "Sort By"
+#~ msgstr "Sorter Efter"
+
+#~ msgid "Display Image"
+#~ msgstr "Vis Thumbnail Billede"
+
+#~ msgid "Image Size"
+#~ msgstr "Billedstørrelse."
+
+#~ msgid "(width)"
+#~ msgstr "(Bredde)"
+
+#~ msgid "(height)"
+#~ msgstr "(Højde)"
+
+#~ msgid "User Submissions"
+#~ msgstr "Indsendte af Brugere"
+
+#~ msgid "Enable User Submissions"
+#~ msgstr "Aktivere brugerindlæg"
+
+#~ msgid "Any submission must be approved before it will be displayed."
+#~ msgstr "Enhver indsendelse skal godkendes, før det vises."
+
+#~ msgid "Submit Link Text"
+#~ msgstr "Indsendelse Linktekst"
+
+#~ msgid "Notify by email on submission"
+#~ msgstr "Give besked via e-mail om indsendelse"
+
+#~ msgid "Access Denied"
+#~ msgstr "Adgang Nægtet"
+
+#~ msgid "Submit Testimonial"
+#~ msgstr "Indsend Testimonial"
+
+#~ msgid "Testimonial Submission"
+#~ msgstr "Testimonial Indsendelse"
+
+#~ msgid "Single"
+#~ msgstr "Single"
+
+#~ msgid "Single Rotating"
+#~ msgstr "Enkelt Roterende"
+
+#~ msgid "Multiple"
+#~ msgstr "Flere"
+
+#~ msgid "All Testimonies"
+#~ msgstr "Alle Testimonials"
+
+#~ msgid "By Category"
+#~ msgstr "Efter Kategori"
+
+#~ msgid "Choose Testimonials"
+#~ msgstr "Vælg Testimonials"
+
+#~ msgid "Random"
+#~ msgstr "Tilfældig"
+
+#~ msgid "Most Recent First"
+#~ msgstr "Nyeste Først"
+
+#~ msgid "Most Recent Last"
+#~ msgstr "Nyeste Sidst"
+
+#~ msgid "Author"
+#~ msgstr "Forfatter"
+
+#~ msgid "Testimonial"
+#~ msgstr "Testimonial"
+
+#~ msgid "Choose Selected"
+#~ msgstr "Vælg Valgte"
+
+#~ msgid "Name"
+#~ msgstr "Navn"
+
+#~ msgid "Content"
+#~ msgstr "Indhold"
+
+#~ msgid "Extra"
+#~ msgstr "Ekstra"
+
+#~ msgid "Anything entered here will appear below the author (eg. Title, Company, etc.). Anything beginning with http:// will automatically be linked.."
+#~ msgstr "Alt der angives her vises under forfatter (f.eks. Titel, virksomhed, osv.). Alt der begynder med http:// vil automatisk blive linket..."
+
+#~ msgid "Please enter an author."
+#~ msgstr "Angiv en forfatter."
+
+#~ msgid "Please enter a testimonial."
+#~ msgstr "Skriv din testimonial."
+
+#~ msgid "Testimonial has been submitted for approval."
+#~ msgstr "Testimonial er blevet sendt til godkendelse."
+
+#~ msgid "Please enter the testimonial content."
+#~ msgstr "Skriv din testimonial."
+
+#~ msgid "Category added!"
+#~ msgstr "Kategori tilføjet!"
+
+#~ msgid "The category %s already exists!"
+#~ msgstr "Kategori %s findes allerede!"
+
+#~ msgid "Category cannot be blank!"
+#~ msgstr "Kategori må ikke være tomt!"
+
+#~ msgid ""
+#~ "\n"
+#~ "There has been a testimonial submission on your Concrete5 website.\n"
+#~ "\n"
+#~ "To view and/or approve this testimonial, visit %s \n"
+#~ "\n"
+#~ msgstr ""
+#~ "\n"
+#~ "Der har været en testimonial indsendelse på dine Concrete5 website.\n"
+#~ "\n"
+#~ "For visning og/eller godkende denne testimonial, besøge %s \n"
+#~ "\n"
+
+#~ msgid "%s Testimonial"
+#~ msgstr "%s Testimonial"
+
+#~ msgid "Date Added"
+#~ msgstr "Dato tilføjet"
+
+#~ msgid "Anything entered here will appear below the author (eg. Title, Company, etc.). Anything beginning with http:// will automatically be linked."
+#~ msgstr "Alt der angives her vises under forfatter (f.eks. Titel, virksomhed, osv.). Alt der begynder med http:// vil automatisk blive linket..."
+
+#~ msgid "Approved"
+#~ msgstr "Godkendt"
+
+#~ msgid "Image"
+#~ msgstr "Billede"
+
+#~ msgid "Yes"
+#~ msgstr "Ja"
+
+#~ msgid "No"
+#~ msgstr "Nej"
+
+#~ msgid "Select Image"
+#~ msgstr "Vælg Billede"
+
+#~ msgid "Add to Categories"
+#~ msgstr "Tilføje til Kategorier"
+
+#~ msgid "**Category"
+#~ msgstr "**Kategori"
+
+#~ msgid "search..."
+#~ msgstr "Søg..."
+
+#~ msgid "Search"
+#~ msgstr "Søg"
+
+#~ msgid "Reset Search"
+#~ msgstr "Nulstille Søgning"
+
+#~ msgid "Add New Testimonial"
+#~ msgstr "Tilføj ny Testimonial"
+
+#~ msgid "Testimonials"
+#~ msgstr "Testimonials"
+
+#~ msgid "Category"
+#~ msgstr "Kategori"
+
+#~ msgid "Date"
+#~ msgstr "Dato"
+
+#~ msgid "Edit"
+#~ msgstr "Rediger"
+
+#~ msgid "Are you sure you want to delete this testimonial?"
+#~ msgstr "Er du sikker på du vil slette denne testimonial?"
+
+#~ msgid "Unapprove"
+#~ msgstr "Fjern Godkendelse"
+
+#~ msgid "Approve"
+#~ msgstr "Godkend"
+
+#~ msgid "Manage Categories"
+#~ msgstr "Administrer Kategorier"
+
+#~ msgid "Are you sure you want to delete this category?"
+#~ msgstr "Er du sikker på du vil slette denne kategori?"
+
+#~ msgid "Add Category"
+#~ msgstr "Tilføj Kategori"

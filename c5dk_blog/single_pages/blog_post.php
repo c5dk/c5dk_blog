@@ -8,7 +8,7 @@
 		<?php if ($error instanceof Error && $error->has()) {  ?>
 			<div class="alert alert-danger alert-dismissable"><?php echo $error->output(); ?></div>
 		<?php } ?>
-		
+
 		<div class="c5dk_blog_button_section c5dk_buttom_border_line">
 			<div class="c5dk_blog_page_icon"><img src="<?php echo REL_DIR_PACKAGES; ?>/c5dk_blog/images/c5blog.png" alt="C5DK Blog Icon" height="40" width="40"></div>
 			<!-- Form buttons -->
@@ -23,7 +23,7 @@
 
 		<!-- Blog ID -->
 		<?php echo $form->hidden('blogID', $C5dkBlog->blogID); ?>
-		
+
 		<!-- Blog root -->
 		<?php	if (count($BlogPost->rootList) < 2 || $BlogPost->mode == C5DK_BLOG_MODE_EDIT) { ?>
 			<?php // Make blogRootID a hidden field if user only can block in one root or is in edit mode ?>
@@ -35,8 +35,8 @@
 				<?php echo $form->select('rootID', $BlogPost->rootList, $C5dkBlog->rootID, ''); ?>
 			</div>
 		<?php } ?>
-		
-		
+
+
 		<div class="c5dk_blog_section">
 			<div class="c5dk_blog_title">
 			<!-- Blog Title -->
@@ -45,7 +45,7 @@
 			<?php if ($BlogPost->mode == C5DK_BLOG_MODE_EDIT && $C5dkConfig->blog_title_editable == 0) { $style['disabled'] = "disabled"; } ?>
 			<?php echo $form->text('title', $C5dkBlog->title, $style); ?>
 			</div>
-		
+
 			<div class="c5dk_blog_description">
 			<!-- Blog Description -->
 			<?php echo $form->label('description', '<span style="display: block; float: left;"><h4>' . t('Blog Description') . ' <sup><i style="color: #E50000; font-size: 12px;" class="fa fa-asterisk"></i></sup></h4></span><span class="c5dk-description-char-counter">' . t('Characters Left (') . '<span style="font-size: 12px;" id="charNumDescription"></span>)</span>')?>
@@ -59,19 +59,21 @@
 			<?php echo $form->label('content', '<h4>' . t('Blog Content') . ' <sup><i style="color: #E50000; font-size: 12px;" class="fa fa-asterisk"></i></sup></h4>'); ?>
 			<?php
 				$editor = Core::make('editor');
-				$editor->setAllowFileManager(false);
-				$editor->getPluginManager()->select('c5dkimagemanager');
-				$editor->getPluginManager()->select('video');
-				print $editor->outputBlockEditModeEditor('content', $C5dkBlog->content);
+				// $editor->setAllowFileManager(false);
+				// $editor->getPluginManager()->select('c5dkimagemanager');
+				// $editor->getPluginManager()->select('video');
+				echo Core::make("editor")->outputBlockEditModeEditor('content', "TEST TEST TEST");
+				// print $editor->outputStandardEditor('content', "TEST TEST TEST"); //$C5dkBlog->content);
+				// print $editor->outputBlockEditModeEditor('content', $C5dkBlog->content);
 			?>
 		</div>
-		
+
 		<div class="c5dk_blog_section">
 			<!-- Blog Tags -->
 			<?php $casTags = CollectionAttributeKey::getByHandle('tags'); ?>
 			<h4><?php echo t('Tags'); ?></h4>
 			<?php echo $casTags->render('form', $C5dkBlog->tags, true); ?>
-		
+
 			<!-- Blog Topics -->
 			<?php if ($BlogPost->topicAttributeID) { ?>
 				<?php echo $form->label('', '<h4 style="margin-top: 25px;">' . t('Topics') . '</h4>'); ?>
@@ -97,9 +99,9 @@
 					<input class="c5dk_blogpage_ButtonGreen" type="button" onclick="c5dk.blog.post.image.showManager('thumbnail')" value="<?php echo t("Select"); ?>">
 					<input class="c5dk_blog_ButtonRed" type="button" onclick="c5dk.blog.post.thumbnail.remove()" value="<?php echo t("Remove"); ?>">
 				</div>
-				
+
 				<div style="clear:both;"></div>
-				
+
 				<div class="c5dk_blog_thumbnail_preview_frame">
 					<div class="c5dk_blog_thumbnail_preview">
 						<img id="c5dk_blog_thumbnail" class="c5dk_blog_thumbnail" src="<?php echo (is_object($C5dkBlog->thumbnail))? File::getRelativePathFromID($C5dkBlog->thumbnail->getFileID()) : ""; ?>"<?php echo (is_object($C5dkBlog->thumbnail))? '' : ' style="display:none;'; ?>>
@@ -108,13 +110,13 @@
 						<?php echo t('Preview'); ?>
 					</div>
 				</div>
-						
+
 				<div class="c5dk_blog_thumbnail_jcrop">
 					<img id="c5dk_crop_pic" src="" style="display:none;" />
 				</div>
 			</div>
 		</div>
-		
+
 		<div class="c5dk_blog_button_section c5dk_top_border_line">
 			<div class="c5dk_blog_page_icon"><img src="<?php echo REL_DIR_PACKAGES; ?>/c5dk_blog/images/c5blog.png" alt="C5DK Blog Icon" height="40" width="40"></div>
 			<!-- Form buttons -->
@@ -179,32 +181,31 @@ c5dk.blog.post = {
 	jcrop_api: null,
 
 	init: function() {
-		
-		$( ".redactor-editor" ).focus(function() {
-			$('.redactor-box').addClass('redactor-box-infocus');
-		});
-		
-		$( ".redactor-editor" ).focusout(function() {
-			$('.redactor-box').removeClass('redactor-box-infocus');
-		});
-		
+
+		// $( ".redactor-editor" ).focus(function() {
+		// 	$('.redactor-box').addClass('redactor-box-infocus');
+		// });
+
+		// $( ".redactor-editor" ).focusout(function() {
+		// 	$('.redactor-box').removeClass('redactor-box-infocus');
+		// });
+
 		$( ".c5dk_bp_title" ).focus(function() {
 			$('.c5dk-title-char-counter').addClass('c5dk-char-counter-highlite');
 		});
-		
+
 		$( ".c5dk_bp_title" ).focusout(function() {
 			$('.c5dk-title-char-counter').removeClass('c5dk-char-counter-highlite');
 		});
-		
+
 		$( "#description" ).focus(function() {
 			$('.c5dk-description-char-counter').addClass('c5dk-char-counter-highlite');
 		});
-		
+
 		$( "#description" ).focusout(function() {
 			$('.c5dk-description-char-counter').removeClass('c5dk-char-counter-highlite');
 		});
-		
-		
+
 		this.eventInit();
 
 		// Init Image Manager fileList
@@ -219,7 +220,7 @@ c5dk.blog.post = {
 	},
 
 	eventInit: function() {
-		
+
 		// Submit blog post
 		$('#c5dk_blog_form').submit( function(){
 			$('#title').removeAttr('disabled');
@@ -228,7 +229,7 @@ c5dk.blog.post = {
 
 		// Root change event to change the topic tree
 		$('#rootID').change(function(event) {
-			window.location = "<?php echo $this->url('blog_post', 'create', $BlogPost->redirectID); ?>/" + $('#rootID').val();			
+			window.location = "<?php echo $this->url('blog_post', 'create', $BlogPost->redirectID); ?>/" + $('#rootID').val();
 		});
 
 		// Title and description char counter
@@ -257,7 +258,7 @@ c5dk.blog.post = {
 		$('#file').on('change', function(event){
 			// Hide error message if shown
 			$('#c5dk_blog_upload_image_error').hide();
-			
+
 			var split = event.currentTarget.value.split('.');
 			var ext = split[split.length - 1].toLowerCase();
 			if(ext == "jpg" || ext == "jpeg" && $(".ui-dialog #file").val() != "") {

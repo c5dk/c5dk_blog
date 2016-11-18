@@ -479,27 +479,27 @@ class BlogPost extends PageController {
 		$al->register('javascript', 'jcrop', 'js/Jcrop/jquery.Jcrop.min.js', array(), 'c5dk_blog');
 		$al->register('css', 'jcrop', 'css/Jcrop/jquery.Jcrop.min.css', array(), 'c5dk_blog');
 
-		// Init C5DK Image Manager Redactor plugin
-		$al->register('javascript', 'editor/plugin/c5dkimagemanager', 'js/redactor/c5dkimagemanager.min.js', array(), 'c5dk_blog');
-		$al->registerGroup('editor/plugin/c5dkimagemanager', array(
-			array('javascript', 'editor/plugin/c5dkimagemanager')
-		));
-		$plugin = new Plugin();
-		$plugin->setKey('c5dkimagemanager');
-		$plugin->setName('C5DK Blog Image Manager');
-		$plugin->requireAsset('editor/plugin/c5dkimagemanager');
-		Core::make('editor')->getPluginManager()->register($plugin);
+		// // Init C5DK Image Manager Redactor plugin
+		// $al->register('javascript', 'editor/plugin/c5dkimagemanager', 'js/redactor/c5dkimagemanager.min.js', array(), 'c5dk_blog');
+		// $al->registerGroup('editor/plugin/c5dkimagemanager', array(
+		// 	array('javascript', 'editor/plugin/c5dkimagemanager')
+		// ));
+		// $plugin = new Plugin();
+		// $plugin->setKey('c5dkimagemanager');
+		// $plugin->setName('C5DK Blog Image Manager');
+		// $plugin->requireAsset('editor/plugin/c5dkimagemanager');
+		// Core::make('editor')->getPluginManager()->register($plugin);
 
-		// Init Redactor Video plugin
-		$al->register('javascript', 'editor/plugin/video', 'js/redactor/video.min.js', array(), 'c5dk_blog');
-		$al->registerGroup('editor/plugin/video', array(
-			array('javascript', 'editor/plugin/video')
-		));
-		$plugin = new Plugin();
-		$plugin->setKey('video');
-		$plugin->setName('C5DK Blog Video');
-		$plugin->requireAsset('editor/plugin/video');
-		Core::make('editor')->getPluginManager()->register($plugin);
+		// // Init Redactor Video plugin
+		// $al->register('javascript', 'editor/plugin/video', 'js/redactor/video.min.js', array(), 'c5dk_blog');
+		// $al->registerGroup('editor/plugin/video', array(
+		// 	array('javascript', 'editor/plugin/video')
+		// ));
+		// $plugin = new Plugin();
+		// $plugin->setKey('video');
+		// $plugin->setName('C5DK Blog Video');
+		// $plugin->requireAsset('editor/plugin/video');
+		// Core::make('editor')->getPluginManager()->register($plugin);
 
 	}
 

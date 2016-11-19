@@ -29,24 +29,24 @@ class C5dkBlog extends Page {
 	public $rootID			= null;
 	public $authorID		= null;
 	public $thumbnail		= null;
-	public $title				= "";
-	public $description	= "";
+	public $title			= "";
+	public $description		= "";
 	public $content			= "";
-	public $tags				= null;
+	public $tags			= null;
 	public $topics			= null;
 
 	public static function getByID($blogID, $version = 'RECENT', $class = 'Concrete\Package\C5dkBlog\Src\C5dkBlog\C5dkBlog\C5dkBlog') {
 
 		$blog = parent::getByID($blogID, $version, $class);
-		$blog->blogID 			= $blogID;
-		$blog->rootID				= $blog->getRootID();
-		$blog->title				= $blog->getCollectionName();
+		$blog->blogID 		= $blogID;
+		$blog->rootID		= $blog->getRootID();
+		$blog->title		= $blog->getCollectionName();
 		$blog->description	= $blog->getCollectionDescription();
-		$blog->authorID			= $blog->getAttribute('c5dk_blog_author_id');
-		$blog->content			= $blog->getContent();
-		$blog->thumbnail		= $blog->getAttribute('thumbnail');
-		$blog->tags					= $blog->getAttributeValueObject(CollectionAttributeKey::getByHandle('tags'));
-		$blog->topics				= $blog->getTopics();
+		$blog->authorID		= $blog->getAttribute('c5dk_blog_author_id');
+		$blog->content		= $blog->getContent();
+		$blog->thumbnail	= $blog->getAttribute('thumbnail');
+		$blog->tags			= $blog->getAttributeValueObject(CollectionAttributeKey::getByHandle('tags'));
+		$blog->topics		= $blog->getTopics();
 
 		return $blog;
 
@@ -61,10 +61,10 @@ class C5dkBlog extends Page {
 				$C5dkRoot = C5dkRoot::getByID($this->rootID);
 				$pt = PageType::getByID($C5dkRoot->pageTypeID);
 				$blog = $C5dkRoot->add($pt, array(
-					'cName'					=> $this->title,
-					'cHandle'				=> $this->getUrlSlug($this->title),
-					'cDescription'	=> $this->description,
-					'cAcquireComposerOutputControls' => true
+					'cName'								=> $this->title,
+					'cHandle'							=> $this->getUrlSlug($this->title),
+					'cDescription'						=> $this->description,
+					'cAcquireComposerOutputControls'	=> true
 				));
 
 				// TODO: Hack until solution have been found for the following bug. https://github.com/concrete5/concrete5/issues/2991
@@ -73,7 +73,7 @@ class C5dkBlog extends Page {
 				$pt->publish($blog);
 				// set name and description again, saving from composer seems to clear them
 				$blog->update( array(
-					'cName'					=> $this->title,
+					'cName'			=> $this->title,
 					'cDescription'	=> $this->description
 				));
 
@@ -87,10 +87,9 @@ class C5dkBlog extends Page {
 
 				$C5dkBlog = C5dkBlog::getByID($this->blogID);
 				$C5dkBlog->update(array(
-					'cName'					=> $this->title,
-					'cDescription' => $this->description
+					'cName'			=> $this->title,
+					'cDescription'	=> $this->description
 				));
-				$C5dkBlog->getVersionObject()->approve();
 				break;
 
 			default:
@@ -98,6 +97,7 @@ class C5dkBlog extends Page {
 				return false;
 
 		}
+		$C5dkBlog->getVersionObject()->approve();
 
 		// Update the composer content block
 		$pt = PageTemplate::getByID($C5dkBlog->getPageTemplateID());
@@ -122,7 +122,12 @@ class C5dkBlog extends Page {
 
 		// Save tags to the blog page
 		$cakTags = CollectionAttributeKey::getByHandle('tags');
-		$cakTags->saveAttributeForm($C5dkBlog);
+		$C5dkBlog = $C5dkBlog->getVersionToModify();
+		$controller = $cakTags->getController();
+		$value = $controller->createAttributeValueFromRequest();
+		$C5dkBlog->setAttribute($cakTags, $value);
+		$C5dkBlog->refreshCache();
+
 
 		// Add topics to the blog page if topics are in use
 		if ($this->topicAttributeID) {
@@ -133,6 +138,7 @@ class C5dkBlog extends Page {
 		// Set meta attributes
 		$C5dkBlog->setAttribute('meta_title', $this->title);
 		$C5dkBlog->setAttribute('meta_description', $this->description);
+
 
 		return $C5dkBlog;
 

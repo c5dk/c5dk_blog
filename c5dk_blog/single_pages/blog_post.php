@@ -59,12 +59,10 @@
 			<?php echo $form->label('content', '<h4>' . t('Blog Content') . ' <sup><i style="color: #E50000; font-size: 12px;" class="fa fa-asterisk"></i></sup></h4>'); ?>
 			<?php
 				$editor = Core::make('editor');
-				// $editor->setAllowFileManager(false);
+				$editor->setAllowFileManager(false);
 				// $editor->getPluginManager()->select('c5dkimagemanager');
 				// $editor->getPluginManager()->select('video');
-				echo Core::make("editor")->outputBlockEditModeEditor('content', "TEST TEST TEST");
-				// print $editor->outputStandardEditor('content', "TEST TEST TEST"); //$C5dkBlog->content);
-				// print $editor->outputBlockEditModeEditor('content', $C5dkBlog->content);
+				print $editor->outputStandardEditor('content', $C5dkBlog->content);
 			?>
 		</div>
 
@@ -224,7 +222,7 @@ c5dk.blog.post = {
 		// Submit blog post
 		$('#c5dk_blog_form').submit( function(){
 			$('#title').removeAttr('disabled');
-			$('.c5dk_blogpage_ButtonGreen').addClass('c5dk_blogpage_ButtonDisabled').removeClass('c5dk_blogpage_ButtonGreen').addAttr('disabled','disabled');
+			$('.c5dk_blogpage_ButtonGreen').addClass('c5dk_blogpage_ButtonDisabled').removeClass('c5dk_blogpage_ButtonGreen').attr('disabled','disabled');
 		});
 
 		// Root change event to change the topic tree

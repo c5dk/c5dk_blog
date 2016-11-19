@@ -144,7 +144,7 @@ class BlogPost extends PageController {
 		$error->addRequired('content', t('The Blog Content field is a required field and cannot be empty.'));
 
 		// Get or create the C5dkNews Object
-			$C5dkBlog = ($this->post('mode') == C5DK_BLOG_MODE_CREATE)? new C5dkBlog : C5dkBlog::getByID($this->post('blogID'));
+		$C5dkBlog = ($this->post('mode') == C5DK_BLOG_MODE_CREATE)? new C5dkBlog : C5dkBlog::getByID($this->post('blogID'));
 
 		// If validation passes then create/update the blog
 		if ($error->test()) {
@@ -154,15 +154,15 @@ class BlogPost extends PageController {
 				"rootID"						=> $this->post("rootID"),
 				"userID"						=> $this->C5dkUser->getUserID(),
 				"title"							=> $this->post("title"),
-				"description"				=> $this->post('description'),
+				"description"					=> $this->post('description'),
 				"content"						=> $this->post("content"),
-				"topicAttributeID"	=> $this->post('topicAttributeID')
+				"topicAttributeID"				=> $this->post('topicAttributeID')
 			));
 			$C5dkBlog = $C5dkBlog->save($this->post('mode'));
 
 			// Can first save the thumbnail now, because we need a page ID.
 			$C5dkBlog->thumbnail = $this->saveThumbnail($this->post('thumbnail'), $C5dkBlog);
-			$C5dkBlog->saveThumbnail();
+			// $C5dkBlog->saveThumbnail();
 
 			// Redirect to the new blog page
 			$this->redirect($C5dkBlog->getCollectionPath());
@@ -178,7 +178,7 @@ class BlogPost extends PageController {
 				"blogID"			=> $this->post("blogID"),
 				"rootID"			=> $this->post("rootID"),
 				"title"				=> $this->post("title"),
-				"description"	=> $this->post("description"),
+				"description"		=> $this->post("description"),
 				"content"			=> $this->post("content")
 			));
 

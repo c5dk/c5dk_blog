@@ -34,7 +34,7 @@ class Controller extends Package {
 
 	protected $pkgHandle			= 'c5dk_blog';
 	protected $appVersionRequired	= '5.7.5';
-	protected $pkgVersion			= '1.4.3';
+	protected $pkgVersion			= '8.0.0.2';
 
 	public function getPackageName() { return t("C5DK Blog"); }
 	public function getPackageDescription() { return t("A blog application for your C5 site, so even normal users can blog."); }

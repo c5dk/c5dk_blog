@@ -35,7 +35,6 @@ class BlogRoots extends DashboardPageController {
 
 		// Require Assets
 		$this->requireAsset('select2');
-
 	}
 
 	public function save(){
@@ -105,16 +104,43 @@ class BlogRoots extends DashboardPageController {
 	}
 
 	public function getTopicsAttributeList() {
-
-		$atTopicsID = attributeType::getByHandle('topics')->getAttributeTypeID();
-		$topicAttributeList = array(0 => t("None"));
-		foreach (CollectionAttributeKey::getList() as $attribute) {
-			if ($attribute->atID == $atTopicsID) {
-				$topicAttributeList[$attribute->getAttributeKeyID()] = $attribute->getAttributeKeyName();
-			}
+		$tt = new TopicTree;
+		$trees[0] = t('None');
+		foreach ($tt->getList() as $tree) {
+			$trees[$tree->rootTreeNodeID] = $tree->getTreeName();
 		}
-
-		return $topicAttributeList;
+		return $trees;
 	}
+	// 	$atTopicsID = attributeType::getByHandle('topics')->getAttributeTypeID();
+	// 	$topicAttributeList = array(0 => t("None"));
+	// 	foreach (CollectionAttributeKey::getList() as $attribute) {
+	// 		if ($attribute->atID == $atTopicsID) {
+	// 			$topicAttributeList[$attribute->getAttributeKeyID()] = $attribute->getAttributeKeyName();
+	// 		}
+	// 	}
 
+	// 	return $topicAttributeList;
+	// }
+
+	// public function getTopicList() {
+ //        $tt = new TopicTree();
+ //        $defaultTree = $tt->getDefault();
+ //        $topicTreeList = $tt->getList();
+ //        $tree = $tt->getByID(Core::make('helper/security')->sanitizeInt($this->akTopicTreeID));
+ //        if (!$tree) {
+ //            $tree = $defaultTree;
+ //        }
+ //        $this->set('tree', $tree);
+ //        $trees = array();
+ //        if (is_object($defaultTree)) {
+ //            $trees[] = $defaultTree;
+ //            foreach ($topicTreeList as $ctree) {
+ //                if ($ctree->getTreeID() != $defaultTree->getTreeID()) {
+ //                    $trees[] = $ctree;
+ //                }
+ //            }
+ //        }
+ //        $this->set('trees', $trees);
+ //        $this->set('parentNode', $this->akTopicParentNodeID);
+ //    }
 }

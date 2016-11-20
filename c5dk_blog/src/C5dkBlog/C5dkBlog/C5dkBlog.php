@@ -97,7 +97,6 @@ class C5dkBlog extends Page {
 				return false;
 
 		}
-		$C5dkBlog->getVersionObject()->approve();
 
 		// Update the composer content block
 		$pt = PageTemplate::getByID($C5dkBlog->getPageTemplateID());
@@ -132,13 +131,17 @@ class C5dkBlog extends Page {
 		// Add topics to the blog page if topics are in use
 		if ($this->topicAttributeID) {
 			$cakTopics = CollectionAttributeKey::getByID($this->topicAttributeID);
-			$cakTopics->saveAttributeForm($C5dkBlog);
+			$controller = $cakTopics->getController();
+			$value = $controller->createAttributeValueFromRequest();
+			$C5dkBlog->setAttribute($cakTopics, $value);
+			$C5dkBlog->refreshCache();
 		}
 
 		// Set meta attributes
 		$C5dkBlog->setAttribute('meta_title', $this->title);
 		$C5dkBlog->setAttribute('meta_description', $this->description);
 
+		$C5dkBlog->getVersionObject()->approve();
 
 		return $C5dkBlog;
 

@@ -34,7 +34,7 @@ class Controller extends Package {
 
 	protected $pkgHandle			= 'c5dk_blog';
 	protected $appVersionRequired	= '5.7.5';
-	protected $pkgVersion			= '8.0.0.2';
+	protected $pkgVersion			= '8.0.0.3';
 
 	public function getPackageName() { return t("C5DK Blog"); }
 	public function getPackageDescription() { return t("A blog application for your C5 site, so even normal users can blog."); }
@@ -118,19 +118,19 @@ class Controller extends Package {
 		// C5DK Blog Buttons
 		$bt = BlockType::getByHandle('c5dk_blog_buttons');
 		if (!is_object($bt)) {
-			BlockType::installBlockTypeFromPackage('c5dk_blog_buttons', $pkg);
+			BlockType::installBlockType('c5dk_blog_buttons', $pkg);
 		}
 
 		// C5DK Blog Header
 		$bt = BlockType::getByHandle('c5dk_blog_header');
 		if (!is_object($bt)) {
-			BlockType::installBlockTypeFromPackage('c5dk_blog_header', $pkg);
+			BlockType::installBlockType('c5dk_blog_header', $pkg);
 		}
 
 		// C5DK Blog Go Back
 		$bt = BlockType::getByHandle('c5dk_blog_goback');
 		if (!is_object($bt)) {
-			BlockType::installBlockTypeFromPackage('c5dk_blog_goback', $pkg);
+			BlockType::installBlockType('c5dk_blog_goback', $pkg);
 		}
 
 	}

@@ -57,7 +57,7 @@ Core::make('help')->display(t('On the "Blog Roots" settings page, is where you c
 		</div>
 
 	</form>
-	
+
 	<script type="text/javascript">
 	$(document).ready(function() {
 		$(".delete_root").on('click', function(event) {
@@ -71,7 +71,7 @@ Core::make('help')->display(t('On the "Blog Roots" settings page, is where you c
 		$('.c5dk_blog_select2').removeClass('form-control').select2();
 	});
 	</script>
-	
+
 	<style type="text/css">
 		#c5dk-blog .noWrap{ white-space: nowrap; }
 		#c5dk-blog .center{ text-align: center; }
@@ -80,12 +80,12 @@ Core::make('help')->display(t('On the "Blog Roots" settings page, is where you c
 		#c5dk-blog .hide{ display: none; }
 		#c5dk-blog .chzn-container{ width: 100% !important; }
 	</style>
-	
+
 <?php } else { ?>
 
 	<!-- No roots found -->
 	<div class="ccm-pane-body">
 		<div class="ccm-ui alert alert-warning"><?= t('No Blog Roots found.'); ?></div>
 	</div>
+<?php }
 
-<?php } ?>

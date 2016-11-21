@@ -160,6 +160,13 @@
 		</div>
 	</div>
 </div> <!-- c5dk-blog-package wrapper -->
+
+<style type="text/css">
+#c5dk-blog-package .field-invalid {
+    border-color: red !important;
+}
+</style>
+
 <script type="text/javascript">
 var CCM_EDITOR_SECURITY_TOKEN = "<?php echo Core::make("token")->generate('editor'); ?>";
 
@@ -209,6 +216,22 @@ c5dk.blog.post = {
 		// Init Image Manager fileList
 		c5dk.blog.post.image.getFileList();
 
+		$("#c5dk_blog_form").validate({
+			rules: {
+				title: { required: true },
+				content: { required: true }
+			},
+			errorClass: "field-invalid",
+			errorPlacement: function(error,element) {
+				return true;
+			},
+			submitHandler: function(form) {
+				$('#title').removeAttr('disabled');
+				$('.c5dk_blogpage_ButtonGreen').addClass('c5dk_blogpage_ButtonDisabled').removeClass('c5dk_blogpage_ButtonGreen').attr('disabled','disabled');
+				form.submit();
+			}
+		});
+
 		// Make sure session doesn't timeout
 		setInterval(c5dk.blog.post.ping, 60000);
 
@@ -219,11 +242,9 @@ c5dk.blog.post = {
 
 	eventInit: function() {
 
-		// Submit blog post
-		$('#c5dk_blog_form').submit( function(){
-			$('#title').removeAttr('disabled');
-			$('.c5dk_blogpage_ButtonGreen').addClass('c5dk_blogpage_ButtonDisabled').removeClass('c5dk_blogpage_ButtonGreen').attr('disabled','disabled');
-		});
+		// // Submit blog post
+		// $('#c5dk_blog_form').submit( function() {
+		// });
 
 		// Root change event to change the topic tree
 		$('#rootID').change(function(event) {

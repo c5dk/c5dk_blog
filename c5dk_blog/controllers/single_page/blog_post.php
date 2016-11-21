@@ -115,10 +115,11 @@ class BlogPost extends PageController {
 		$this->set('identifier', id(new Identifier())->getString(32));
 
 		// Require Assets
-		$this->requireAsset('redactor');
+		// $this->requireAsset('redactor');
 		$this->requireAsset('core/topics');
 		$this->requireAsset('javascript', 'jcrop');
 		$this->requireAsset('css', 'jcrop');
+		$this->requireAsset('javascript', 'validation');
 
 		// Set View variables
 		$this->set('BlogPost',		$this);
@@ -151,12 +152,12 @@ class BlogPost extends PageController {
 
 			// Setup blog and save it
 			$C5dkBlog->setPropertiesFromArray( array(
-				"rootID"						=> $this->post("rootID"),
-				"userID"						=> $this->C5dkUser->getUserID(),
-				"title"							=> $this->post("title"),
-				"description"					=> $this->post('description'),
-				"content"						=> $this->post("content"),
-				"topicAttributeID"				=> $this->post('topicAttributeID')
+				"rootID"			=> $this->post("rootID"),
+				"userID"			=> $this->C5dkUser->getUserID(),
+				"title"				=> $this->post("title"),
+				"description"		=> $this->post('description'),
+				"content"			=> $this->post("content"),
+				"topicAttributeID"	=> $this->post('topicAttributeID')
 			));
 			$C5dkBlog = $C5dkBlog->save($this->post('mode'));
 
@@ -173,16 +174,15 @@ class BlogPost extends PageController {
 			$this->set('error', $error->getError());
 
 			// Set blog data
-			$this->mode = $this->post('mode');
-			$C5dkBlog->setPropertiesFromArray( array(
-				"blogID"			=> $this->post("blogID"),
-				"rootID"			=> $this->post("rootID"),
-				"title"				=> $this->post("title"),
-				"description"		=> $this->post("description"),
-				"content"			=> $this->post("content")
-			));
+			$this->mode 			= $this->post('mode');
+			$this->blogID			= $this->post("blogID");
+			$this->rootID			= $this->post("rootID");
+			$this->title			= $this->post("title");
+			$this->description		= $this->post("description");
+			$this->content			= $this->post("content");
+			$this->topicAttributeID	= $this->post('topicAttributeID');
 
-			$this->init($C5dkBlog);
+			$this->init();
 		}
 
 	}
@@ -478,6 +478,9 @@ class BlogPost extends PageController {
 		// Register jQuery Jcrop plugin
 		$al->register('javascript', 'jcrop', 'js/Jcrop/jquery.Jcrop.min.js', array(), 'c5dk_blog');
 		$al->register('css', 'jcrop', 'css/Jcrop/jquery.Jcrop.min.css', array(), 'c5dk_blog');
+
+		// Register jQuery Jcrop plugin
+		$al->register('javascript', 'validation', 'js/validation/jquery.validate.js', array(), 'c5dk_blog');
 
 		// // Init C5DK Image Manager Redactor plugin
 		// $al->register('javascript', 'editor/plugin/c5dkimagemanager', 'js/redactor/c5dkimagemanager.min.js', array(), 'c5dk_blog');

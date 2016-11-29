@@ -8,11 +8,20 @@ use Database;
 use Package;
 use AssetList;
 use CollectionAttributeKey;
+
 use Image;
+use Imagine\Image\Box;
+use Imagine\Image\Point;
+use Imagine\Image\ImageInterface;
+use Imagine\Image\PointInterface;
+
 use File;
 use FileList;
 use FileImporter;
 use FileSet;
+use Concrete\Core\File\StorageLocation\StorageLocation;
+use League\Flysystem\AdapterInterface;
+use Concrete\Core\Tree\Node\Type\FileFolder as FileFolder;
 use Concrete\Core\Tree\Type\Topic as TopicTree;
 use Concrete\Core\Utility\Service\Identifier as Identifier;
 use Concrete\Core\Html\Service\Navigation as Navigation;
@@ -48,14 +57,12 @@ class BlogPost extends PageController {
 
 		$this->registerAssets();
 		$this->requireAsset('css', 'c5dk_blog_css');
-
 	}
 
 	public function view(){
 
 		// Direct access is not allowed.
 		$this->redirect('/');
-
 	}
 
 	public function create($redirectID, $rootID = false) {
@@ -77,7 +84,6 @@ class BlogPost extends PageController {
 		$this->topicAttributeID = $C5dkRoot->topicAttributeID;
 
 		$this->init();
-
 	}
 
 	public function edit($blogID) {
@@ -99,7 +105,6 @@ class BlogPost extends PageController {
 		}
 
 		$this->init();
-
 	}
 
 	public function init() {
@@ -116,6 +121,7 @@ class BlogPost extends PageController {
 
 		// Require Assets
 		// $this->requireAsset('redactor');
+		$this->requireAsset('javascript', 'c5dkckeditor');
 		$this->requireAsset('core/topics');
 		$this->requireAsset('javascript', 'jcrop');
 		$this->requireAsset('css', 'jcrop');
@@ -126,7 +132,6 @@ class BlogPost extends PageController {
 		$this->set('C5dkConfig',	$this->C5dkConfig);
 		$this->set('C5dkUser',		$this->C5dkUser);
 		$this->set('C5dkBlog',		$this->C5dkBlog);
-
 	}
 
 	public function save() {
@@ -161,8 +166,14 @@ class BlogPost extends PageController {
 			));
 			$C5dkBlog = $C5dkBlog->save($this->post('mode'));
 
-			// Can first save the thumbnail now, because we need a page ID.
-			$C5dkBlog->thumbnail = $this->saveThumbnail($this->post('thumbnail'), $C5dkBlog);
+			// Can first save the thumbnail now, because we needed to save the page first.
+			$thumbnail = $this->saveThumbnail($this->post('thumbnail'), $C5dkBlog);
+			$cakThumbnail = CollectionAttributeKey::getByHandle('thumbnail');
+			$C5dkBlog = $C5dkBlog->getVersionToModify();
+			$controller = $cakThumbnail->getController();
+			// $value = $controller->createAttributeValueFromRequest();
+			$C5dkBlog->setAttribute($cakThumbnail, $thumbnail);
+			$C5dkBlog->refreshCache();
 			// $C5dkBlog->saveThumbnail();
 
 			// Redirect to the new blog page
@@ -184,7 +195,6 @@ class BlogPost extends PageController {
 
 			$this->init();
 		}
-
 	}
 
 	public function delete ($type, $id) {
@@ -232,7 +242,6 @@ class BlogPost extends PageController {
 		}
 
 		exit;
-
 	}
 
 	private function getUserRootList() {
@@ -242,9 +251,7 @@ class BlogPost extends PageController {
 		}
 
 		return $rootList;
-
 	}
-
 
 	public function saveThumbnail ($thumbnail, $page) {
 
@@ -256,11 +263,11 @@ class BlogPost extends PageController {
 		if ($thumbnail['id'] > 0 && $thumbnail['pictureWidth'] != 0) {
 			// Remove old thumbnail
 			$this->postRemoveThumbnail($page);
-			if (($file = $this->postSaveThumbnail($thumbnail, $page)) instanceof File) { return $file; }
+			$file = $this->postSaveThumbnail($thumbnail, $page);
+			if (is_object($file)) { return $file; }
 		}
 
 		return $thumbnail['id'];
-
 	}
 
 	public function postSaveThumbnail($thumbnail, $C5dkBlog){
@@ -270,17 +277,17 @@ class BlogPost extends PageController {
 		$fh = Core::make('helper/file');
 
 		// Init C5DK Objects
-		$C5dkConfig = new C5dkConfig;
-		$C5dkUser = new C5dkUser;
+		$C5dkConfig	= new C5dkConfig;
+		$C5dkUser	= new C5dkUser;
 
 		// Set needed file information
-		$file						= File::getByID($thumbnail['id']);
-		$fv							= $file->getRecentVersion();
-		$src						= $_SERVER['DOCUMENT_ROOT'] . $file->getRelativePath();
-		$fileExtension	= $fv->getExtension();
+		$file		= File::getByID($thumbnail['id']);
+		$fv			= $file->getRecentVersion();
+		$src		= $_SERVER['DOCUMENT_ROOT'] . $file->getRelativePath();
+		$fileExt	= $fv->getExtension();
 
 		// Calculate the thumbnail area on the original picture
-		$ratio			= $fv->getAttribute('width')/$thumbnail['pictureWidth'];
+		$ratio		= $fv->getAttribute('width')/$thumbnail['pictureWidth'];
 		$thumb['x'] = round($ratio * $thumbnail['x']);
 		$thumb['y'] = round($ratio * $thumbnail['y']);
 		$thumb['w'] = round($ratio * $thumbnail['width']);
@@ -288,31 +295,37 @@ class BlogPost extends PageController {
 
 		// Set thumbnail size and quality
 		$targetWidth	= $C5dkConfig->blog_thumbnail_width;
-		$targetHeight = $C5dkConfig->blog_thumbnail_height;
-		$jpeg_quality = 90;
+		$targetHeight	= $C5dkConfig->blog_thumbnail_height;
+		$jpeg_quality	= 90;
 
-		// Create the thumbnail
-		$dstImage = ImageCreateTrueColor( $targetWidth, $targetHeight );
-		$srcImage = imagecreatefromjpeg($src);
-		imagecopyresampled($dstImage, $srcImage, 0, 0, $thumb['x'], $thumb['y'], $targetWidth, $targetHeight, $thumb['w'], $thumb['h']);
-
-		// Save the thumbnail in the tmp folder
-		imagejpeg($dstImage, $fh->getTemporaryDirectory() . '/c5dk_blog.jpg', $jpeg_quality);
+		// Create, crop and save the thumbnail
+		$box		= new Box($thumb['w'], $thumb['h']);
+		$point		= new Point($thumb['x'], $thumb['y']);
+		$resource	= $fv->getFileResource();
+		$image		= Image::load($resource->read());
+		$image
+			->crop($point , $box)
+			->save($fh->getTemporaryDirectory() . "/" . '/c5dk_blog.tmp.jpg');
 
 		// Import thumbnail into the File Manager
-		$fv = $fi->import($fh->getTemporaryDirectory() . '/c5dk_blog.jpg', "C5DK_BLOG_uID-" . $C5dkUser->getUserID() . "_Thumb_cID-" . $C5dkBlog->getCollectionID() . "." . $fileExtension);
-		$file = $fv->getFile();
-		if(!is_object($file)){ return; }
-		// Create and get FileSet if not exist and add file to the set
-		$fs = FileSet::createAndGetSet("C5DK_BLOG_uID-" . $C5dkUser->getUserID(), FileSet::TYPE_PUBLIC, $C5dkUser->getUserID());
-		$fsf = $fs->addFileToSet($file);
+		$fv = $fi->import(
+			$fh->getTemporaryDirectory() . "/" . '/c5dk_blog.tmp.jpg',
+			"C5DK_BLOG_uID-" . $C5dkUser->getUserID() . "_Thumb_cID-" . $C5dkBlog->getCollectionID() . "." . $fileExt,
+			FileFolder::getNodeByName('C5DK Blog')
+		);
 
-		// Delete tmp file
-		unlink($fh->getTemporaryDirectory() . "/" . '/c5dk_blog.jpg');
+		if(is_object($fv)){
 
-		// Return the File Object
-		return $file;
+			// Create and get FileSet if not exist and add file to the set
+			$fs = FileSet::createAndGetSet("C5DK_BLOG_uID-" . $C5dkUser->getUserID(), FileSet::TYPE_PUBLIC, $C5dkUser->getUserID());
+			$fsf = $fs->addFileToSet($fv);
 
+			// Delete tmp file
+			unlink($fh->getTemporaryDirectory() . "/" . '/c5dk_blog.tmp.jpg');
+
+			// Return the File Object
+			return $fv->getFile();
+		}
 	}
 
 	public function postRemoveThumbnail($C5dkBlog){
@@ -329,7 +342,6 @@ class BlogPost extends PageController {
 		if ($C5dkBlog instanceof C5dkBlog && is_object($cak)) {
 			$C5dkBlog->clearAttribute($cak);
 		}
-
 	}
 
 	public function upload($mode = null){
@@ -337,9 +349,8 @@ class BlogPost extends PageController {
 		// TODO: Make it possible to upload different file types and convert them to .jpg
 
 		// Get helper objects
-		$im = Core::make('image/thumbnailer');
 		$jh = Core::make('helper/json');
-		$fh = Core::make('helper/file');
+		// $fh = Core::make('helper/file');
 
 		// Get C5dk Objects
 		$C5dkConfig = new C5dkConfig;
@@ -352,48 +363,52 @@ class BlogPost extends PageController {
 
 		$C5dkUser = new C5dkUser();
 
-		// Resize image if needed
-		$im->create($_FILES['file']['tmp_name'][0], $fh->getTemporaryDirectory() . "/" . $_FILES['file']['name'][0], $C5dkConfig->blog_picture_width, 0, false);
-
 		// Import file
 		$fi = new FileImporter();
-		if(!is_object($file = $fi->import($fh->getTemporaryDirectory() . "/" . $_FILES['file']['name'][0], "C5DK_BLOG_uID-" . $C5dkUser->getUserID() . "_Pic_" . $_FILES['file']['name'][0]))){
-			header('Content-type: application/json');
-			echo $jh->encode($data);
-			exit;
-		}
+		$fv = $fi->import(
+			$_FILES['file']['tmp_name'][0],
+			"C5DK_BLOG_uID-" . $C5dkUser->getUserID() . "_Pic_" . $_FILES['file']['name'][0],
+			FileFolder::getNodeByName('C5DK Blog')
+		);
 
-		// Create and get FileSet if not exist and add file to the set
-		$fs = FileSet::createAndGetSet("C5DK_BLOG_uID-" . $C5dkUser->getUserID(), FileSet::TYPE_PUBLIC, $C5dkUser->getUserID());
-		$fsf = $fs->addFileToSet($file);
+		if(is_object($fv)){
 
-		// Delete tmp file
-		unlink($fh->getTemporaryDirectory() . "/" . $_FILES['file']['name'][0]);
+			// Create and get FileSet if not exist and add file to the set
+			$fileSet = FileSet::createAndGetSet("C5DK_BLOG_uID-" . $C5dkUser->getUserID(), FileSet::TYPE_PUBLIC, $C5dkUser->getUserID());
+			$fsf = $fileSet->addFileToSet($fv);
 
-		switch ($mode) {
-			case 'dnd':
-				$data = array(
-					'filelink' => File::getRelativePathFromID($file->getFileID())
-				);
-				break;
+			// Resize
+			$resource = $fv->getFileResource();
+			$image = Image::load($resource->read());
+			$image = $image->thumbnail(new Box($C5dkConfig->blog_picture_width, 9999), ImageInterface::THUMBNAIL_INSET);
 
-			default:
-				// Get FileList
-				$files = $this->getFileList($fs);
-				rsort($files);
-				$data = array(
-					'file' => $file,
-					'fileList' => $files,
-					'status' => 1
-				);
-				break;
+			// Now let's update the image
+			$fv->updateContents($image->get($fv->getExtension()));
+
+			switch ($mode) {
+				case 'dnd':
+					$data = array(
+						'filelink' => File::getRelativePathFromID($fv->getFileID())
+					);
+					break;
+
+				default:
+					// Get FileList
+					$files = $this->getFileList($fileSet);
+					rsort($files);
+					$data = array(
+						'file' => $file,
+						'fileList' => $files,
+						'status' => 1
+					);
+					break;
+			}
 		}
 
 		header('Content-type: application/json');
 		echo $jh->encode($data);
 
 		exit;
-
 	}
 
 	public function getFileList($fs = null){
@@ -437,7 +452,8 @@ class BlogPost extends PageController {
 						"src"			=> File::getRelativePathFromID($file->getFileID()),
 						"width"		=> $fv->getAttribute("width"),
 						"height"	=> $fv->getAttribute("height")
-					)
+					),
+					"FileFolder" => \Concrete\Core\Tree\Node\Type\FileFolder::getNodeByName('C5DK Blog')
 				);
 			}
 
@@ -447,7 +463,6 @@ class BlogPost extends PageController {
 		echo $jh->encode($files);
 
 		exit;
-
 	}
 
 	// Keep the active login session active
@@ -464,13 +479,15 @@ class BlogPost extends PageController {
 		echo $jh->encode($data);
 
 		exit;
-
 	}
 
 	public function registerAssets() {
 
 		// Get the AssetList
 		$al = AssetList::getInstance();
+
+		// CKEditor
+		$al->register('javascript', 'c5dkckeditor', 'js/ckeditor/ckeditor.js', array(), 'c5dk_blog');
 
 		// Register C5DK Blog CSS
 		$al->register('css', 'c5dk_blog_css', 'css/c5dk_blog.min.css', array(), 'c5dk_blog');
@@ -504,6 +521,31 @@ class BlogPost extends PageController {
 		// $plugin->requireAsset('editor/plugin/video');
 		// Core::make('editor')->getPluginManager()->register($plugin);
 
+		// Init Redactor Video plugin
+		// $al->register('javascript', 'editor/plugin/video', 'js\ckeditor\plugin.js', array(), 'c5dk_blog');
+		// $al->registerGroup('editor/plugin/video', array(
+		// 	array('javascript', 'editor/plugin/video')
+		// ));
+		// $plugin = new Plugin();
+		// $plugin->setKey('video');
+		// $plugin->setName('C5DK Blog Video');
+		// $plugin->requireAsset('editor/plugin/video');
+		// Core::make('editor')->getPluginManager()->register($plugin);
+
+
+
+
+		// $al->register('javascript', 'editor/plugin/videodetector', 'js/ckeditor/plugin.js', array(), 'c5dk_blog');
+		// $al->register('css', 'editor/plugin/videodetector', 'js/ckeditor/videodetector.css', array(), 'c5dk_blog');
+		// $al->registerGroup('editor/plugin/videodetector', array(
+		// 	array('javascript', 'editor/plugin/videodetector'),
+		// 	array('css', 'editor/plugin/videodetector')
+		// ));
+		// $plugin = new Plugin();
+		// $plugin->setKey('videodetector');
+		// $plugin->setName('C5DK Blog Video');
+		// $plugin->requireAsset('editor/plugin/videodetector');
+		// Core::make('editor')->getPluginManager()->register($plugin);
 	}
 
 }

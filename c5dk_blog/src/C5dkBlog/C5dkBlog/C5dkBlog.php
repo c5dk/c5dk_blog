@@ -49,7 +49,6 @@ class C5dkBlog extends Page {
 		$blog->topics		= $blog->getTopics();
 
 		return $blog;
-
 	}
 
 	public function save($mode) {
@@ -144,21 +143,18 @@ class C5dkBlog extends Page {
 		$C5dkBlog->getVersionObject()->approve();
 
 		return $C5dkBlog;
-
 	}
 
 	public function delete() {
 
 		$this->deleteThumbnail();
 		parent::delete();
-
 	}
 
 	public function moveToTrash () {
 
 		$this->deleteThumbnail();
 		parent::moveToTrash();
-
 	}
 
 	public function saveThumbnail() {
@@ -168,7 +164,6 @@ class C5dkBlog extends Page {
 		if (is_object($cak)) {
 			$this->setAttribute($cak, $this->thumbnail);
 		}
-
 	}
 
 	public function deleteThumbnail () {
@@ -176,8 +171,9 @@ class C5dkBlog extends Page {
 		// Remove old thumbnail from filemanager
 		$thumbnail = $this->getAttribute('thumbnail');
 		$u = new user;
-		if (is_object($thumbnail) && $thumbnail->getRecentVersion()->getFileName() == "C5DK_BLOG_uID-" . $u->getUserID() . "_Thumb_cID-" . $this->blogID . "." . $thumbnail->getRecentVersion()->getExtension()) { $thumbnail->delete(); }
-
+		if (is_object($thumbnail) && $thumbnail->getRecentVersion()->getFileName() == "C5DK_BLOG_uID-" . $u->getUserID() . "_Thumb_cID-" . $this->blogID . "." . $thumbnail->getRecentVersion()->getExtension()) {
+			$thumbnail->delete();
+		}
 	}
 
 	// Get the specified blogs root ID
@@ -199,7 +195,6 @@ class C5dkBlog extends Page {
 
 		// Didn't find the root
 		return null;
-
 	}
 
 	// Get blog content from the first content block in the main area or return empty "" string
@@ -214,7 +209,6 @@ class C5dkBlog extends Page {
 		}
 
 		return "";
-
 	}
 
 	private function getTopics() {
@@ -239,7 +233,6 @@ class C5dkBlog extends Page {
 		$ret = Events::fire('on_page_urlify', $name);
 
 		return (!$ret)? $name : $ret;
-
 	}
 
 }

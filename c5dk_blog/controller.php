@@ -16,6 +16,7 @@ use AttributeSet;
 use UserAttributeKey;
 use CollectionAttributeKey;
 use Concrete\Core\Attribute\Key\Category as AttributeKeyCategory;
+use Concrete\Core\File\Image\Thumbnail\Type\Type;
 
 use Events;
 use View;
@@ -28,6 +29,8 @@ use Concrete\Core\Editor\Plugin;
 use Concrete\Package\C5dkBlog\Src\C5dkBlog\C5dkBlog\C5dkBlog as C5dkBlog;
 use Concrete\Package\C5dkBlog\Src\C5dkBlog\C5dkAjax as C5dkAjax;
 
+use Concrete\Package\C5dkBlog\Src\C5dkInstaller as C5dkInstaller;
+
 defined('C5_EXECUTE') or die("Access Denied.");
 
 class Controller extends Package {
@@ -36,8 +39,8 @@ class Controller extends Package {
 	protected $appVersionRequired	= '5.7.5';
 	protected $pkgVersion			= '8.0.0.4';
 
-	public function getPackageName() { return t("C5DK Blog"); }
-	public function getPackageDescription() { return t("A blog application for your C5 site, so even normal users can blog."); }
+	public function getPackageName() {			return t("C5DK Blog"); }
+	public function getPackageDescription() {	return t("A blog application for your C5 site, so even normal users can blog."); }
 
 	public function on_start() {
 
@@ -47,7 +50,6 @@ class Controller extends Package {
 
 		$this->registerEvents();
 		$this->registerRoutes();
-
 	}
 
 	private function registerEvents() {
@@ -58,29 +60,32 @@ class Controller extends Package {
 
 	private function registerRoutes() {
 
-    Route::register('/c5dk/blog/{method}/{blogID}', '\Concrete\Package\C5dkBlog\Src\C5dkBlog\C5dkAjax::blog');
-
+		Route::register('/c5dk/blog/{method}/{blogID}', '\Concrete\Package\C5dkBlog\Src\C5dkBlog\C5dkAjax::blog');
 	}
 
 	public function install() {
 
 		$pkg = parent::install();
 
-		$this->setupConfig($pkg);
-		$this->setupBlocks($pkg);
-		$this->setupSinglePages($pkg);
-		$this->setupPageAttributes($pkg);
-		$this->setupUserAttributes($pkg);
-
+		$this->c5dkInstall($pkg);
 	}
 
 	public function upgrade() {
 
 		parent::upgrade();
 
-		$this->setupConfig($this);
-		$this->setupSinglePages($this);
+		$this->c5dkInstall($this);
+	}
 
+	private function c5dkInstall($pkg) {
+
+		$this->setupConfig($pkg);
+
+		$this->setupBlocks($pkg);
+		$this->setupFilesystem($pkg);
+		$this->setupSinglePages($pkg);
+		$this->setupPageAttributes($pkg);
+		$this->setupUserAttributes($pkg);
 	}
 
 	public function uninstall() {
@@ -90,8 +95,9 @@ class Controller extends Package {
 		// Remove database tables
 		$db = Database::connection();
 		$db->Execute("DROP TABLE IF EXISTS C5dkBlogRootPermissions");
-
 	}
+
+
 
 	private function setupConfig($pkg) {
 
@@ -104,122 +110,67 @@ class Controller extends Package {
 		if (!$config->get('blog_headline_color')) { $config->save('c5dk_blog.blog_headline_color',				'#AAAAAA'); }
 		if (!$config->get('blog_headline_margin')) { $config->save('c5dk_blog.blog_headline_margin',			'5px 0'); }
 		if (!$config->get('blog_headline_icon_color')) { $config->save('c5dk_blog.blog_headline_icon_color',	'#1685D4'); }
-
 	}
+
+
 
 	private function setupBlocks($pkg) {
 
 		// C5DK Blog block type set
-		$bts = BlockTypeSet::getByHandle('C5dk_blog');
-		if (!$bts instanceof BlockTypeSet) {
-			BlockTypeSet::add("c5dk_blog", "C5DK Blog", $pkg);
-		}
+		C5dkInstaller::installBlockTypeSet("c5dk_blog", "C5DK Blog", $pkg);
 
-		// C5DK Blog Buttons
-		$bt = BlockType::getByHandle('c5dk_blog_buttons');
-		if (!is_object($bt)) {
-			BlockType::installBlockType('c5dk_blog_buttons', $pkg);
-		}
+		// C5DK Blog Blocks
+		C5dkInstaller::installBlockType('c5dk_blog_buttons', $pkg);
+		C5dkInstaller::installBlockType('c5dk_blog_header', $pkg);
+		C5dkInstaller::installBlockType('c5dk_blog_goback', $pkg);
+	}
 
-		// C5DK Blog Header
-		$bt = BlockType::getByHandle('c5dk_blog_header');
-		if (!is_object($bt)) {
-			BlockType::installBlockType('c5dk_blog_header', $pkg);
-		}
+	private function setupFilesystem($pkg) {
 
-		// C5DK Blog Go Back
-		$bt = BlockType::getByHandle('c5dk_blog_goback');
-		if (!is_object($bt)) {
-			BlockType::installBlockType('c5dk_blog_goback', $pkg);
-		}
+		$rootFolder = C5dkInstaller::installFileFolder('-root-', 'C5DK Blog');
+		$thumbs = C5dkInstaller::installFileFolder($rootFolder, 'Thumbs');
+		$manager = C5dkInstaller::installFileFolder($rootFolder, 'Manager');
 
+		// C5dkInstaller::installThumbnailType('c5dk_blog_thumbnail', t('C5DK Blog Thumbnail'), 360, 360);
 	}
 
 	private function setupSinglePages($pkg) {
 
 		// Dashboard
-			// C5DK Blog
-			if (!Page::getByPath('dashboard/c5dk_blog') instanceof SinglePage) {
-				$singlePage = SinglePage::add('dashboard/c5dk_blog', $pkg);
-				$singlePage->update(array('cName' => t('C5DK Blog'), 'cDescription' => t("Blog system for your website")));
-			}
+		$singlePage = C5dkInstaller::installSinglePage('/dashboard/c5dk_blog', t('C5DK Blog'), t('Blog system for your website'), $pkg);
+		$singlePage = C5dkInstaller::installSinglePage('/dashboard/c5dk_blog/blog_roots', t('Blog Roots'), t('Manage Roots'), $pkg);
+		$singlePage = C5dkInstaller::installSinglePage('/dashboard/c5dk_blog/blog_roots/add', t('Add'), t('Add an existing page as a Blog Root'), $pkg,
+			array('exclude_nav' => 1));
+		$singlePage = C5dkInstaller::installSinglePage('/dashboard/c5dk_blog/blog_settings', t('Settings'), t('Manage Settings'), $pkg);
+		$singlePage = C5dkInstaller::installSinglePage('/dashboard/c5dk_blog/user_deletion', t('User Deletion'), t('What should we do with the users blog posts?'), $pkg,
+			array('exclude_nav' => 1));
 
-			// Blog Settings
-			if (!Page::getByPath('dashboard/c5dk_blog/blog_settings') instanceof SinglePage) {
-				$singlePage = SinglePage::add('dashboard/c5dk_blog/blog_settings', $pkg);
-				$singlePage->update(array('cName' => t('Settings'), 'cDescription' => t("Manage Settings")));
-			}
-
-			// Blog Roots
-			if (!Page::getByPath('dashboard/c5dk_blog/blog_roots') instanceof SinglePage) {
-				$singlePage = SinglePage::add('dashboard/c5dk_blog/blog_roots', $pkg);
-				$singlePage->update(array('cName' => t('Blog Roots'), 'cDescription' => t("Manage Roots")));
-			}
-
-			// Add Blog Root
-			if (!Page::getByPath('dashboard/c5dk_blog/blog_roots/add') instanceof SinglePage) {
-				$singlePage = SinglePage::add('dashboard/c5dk_blog/blog_roots/add', $pkg);
-				$singlePage->update(array('cName' => t('Add'), 'cDescription' => t("Add an existing page as a Blog Root")));
-				$singlePage->setAttribute('exclude_nav', 1);
-			}
-
-			// User Deletion
-			if (!Page::getByPath('dashboard/c5dk_blog/user_deletion') instanceof SinglePage) {
-				$singlePage = SinglePage::add('dashboard/c5dk_blog/user_deletion', $pkg);
-				$singlePage->update(array('cName' => t('User Deletion'), 'cDescription' => t("What should we do with the users blog posts?")));
-				$singlePage->setAttribute('exclude_nav', 1);
-			}
-
-		// Normal Single Pages
-			// Blog Post
-			if (!Page::getByPath('blog_post') instanceof SinglePage) {
-				$singlePage = SinglePage::add('blog_post', $pkg);
-				$singlePage->update(array('cName' => t('Blog Post'), 'cDescription' => t("Add/Edit a blog post")));
-				$singlePage->setAttribute('exclude_nav', 1);
-			}
-
+		// Normal
+		$singlePage = C5dkInstaller::installSinglePage('/blog_post', t('Blog Post'), t('Add/Edit a blog post'), $pkg,
+			array('exclude_nav' => 1));
 	}
 
 	private function setupPageAttributes($pkg){
 
-		// Add C5DK Blog page attribute Set if not already exist
-		$bas = AttributeSet::getByHandle('c5dk_blog');
-		if (!$bas instanceof AttributeSet){
-			$cakc = AttributeKeyCategory::getByHandle('collection');
-			$cakc->setAllowAttributeSets(AttributeKeyCategory::ASET_ALLOW_MULTIPLE);
-			$bas = $cakc->addSet('c5dk_blog', t('C5DK Blog'));
-		}
+		$bas = C5dkInstaller::installCollectionAttributeSet('c5dk_blog', t('C5DK Blog'));
 
-		// Add Blog Root attribute if not already installed
-		$c5dk_blog_root = CollectionAttributeKey::getByHandle('c5dk_blog_root');
-		if (!$c5dk_blog_root instanceof CollectionAttributeKey) {
-			$c5dk_blog_root = CollectionAttributeKey::add("boolean", array(
+		C5dkInstaller::installCollectionAttributeKey('boolean', array(
 				'akHandle'				=> 'c5dk_blog_root',
 				'akName'				=> t('Blog Root'),
 				'akIsSearchable'		=> true,
 				'akIsSearchableIndexed'	=> true
-			))->setAttributeSet($bas);
-		}
-
-		// Add Blog AuthorID attribute if not already installed
-		$c5dk_blog_author_id = CollectionAttributeKey::getByHandle('c5dk_blog_author_id');
-		if (!$c5dk_blog_author_id instanceof CollectionAttributeKey) {
-			$c5dk_blog_author_id = CollectionAttributeKey::add("number", array(
+			), false, $bas);
+		C5dkInstaller::installCollectionAttributeKey('number', array(
 				'akHandle'				=> 'c5dk_blog_author_id',
 				'akName'				=> t('Blog Author ID'),
 				'akIsSearchable'		=> true,
 				'akIsSearchableIndexed'	=> true
-			))->setAttributeSet($bas);
-		}
-
+			), false, $bas);
 	}
 
 	public function setupUserAttributes($pkg) {
 
-		// Add Full Name attribute if not already installed
-		$full_name = UserAttributeKey::getByHandle('full_name');
-		if (!$full_name instanceof UserAttributeKey) {
-			$full_name = UserAttributeKey::add("text", array(
+		C5dkInstaller::installUserAttribute('text', array(
 				'akHandle'					=> 'full_name',
 				'akName'					=> t('Full Name'),
 				'uakProfileDisplay'			=> true,
@@ -231,9 +182,9 @@ class Controller extends Package {
 				'akIsSearchable'			=> true,
 				'akIsSearchableIndexed'		=> true
 			));
-		}
-
 	}
+
+
 
 	public function eventOnUserDelete($event) {
 
@@ -283,7 +234,6 @@ class Controller extends Package {
 			}
 
 		}
-
 	}
 
 }

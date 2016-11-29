@@ -2,37 +2,37 @@
 
 <div id="c5dk-blog-package">
 
-	<form id="c5dk_blog_form" method="post" action="<?php echo $this->action('save'); ?>">
+	<form id="c5dk_blog_form" method="post" action="<?= $this->action('save'); ?>">
 
 		<!-- Show errors if any -->
 		<?php if ($error instanceof Error && $error->has()) {  ?>
-			<div class="alert alert-danger alert-dismissable"><?php echo $error->output(); ?></div>
+			<div class="alert alert-danger alert-dismissable"><?= $error->output(); ?></div>
 		<?php } ?>
 
 		<div class="c5dk_blog_button_section c5dk_buttom_border_line">
-			<div class="c5dk_blog_page_icon"><img src="<?php echo REL_DIR_PACKAGES; ?>/c5dk_blog/images/c5blog.png" alt="C5DK Blog Icon" height="40" width="40"></div>
+			<div class="c5dk_blog_page_icon"><img src="<?= REL_DIR_PACKAGES; ?>/c5dk_blog/images/c5blog.png" alt="C5DK Blog Icon" height="40" width="40"></div>
 			<!-- Form buttons -->
 			<div class="c5dk_blog_buttons">
-				<input class="c5dk_blogpage_ButtonGreen" type="submit" value="<?php echo ($BlogPost->mode == C5DK_BLOG_MODE_CREATE)? t('Post') : t('Update'); ?>" name="submit">
-				<input class="c5dk_blogpage_ButtonBlue" onclick="window.history.back();" type="button" value="<?php echo t('Cancel'); ?>">
+				<input class="c5dk_blogpage_ButtonGreen" type="submit" value="<?= ($BlogPost->mode == C5DK_BLOG_MODE_CREATE)? t('Post') : t('Update'); ?>" name="submit">
+				<input class="c5dk_blogpage_ButtonBlue" onclick="window.history.back();" type="button" value="<?= t('Cancel'); ?>">
 			</div>
 		</div>
 
 		<!-- Blog Mode -->
-		<?php echo $form->hidden('mode', $BlogPost->mode); ?>
+		<?= $form->hidden('mode', $BlogPost->mode); ?>
 
 		<!-- Blog ID -->
-		<?php echo $form->hidden('blogID', $C5dkBlog->blogID); ?>
+		<?= $form->hidden('blogID', $C5dkBlog->blogID); ?>
 
 		<!-- Blog root -->
-		<?php	if (count($BlogPost->rootList) < 2 || $BlogPost->mode == C5DK_BLOG_MODE_EDIT) { ?>
+		<?php if (count($BlogPost->rootList) < 2 || $BlogPost->mode == C5DK_BLOG_MODE_EDIT) { ?>
 			<?php // Make blogRootID a hidden field if user only can block in one root or is in edit mode ?>
-			<?php echo $form->hidden('rootID', $C5dkBlog->rootID); ?>
+			<?= $form->hidden('rootID', $C5dkBlog->rootID); ?>
 		<?php } else { ?>
 			<div class="c5dk_blog_section">
 				<?php // Show select input with all the roots the user have access to ?>
-				<?php echo $form->label('rootID', '<h4>' . t('Post your blog under') . '</h4>'); ?>
-				<?php echo $form->select('rootID', $BlogPost->rootList, $C5dkBlog->rootID, ''); ?>
+				<?= $form->label('rootID', '<h4>' . t('Post your blog under') . '</h4>'); ?>
+				<?= $form->select('rootID', $BlogPost->rootList, $C5dkBlog->rootID, ''); ?>
 			</div>
 		<?php } ?>
 
@@ -40,51 +40,57 @@
 		<div class="c5dk_blog_section">
 			<div class="c5dk_blog_title">
 			<!-- Blog Title -->
-			<?php echo $form->label('title', '<span style="display: block; float: left;"><h4>' . t('Blog Title') . ' <sup><i style="color: #E50000; font-size: 12px;" class="fa fa-asterisk"></i></sup></h4></span><span class="c5dk-title-char-counter">' . t('Characters Left (') . '<span style="font-size: 12px;" id="charNumTitle"></span>)</span>'); ?>
+			<?= $form->label('title', '<span style="display: block; float: left;"><h4>' . t('Blog Title') . ' <sup><i style="color: #E50000; font-size: 12px;" class="fa fa-asterisk"></i></sup></h4></span><span class="c5dk-title-char-counter">' . t('Characters Left (') . '<span style="font-size: 12px;" id="charNumTitle"></span>)</span>'); ?>
 			<?php $style = array('class' => 'c5dk_bp_title c5dk-blog-full-width'); ?>
 			<?php if ($BlogPost->mode == C5DK_BLOG_MODE_EDIT && $C5dkConfig->blog_title_editable == 0) { $style['disabled'] = "disabled"; } ?>
-			<?php echo $form->text('title', $C5dkBlog->title, $style); ?>
+			<?= $form->text('title', $C5dkBlog->title, $style); ?>
 			</div>
 
 			<div class="c5dk_blog_description">
 			<!-- Blog Description -->
-			<?php echo $form->label('description', '<span style="display: block; float: left;"><h4>' . t('Blog Description') . ' <sup><i style="color: #E50000; font-size: 12px;" class="fa fa-asterisk"></i></sup></h4></span><span class="c5dk-description-char-counter">' . t('Characters Left (') . '<span style="font-size: 12px;" id="charNumDescription"></span>)</span>')?>
-			<?php echo $form->textarea('description', Core::make('helper/text')->entities($C5dkBlog->description), array('class' => 'c5dk-blog-full-width', 'rows' => 4))?>
+			<?= $form->label('description', '<span style="display: block; float: left;"><h4>' . t('Blog Description') . ' <sup><i style="color: #E50000; font-size: 12px;" class="fa fa-asterisk"></i></sup></h4></span><span class="c5dk-description-char-counter">' . t('Characters Left (') . '<span style="font-size: 12px;" id="charNumDescription"></span>)</span>')?>
+			<?= $form->textarea('description', Core::make('helper/text')->entities($C5dkBlog->description), array('class' => 'c5dk-blog-full-width', 'rows' => 4))?>
 			</div>
 		</div>
 
 
 		<div class="c5dk_blog_section">
 			<!-- Blog Body -->
-			<?php echo $form->label('content', '<h4>' . t('Blog Content') . ' <sup><i style="color: #E50000; font-size: 12px;" class="fa fa-asterisk"></i></sup></h4>'); ?>
+			<?= $form->label('content', '<h4>' . t('Blog Content') . ' <sup><i style="color: #E50000; font-size: 12px;" class="fa fa-asterisk"></i></sup></h4>'); ?>
 			<?php
-				$editor = Core::make('editor');
-				$editor->setAllowFileManager(false);
+				// $editor = Core::make('editor');
+				// $editor->setAllowFileManager(false);
 				// $editor->getPluginManager()->select('c5dkimagemanager');
-				// $editor->getPluginManager()->select('video');
-				print $editor->outputStandardEditor('content', $C5dkBlog->content);
+				// $editor->getPluginManager()->select('videodetector');
+				// print $editor->outputStandardEditor('content', $C5dkBlog->content);
 			?>
+			<?= $form->textarea('content', $C5dkBlog->content); ?>
+			<script type="text/javascript">
+				$(document).ready(function() {
+					CKEDITOR.replace( 'content' );
+				});
+			</script>
 		</div>
 
 		<div class="c5dk_blog_section">
 			<!-- Blog Tags -->
 			<?php $casTags = CollectionAttributeKey::getByHandle('tags'); ?>
-			<h4><?php echo t('Tags'); ?></h4>
-			<?php echo $casTags->render('form', $C5dkBlog->tags, true); ?>
+			<h4><?= t('Tags'); ?></h4>
+			<?= $casTags->render('form', $C5dkBlog->tags, true); ?>
 
 			<!-- Blog Topics -->
 			<?php if ($BlogPost->topicAttributeID) { ?>
-				<?php echo $form->label('', '<h4 style="margin-top: 25px;">' . t('Topics') . '</h4>'); ?>
-				<?php echo $form->hidden('topicAttributeID', $BlogPost->topicAttributeID); ?>
+				<?= $form->label('', '<h4 style="margin-top: 25px;">' . t('Topics') . '</h4>'); ?>
+				<?= $form->hidden('topicAttributeID', $BlogPost->topicAttributeID); ?>
 				<?php $casTopics = CollectionAttributeKey::getByID($BlogPost->topicAttributeID); ?>
-				<?php echo $casTopics->render('form', $C5dkBlog->topics, true); ?>
+				<?= $casTopics->render('form', $C5dkBlog->topics, true); ?>
 			<?php } ?>
 		</div>
 
 
 		<div class="c5dk_blog_section">
 			<!-- Blog Thumbnail -->
-			<input id="thumbnailID" name="thumbnail[id]" type="hidden" value="<?php echo (is_object($C5dkBlog->thumbnail))? $C5dkBlog->thumbnail->getFileID() : 0; ?>">
+			<input id="thumbnailID" name="thumbnail[id]" type="hidden" value="<?= (is_object($C5dkBlog->thumbnail))? $C5dkBlog->thumbnail->getFileID() : 0; ?>">
 			<input id="thumbnailX" name="thumbnail[x]" type="hidden" value="0">
 			<input id="thumbnailY" name="thumbnail[y]" type="hidden" value="0">
 			<input id="thumbnailWidth" name="thumbnail[width]" type="hidden" value="0">
@@ -93,19 +99,19 @@
 			<input id="pictureHeight" name="thumbnail[pictureHeight]" type="hidden" value="0">
 			<div class="c5dk_blog_box_thumbnail">
 				<div class="c5dk_blog_box_thumbnail_header">
-					<?php echo $form->label('thumbailID', '<h4>' . t('Thumbnail') . '</h4>'); ?>
-					<input class="c5dk_blogpage_ButtonGreen" type="button" onclick="c5dk.blog.post.image.showManager('thumbnail')" value="<?php echo t("Select"); ?>">
-					<input class="c5dk_blog_ButtonRed" type="button" onclick="c5dk.blog.post.thumbnail.remove()" value="<?php echo t("Remove"); ?>">
+					<?= $form->label('thumbailID', '<h4>' . t('Thumbnail') . '</h4>'); ?>
+					<input class="c5dk_blogpage_ButtonGreen" type="button" onclick="c5dk.blog.post.image.showManager('thumbnail')" value="<?= t("Select"); ?>">
+					<input class="c5dk_blog_ButtonRed" type="button" onclick="c5dk.blog.post.thumbnail.remove()" value="<?= t("Remove"); ?>">
 				</div>
 
 				<div style="clear:both;"></div>
 
 				<div class="c5dk_blog_thumbnail_preview_frame">
 					<div class="c5dk_blog_thumbnail_preview">
-						<img id="c5dk_blog_thumbnail" class="c5dk_blog_thumbnail" src="<?php echo (is_object($C5dkBlog->thumbnail))? File::getRelativePathFromID($C5dkBlog->thumbnail->getFileID()) : ""; ?>"<?php echo (is_object($C5dkBlog->thumbnail))? '' : ' style="display:none;'; ?>>
+						<img id="c5dk_blog_thumbnail" class="c5dk_blog_thumbnail" src="<?= (is_object($C5dkBlog->thumbnail))? File::getRelativePathFromID($C5dkBlog->thumbnail->getFileID()) : ""; ?>"<?= (is_object($C5dkBlog->thumbnail))? '' : ' style="display:none;'; ?>>
 					</div>
 					<div class="c5dk_blog_thumbnail_preview_subtext">
-						<?php echo t('Preview'); ?>
+						<?= t('Preview'); ?>
 					</div>
 				</div>
 
@@ -116,11 +122,11 @@
 		</div>
 
 		<div class="c5dk_blog_button_section c5dk_top_border_line">
-			<div class="c5dk_blog_page_icon"><img src="<?php echo REL_DIR_PACKAGES; ?>/c5dk_blog/images/c5blog.png" alt="C5DK Blog Icon" height="40" width="40"></div>
+			<div class="c5dk_blog_page_icon"><img src="<?= REL_DIR_PACKAGES; ?>/c5dk_blog/images/c5blog.png" alt="C5DK Blog Icon" height="40" width="40"></div>
 			<!-- Form buttons -->
 			<div class="c5dk_blog_buttons">
-				<input class="c5dk_blogpage_ButtonGreen" type="submit" value="<?php echo ($BlogPost->mode == C5DK_BLOG_MODE_CREATE)? t('Post') : t('Update'); ?>" name="submit">
-				<input class="c5dk_blogpage_ButtonBlue" onclick="window.history.back();" type="button" value="<?php echo t('Cancel'); ?>">
+				<input class="c5dk_blogpage_ButtonGreen" type="submit" value="<?= ($BlogPost->mode == C5DK_BLOG_MODE_CREATE)? t('Post') : t('Update'); ?>" name="submit">
+				<input class="c5dk_blogpage_ButtonBlue" onclick="window.history.back();" type="button" value="<?= t('Cancel'); ?>">
 			</div>
 		</div>
 
@@ -130,17 +136,17 @@
 
 	<!-- Dialogs/Modals -->
 	<div id="dialog-imageManager" class="c5dk-dialog" style="display:none;">
-		<form id="c5dk_image_upload_form" method="post" action="<?php echo $this->action('upload'); ?>" class="ccm-file-manager-submit-single" enctype="multipart/form-data">
+		<form id="c5dk_image_upload_form" method="post" action="<?= $this->action('upload'); ?>" class="ccm-file-manager-submit-single" enctype="multipart/form-data">
 
 			<!-- Token -->
-			<?php echo $token->output('upload');?>
+			<?= $token->output('upload');?>
 
 			<!-- Form Error Messages -->
 			<div id="c5dk_upload_form_message"></div>
 
 			<!-- Upload input fields -->
 			<input id="file" class="ccm-input-file" accept="image/jpeg" type="file" name="file[]">
-			<div id="c5dk_blog_upload_image_error" class="alert alert-danger"><?php echo t("Only .jpg or .jpeg is supported at the moment."); ?></div>
+			<div id="c5dk_blog_upload_image_error" class="alert alert-danger"><?= t("Only .jpg or .jpeg is supported at the moment."); ?></div>
 			<progress value="0" style="display:none;"></progress>
 		</form>
 		<hr />
@@ -151,11 +157,11 @@
 	<div id="dialog-confirmDeleteImage" class="c5dk-dialog" style="display:none;">
 		<div class="ccm-ui">
 			<div style="padding:20px 0 30px;">
-				<span id="dialogText"><?php echo t("Are you sure you want to delete this image?"); ?></span>
+				<span id="dialogText"><?= t("Are you sure you want to delete this image?"); ?></span>
 			</div>
 			<div id="c5dk-setDeleteButtons" class="">
-				<input class="btn btn-default btn-danger pull-right" onclick="c5dk.blog.post.image.delete('delete')" type="button" value="<?php echo t('Delete'); ?>">
-				<input class="btn btn-default primary" onclick="c5dk.blog.post.image.delete('close')" type="button" value="<?php echo t('Cancel'); ?>">
+				<input class="btn btn-default btn-danger pull-right" onclick="c5dk.blog.post.image.delete('delete')" type="button" value="<?= t('Delete'); ?>">
+				<input class="btn btn-default primary" onclick="c5dk.blog.post.image.delete('close')" type="button" value="<?= t('Cancel'); ?>">
 			</div>
 		</div>
 	</div>
@@ -168,7 +174,7 @@
 </style>
 
 <script type="text/javascript">
-var CCM_EDITOR_SECURITY_TOKEN = "<?php echo Core::make("token")->generate('editor'); ?>";
+var CCM_EDITOR_SECURITY_TOKEN = "<?= Core::make("token")->generate('editor'); ?>";
 
 if (!c5dk) {
 	var c5dk = {};
@@ -179,9 +185,9 @@ if (!c5dk.blog) {
 
 c5dk.blog.post = {
 
-	rootList: <?php echo $jh->encode($BlogPost->rootList); ?>,
+	rootList: <?= $jh->encode($BlogPost->rootList); ?>,
 	imageList: '',
-	imageUploadUrl: '<?php echo $this->action("upload"); ?>',
+	imageUploadUrl: '<?= $this->action("upload"); ?>',
 	redactor: null,
 	jcrop_api: null,
 
@@ -248,7 +254,7 @@ c5dk.blog.post = {
 
 		// Root change event to change the topic tree
 		$('#rootID').change(function(event) {
-			window.location = "<?php echo $this->url('blog_post', 'create', $BlogPost->redirectID); ?>/" + $('#rootID').val();
+			window.location = "<?= $this->url('blog_post', 'create', $BlogPost->redirectID); ?>/" + $('#rootID').val();
 		});
 
 		// Title and description char counter
@@ -280,7 +286,8 @@ c5dk.blog.post = {
 
 			var split = event.currentTarget.value.split('.');
 			var ext = split[split.length - 1].toLowerCase();
-			if(ext == "jpg" || ext == "jpeg" && $(".ui-dialog #file").val() != "") {
+			var allowedExt = ['jpg', 'jpeg', 'png', 'bmp'];
+			if($.inArray(ext, allowedExt) !== "-1" && $(".ui-dialog #file").val() != "") {
 				$('#c5dk_imageManager progress').hide();
 				var formData = new FormData($('#c5dk_image_upload_form')[0]);
 				$.ajax({
@@ -323,7 +330,7 @@ c5dk.blog.post = {
 	ping: function(){
 		$.ajax({
 			type: 'POST',
-			url: '<?php echo $this->action('ping'); ?>',
+			url: '<?= $this->action('ping'); ?>',
 			dataType: 'json'
 		});
 	},
@@ -340,7 +347,7 @@ c5dk.blog.post = {
 					c5dk.blog.post.image.currentFID = fID;
 					$.fn.dialog.open({
 						element:"#dialog-confirmDeleteImage",
-						title:"<?php echo t('Confirm Delete'); ?>",
+						title:"<?= t('Confirm Delete'); ?>",
 						height:100,
 						width:300
 					});
@@ -350,7 +357,7 @@ c5dk.blog.post = {
 					$.fn.dialog.closeTop();
 					$.ajax({
 						type: 'POST',
-						url: '<?php echo $this->action('delete', 'image'); ?>/' + c5dk.blog.post.image.currentFID,
+						url: '<?= $this->action('delete', 'image'); ?>/' + c5dk.blog.post.image.currentFID,
 						dataType: 'json',
 						success: function(r) {
 							if (r.status == "success") { c5dk.blog.post.image.getFileList(); }
@@ -367,7 +374,7 @@ c5dk.blog.post = {
 			$('progress').hide();
 			$.ajax({
 				type: 'POST',
-				url: '<?php echo $this->action('getFileList'); ?>',
+				url: '<?= $this->action('getFileList'); ?>',
 				dataType: 'json',
 				success: function(data){
 					c5dk.blog.post.image.fileList = data;
@@ -383,7 +390,7 @@ c5dk.blog.post = {
 			$('#c5dk_imageManager progress').hide();
 			$.fn.dialog.open({
 				element:"#dialog-imageManager",
-				title:"<?php echo t('Image Manager'); ?>",
+				title:"<?= t('Image Manager'); ?>",
 				height:450,
 				width:620
 			});
@@ -425,12 +432,12 @@ c5dk.blog.post = {
 	thumbnail: {
 		preview:{
 			width: 150,
-			height: Math.round((150 / (<?php echo $C5dkConfig->blog_thumbnail_width; ?> / 100)) * (<?php echo $C5dkConfig->blog_thumbnail_height; ?> / 100))
+			height: Math.round((150 / (<?= $C5dkConfig->blog_thumbnail_width; ?> / 100)) * (<?= $C5dkConfig->blog_thumbnail_height; ?> / 100))
 		},
 
 		save:{
-			width: <?php echo $C5dkConfig->blog_thumbnail_width; ?>,
-			height:	<?php echo $C5dkConfig->blog_thumbnail_height; ?>
+			width: <?= $C5dkConfig->blog_thumbnail_width; ?>,
+			height:	<?= $C5dkConfig->blog_thumbnail_height; ?>
 		},
 
 		image:{
@@ -517,12 +524,12 @@ $(document).ready( function(){ c5dk.blog.post.init(); });
     border: 1px solid #ccc;
     background-color: #eee;
     width: 150px;
-    height: <?php echo intval((150 / ( $C5dkConfig->blog_thumbnail_width / 100)) * ($C5dkConfig->blog_thumbnail_height  / 100)); ?>px;
+    height: <?= intval((150 / ( $C5dkConfig->blog_thumbnail_width / 100)) * ($C5dkConfig->blog_thumbnail_height  / 100)); ?>px;
     /*cursor: pointer;*/
 }
 #c5dk-blog-package .c5dk_blog_thumbnail_preview img{
     width: 150px;
-    height: <?php echo intval((150 / ( $C5dkConfig->blog_thumbnail_width / 100)) * ($C5dkConfig->blog_thumbnail_height  / 100)); ?>px;
+    height: <?= intval((150 / ( $C5dkConfig->blog_thumbnail_width / 100)) * ($C5dkConfig->blog_thumbnail_height  / 100)); ?>px;
     max-width: none;
 }
 #c5dk-blog-package .c5dk_blog_thumbnail_jcrop{

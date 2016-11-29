@@ -67,7 +67,9 @@
 			<?= $form->textarea('content', $C5dkBlog->content); ?>
 			<script type="text/javascript">
 				$(document).ready(function() {
-					CKEDITOR.replace( 'content' );
+					CKEDITOR.replace('content', {
+						extraPlugins: 'c5dkimagemanager'
+					});
 				});
 			</script>
 		</div>
@@ -188,7 +190,7 @@ c5dk.blog.post = {
 	rootList: <?= $jh->encode($BlogPost->rootList); ?>,
 	imageList: '',
 	imageUploadUrl: '<?= $this->action("upload"); ?>',
-	redactor: null,
+	ckeditor: null,
 	jcrop_api: null,
 
 	init: function() {
@@ -410,7 +412,8 @@ c5dk.blog.post = {
 			$(".c5dk_image_thumbs").on('click', function(event) {
 				switch (c5dk.blog.post.image.managerMode) {
 					case "editor":
-						c5dk.blog.post.redactor.c5dkimagemanager.insert(event);
+						c5dk.blog.post.ckeditor.insertHtml('<img src="' + $(event.target).data('src') + '" />');
+						// c5dk.blog.post.redactor.c5dkimagemanager.insert(event);
 						$.fn.dialog.closeTop();
 						break;
 

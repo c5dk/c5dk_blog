@@ -68,7 +68,14 @@
 			<script type="text/javascript">
 				$(document).ready(function() {
 					CKEDITOR.replace('content', {
-						extraPlugins: 'c5dkimagemanager'
+						customConfig: 'c5dk_blog_config.js',
+						format_tags: 'p;h1;h2;h3;pre',
+						autoGrow_minHeight: 300,
+						autoGrow_maxHeight: 800,
+						autoGrow_onStartup: true,
+						extraAllowedContent: 'img[alt,!src]',
+						//disallowedContent: 'img{border*,margin*,width,height,float}',
+						extraPlugins: 'c5dkimagemanager,youtube,autogrow,widget'
 					});
 				});
 			</script>
@@ -412,8 +419,10 @@ c5dk.blog.post = {
 			$(".c5dk_image_thumbs").on('click', function(event) {
 				switch (c5dk.blog.post.image.managerMode) {
 					case "editor":
-						c5dk.blog.post.ckeditor.insertHtml('<img src="' + $(event.target).data('src') + '" />');
-						// c5dk.blog.post.redactor.c5dkimagemanager.insert(event);
+						var element = CKEDITOR.dom.element.createFromHtml( '<img src="' + $(event.target).data('src') + '" />' );
+						c5dk.blog.post.ckeditor.insertElement( element );
+						// c5dk.blog.post.ckeditor.insertHtml('<img src="' + $(event.target).data('src') + '" />');
+						// c5dk.blog.post.ckeditor.insertHtml('Hej');
 						$.fn.dialog.closeTop();
 						break;
 

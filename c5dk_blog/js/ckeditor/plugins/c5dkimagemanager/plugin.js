@@ -1,5 +1,5 @@
 CKEDITOR.plugins.add( 'c5dkimagemanager', {
-	icons: 'icon',
+
 	init: function( editor ) {
 
 		c5dk.blog.post.ckeditor = editor;
@@ -13,7 +13,8 @@ CKEDITOR.plugins.add( 'c5dkimagemanager', {
 		editor.ui.addButton( 'Image Manager', {
 			label: 'Insert Image',
 			command: 'insertBlogImage',
-			toolbar: 'insert'
+			toolbar: 'insert',
+			icon : this.path + 'images/icon.png'
 		});
 
 	}

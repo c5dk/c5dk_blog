@@ -114,10 +114,17 @@ class BlogPost extends PageController {
 
 		// Setup helpers
 		$this->set('form',	Core::make('helper/form'));
-		$this->set('jh',		Core::make('helper/json'));
+		$this->set('jh',	Core::make('helper/json'));
 		$this->set('token',	Core::make('token'));
 		// TODO: What is it we need this for?
 		$this->set('identifier', id(new Identifier())->getString(32));
+
+		// Set $settings
+		$settings = array(
+			'format_tags' => $this->getFormatTags(),
+			'youtube' => ($this->C5dkConfig->blog_plugin_youtube? 'youtube,' : '')
+		);
+		$this->set('settings', $settings);
 
 		// Require Assets
 		// $this->requireAsset('redactor');
@@ -132,6 +139,16 @@ class BlogPost extends PageController {
 		$this->set('C5dkConfig',	$this->C5dkConfig);
 		$this->set('C5dkUser',		$this->C5dkUser);
 		$this->set('C5dkBlog',		$this->C5dkBlog);
+	}
+
+	private function getFormatTags() {
+		if ($this->C5dkConfig->blog_format_h1) { $tags[] = 'h1'; }
+		if ($this->C5dkConfig->blog_format_h2) { $tags[] = 'h2'; }
+		if ($this->C5dkConfig->blog_format_h3) { $tags[] = 'h3'; }
+		if ($this->C5dkConfig->blog_format_h4) { $tags[] = 'h4'; }
+		if ($this->C5dkConfig->blog_format_pre) { $tags[] = 'pre'; }
+
+		return implode(";", $tags);
 	}
 
 	public function save() {
@@ -309,7 +326,7 @@ class BlogPost extends PageController {
 		$fv = $fi->import(
 			$fh->getTemporaryDirectory() . "/" . '/c5dk_blog.tmp.jpg',
 			"C5DK_BLOG_uID-" . $C5dkUser->getUserID() . "_Thumb_cID-" . $C5dkBlog->getCollectionID() . ".jpg",
-			FileFolder::getNodeByName('C5DK Blog')
+			FileFolder::getNodeByName('Thumbs')
 		);
 
 		if(is_object($fv)){
@@ -366,7 +383,7 @@ class BlogPost extends PageController {
 		$fv = $fi->import(
 			$_FILES['file']['tmp_name'][0],
 			"C5DK_BLOG_uID-" . $C5dkUser->getUserID() . "_Pic_" . $_FILES['file']['name'][0],
-			FileFolder::getNodeByName('C5DK Blog')
+			FileFolder::getNodeByName('Manager')
 		);
 
 		if(is_object($fv)){

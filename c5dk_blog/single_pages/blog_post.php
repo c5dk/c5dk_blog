@@ -68,14 +68,30 @@
 			<script type="text/javascript">
 				$(document).ready(function() {
 					CKEDITOR.replace('content', {
-						customConfig: 'c5dk_blog_config.js',
-						format_tags: 'p;h1;h2;h3;pre',
+						// customConfig: 'c5dk_blog_config.js',
+						format_tags: 'p;<?= $settings["format_tags"]; ?>',
 						autoGrow_minHeight: 300,
 						autoGrow_maxHeight: 800,
 						autoGrow_onStartup: true,
 						extraAllowedContent: 'img[alt,!src]',
 						//disallowedContent: 'img{border*,margin*,width,height,float}',
-						extraPlugins: 'c5dkimagemanager,youtube,autogrow,widget'
+						extraPlugins: 'c5dkimagemanager,<?= $settings["youtube"]; ?>autogrow,widget',
+						toolbarGroups: [
+							{ name: 'tools',		groups: [ 'tools' ] },
+							{ name: 'document',		groups: [ 'mode', 'document', 'doctools' ] },
+							{ name: 'clipboard',	groups: [ 'clipboard', 'undo' ] },
+							{ name: 'editing',		groups: [ 'find', 'selection', 'spellchecker', 'editing' ] },
+							{ name: 'links',		groups: [ 'links' ] },
+							{ name: 'insert',		groups: [ 'insert' ] },
+							{ name: 'forms',		groups: [ 'forms' ] },
+							{ name: 'others',		groups: [ 'others' ] },
+							{ name: 'basicstyles',	groups: [ 'basicstyles', 'cleanup' ] },
+							{ name: 'paragraph',	groups: [ 'list', 'indent', 'blocks', 'align', 'bidi', 'paragraph' ] },
+							{ name: 'styles',		groups: [ 'styles' ] },
+							{ name: 'colors',		groups: [ 'colors' ] },
+							{ name: 'about',		groups: [ 'about' ] }
+						],
+						removeButtons: 'Image,Table,Styles,About,Blockquote'
 					});
 				});
 			</script>
@@ -421,8 +437,6 @@ c5dk.blog.post = {
 					case "editor":
 						var element = CKEDITOR.dom.element.createFromHtml( '<img src="' + $(event.target).data('src') + '" />' );
 						c5dk.blog.post.ckeditor.insertElement( element );
-						// c5dk.blog.post.ckeditor.insertHtml('<img src="' + $(event.target).data('src') + '" />');
-						// c5dk.blog.post.ckeditor.insertHtml('Hej');
 						$.fn.dialog.closeTop();
 						break;
 

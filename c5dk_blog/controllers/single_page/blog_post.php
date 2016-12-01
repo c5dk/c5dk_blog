@@ -77,7 +77,7 @@ class BlogPost extends PageController {
 		$this->rootList = $this->getUserRootList();
 
 		// Set Root ID if set or default to the first root in our list we will show
-		$this->C5dkBlog->rootID = ($rootID)? $rootID : key($this->rootList);
+		$this->C5dkBlog->rootID = (isset($this->rootList[$rootID]))? $rootID : key($this->rootList);
 
 		// Set the topic attribute id from the blogs root
 		$C5dkRoot = C5dkRoot::getByID($this->C5dkBlog->rootID);
@@ -185,13 +185,15 @@ class BlogPost extends PageController {
 
 			// Can first save the thumbnail now, because we needed to save the page first.
 			$thumbnail = $this->saveThumbnail($this->post('thumbnail'), $C5dkBlog);
-			$cakThumbnail = CollectionAttributeKey::getByHandle('thumbnail');
-			$C5dkBlog = $C5dkBlog->getVersionToModify();
-			$controller = $cakThumbnail->getController();
-			// $value = $controller->createAttributeValueFromRequest();
-			$C5dkBlog->setAttribute($cakThumbnail, $thumbnail);
-			$C5dkBlog->refreshCache();
-			// $C5dkBlog->saveThumbnail();
+			if (is_object($thumbnail)) {
+				$cakThumbnail = CollectionAttributeKey::getByHandle('thumbnail');
+				$C5dkBlog = $C5dkBlog->getVersionToModify();
+				$controller = $cakThumbnail->getController();
+				// $value = $controller->createAttributeValueFromRequest();
+				$C5dkBlog->setAttribute($cakThumbnail, $thumbnail);
+				$C5dkBlog->refreshCache();
+				// $C5dkBlog->saveThumbnail();
+			}
 
 			// Redirect to the new blog page
 			$this->redirect($C5dkBlog->getCollectionPath());

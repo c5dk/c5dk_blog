@@ -299,18 +299,16 @@ class BlogPost extends PageController {
 		$jpeg_quality	= 90;
 
 		// Create, crop and save the thumbnail
-		$box		= new Box($thumb['w'], $thumb['h']);
-		$point		= new Point($thumb['x'], $thumb['y']);
 		$resource	= $fv->getFileResource();
 		$image		= Image::load($resource->read());
 		$image
-			->crop($point , $box)
+			->crop(new Point($thumb['x'], $thumb['y']), new Box($thumb['w'], $thumb['h']))
 			->save($fh->getTemporaryDirectory() . "/" . '/c5dk_blog.tmp.jpg');
 
 		// Import thumbnail into the File Manager
 		$fv = $fi->import(
 			$fh->getTemporaryDirectory() . "/" . '/c5dk_blog.tmp.jpg',
-			"C5DK_BLOG_uID-" . $C5dkUser->getUserID() . "_Thumb_cID-" . $C5dkBlog->getCollectionID() . "." . $fileExt,
+			"C5DK_BLOG_uID-" . $C5dkUser->getUserID() . "_Thumb_cID-" . $C5dkBlog->getCollectionID() . ".jpg",
 			FileFolder::getNodeByName('C5DK Blog')
 		);
 

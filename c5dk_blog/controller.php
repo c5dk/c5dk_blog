@@ -121,6 +121,8 @@ class Controller extends Package {
 		if (!$config->get('blog_headline_icon_color')) { $config->save('c5dk_blog.blog_headline_icon_color',	'#1685D4'); }
 
 		// Editor
+		if (!$config->get('blog_plugin_youtube')) { $config->save('c5dk_blog.blog_plugin_youtube',	true); }
+
 		if (!$config->get('blog_format_h1')) { $config->save('c5dk_blog.blog_format_h1',	false); }
 		if (!$config->get('blog_format_h2')) { $config->save('c5dk_blog.blog_format_h2',	true); }
 		if (!$config->get('blog_format_h3')) { $config->save('c5dk_blog.blog_format_h3',	true); }

@@ -23,7 +23,7 @@ class UserDeletion extends DashboardPageController {
 
 	public function transfer($uID) {
 		$tID = $this->post('tID');
-		
+
 		$list = $this->getList($uID);
 		if (count($list)) {
 			foreach ($list as $page) {
@@ -31,7 +31,8 @@ class UserDeletion extends DashboardPageController {
 			}
 		}
 
-		$ui = UserInfo::getByID($uID);
+		$app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
+		$ui = $app->make(\Concrete\Core\User\UserInfoFactory::class)->getByID($uID);
 		$ui->delete();
 
 		$this->redirect('/dashboard/users');
@@ -47,7 +48,8 @@ class UserDeletion extends DashboardPageController {
 			}
 		}
 
-		$ui = UserInfo::getByID($uID);
+		$app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
+		$ui = $app->make(\Concrete\Core\User\UserInfoFactory::class)->getByID($uID);
 		$ui->delete();
 
 		$this->redirect('/dashboard/users');
@@ -61,11 +63,11 @@ class UserDeletion extends DashboardPageController {
 	}
 
 	public function getList($uID) {
-		
+
 		$pl = new PageList;
 		$pl->filterByC5dkBlogAuthorId($uID);
-		
+
 		return $pl->getResults();
 	}
-	
+
 }

@@ -14,13 +14,13 @@ use Concrete\Package\C5dkBlog\Src\C5dkBlog\C5dkRoot\C5dkRootList as C5dkRootList
 defined('C5_EXECUTE') or die("Access Denied.");
 
 class C5dkUser extends User {
-	
+
 	public $isBlogger = false;
 	public $isOwner = false;
 	public $isAdmin = false;
 
 	public $fullName = null;
-	
+
 	public $rootList = array();
 
 	public function __construct() {
@@ -38,7 +38,7 @@ class C5dkUser extends User {
 				$this->isOwner = true;
 			}
 		}
-		
+
 		// Get Full Name if exists
 		$ui = UserInfo::getByID($this->getUserID());
 		if ($ui instanceof UserInfo){
@@ -50,14 +50,14 @@ class C5dkUser extends User {
 		$this->isAdmin = ($this->superUser || $this->inGroup(Group::getByName("Administrators")))? true : false;
 
 	}
-	
+
 	public static function getByUserID($uID, $login = false, $cacheItemsOnLogin = true) {
 
 		// Return false if no user id is given
 		if (!$uID){
 			return false;
 		}
-		
+
 		$u = parent::getByUserID($uID, $login, $cacheItemsOnLogin);
 		If ($u instanceof User) {
 			$u->fullName = UserInfo::getByID($uID)->getAttribute('full_name');
@@ -66,14 +66,15 @@ class C5dkUser extends User {
 
 		// Return the User object
 		return $u;
-	
+
 	}
 
 	public function getRootList() {
 
 		// Add the roots the user can blog in
-		$db = Database::connection();
-		$rs = $db->execute('SELECT * FROM C5dkBlogRootPermissions');
+		$app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
+		$db = $app->make('database')->connection();
+		$rs = $db->executeQuery('SELECT * FROM C5dkBlogRootPermissions');
 		while ($row = $rs->fetchRow()) {
 			if ($this->inGroup(Group::getByID($row["groupID"]))) {
 				// Add the root's information
@@ -82,7 +83,7 @@ class C5dkUser extends User {
 		}
 
 		return $this->rootList;
-	
+
 	}
 
 }

@@ -39,7 +39,8 @@ class BlogRoots extends DashboardPageController {
 
 	public function save(){
 
-		$db = Database::connection();
+		$app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
+		$db = $app->make('database')->connection();
 
 		// Delete old values in db
 		$db->Execute('DELETE FROM C5dkBlogRootPermissions');

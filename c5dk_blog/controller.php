@@ -40,7 +40,7 @@ class Controller extends Package {
 
 	protected $pkgHandle			= 'c5dk_blog';
 	protected $appVersionRequired	= '5.8';
-	protected $pkgVersion			= '8.0.0.9';
+	protected $pkgVersion			= '8.0.0.10';
 
 	public function getPackageName() {			return t("C5DK Blog"); }
 	public function getPackageDescription() {	return t("A blog application for your C5 site, so even normal users can blog."); }
@@ -96,7 +96,8 @@ class Controller extends Package {
 		parent::uninstall();
 
 		// Remove database tables
-		$db = Database::connection();
+		$app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
+		$db = $app->make('database')->connection();
 		$db->Execute("DROP TABLE IF EXISTS C5dkBlogRootPermissions");
 	}
 

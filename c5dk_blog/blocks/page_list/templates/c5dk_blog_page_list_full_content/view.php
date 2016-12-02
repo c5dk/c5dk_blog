@@ -46,10 +46,10 @@ $C5dkConfig = new C5dkConfig;
       }
 
       foreach ($pages as $page) {
-        
+
         // Prepare C5DK Blog Full Content so show
         $C5dkBlog = C5dkBlog::getByID($page->getCollectionID());
-        
+
         // Prepare data for each page being listed...
         $buttonClasses = 'ccm-block-page-list-read-more';
         $entryClasses = 'ccm-block-page-list-page-entry';
@@ -86,7 +86,7 @@ $C5dkConfig = new C5dkConfig;
          * $example_value = $page->getAttribute('example_attribute_handle');
          *
          * HOW TO USE IMAGE ATTRIBUTES:
-         * 1) Uncomment the "$ih = Loader::helper('image');" line up top.
+         * 1) Uncomment the "$ih = Core::make('helper/image');" line up top.
          * 2) Put in some code here like the following 2 lines:
          *      $img = $page->getAttribute('example_image_attribute_handle');
          *      $thumb = $ih->getThumbnail($img, 64, 9999, false);
@@ -154,7 +154,7 @@ $C5dkConfig = new C5dkConfig;
 
             </div>
           <?php } ?>
-          
+
         </div>
 
       <?php } ?>

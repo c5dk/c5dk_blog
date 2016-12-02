@@ -1,9 +1,9 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: C5DK Blog v1.4.3\n"
+"Project-Id-Version: C5DK Blog v8.0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-07-31 10:05+0200\n"
-"PO-Revision-Date: 2016-07-31 10:20+0200\n"
+"POT-Creation-Date: 2016-12-02 11:23+0100\n"
+"PO-Revision-Date: 2016-12-02 11:26+0100\n"
 "Last-Translator: Michael Jensen-Maar <info@concrete5.dk>\n"
 "Language-Team: Concrete5 Danmark <info@concrete5.dk>\n"
 "Language: da_DK\n"
@@ -13,7 +13,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Poedit-KeywordsList: _;t;t2:1,2\n"
 "X-Poedit-SourceCharset: UTF-8\n"
-"X-Generator: Poedit 1.8.8\n"
+"X-Generator: Poedit 1.8.11\n"
 "X-Poedit-Basepath: ../../..\n"
 "X-Poedit-SearchPath-0: .\n"
 
@@ -62,9 +62,9 @@ msgstr "Er du sikker på, du vil slette dette indlæg?"
 #: blocks/c5dk_blog_buttons/templates/c5dk_simple_one/view.php:29
 #: blocks/c5dk_blog_buttons/templates/c5dk_simple_two/view.php:28
 #: blocks/c5dk_blog_buttons/view.php:29 single_pages/blog_post.php:17
-#: single_pages/blog_post.php:123 single_pages/blog_post.php:158
+#: single_pages/blog_post.php:154 single_pages/blog_post.php:189
 #: single_pages/dashboard/c5dk_blog/blog_roots/add.php:10
-#: single_pages/dashboard/c5dk_blog/blog_settings.php:49
+#: single_pages/dashboard/c5dk_blog/blog_settings.php:80
 #: single_pages/dashboard/c5dk_blog/user_deletion.php:40
 msgid "Cancel"
 msgstr "Annuller"
@@ -72,14 +72,14 @@ msgstr "Annuller"
 #: blocks/c5dk_blog_buttons/templates/c5dk_old/view.php:30
 #: blocks/c5dk_blog_buttons/templates/c5dk_simple_one/view.php:30
 #: blocks/c5dk_blog_buttons/templates/c5dk_simple_two/view.php:29
-#: blocks/c5dk_blog_buttons/view.php:30 single_pages/blog_post.php:157
+#: blocks/c5dk_blog_buttons/view.php:30 single_pages/blog_post.php:188
 msgid "Delete"
 msgstr "Slet"
 
 #: blocks/c5dk_blog_buttons/templates/c5dk_old/view.php:50
 #: blocks/c5dk_blog_buttons/templates/c5dk_simple_one/view.php:50
 #: blocks/c5dk_blog_buttons/templates/c5dk_simple_two/view.php:49
-#: blocks/c5dk_blog_buttons/view.php:50 single_pages/blog_post.php:323
+#: blocks/c5dk_blog_buttons/view.php:50 single_pages/blog_post.php:375
 msgid "Confirm Delete"
 msgstr "Bekræft sletning"
 
@@ -121,6 +121,10 @@ msgstr "Vis blog header information."
 msgid "Posted by"
 msgstr "Skrevet af"
 
+#: blocks/c5dk_blog_header/view.php:3
+msgid "(Not set)"
+msgstr "(Ikke Sat)"
+
 #: blocks/date_navigation/templates/c5dk_date_navigation/view.php:11
 msgid "All"
 msgstr "Alle"
@@ -131,6 +135,7 @@ msgstr "Ingen."
 
 #: blocks/page_list/templates/c5dk_blog_page_list/view.php:24
 #: blocks/page_list/templates/c5dk_blog_page_list_full_content/view.php:24
+#: blocks/page_list/templates/maar_blog_page_list/view.php:18
 msgid "Empty Page List Block."
 msgstr "Tom Sideliste Block."
 
@@ -141,83 +146,85 @@ msgstr "Tom Sideliste Block."
 msgid "Thumbnail for"
 msgstr "Thumbnail for"
 
+#: blocks/topic_list/templates/c5dk_advanced_topic_list/view.php:15
 #: blocks/topic_list/templates/c5dk_topic_list/view.php:15
 msgid "Show All Topics"
 msgstr "Vis alle emner"
 
+#: blocks/topic_list/templates/c5dk_advanced_topic_list/view.php:47
 #: blocks/topic_list/templates/c5dk_topic_list/view.php:47
 msgid "No topics."
 msgstr "Ingen emner."
 
-#: controller.php:39 controller.php:144 controller.php:190
+#: controller.php:45 controller.php:166 controller.php:181
 msgid "C5DK Blog"
 msgstr "C5DK Blog"
 
-#: controller.php:40
+#: controller.php:46
 msgid "A blog application for your C5 site, so even normal users can blog."
 msgstr "Et blog applikation til din C5 hjemmeside, så selv almindelige brugere kan blogge."
 
-#: controller.php:144
+#: controller.php:166
 msgid "Blog system for your website"
 msgstr "Blog system til din hjemmeside"
 
-#: controller.php:150
-msgid "Settings"
-msgstr "Indstillinger"
-
-#: controller.php:150
-msgid "Manage Settings"
-msgstr "Administrer Indstillinger"
-
-#: controller.php:156
+#: controller.php:167
 msgid "Blog Roots"
 msgstr "Blog Rødder"
 
-#: controller.php:156
+#: controller.php:167
 msgid "Manage Roots"
 msgstr "Administrer Rødder"
 
-#: controller.php:162
+#: controller.php:168
 msgid "Add"
 msgstr "Tilføj"
 
-#: controller.php:162
+#: controller.php:168
 msgid "Add an existing page as a Blog Root"
 msgstr "Føj en eksisterende side til som en blog Rod"
 
-#: controller.php:169
+#: controller.php:170
+msgid "Settings"
+msgstr "Indstillinger"
+
+#: controller.php:170
+msgid "Manage Settings"
+msgstr "Administrer Indstillinger"
+
+#: controller.php:171
 msgid "User Deletion"
 msgstr "Bruger Sletning"
 
-#: controller.php:169
+#: controller.php:171
 msgid "What should we do with the users blog posts?"
 msgstr "Hvad skal vi gøre med brugerens blogindlæg?"
 
-#: controller.php:177
+#: controller.php:175
 msgid "Blog Post"
 msgstr "Blogindlæg"
 
-#: controller.php:177
+#: controller.php:175
 msgid "Add/Edit a blog post"
 msgstr "Tilføj/Rediger et blogindlæg"
 
-#: controller.php:198
+#: controller.php:185
 msgid "Blog Root"
 msgstr "Blog Rod"
 
-#: controller.php:209
+#: controller.php:191
 msgid "Blog Author ID"
 msgstr "Blog Forfatter ID"
 
-#: controller.php:224
+#: controller.php:201
 msgid "Full Name"
 msgstr "Fulde Navn"
 
-#: controllers/single_page/blog_post.php:143
+#: controllers/single_page/blog_post.php:166
 msgid "The Blog Title field is a required field and cannot be empty."
 msgstr "Titelfeltet er et obligatorisk felt, og kan ikke være tomt."
 
-#: controllers/single_page/blog_post.php:144
+#: controllers/single_page/blog_post.php:167
 msgid "The Blog Content field is a required field and cannot be empty."
 msgstr "Blog indholdsfeltet er et obligatorisk felt, og kan ikke være tomt."
 
@@ -229,19 +236,19 @@ msgstr "Rod værdier gemt."
 msgid "Blog Root has been removed"
 msgstr "Blog Rod er blevet fjernet"
 
-#: controllers/single_page/dashboard/c5dk_blog/blog_roots.php:110
+#: controllers/single_page/dashboard/c5dk_blog/blog_roots.php:109
 msgid "None"
 msgstr "Ingen"
 
-#: controllers/single_page/dashboard/c5dk_blog/blog_settings.php:37
+#: controllers/single_page/dashboard/c5dk_blog/blog_settings.php:52
 msgid "Settings saved."
 msgstr "Indstillinger gemt."
 
-#: single_pages/blog_post.php:16 single_pages/blog_post.php:122
+#: single_pages/blog_post.php:16 single_pages/blog_post.php:153
 msgid "Post"
 msgstr "Udgiv"
 
-#: single_pages/blog_post.php:16 single_pages/blog_post.php:122
+#: single_pages/blog_post.php:16 single_pages/blog_post.php:153
 msgid "Update"
 msgstr "Opdater"
 
@@ -265,39 +272,39 @@ msgstr "Blog Beskrivelse"
 msgid "Blog Content"
 msgstr "Blog Indhold"
 
-#: single_pages/blog_post.php:72
+#: single_pages/blog_post.php:103
 msgid "Tags"
 msgstr "Tags"
 
-#: single_pages/blog_post.php:77
+#: single_pages/blog_post.php:108
 msgid "Topics"
 msgstr "Emner"
 
-#: single_pages/blog_post.php:96
+#: single_pages/blog_post.php:127
 msgid "Thumbnail"
 msgstr "Thumbnail"
 
-#: single_pages/blog_post.php:97
+#: single_pages/blog_post.php:128
 msgid "Select"
 msgstr "Vælg"
 
-#: single_pages/blog_post.php:98
+#: single_pages/blog_post.php:129
 msgid "Remove"
 msgstr "Fjern"
 
-#: single_pages/blog_post.php:108
+#: single_pages/blog_post.php:139
 msgid "Preview"
 msgstr "Preview"
 
-#: single_pages/blog_post.php:143
+#: single_pages/blog_post.php:174
 msgid "Only .jpg or .jpeg is supported at the moment."
 msgstr "Kun .jpg eller .jpeg understøttes i øjeblikket."
 
-#: single_pages/blog_post.php:154
+#: single_pages/blog_post.php:185
 msgid "Are you sure you want to delete this image?"
 msgstr "Er du sikker på, at du vil slette dette billede?"
 
-#: single_pages/blog_post.php:366
+#: single_pages/blog_post.php:418
 msgid "Image Manager"
 msgstr "Billede Manager"
 
@@ -343,7 +350,7 @@ msgstr "Slette rod"
 
 #: single_pages/dashboard/c5dk_blog/blog_roots.php:55
 #: single_pages/dashboard/c5dk_blog/blog_roots/add.php:9
-#: single_pages/dashboard/c5dk_blog/blog_settings.php:48
+#: single_pages/dashboard/c5dk_blog/blog_settings.php:79
 msgid "Save"
 msgstr "Gem"
 
@@ -359,53 +366,101 @@ msgstr "Ingen Blog rødder fundet."
 msgid "Here in the Blog settings page, you have the options to control the images used by blog writers on your site. First you set the \"Picture Save Size\". That will make the system resize images when uploaded.<br><br>The \"Thumbnail Save Size\" controls the picture cropper, embedded in the blog editor page. This makes it easy to set the picture size to accommodate your site layout."
 msgstr "Her på siden, indstillinger, har du muligheder for at kontrollere de billeder, der bruges af blog forfattere på din hjemmeside. Først sætte du \"Billede Gem Størrelse\". Det vil få systemet til at ændre størrelse på billeder, når uploadet.<br><br>\"Thumbnail Gem Størrelse\" styrer billede beskæringsværktøjet, indlejret i blogges editor side. Dette gør det nemt at indstille billedstørrelsen for at imødekomme din hjemmeside layout."
 
+#: single_pages/dashboard/c5dk_blog/blog_settings.php:7
+msgid "General Settings"
+msgstr "Generelle Indstillinger"
+
+#: single_pages/dashboard/c5dk_blog/blog_settings.php:8
+msgid "Images & Thumbnails"
+msgstr "Billeder & Thumbnails"
+
+#: single_pages/dashboard/c5dk_blog/blog_settings.php:9
+msgid "Styling"
+msgstr "Styling"
+
 #: single_pages/dashboard/c5dk_blog/blog_settings.php:10
-msgid "Picture Save Size"
-msgstr "Billede Gem Størrelse"
-
-#: single_pages/dashboard/c5dk_blog/blog_settings.php:11
-msgid "Blog Picture Max Width in Pixels"
-msgstr "Blog Billede Max Bredde i pixels"
-
-#: single_pages/dashboard/c5dk_blog/blog_settings.php:15
-msgid "Thumbnail Save Size"
-msgstr "Thumbnail Gem Størrelse"
-
-#: single_pages/dashboard/c5dk_blog/blog_settings.php:16
-msgid "Blog Thumbnail Width in Pixels"
-msgstr "Blog Thumbnail Bredde i pixels"
-
-#: single_pages/dashboard/c5dk_blog/blog_settings.php:19
-msgid "Blog Thumbnail Height in Pixels"
-msgstr "Blog Thumbnail højde i pixel"
+msgid "Editor"
+msgstr "Editor"
 
 #: single_pages/dashboard/c5dk_blog/blog_settings.php:23
-msgid "CSS Style Customization for Header and Pagelist blocks"
-msgstr "CSS stil tilpasning til Header- og Sideliste blocke"
-
-#: single_pages/dashboard/c5dk_blog/blog_settings.php:24
-msgid "\"Posted By\" Font Size"
-msgstr "\"Skrevet af\" skriftstørrelse"
-
-#: single_pages/dashboard/c5dk_blog/blog_settings.php:27
-msgid "\"Posted By\" Color"
-msgstr "\"Skrevet af\" farve"
-
-#: single_pages/dashboard/c5dk_blog/blog_settings.php:30
-msgid "\"Posted By\" Margin"
-msgstr "\"Skrevet af\" Margin"
-
-#: single_pages/dashboard/c5dk_blog/blog_settings.php:33
-msgid "\"Posted By\" Icons Color"
-msgstr "\"Skrevet af\" ikoner farve"
-
-#: single_pages/dashboard/c5dk_blog/blog_settings.php:37
 msgid "Other Settings"
 msgstr "Andre Indstillinger"
 
-#: single_pages/dashboard/c5dk_blog/blog_settings.php:39
+#: single_pages/dashboard/c5dk_blog/blog_settings.php:25
 msgid "Make title field editable"
 msgstr "Gør titel felt redigerbare"
+
+#: single_pages/dashboard/c5dk_blog/blog_settings.php:31
+msgid "Picture Save Size"
+msgstr "Billede Gem Størrelse"
+
+#: single_pages/dashboard/c5dk_blog/blog_settings.php:32
+msgid "Blog Picture Max Width in Pixels"
+msgstr "Blog Billede Max Bredde i pixels"
+
+#: single_pages/dashboard/c5dk_blog/blog_settings.php:36
+msgid "Thumbnail Save Size"
+msgstr "Thumbnail Gem Størrelse"
+
+#: single_pages/dashboard/c5dk_blog/blog_settings.php:37
+msgid "Blog Thumbnail Width in Pixels"
+msgstr "Blog Thumbnail Bredde i pixels"
+
+#: single_pages/dashboard/c5dk_blog/blog_settings.php:40
+msgid "Blog Thumbnail Height in Pixels"
+msgstr "Blog Thumbnail højde i pixel"
+
+#: single_pages/dashboard/c5dk_blog/blog_settings.php:47
+msgid "CSS Style Customization for Header and Pagelist blocks"
+msgstr "CSS stil tilpasning til Header- og Sideliste blocke"
+
+#: single_pages/dashboard/c5dk_blog/blog_settings.php:48
+msgid "\"Posted By\" Font Size"
+msgstr "\"Skrevet af\" skriftstørrelse"
+
+#: single_pages/dashboard/c5dk_blog/blog_settings.php:51
+msgid "\"Posted By\" Color"
+msgstr "\"Skrevet af\" farve"
+
+#: single_pages/dashboard/c5dk_blog/blog_settings.php:54
+msgid "\"Posted By\" Margin"
+msgstr "\"Skrevet af\" Margin"
+
+#: single_pages/dashboard/c5dk_blog/blog_settings.php:57
+msgid "\"Posted By\" Icons Color"
+msgstr "\"Skrevet af\" ikoner farve"
+
+#: single_pages/dashboard/c5dk_blog/blog_settings.php:64
+msgid "Plugins"
+msgstr "Plugins"
+
+#: single_pages/dashboard/c5dk_blog/blog_settings.php:65
+msgid "YouTube"
+msgstr "YouTube"
+
+#: single_pages/dashboard/c5dk_blog/blog_settings.php:67
+msgid "Formats"
+msgstr "Formater"
+
+#: single_pages/dashboard/c5dk_blog/blog_settings.php:68
+msgid "h1"
+msgstr "h1"
+
+#: single_pages/dashboard/c5dk_blog/blog_settings.php:69
+msgid "h2"
+msgstr "h2"
+
+#: single_pages/dashboard/c5dk_blog/blog_settings.php:70
+msgid "h3"
+msgstr "h3"
+
+#: single_pages/dashboard/c5dk_blog/blog_settings.php:71
+msgid "h4"
+msgstr "h4"
+
+#: single_pages/dashboard/c5dk_blog/blog_settings.php:72
+msgid "pre"
+msgstr "pre"
 
 #: single_pages/dashboard/c5dk_blog/user_deletion.php:4
 msgid "You have requested deletion of a user that is the owner of some blog pages. We have made it possible to control what to do with these blog pages.<br><br>You can either choose to delete alle the blog pages that belong to this user, or you can assign a new user as the owner of these blog pages."

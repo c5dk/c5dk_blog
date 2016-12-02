@@ -338,7 +338,7 @@ class BlogPost extends PageController {
 			$fsf = $fs->addFileToSet($fv);
 
 			// Delete tmp file
-			unlink($fh->getTemporaryDirectory() . "/" . '/c5dk_blog.tmp.jpg');
+			// unlink($fh->getTemporaryDirectory() . "/" . '/c5dk_blog.tmp.jpg');
 
 			// Return the File Object
 			return $fv->getFile();

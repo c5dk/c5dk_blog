@@ -9,11 +9,11 @@ use GroupList;
 use Concrete\Core\Attribute\Type as attributeType;
 use CollectionAttributeKey;
 
-use \Concrete\Core\Tree\Type\Topic as TopicTree;
+use Concrete\Core\Tree\Type\Topic as TopicTree;
 use Concrete\Core\Page\Controller\DashboardPageController;
 
-use Concrete\Package\C5dkBlog\Src\C5dkBlog\C5dkUser\C5dkUser as C5dkUser;
-use Concrete\Package\C5dkBlog\Src\C5dkBlog\C5dkRoot\C5dkRootList as C5dkRootList;
+use C5dk\Blog\C5dkUser\C5dkUser as C5dkUser;
+use C5dk\Blog\C5dkRoot\C5dkRootList as C5dkRootList;
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
@@ -22,12 +22,12 @@ class BlogRoots extends DashboardPageController {
 	public function view() {
 
 		// Set all our view variables
-		$C5dkRootList = new C5dkRootList;
-		$this->set('user',								new C5dkUser);
-		$this->set('rootList',						$C5dkRootList->getResults());
+		$C5dkRootList =						new C5dkRootList;
+		$this->set('user',					new C5dkUser);
+		$this->set('rootList',				$C5dkRootList->getResults());
 
-		$this->set('groupList',						$this->getAllGroups());
-		$this->set('pageTypeList',				$this->getAllPageTypes());
+		$this->set('groupList',				$this->getAllGroups());
+		$this->set('pageTypeList',			$this->getAllPageTypes());
 		$this->set('topicAttributeList',	$this->getTopicsAttributeList());
 
 		// Set helpers

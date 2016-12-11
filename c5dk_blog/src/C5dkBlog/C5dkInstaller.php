@@ -1,5 +1,5 @@
 <?php
-namespace Concrete\Package\C5dkBlog\Src;
+namespace C5dk\Blog;
 
 use Core;
 use Database;
@@ -18,33 +18,23 @@ use CollectionAttributeKey;
 use Concrete\Core\Attribute\Key\Category as AttributeKeyCategory;
 use Concrete\Core\File\Image\Thumbnail\Type\Type;
 
-// use Events;
-// use View;
-
-// use Route;
-
-// use AssetList;
-// use Concrete\Core\Editor\Plugin;
-
-// use Concrete\Package\C5dkBlog\Src\C5dkBlog\C5dkBlog\C5dkBlog as C5dkBlog;
-// use Concrete\Package\C5dkBlog\Src\C5dkBlog\C5dkAjax as C5dkAjax;
-
 defined('C5_EXECUTE') or die("Access Denied.");
 
-class C5dkInstaller {
+class C5dkInstaller
+{
 
-	private function setupConfig($pkg) {
+	// private function setupConfig($pkg) {
 
-		$config = $pkg->getConfig();
-		if (!$config->get('blog_thumbnail_width')) { $config->save('c5dk_blog.blog_thumbnail_width',			360); }
-		if (!$config->get('blog_thumbnail_height')) { $config->save('c5dk_blog.blog_thumbnail_height',			360); }
-		if (!$config->get('blog_picture_width')) { $config->save('c5dk_blog.blog_picture_width',				1200); }
+	// 	$config = $pkg->getConfig();
+	// 	if (!$config->get('blog_thumbnail_width')) { $config->save('c5dk_blog.blog_thumbnail_width',			360); }
+	// 	if (!$config->get('blog_thumbnail_height')) { $config->save('c5dk_blog.blog_thumbnail_height',			360); }
+	// 	if (!$config->get('blog_picture_width')) { $config->save('c5dk_blog.blog_picture_width',				1200); }
 
-		if (!$config->get('blog_headline_size')) { $config->save('c5dk_blog.blog_headline_size',				12); }
-		if (!$config->get('blog_headline_color')) { $config->save('c5dk_blog.blog_headline_color',				'#AAAAAA'); }
-		if (!$config->get('blog_headline_margin')) { $config->save('c5dk_blog.blog_headline_margin',			'5px 0'); }
-		if (!$config->get('blog_headline_icon_color')) { $config->save('c5dk_blog.blog_headline_icon_color',	'#1685D4'); }
-	}
+	// 	if (!$config->get('blog_headline_size')) { $config->save('c5dk_blog.blog_headline_size',				12); }
+	// 	if (!$config->get('blog_headline_color')) { $config->save('c5dk_blog.blog_headline_color',				'#AAAAAA'); }
+	// 	if (!$config->get('blog_headline_margin')) { $config->save('c5dk_blog.blog_headline_margin',			'5px 0'); }
+	// 	if (!$config->get('blog_headline_icon_color')) { $config->save('c5dk_blog.blog_headline_icon_color',	'#1685D4'); }
+	// }
 
 
 
@@ -92,7 +82,7 @@ class C5dkInstaller {
 	public static function installUserAttributeKey($type, $handle, $name, $options) {
 	}
 
-	public static function installBlockTypeSet($handle, $name, $pkg = false) {
+	public function installBlockTypeSet($handle, $name, $pkg = false) {
 		$bts = BlockTypeSet::getByHandle($handle);
 		if (!is_object($bts) || $bts->isError()) {
 			return BlockTypeSet::add($handle, $name, $pkg);

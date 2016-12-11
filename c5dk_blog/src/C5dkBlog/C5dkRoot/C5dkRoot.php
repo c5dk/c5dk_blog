@@ -1,5 +1,5 @@
 <?php
-namespace Concrete\Package\C5dkBlog\Src\C5dkBlog\C5dkRoot;
+namespace C5dk\Blog\C5dkRoot;
 
 use Page;
 use Database;

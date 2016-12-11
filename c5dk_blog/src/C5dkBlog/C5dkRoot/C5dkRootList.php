@@ -1,5 +1,5 @@
-<?php  
-namespace Concrete\Package\C5dkBlog\Src\C5dkBlog\C5dkRoot;
+<?php
+namespace C5dk\Blog\C5dkRoot;
 
 use Page;
 use PageList;
@@ -8,7 +8,7 @@ use Concrete\Core\Search\Pagination\Pagination;
 use Concrete\Core\Search\Pagination\PermissionablePagination;
 use Concrete\Core\Search\PermissionableListItemInterface;
 
-use Concrete\Package\C5dkBlog\Src\C5dkBlog\C5dkRoot\C5dkRoot as C5dkRoot;
+// use Concrete\Package\C5dkBlog\Src\C5dkBlog\C5dkRoot\C5dkRoot as C5dkRoot;
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
@@ -42,12 +42,12 @@ class C5dkRootList extends DatabaseItemList implements PermissionableListItemInt
 		$pl = new PageList;
 		$pl->filterByAttribute('c5dk_blog_root', true);
 		foreach($pl->get($itemsToGet, intval($offset)) as $row) {
-			$roots[$row->cID] = C5dkRoot::getByID($row->cID);
+			$roots[$row->cID] = \C5dk\Blog\C5dkRoot\C5dkRoot::getByID($row->cID);
 		}
 
 		return $roots;
 
-	}	
+	}
 
 	public function getTotalResults() {
 
@@ -85,10 +85,10 @@ class C5dkRootList extends DatabaseItemList implements PermissionableListItemInt
 	 * @param $queryRow
 	 * @return \Concrete\Core\File\File
 	 */
-	
+
 	public function getResult($queryRow) {
 
-		$c = C5dkRoot::getByID($queryRow['cID'], 'ACTIVE');
+		$c = \C5dk\Blog\C5dkRoot\C5dkRoot::getByID($queryRow['cID'], 'ACTIVE');
 		if (is_object($c) && $this->checkPermissions($c)) {
 			if ($this->pageVersionToRetrieve == PageList::PAGE_VERSION_RECENT) {
 				$cp = new \Permissions($c);
@@ -103,7 +103,7 @@ class C5dkRootList extends DatabaseItemList implements PermissionableListItemInt
 			return $c;
 
 		}
-		
+
 	}
 
 		public function setPermissionsChecker(\Closure $checker)

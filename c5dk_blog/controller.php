@@ -1,46 +1,27 @@
 <?php
 namespace Concrete\Package\C5dkBlog;
 
-use Core;
-use Database;
 use Package;
-
 use Page;
 use PageList;
-use SinglePage;
-
-use BlockTypeSet;
-use BlockType;
-
-use AttributeSet;
-use UserAttributeKey;
-use CollectionAttributeKey;
-use Concrete\Core\Attribute\Key\Category as AttributeKeyCategory;
-use Concrete\Core\File\Image\Thumbnail\Type\Type;
-
-use Concrete\Core\Tree\Tree;
-use Concrete\Core\Tree\Type\FileManager;
-
 use Events;
-use View;
-
 use Route;
-
-use AssetList;
 use Concrete\Core\Editor\Plugin;
 
-use Concrete\Package\C5dkBlog\Src\C5dkBlog\C5dkBlog\C5dkBlog as C5dkBlog;
-use Concrete\Package\C5dkBlog\Src\C5dkBlog\C5dkAjax as C5dkAjax;
+use Concrete\Core\Tree\Type\FileManager;
 
-use Concrete\Package\C5dkBlog\Src\C5dkInstaller as C5dkInstaller;
+use C5dk\Blog\C5dkInstaller as C5dkInstaller;
+use C5dk\Blog\C5dkAjax as C5dkAjax;
 
-defined('C5_EXECUTE') or die("Access Denied.");
+// defined('C5_EXECUTE') or die("Access Denied.");
 
 class Controller extends Package {
 
 	protected $pkgHandle			= 'c5dk_blog';
-	protected $appVersionRequired	= '8.0.0';
-	protected $pkgVersion			= '8.0.2';
+	protected $appVersionRequired	= '8.0.1';
+	protected $pkgVersion			= '8.0.3';
+
+	protected $pkgAutoloaderRegistries = array('src/C5dkBlog' => '\C5dk\Blog');
 
 	public function getPackageName() {			return t("C5DK Blog"); }
 	public function getPackageDescription() {	return t("A blog application for your C5 site, so even normal users can blog."); }
@@ -63,7 +44,7 @@ class Controller extends Package {
 
 	private function registerRoutes() {
 
-		Route::register('/c5dk/blog/{method}/{blogID}', '\Concrete\Package\C5dkBlog\Src\C5dkBlog\C5dkAjax::blog');
+		Route::register('/c5dk/blog/{method}/{blogID}', '\C5dk\Blog\C5dkAjax::blog');
 	}
 
 	public function install() {
@@ -80,7 +61,7 @@ class Controller extends Package {
 		$this->c5dkInstall($this);
 	}
 
-	private function c5dkInstall($pkg) {
+	public function c5dkInstall($pkg) {
 
 		$this->setupConfig($pkg);
 
@@ -96,14 +77,14 @@ class Controller extends Package {
 		parent::uninstall();
 
 		// Remove database tables
-		$app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
-		$db = $app->make('database')->connection();
-		$db->Execute("DROP TABLE IF EXISTS C5dkBlogRootPermissions");
+		// $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
+		// $db = $app->make('database')->connection();
+		// $db->Execute("DROP TABLE IF EXISTS C5dkBlogRootPermissions");
 	}
 
 
 
-	private function setupConfig($pkg) {
+	public function setupConfig($pkg) {
 
 		$config = $pkg->getConfig();
 
@@ -133,7 +114,7 @@ class Controller extends Package {
 
 
 
-	private function setupBlocks($pkg) {
+	public function setupBlocks($pkg) {
 
 		// C5DK Blog block type set
 		C5dkInstaller::installBlockTypeSet("c5dk_blog", "C5DK Blog", $pkg);
@@ -232,7 +213,6 @@ class Controller extends Package {
 
 		// Get the view object
 		$view = $event->getArgument('view');
-		//$view = View::getInstance();
 
 		// Get the current page
 		$page = Page::getCurrentPage();

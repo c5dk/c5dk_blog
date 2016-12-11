@@ -6,7 +6,7 @@ use Package;
 use Database;
 use \Concrete\Core\Page\Controller\DashboardPageController;
 
-use Concrete\Package\C5dkBlog\Src\C5dkBlog\C5dkConfig as C5dkConfig;
+use C5dk\Blog\C5dkConfig as C5dkConfig;
 
 defined('C5_EXECUTE') or die("Access Denied.");
 class BlogSettings extends DashboardPageController {

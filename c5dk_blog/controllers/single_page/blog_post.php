@@ -29,10 +29,10 @@ use Concrete\Core\Page\Controller\PageController;
 
 use Concrete\Core\Editor\Plugin;
 
-use Concrete\Package\C5dkBlog\Src\C5dkBlog\C5dkConfig as C5dkConfig;
-use Concrete\Package\C5dkBlog\Src\C5dkBlog\C5dkUser\C5dkUser as C5dkUser;
-use Concrete\Package\C5dkBlog\Src\C5dkBlog\C5dkRoot\C5dkRoot as C5dkRoot;
-use Concrete\Package\C5dkBlog\Src\C5dkBlog\C5dkBlog\C5dkBlog as C5dkBlog;
+use C5dk\Blog\C5dkConfig as C5dkConfig;
+use C5dk\Blog\C5dkUser\C5dkUser as C5dkUser;
+use C5dk\Blog\C5dkRoot\C5dkRoot as C5dkRoot;
+use C5dk\Blog\C5dkBlog\C5dkBlog as C5dkBlog;
 
 defined('C5_EXECUTE') or die("Access Denied.");
 

@@ -1,5 +1,5 @@
 <?php
-namespace Concrete\Package\C5dkBlog\Src\C5dkBlog;
+namespace C5dk\Blog;
 
 use Core;
 use Package;

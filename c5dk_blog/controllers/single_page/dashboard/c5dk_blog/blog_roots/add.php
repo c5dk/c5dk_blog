@@ -6,7 +6,7 @@ use Database;
 use Cookie;
 use Concrete\Core\Page\Controller\DashboardPageController;
 
-use C5dk\Blog\C5dkRoot\C5dkRoot as C5dkRoot;
+use C5dk\Blog\C5dkRoot as C5dkRoot;
 
 defined('C5_EXECUTE') or die("Access Denied.");
 

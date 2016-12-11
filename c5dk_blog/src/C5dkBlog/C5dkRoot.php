@@ -1,5 +1,5 @@
 <?php
-namespace C5dk\Blog\C5dkRoot;
+namespace C5dk\Blog;
 
 use Page;
 use Database;

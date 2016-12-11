@@ -5,8 +5,8 @@ use Core;
 use Page;
 use Concrete\Core\Block\BlockController;
 
-use C5dk\Blog\C5dkUser\C5dkUser as C5dkUser;
-use C5dk\Blog\C5dkBlog\C5dkBlog as C5dkBlog;
+use C5dk\Blog\C5dkUser as C5dkUser;
+use C5dk\Blog\C5dkBlog as C5dkBlog;
 
 defined('C5_EXECUTE') or die("Access Denied.");
 

@@ -13,13 +13,13 @@ use Concrete\Core\Tree\Type\FileManager;
 use C5dk\Blog\C5dkInstaller as C5dkInstaller;
 use C5dk\Blog\C5dkAjax as C5dkAjax;
 
-// defined('C5_EXECUTE') or die("Access Denied.");
+defined('C5_EXECUTE') or die("Access Denied.");
 
 class Controller extends Package {
 
 	protected $pkgHandle			= 'c5dk_blog';
 	protected $appVersionRequired	= '8.0.1';
-	protected $pkgVersion			= '8.0.3';
+	protected $pkgVersion			= '8.0.4';
 
 	protected $pkgAutoloaderRegistries = array('src/C5dkBlog' => '\C5dk\Blog');
 

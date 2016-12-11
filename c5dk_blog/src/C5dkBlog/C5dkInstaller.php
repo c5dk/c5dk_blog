@@ -20,8 +20,7 @@ use Concrete\Core\File\Image\Thumbnail\Type\Type;
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
-class C5dkInstaller
-{
+class C5dkInstaller {
 
 	// private function setupConfig($pkg) {
 

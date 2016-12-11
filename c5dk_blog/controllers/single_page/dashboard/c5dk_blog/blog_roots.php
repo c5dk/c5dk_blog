@@ -12,8 +12,8 @@ use CollectionAttributeKey;
 use Concrete\Core\Tree\Type\Topic as TopicTree;
 use Concrete\Core\Page\Controller\DashboardPageController;
 
-use C5dk\Blog\C5dkUser\C5dkUser as C5dkUser;
-use C5dk\Blog\C5dkRoot\C5dkRootList as C5dkRootList;
+use C5dk\Blog\C5dkUser as C5dkUser;
+use C5dk\Blog\C5dkRootList as C5dkRootList;
 
 defined('C5_EXECUTE') or die("Access Denied.");
 

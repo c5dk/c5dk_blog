@@ -1,5 +1,5 @@
 <?php
-namespace C5dk\Blog\C5dkBlog;
+namespace C5dk\Blog;
 
 use Core;
 use Events;
@@ -14,8 +14,7 @@ use Concrete\Core\Page\Type\Composer\OutputControl as PageTypeComposerOutputCont
 use \Concrete\Core\Page\Type\Composer\FormLayoutSetControl as PageTypeComposerFormLayoutSetControl;
 use Concrete\Core\Page\Type\Composer\Control\BlockControl as PageTypeComposerControlBlockControl;
 
-// use Concrete\Package\C5dkBlog\Src\C5dkBlog\C5dkUser\C5dkUser as C5dkUser;
-// use Concrete\Package\C5dkBlog\Src\C5dkBlog\C5dkRoot\C5dkRoot as C5dkRoot;
+use C5dk\Blog\C5dkRoot as C5dkRoot;
 
 use Block;
 use PageTemplate;
@@ -57,7 +56,7 @@ class C5dkBlog extends Page {
 
 			case C5DK_BLOG_MODE_CREATE:
 
-				$C5dkRoot = \C5dk\Blog\C5dkRoot\C5dkRoot::getByID($this->rootID);
+				$C5dkRoot = C5dkRoot::getByID($this->rootID);
 				$pt = PageType::getByID($C5dkRoot->pageTypeID);
 				$blog = $C5dkRoot->add($pt, array(
 					'cName'								=> $this->title,
@@ -215,7 +214,7 @@ class C5dkBlog extends Page {
 
 		if (!$this->rootID) { return 0; }
 
-		$C5dkRoot = \C5dk\Blog\C5dkRoot\C5dkRoot::getByID($this->rootID);
+		$C5dkRoot = C5dkRoot::getByID($this->rootID);
 		if ($C5dkRoot->topicAttributeID) {
 
 			return $this->getAttributeValueObject(CollectionAttributeKey::getByID($C5dkRoot->topicAttributeID));

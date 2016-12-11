@@ -4,8 +4,9 @@ namespace Concrete\Package\C5dkBlog\Block\C5dkBlogGoback;
 use Core;
 use Page;
 use Concrete\Core\Block\BlockController;
-use Concrete\Package\C5dkBlog\Src\C5dkBlog\C5dkBlog\C5dkBlog as C5dkBlog;
-use Concrete\Package\C5dkBlog\Src\C5dkBlog\C5dkRoot\C5dkRoot as C5dkRoot;
+
+use C5dk\Blog\C5dkBlog as C5dkBlog;
+use C5dk\Blog\C5dkRoot as C5dkRoot;
 
 defined('C5_EXECUTE') or die("Access Denied.");
 

@@ -1,5 +1,5 @@
 <?php
-namespace C5dk\Blog\C5dkUser;
+namespace C5dk\Blog;
 
 use User;
 use UserInfo;
@@ -7,9 +7,8 @@ use Page;
 use Group;
 use Database;
 
-// use Concrete\Package\C5dkBlog\Src\C5dkBlog\C5dkBlog\C5dkBlog as C5dkBlog;
-// use Concrete\Package\C5dkBlog\Src\C5dkBlog\C5dkRoot\C5dkRoot as C5dkRoot;
-// use Concrete\Package\C5dkBlog\Src\C5dkBlog\C5dkRoot\C5dkRootList as C5dkRootList;
+use C5dk\Blog\C5dkBlog as C5dkBlog;
+use C5dk\Blog\C5dkRoot as C5dkRoot;
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
@@ -33,7 +32,7 @@ class C5dkUser extends User {
 
 		// Is the current user the owner of the current page
 		if (($page = Page::getCurrentPage()) instanceof Page) {
-			$C5dkBlog = \C5dk\Blog\C5dkBlog\C5dkBlog::getByID(Page::getCurrentPage()->getCollectionID());
+			$C5dkBlog = C5dkBlog::getByID(Page::getCurrentPage()->getCollectionID());
 			if ($C5dkBlog->authorID == $this->uID && is_numeric($this->uID)) {
 				$this->isOwner = true;
 			}
@@ -78,7 +77,7 @@ class C5dkUser extends User {
 		while ($row = $rs->fetchRow()) {
 			if ($this->inGroup(Group::getByID($row["groupID"]))) {
 				// Add the root's information
-				$this->rootList[$row["rootID"]] = \C5dk\Blog\C5dkRoot\C5dkRoot::getByID($row["rootID"]);
+				$this->rootList[$row["rootID"]] = C5dkRoot::getByID($row["rootID"]);
 			}
 		}
 

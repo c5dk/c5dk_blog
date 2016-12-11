@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Package\C5dkBlog\Controller\SinglePage\Dashboard;
 
-use \Concrete\Core\Page\Controller\DashboardPageController;
+use Concrete\Core\Page\Controller\DashboardPageController;
 
 defined('C5_EXECUTE') or die("Access Denied.");
 

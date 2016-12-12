@@ -1,9 +1,9 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: C5DK Blog v8.0.1\n"
+"Project-Id-Version: C5DK Blog v8.0.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-12-02 11:23+0100\n"
-"PO-Revision-Date: 2016-12-02 11:26+0100\n"
+"POT-Creation-Date: 2016-12-12 10:47+0100\n"
+"PO-Revision-Date: 2016-12-12 10:48+0100\n"
 "Last-Translator: Michael Jensen-Maar <info@concrete5.dk>\n"
 "Language-Team: Concrete5 Danmark <info@concrete5.dk>\n"
 "Language: da_DK\n"
@@ -94,13 +94,21 @@ msgstr "C5DK Blogging Knapper: Kan kun ses af brugere med tilladelser til at blo
 msgid "Blog Editor"
 msgstr "Blog Editor"
 
-#: blocks/c5dk_blog_goback/controller.php:17
+#: blocks/c5dk_blog_goback/controller.php:18
 msgid "Blog Go Back"
 msgstr "Blog Gå tilbage"
 
-#: blocks/c5dk_blog_goback/controller.php:18
+#: blocks/c5dk_blog_goback/controller.php:19
 msgid "Go back to blog root page."
 msgstr "Tilbage til blog rod side."
+
+#: blocks/c5dk_blog_goback/templates/c5dk_advanced_animated/view.php:4
+msgid "blog list"
+msgstr "blog listen"
+
+#: blocks/c5dk_blog_goback/templates/c5dk_advanced_animated/view.php:4
+msgid "Back to"
+msgstr "Tilbage til"
 
 #: blocks/c5dk_blog_goback/templates/c5dk_animated/view.php:3
 #: blocks/c5dk_blog_goback/view.php:3
@@ -135,7 +143,6 @@ msgstr "Ingen."
 
 #: blocks/page_list/templates/c5dk_blog_page_list/view.php:24
 #: blocks/page_list/templates/c5dk_blog_page_list_full_content/view.php:24
-#: blocks/page_list/templates/maar_blog_page_list/view.php:18
 msgid "Empty Page List Block."
 msgstr "Tom Sideliste Block."
 
@@ -156,67 +163,67 @@ msgstr "Vis alle emner"
 msgid "No topics."
 msgstr "Ingen emner."
 
-#: controller.php:45 controller.php:166 controller.php:181
+#: controller.php:26 controller.php:147 controller.php:162
 msgid "C5DK Blog"
 msgstr "C5DK Blog"
 
-#: controller.php:46
+#: controller.php:27
 msgid "A blog application for your C5 site, so even normal users can blog."
 msgstr "Et blog applikation til din C5 hjemmeside, så selv almindelige brugere kan blogge."
 
-#: controller.php:166
+#: controller.php:147
 msgid "Blog system for your website"
 msgstr "Blog system til din hjemmeside"
 
-#: controller.php:167
+#: controller.php:148
 msgid "Blog Roots"
 msgstr "Blog Rødder"
 
-#: controller.php:167
+#: controller.php:148
 msgid "Manage Roots"
 msgstr "Administrer Rødder"
 
-#: controller.php:168
+#: controller.php:149
 msgid "Add"
 msgstr "Tilføj"
 
-#: controller.php:168
+#: controller.php:149
 msgid "Add an existing page as a Blog Root"
 msgstr "Føj en eksisterende side til som en blog Rod"
 
-#: controller.php:170
+#: controller.php:151
 msgid "Settings"
 msgstr "Indstillinger"
 
-#: controller.php:170
+#: controller.php:151
 msgid "Manage Settings"
 msgstr "Administrer Indstillinger"
 
-#: controller.php:171
+#: controller.php:152
 msgid "User Deletion"
 msgstr "Bruger Sletning"
 
-#: controller.php:171
+#: controller.php:152
 msgid "What should we do with the users blog posts?"
 msgstr "Hvad skal vi gøre med brugerens blogindlæg?"
 
-#: controller.php:175
+#: controller.php:156
 msgid "Blog Post"
 msgstr "Blogindlæg"
 
-#: controller.php:175
+#: controller.php:156
 msgid "Add/Edit a blog post"
 msgstr "Tilføj/Rediger et blogindlæg"
 
-#: controller.php:185
+#: controller.php:166
 msgid "Blog Root"
 msgstr "Blog Rod"
 
-#: controller.php:191
+#: controller.php:172
 msgid "Blog Author ID"
 msgstr "Blog Forfatter ID"
 
-#: controller.php:201
+#: controller.php:182
 msgid "Full Name"
 msgstr "Fulde Navn"
 

@@ -107,7 +107,7 @@
 			<?php if ($BlogPost->topicAttributeID) { ?>
 				<?= $form->label('', '<h4 style="margin-top: 25px;">' . t('Topics') . '</h4>'); ?>
 				<?= $form->hidden('topicAttributeID', $BlogPost->topicAttributeID); ?>
-				<?php $casTopics = CollectionAttributeKey::getByID($BlogPost->topicAttributeID); ?>
+				<?php $casTopics = CollectionAttributeKey::getByHandle($BlogPost->topicAttributeID); ?>
 				<?= $casTopics->render('form', $C5dkBlog->topics, true); ?>
 			<?php } ?>
 		</div>

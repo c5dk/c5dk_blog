@@ -17,11 +17,10 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 class Controller extends Package {
 
-	protected $pkgHandle			= 'c5dk_blog';
-	protected $appVersionRequired	= '8.0.1';
-	protected $pkgVersion			= '8.0.4';
-
-	protected $pkgAutoloaderRegistries = array('src/C5dkBlog' => '\C5dk\Blog');
+	protected $appVersionRequired		= '8.0.1';
+	protected $pkgVersion				= '8.0.4';
+	protected $pkgHandle				= 'c5dk_blog';
+	protected $pkgAutoloaderRegistries	= array('src/C5dkBlog' => '\C5dk\Blog');
 
 	public function getPackageName() {			return t("C5DK Blog"); }
 	public function getPackageDescription() {	return t("A blog application for your C5 site, so even normal users can blog."); }
@@ -61,17 +60,6 @@ class Controller extends Package {
 		$this->c5dkInstall($this);
 	}
 
-	public function c5dkInstall($pkg) {
-
-		$this->setupConfig($pkg);
-
-		$this->setupBlocks($pkg);
-		$this->setupFilesystem($pkg);
-		$this->setupSinglePages($pkg);
-		$this->setupPageAttributes($pkg);
-		$this->setupUserAttributes($pkg);
-	}
-
 	public function uninstall() {
 
 		parent::uninstall();
@@ -84,37 +72,44 @@ class Controller extends Package {
 
 
 
-	public function setupConfig($pkg) {
+	private function c5dkInstall($pkg) {
 
-		$config = $pkg->getConfig();
+		$this->setupConfig($pkg);
 
-		// Settings
-		if (!$config->get('blog_title_editable')) { $config->save('c5dk_blog.blog_title_editable',	false); }
-
-		// Images & Thumbnails
-		if (!$config->get('blog_thumbnail_width')) { $config->save('c5dk_blog.blog_thumbnail_width',	360); }
-		if (!$config->get('blog_thumbnail_height')) { $config->save('c5dk_blog.blog_thumbnail_height',	360); }
-		if (!$config->get('blog_picture_width')) { $config->save('c5dk_blog.blog_picture_width',		1200); }
-
-		// Styling
-		if (!$config->get('blog_headline_size')) { $config->save('c5dk_blog.blog_headline_size',				12); }
-		if (!$config->get('blog_headline_color')) { $config->save('c5dk_blog.blog_headline_color',				'#AAAAAA'); }
-		if (!$config->get('blog_headline_margin')) { $config->save('c5dk_blog.blog_headline_margin',			'5px 0'); }
-		if (!$config->get('blog_headline_icon_color')) { $config->save('c5dk_blog.blog_headline_icon_color',	'#1685D4'); }
-
-		// Editor
-		if (!$config->get('blog_plugin_youtube')) { $config->save('c5dk_blog.blog_plugin_youtube',	true); }
-
-		if (!$config->get('blog_format_h1')) { $config->save('c5dk_blog.blog_format_h1',	false); }
-		if (!$config->get('blog_format_h2')) { $config->save('c5dk_blog.blog_format_h2',	true); }
-		if (!$config->get('blog_format_h3')) { $config->save('c5dk_blog.blog_format_h3',	true); }
-		if (!$config->get('blog_format_h4')) { $config->save('c5dk_blog.blog_format_h4',	false); }
-		if (!$config->get('blog_format_pre')) { $config->save('c5dk_blog.blog_format_pre',	true); }
+		$this->setupBlocks($pkg);
+		$this->setupFilesystem($pkg);
+		$this->setupSinglePages($pkg);
+		$this->setupPageAttributes($pkg);
+		$this->setupUserAttributes($pkg);
 	}
 
+	private function setupConfig($pkg) {
 
+		// Settings
+		C5dkInstaller::installConfigKey('blog_title_editable',		false,		$pkg);
 
-	public function setupBlocks($pkg) {
+		// Images & Thumbnails
+		C5dkInstaller::installConfigKey('blog_thumbnail_width',		360,		$pkg);
+		C5dkInstaller::installConfigKey('blog_thumbnail_height',	360,		$pkg);
+		C5dkInstaller::installConfigKey('blog_picture_width',		1200,		$pkg);
+
+		// Styling
+		C5dkInstaller::installConfigKey('blog_headline_size',		12,			$pkg);
+		C5dkInstaller::installConfigKey('blog_headline_color',		'#AAAAAA',	$pkg);
+		C5dkInstaller::installConfigKey('blog_headline_margin',		'5px 0',	$pkg);
+		C5dkInstaller::installConfigKey('blog_headline_icon_color',	'#1685D4',	$pkg);
+
+		// Editor
+		C5dkInstaller::installConfigKey('blog_plugin_youtube',		true,		$pkg);
+
+		C5dkInstaller::installConfigKey('blog_format_h1',			false,		$pkg);
+		C5dkInstaller::installConfigKey('blog_format_h2',			true,		$pkg);
+		C5dkInstaller::installConfigKey('blog_format_h3',			true,		$pkg);
+		C5dkInstaller::installConfigKey('blog_format_h4',			false,		$pkg);
+		C5dkInstaller::installConfigKey('blog_format_pre',			true,		$pkg);
+	}
+
+	private function setupBlocks($pkg) {
 
 		// C5DK Blog block type set
 		C5dkInstaller::installBlockTypeSet("c5dk_blog", "C5DK Blog", $pkg);
@@ -131,8 +126,8 @@ class Controller extends Package {
 		$rootFolder = C5dkInstaller::installFileFolder('-root-', 'C5DK Blog');
 
 		// Get the C5DK Blog folder object
-        $tree = FileManager::get();
-        $fldC5dkBlog = $tree->getNodeByDisplayPath("/C5DK Blog");
+        $manager = FileManager::get();
+        $fldC5dkBlog = $manager->getNodeByDisplayPath("/C5DK Blog");
 
         // Create Thumbs and Manager folders in the C5DK Blog folder
 		$thumbs = C5dkInstaller::installFileFolder($fldC5dkBlog, 'Thumbs');
@@ -175,9 +170,9 @@ class Controller extends Package {
 			), false, $bas);
 	}
 
-	public function setupUserAttributes($pkg) {
+	private function setupUserAttributes($pkg) {
 
-		C5dkInstaller::installUserAttribute('text', array(
+		C5dkInstaller::installUserAttributeKey('text', array(
 				'akHandle'					=> 'full_name',
 				'akName'					=> t('Full Name'),
 				'uakProfileDisplay'			=> true,

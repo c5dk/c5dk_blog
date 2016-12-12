@@ -304,6 +304,8 @@ class BlogPost extends PageController {
 		$fv			= $file->getRecentVersion();
 		$src		= $_SERVER['DOCUMENT_ROOT'] . $file->getRelativePath();
 		$fileExt	= $fv->getExtension();
+		$tmpFolder	= $fh->getTemporaryDirectory();
+
 
 		// Calculate the thumbnail area on the original picture
 		$ratio		= $fv->getAttribute('width')/$thumbnail['pictureWidth'];
@@ -322,12 +324,12 @@ class BlogPost extends PageController {
 		$image		= Image::load($resource->read());
 		$image
 			->crop(new Point($thumb['x'], $thumb['y']), new Box($thumb['w'], $thumb['h']))
-			->save($fh->getTemporaryDirectory() . "/" . '/c5dk_blog.tmp.jpg');
+			->save($tmpFolder . '/c5dk_blog.' . $fileExt);
 
 		// Import thumbnail into the File Manager
 		$fv = $fi->import(
-			$fh->getTemporaryDirectory() . "/" . '/c5dk_blog.tmp.jpg',
-			"C5DK_BLOG_uID-" . $C5dkUser->getUserID() . "_Thumb_cID-" . $C5dkBlog->getCollectionID() . ".jpg",
+			$tmpFolder . '/c5dk_blog.' . $fileExt,
+			"C5DK_BLOG_uID-" . $C5dkUser->getUserID() . "_Thumb_cID-" . $C5dkBlog->getCollectionID() . "." . $fileExt,
 			FileFolder::getNodeByName('Thumbs')
 		);
 
@@ -338,7 +340,9 @@ class BlogPost extends PageController {
 			$fsf = $fs->addFileToSet($fv);
 
 			// Delete tmp file
-			// unlink($fh->getTemporaryDirectory() . "/" . '/c5dk_blog.tmp.jpg');
+			$fs = new \Illuminate\Filesystem\Filesystem();
+			$fs->delete($tmpFolder . '/c5dk_blog.'. $fileExt);
+			// unlink($fh->getTemporaryDirectory() . "/" . '/c5dk_blog.jpg');
 
 			// Return the File Object
 			return $fv->getFile();
@@ -515,54 +519,6 @@ class BlogPost extends PageController {
 
 		// Register jQuery Jcrop plugin
 		$al->register('javascript', 'validation', 'js/validation/jquery.validate.js', array(), 'c5dk_blog');
-
-		// // Init C5DK Image Manager Redactor plugin
-		// $al->register('javascript', 'editor/plugin/c5dkimagemanager', 'js/redactor/c5dkimagemanager.min.js', array(), 'c5dk_blog');
-		// $al->registerGroup('editor/plugin/c5dkimagemanager', array(
-		// 	array('javascript', 'editor/plugin/c5dkimagemanager')
-		// ));
-		// $plugin = new Plugin();
-		// $plugin->setKey('c5dkimagemanager');
-		// $plugin->setName('C5DK Blog Image Manager');
-		// $plugin->requireAsset('editor/plugin/c5dkimagemanager');
-		// Core::make('editor')->getPluginManager()->register($plugin);
-
-		// // Init Redactor Video plugin
-		// $al->register('javascript', 'editor/plugin/video', 'js/redactor/video.min.js', array(), 'c5dk_blog');
-		// $al->registerGroup('editor/plugin/video', array(
-		// 	array('javascript', 'editor/plugin/video')
-		// ));
-		// $plugin = new Plugin();
-		// $plugin->setKey('video');
-		// $plugin->setName('C5DK Blog Video');
-		// $plugin->requireAsset('editor/plugin/video');
-		// Core::make('editor')->getPluginManager()->register($plugin);
-
-		// Init Redactor Video plugin
-		// $al->register('javascript', 'editor/plugin/video', 'js\ckeditor\plugin.js', array(), 'c5dk_blog');
-		// $al->registerGroup('editor/plugin/video', array(
-		// 	array('javascript', 'editor/plugin/video')
-		// ));
-		// $plugin = new Plugin();
-		// $plugin->setKey('video');
-		// $plugin->setName('C5DK Blog Video');
-		// $plugin->requireAsset('editor/plugin/video');
-		// Core::make('editor')->getPluginManager()->register($plugin);
-
-
-
-
-		// $al->register('javascript', 'editor/plugin/videodetector', 'js/ckeditor/plugin.js', array(), 'c5dk_blog');
-		// $al->register('css', 'editor/plugin/videodetector', 'js/ckeditor/videodetector.css', array(), 'c5dk_blog');
-		// $al->registerGroup('editor/plugin/videodetector', array(
-		// 	array('javascript', 'editor/plugin/videodetector'),
-		// 	array('css', 'editor/plugin/videodetector')
-		// ));
-		// $plugin = new Plugin();
-		// $plugin->setKey('videodetector');
-		// $plugin->setName('C5DK Blog Video');
-		// $plugin->requireAsset('editor/plugin/videodetector');
-		// Core::make('editor')->getPluginManager()->register($plugin);
 	}
 
 }

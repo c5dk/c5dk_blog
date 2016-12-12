@@ -28,7 +28,7 @@ class C5dkRoot extends Page {
 			$C5dkRoot->rootID			= $row["rootID"];
 			$C5dkRoot->groups[]			= $row["groupID"];
 			$C5dkRoot->pageTypeID		= $row["pageTypeID"];
-			$C5dkRoot->topicAttributeID	= $C5dkRoot->getTopicAttributeID($row["topicAttributeID"]);
+			$C5dkRoot->topicAttributeID	= $row["topicAttributeID"]; //$C5dkRoot->getTopicAttributeID($row["topicAttributeID"]);
 		}
 
 		return $C5dkRoot;
@@ -42,7 +42,7 @@ class C5dkRoot extends Page {
 
 			// Do the topic tree still exist?
 			$topicAttribute = CollectionAttributeKey::getByID($topicAttributeID);
-			if ($topicAttribute) {
+			if (is_object($topicAttribute)) {
 				return $topicAttributeID;
 			} else {
 				// Delete the topic from this root
@@ -54,7 +54,7 @@ class C5dkRoot extends Page {
 
 		}
 
-		return $topicAttributeID;
+		return 0;
 
 	}
 

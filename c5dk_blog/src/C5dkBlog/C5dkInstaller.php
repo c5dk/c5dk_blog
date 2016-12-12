@@ -22,24 +22,17 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 class C5dkInstaller {
 
-	// private function setupConfig($pkg) {
+	public static function installConfigKey($handle, $value, $pkg = false, $override = false) {
 
-	// 	$config = $pkg->getConfig();
-	// 	if (!$config->get('blog_thumbnail_width')) { $config->save('c5dk_blog.blog_thumbnail_width',			360); }
-	// 	if (!$config->get('blog_thumbnail_height')) { $config->save('c5dk_blog.blog_thumbnail_height',			360); }
-	// 	if (!$config->get('blog_picture_width')) { $config->save('c5dk_blog.blog_picture_width',				1200); }
+		if (is_object($pkg)) {
+			$config = $pkg->getConfig();
+			if (!$config->get($handle) || $override) { $config->save($pkg->getPackageHandle() . '.' . $handle,	$value); }
+		} else {
+			// TODO: Get the config from $app and use that instead.
+		}
+	}
 
-	// 	if (!$config->get('blog_headline_size')) { $config->save('c5dk_blog.blog_headline_size',				12); }
-	// 	if (!$config->get('blog_headline_color')) { $config->save('c5dk_blog.blog_headline_color',				'#AAAAAA'); }
-	// 	if (!$config->get('blog_headline_margin')) { $config->save('c5dk_blog.blog_headline_margin',			'5px 0'); }
-	// 	if (!$config->get('blog_headline_icon_color')) { $config->save('c5dk_blog.blog_headline_icon_color',	'#1685D4'); }
-	// }
-
-
-
-
-
-	public static function installUserAttribute($type, $options, $pkg = false) {
+	public static function installUserAttributeKey($type, $options, $pkg = false) {
 		$uak = UserAttributeKey::getByHandle($options['akHandle']);
 		if (!is_object($uak)) {
 			$uak = UserAttributeKey::add($type, $options, $pkg);
@@ -78,10 +71,7 @@ class C5dkInstaller {
 		return $cak;
 	}
 
-	public static function installUserAttributeKey($type, $handle, $name, $options) {
-	}
-
-	public function installBlockTypeSet($handle, $name, $pkg = false) {
+	public static function installBlockTypeSet($handle, $name, $pkg = false) {
 		$bts = BlockTypeSet::getByHandle($handle);
 		if (!is_object($bts) || $bts->isError()) {
 			return BlockTypeSet::add($handle, $name, $pkg);

@@ -128,7 +128,7 @@ class C5dkBlog extends Page {
 
 		// Add topics to the blog page if topics are in use
 		if ($this->topicAttributeID) {
-			$cakTopics = CollectionAttributeKey::getByID($this->topicAttributeID);
+			$cakTopics = CollectionAttributeKey::getByHandle($this->topicAttributeID);
 			$controller = $cakTopics->getController();
 			$value = $controller->createAttributeValueFromRequest();
 			$C5dkBlog->setAttribute($cakTopics, $value);

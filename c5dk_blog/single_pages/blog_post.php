@@ -10,6 +10,7 @@
 		<?php } ?>
 
 		<div class="c5dk_blog_button_section c5dk_buttom_border_line">
+			<!-- C5DK Blog Icon -->
 			<div class="c5dk_blog_page_icon"><img src="<?= REL_DIR_PACKAGES; ?>/c5dk_blog/images/c5blog.png" alt="C5DK Blog Icon" height="40" width="40"></div>
 			<!-- Form buttons -->
 			<div class="c5dk_blog_buttons">
@@ -38,32 +39,28 @@
 
 
 		<div class="c5dk_blog_section">
-			<div class="c5dk_blog_title">
+
 			<!-- Blog Title -->
-			<?= $form->label('title', '<span style="display: block; float: left;"><h4>' . t('Blog Title') . ' <sup><i style="color: #E50000; font-size: 12px;" class="fa fa-asterisk"></i></sup></h4></span><span class="c5dk-title-char-counter">' . t('Characters Left (') . '<span style="font-size: 12px;" id="charNumTitle"></span>)</span>'); ?>
-			<?php $style = array('class' => 'c5dk_bp_title c5dk-blog-full-width'); ?>
-			<?php if ($BlogPost->mode == C5DK_BLOG_MODE_EDIT && $C5dkConfig->blog_title_editable == 0) { $style['disabled'] = "disabled"; } ?>
-			<?= $form->text('title', $C5dkBlog->title, $style); ?>
+			<div class="c5dk_blog_title">
+				<?= $form->label('title', '<span style="display: block; float: left;"><h4>' . t('Blog Title') . ' <sup><i style="color: #E50000; font-size: 12px;" class="fa fa-asterisk"></i></sup></h4></span><span class="c5dk-title-char-counter">' . t('Characters Left (') . '<span style="font-size: 12px;" id="charNumTitle"></span>)</span>'); ?>
+				<?php $style = array('class' => 'c5dk_bp_title c5dk-blog-full-width'); ?>
+				<?php if ($BlogPost->mode == C5DK_BLOG_MODE_EDIT && $C5dkConfig->blog_title_editable == 0) { $style['disabled'] = "disabled"; } ?>
+				<?= $form->text('title', $C5dkBlog->title, $style); ?>
 			</div>
 
-			<div class="c5dk_blog_description">
 			<!-- Blog Description -->
-			<?= $form->label('description', '<span style="display: block; float: left;"><h4>' . t('Blog Description') . ' <sup><i style="color: #E50000; font-size: 12px;" class="fa fa-asterisk"></i></sup></h4></span><span class="c5dk-description-char-counter">' . t('Characters Left (') . '<span style="font-size: 12px;" id="charNumDescription"></span>)</span>')?>
-			<?= $form->textarea('description', Core::make('helper/text')->entities($C5dkBlog->description), array('class' => 'c5dk-blog-full-width', 'rows' => 4))?>
+			<div class="c5dk_blog_description">
+				<?= $form->label('description', '<span style="display: block; float: left;"><h4>' . t('Blog Description') . ' <sup><i style="color: #E50000; font-size: 12px;" class="fa fa-asterisk"></i></sup></h4></span><span class="c5dk-description-char-counter">' . t('Characters Left (') . '<span style="font-size: 12px;" id="charNumDescription"></span>)</span>')?>
+				<?= $form->textarea('description', Core::make('helper/text')->entities($C5dkBlog->description), array('class' => 'c5dk-blog-full-width', 'rows' => 4))?>
 			</div>
+
 		</div>
 
 
 		<div class="c5dk_blog_section">
+
 			<!-- Blog Body -->
 			<?= $form->label('content', '<h4>' . t('Blog Content') . ' <sup><i style="color: #E50000; font-size: 12px;" class="fa fa-asterisk"></i></sup></h4>'); ?>
-			<?php
-				// $editor = Core::make('editor');
-				// $editor->setAllowFileManager(false);
-				// $editor->getPluginManager()->select('c5dkimagemanager');
-				// $editor->getPluginManager()->select('videodetector');
-				// print $editor->outputStandardEditor('content', $C5dkBlog->content);
-			?>
 			<?= $form->textarea('content', $C5dkBlog->content); ?>
 			<script type="text/javascript">
 				$(document).ready(function() {
@@ -95,9 +92,11 @@
 					});
 				});
 			</script>
+
 		</div>
 
 		<div class="c5dk_blog_section">
+
 			<!-- Blog Tags -->
 			<?php $casTags = CollectionAttributeKey::getByHandle('tags'); ?>
 			<h4><?= t('Tags'); ?></h4>
@@ -110,10 +109,12 @@
 				<?php $casTopics = CollectionAttributeKey::getByHandle($BlogPost->topicAttributeID); ?>
 				<?= $casTopics->render('form', $C5dkBlog->topics, true); ?>
 			<?php } ?>
+
 		</div>
 
 
 		<div class="c5dk_blog_section">
+
 			<!-- Blog Thumbnail -->
 			<input id="thumbnailID" name="thumbnail[id]" type="hidden" value="<?= (is_object($C5dkBlog->thumbnail))? $C5dkBlog->thumbnail->getFileID() : 0; ?>">
 			<input id="thumbnailX" name="thumbnail[x]" type="hidden" value="0">
@@ -147,6 +148,8 @@
 		</div>
 
 		<div class="c5dk_blog_button_section c5dk_top_border_line">
+
+			<!-- C5DK Blog Icon -->
 			<div class="c5dk_blog_page_icon"><img src="<?= REL_DIR_PACKAGES; ?>/c5dk_blog/images/c5blog.png" alt="C5DK Blog Icon" height="40" width="40"></div>
 			<!-- Form buttons -->
 			<div class="c5dk_blog_buttons">
@@ -173,8 +176,11 @@
 			<input id="file" class="ccm-input-file" accept="image/jpeg" type="file" name="file[]">
 			<div id="c5dk_blog_upload_image_error" class="alert alert-danger"><?= t("Only .jpg or .jpeg is supported at the moment."); ?></div>
 			<progress value="0" style="display:none;"></progress>
+
 		</form>
+
 		<hr />
+
 		<div id="redactor-c5dkimagemanager-box" class="redactor-c5dkimagemanager-box"></div>
 	</div>
 
@@ -257,9 +263,11 @@ c5dk.blog.post = {
 				return true;
 			},
 			submitHandler: function(form) {
+
+				// Submit form
 				$('#title').removeAttr('disabled');
 				$('.c5dk_blogpage_ButtonGreen').addClass('c5dk_blogpage_ButtonDisabled').removeClass('c5dk_blogpage_ButtonGreen').attr('disabled','disabled');
-				form.submit();
+				return true;
 			}
 		});
 
@@ -272,10 +280,6 @@ c5dk.blog.post = {
 	},
 
 	eventInit: function() {
-
-		// // Submit blog post
-		// $('#c5dk_blog_form').submit( function() {
-		// });
 
 		// Root change event to change the topic tree
 		$('#rootID').change(function(event) {
@@ -522,53 +526,53 @@ $(document).ready( function(){ c5dk.blog.post.init(); });
 </script>
 
 <style>
-#c5dk-blog-package .c5dk_blog_box_thumbnail{
-    position: relative;
-    width: auto;
-    height: auto;
-}
-#c5dk-blog-package .c5dk_blog_box_thumbnail_header{
-    float: left;
-    padding-bottom: 10px;
-	width: 178px;
-}
-#c5dk-blog-package .c5dk_blog_thumbnail_preview_frame {
-    float: left;
-    margin: 0 30px 5px 0;
-    padding: 12px;
-    border: 1px solid #ccc;
-    -webkit-border-radius: 4px;
-    -moz-border-radius: 4px;
-    border-radius: 4px;
-	-webkit-box-shadow: 1px 1px 3px 1px rgba(0,0,0,0.3);
-    -moz-box-shadow: 1px 1px 3px 1px rgba(0,0,0,0.3);
-    box-shadow: 1px 1px 3px 1px rgba(0,0,0,0.3);
-}
-#c5dk-blog-package .c5dk_blog_thumbnail_preview{
-    float: left;
-    overflow: hidden;
-    border: 1px solid #ccc;
-    background-color: #eee;
-    width: 150px;
-    height: <?= intval((150 / ( $C5dkConfig->blog_thumbnail_width / 100)) * ($C5dkConfig->blog_thumbnail_height  / 100)); ?>px;
-    /*cursor: pointer;*/
-}
-#c5dk-blog-package .c5dk_blog_thumbnail_preview img{
-    width: 150px;
-    height: <?= intval((150 / ( $C5dkConfig->blog_thumbnail_width / 100)) * ($C5dkConfig->blog_thumbnail_height  / 100)); ?>px;
-    max-width: none;
-}
-#c5dk-blog-package .c5dk_blog_thumbnail_jcrop{
-    float: left;
-	-webkit-box-shadow: 2px 2px 5px 1px rgba(0,0,0,0.3);
-    -moz-box-shadow: 2px 2px 5px 1px rgba(0,0,0,0.3);
-    box-shadow: 2px 2px 5px 1px rgba(0,0,0,0.3);
-}
-#c5dk-blog-package .c5dk_blog_box_thumbnail img{
-    max-width: none!important;
-}
-#c5dk-blog-package .c5dk_blog_cnt_red {
-	color: #FF0000;
-	font-weight: bold;
-}
+	#c5dk-blog-package .c5dk_blog_box_thumbnail{
+	    position: relative;
+	    width: auto;
+	    height: auto;
+	}
+	#c5dk-blog-package .c5dk_blog_box_thumbnail_header{
+	    float: left;
+	    padding-bottom: 10px;
+		width: 178px;
+	}
+	#c5dk-blog-package .c5dk_blog_thumbnail_preview_frame {
+	    float: left;
+	    margin: 0 30px 5px 0;
+	    padding: 12px;
+	    border: 1px solid #ccc;
+	    -webkit-border-radius: 4px;
+	    -moz-border-radius: 4px;
+	    border-radius: 4px;
+		-webkit-box-shadow: 1px 1px 3px 1px rgba(0,0,0,0.3);
+	    -moz-box-shadow: 1px 1px 3px 1px rgba(0,0,0,0.3);
+	    box-shadow: 1px 1px 3px 1px rgba(0,0,0,0.3);
+	}
+	#c5dk-blog-package .c5dk_blog_thumbnail_preview{
+	    float: left;
+	    overflow: hidden;
+	    border: 1px solid #ccc;
+	    background-color: #eee;
+	    width: 150px;
+	    height: <?= intval((150 / ( $C5dkConfig->blog_thumbnail_width / 100)) * ($C5dkConfig->blog_thumbnail_height  / 100)); ?>px;
+	    /*cursor: pointer;*/
+	}
+	#c5dk-blog-package .c5dk_blog_thumbnail_preview img{
+	    width: 150px;
+	    height: <?= intval((150 / ( $C5dkConfig->blog_thumbnail_width / 100)) * ($C5dkConfig->blog_thumbnail_height  / 100)); ?>px;
+	    max-width: none;
+	}
+	#c5dk-blog-package .c5dk_blog_thumbnail_jcrop{
+	    float: left;
+		-webkit-box-shadow: 2px 2px 5px 1px rgba(0,0,0,0.3);
+	    -moz-box-shadow: 2px 2px 5px 1px rgba(0,0,0,0.3);
+	    box-shadow: 2px 2px 5px 1px rgba(0,0,0,0.3);
+	}
+	#c5dk-blog-package .c5dk_blog_box_thumbnail img{
+	    max-width: none!important;
+	}
+	#c5dk-blog-package .c5dk_blog_cnt_red {
+		color: #FF0000;
+		font-weight: bold;
+	}
 </style>

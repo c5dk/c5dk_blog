@@ -13,7 +13,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 class C5dkAjax extends Controller {
 
-	public function blog($method = null, $blogID) {
+	public function blog($method, $blogID) {
 
 		// What should we do?
 		switch ($method) {
@@ -23,7 +23,6 @@ class C5dkAjax extends Controller {
 				break;
 
 		}
-
 	}
 
 	public function delete($blogID) {
@@ -37,10 +36,9 @@ class C5dkAjax extends Controller {
 			$jh = Core::make('helper/json');
 			echo $jh->encode(array(
 				'url' => Page::getByID($C5dkBlog->rootID)->getCollectionLink(),
-				'result' => $C5dkBlog->delete()
+				'result' => $C5dkBlog->moveToTrash()
 			));
 		}
-
 	}
 
 	public function link($link) {

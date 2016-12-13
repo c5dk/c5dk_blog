@@ -13,7 +13,6 @@ use Image;
 use Imagine\Image\Box;
 use Imagine\Image\Point;
 use Imagine\Image\ImageInterface;
-use Imagine\Image\PointInterface;
 
 use File;
 use FileList;
@@ -25,9 +24,9 @@ use Concrete\Core\Tree\Node\Type\FileFolder as FileFolder;
 use Concrete\Core\Tree\Type\Topic as TopicTree;
 use Concrete\Core\Utility\Service\Identifier as Identifier;
 use Concrete\Core\Html\Service\Navigation as Navigation;
-use Concrete\Core\Page\Controller\PageController;
-
 use Concrete\Core\Editor\Plugin;
+
+use Concrete\Core\Page\Controller\PageController;
 
 use C5dk\Blog\C5dkConfig as C5dkConfig;
 use C5dk\Blog\C5dkUser as C5dkUser;
@@ -188,11 +187,8 @@ class BlogPost extends PageController {
 			if (is_object($thumbnail)) {
 				$cakThumbnail = CollectionAttributeKey::getByHandle('thumbnail');
 				$C5dkBlog = $C5dkBlog->getVersionToModify();
-				$controller = $cakThumbnail->getController();
-				// $value = $controller->createAttributeValueFromRequest();
 				$C5dkBlog->setAttribute($cakThumbnail, $thumbnail);
 				$C5dkBlog->refreshCache();
-				// $C5dkBlog->saveThumbnail();
 			}
 
 			// Redirect to the new blog page
@@ -301,7 +297,7 @@ class BlogPost extends PageController {
 
 		// Set needed file information
 		$file		= File::getByID($thumbnail['id']);
-		$fv			= $file->getRecentVersion();
+		$fv			= $file->getApprovedVersion();
 		$src		= $_SERVER['DOCUMENT_ROOT'] . $file->getRelativePath();
 		$fileExt	= $fv->getExtension();
 		$tmpFolder	= $fh->getTemporaryDirectory();
@@ -342,7 +338,6 @@ class BlogPost extends PageController {
 			// Delete tmp file
 			$fs = new \Illuminate\Filesystem\Filesystem();
 			$fs->delete($tmpFolder . '/c5dk_blog.'. $fileExt);
-			// unlink($fh->getTemporaryDirectory() . "/" . '/c5dk_blog.jpg');
 
 			// Return the File Object
 			return $fv->getFile();
@@ -367,11 +362,8 @@ class BlogPost extends PageController {
 
 	public function upload($mode = null){
 
-		// TODO: Make it possible to upload different file types and convert them to .jpg
-
 		// Get helper objects
 		$jh = Core::make('helper/json');
-		// $fh = Core::make('helper/file');
 
 		// Get C5dk Objects
 		$C5dkConfig = new C5dkConfig;

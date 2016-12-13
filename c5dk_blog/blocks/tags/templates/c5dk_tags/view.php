@@ -47,7 +47,6 @@ $this->requireAsset('javascript', 'tagcanvas');
 			outlineThickness : 5,
 			outlineOffset : 1,
 			outlineMethod : "colour",
-			// TODO: Shold not be hardcoded!
 			centreImage : '<?php echo REL_DIR_PACKAGES; ?>/c5dk_blog/blocks/tags/templates/c5dk_tags/images/tagsicon.png',
 			padding : 0,
 			stretchX : 0.9,

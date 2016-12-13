@@ -38,7 +38,7 @@ $this->requireAsset('javascript', 'tagcanvas');
 </div>
 <script type="text/javascript">
 		$(document).ready(function() {
-						
+
 			if( ! $('#c5dkCanvasImageBackground').tagcanvas({
 				interval : 20,
 				textColour : '#FFF',
@@ -48,7 +48,6 @@ $this->requireAsset('javascript', 'tagcanvas');
 				outlineThickness : 5,
 				outlineOffset : 1,
 				outlineMethod : "colour",
-				// TODO: Shold not be hardcoded!
 				centreImage : '<?php echo REL_DIR_PACKAGES; ?>/c5dk_blog/blocks/tags/templates/c5dk_blog_tags/images/blogtagsicon.png',
 				padding : 0,
 				stretchX : 0.9,

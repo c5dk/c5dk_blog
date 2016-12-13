@@ -18,9 +18,11 @@ defined('C5_EXECUTE') or die("Access Denied.");
 class Controller extends Package {
 
 	protected $appVersionRequired		= '8.0.1';
-	protected $pkgVersion				= '8.0.5';
+	protected $pkgVersion				= '8.0.6';
 	protected $pkgHandle				= 'c5dk_blog';
-	protected $pkgAutoloaderRegistries	= array('src/C5dkBlog' => '\C5dk\Blog');
+	protected $pkgAutoloaderRegistries	= array(
+		'src/C5dkBlog' => '\C5dk\Blog'
+	);
 
 	public function getPackageName() {			return t("C5DK Blog"); }
 	public function getPackageDescription() {	return t("A blog application for your C5 site, so even normal users can blog."); }

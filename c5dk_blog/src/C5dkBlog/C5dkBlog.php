@@ -217,7 +217,7 @@ class C5dkBlog extends Page {
 		$C5dkRoot = C5dkRoot::getByID($this->rootID);
 		if ($C5dkRoot->topicAttributeID) {
 
-			return $this->getAttributeValueObject(CollectionAttributeKey::getByID($C5dkRoot->topicAttributeID));
+			return $this->getAttributeValueObject(CollectionAttributeKey::getByHandle($C5dkRoot->topicAttributeID));
 
 		} else {
 

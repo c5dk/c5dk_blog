@@ -28,7 +28,7 @@ class C5dkRoot extends Page {
 			$C5dkRoot->rootID			= $row["rootID"];
 			$C5dkRoot->groups[]			= $row["groupID"];
 			$C5dkRoot->pageTypeID		= $row["pageTypeID"];
-			$C5dkRoot->topicAttributeID	= $row["topicAttributeID"]; //$C5dkRoot->getTopicAttributeID($row["topicAttributeID"]);
+			$C5dkRoot->topicAttributeID	= $C5dkRoot->getTopicAttributeID($row["topicAttributeID"]);
 		}
 
 		return $C5dkRoot;
@@ -38,19 +38,20 @@ class C5dkRoot extends Page {
 	public function getTopicAttributeID($topicAttributeID) {
 
 		// Is topics used?
-		if ($topicAttributeID) {
-
-			// Do the topic tree still exist?
-			$topicAttribute = CollectionAttributeKey::getByID($topicAttributeID);
-			if (is_object($topicAttribute)) {
-				return $topicAttributeID;
-			} else {
+		if (!$topicAttributeID) {
 				// Delete the topic from this root
 				$app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
 				$db = $app->make('database')->connection();
 				$rs = $db->Execute("UPDATE C5dkBlogRootPermissions set topicAttributeID = ? WHERE rootID = ?", array(0, $rootID));
+
 				return 0;
-			}
+		}
+
+		// Do the topic tree still exist?
+		$topicAttribute = CollectionAttributeKey::getByHandle($topicAttributeID);
+		if (is_object($topicAttribute)) {
+
+			return $topicAttributeID;
 
 		}
 

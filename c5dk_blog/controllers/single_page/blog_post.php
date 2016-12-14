@@ -18,20 +18,20 @@ use File;
 use FileList;
 use FileImporter;
 use FileSet;
+use Concrete\Core\Tree\Node\Type\FileFolder		as FileFolder;
+use Concrete\Core\Tree\Type\Topic				as TopicTree;
+use Concrete\Core\Utility\Service\Identifier	as Identifier;
+use Concrete\Core\Html\Service\Navigation		as Navigation;
 use Concrete\Core\File\StorageLocation\StorageLocation;
-use League\Flysystem\AdapterInterface;
-use Concrete\Core\Tree\Node\Type\FileFolder as FileFolder;
-use Concrete\Core\Tree\Type\Topic as TopicTree;
-use Concrete\Core\Utility\Service\Identifier as Identifier;
-use Concrete\Core\Html\Service\Navigation as Navigation;
+
 use Concrete\Core\Editor\Plugin;
 
 use Concrete\Core\Page\Controller\PageController;
 
-use C5dk\Blog\C5dkConfig as C5dkConfig;
-use C5dk\Blog\C5dkUser as C5dkUser;
-use C5dk\Blog\C5dkRoot as C5dkRoot;
-use C5dk\Blog\C5dkBlog as C5dkBlog;
+use C5dk\Blog\C5dkConfig	as C5dkConfig;
+use C5dk\Blog\C5dkUser		as C5dkUser;
+use C5dk\Blog\C5dkRoot		as C5dkRoot;
+use C5dk\Blog\C5dkBlog		as C5dkBlog;
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
@@ -368,9 +368,11 @@ class BlogPost extends PageController {
 
 		// Get helper objects
 		$jh = Core::make('helper/json');
+		$fh = Core::make('helper/file');
 
 		// Get C5dk Objects
 		$C5dkConfig = new C5dkConfig;
+		$C5dkUser = new C5dkUser();
 
 		// Data to send back if something fails
 		$data = array(
@@ -378,13 +380,18 @@ class BlogPost extends PageController {
 			'status' => 0
 		);
 
-		$C5dkUser = new C5dkUser();
+		$tmpFolder	= $fh->getTemporaryDirectory();
+
+		// Convert picture to .jpg
+		$image = Image::open($_FILES['file']['tmp_name'][0]);
+		$image->save($tmpFolder . '/c5dk_blog.jpg', array('jpeg_quality' => 80));
 
 		// Import file
 		$fi = new FileImporter();
 		$fv = $fi->import(
-			$_FILES['file']['tmp_name'][0],
-			"C5DK_BLOG_uID-" . $C5dkUser->getUserID() . "_Pic_" . $_FILES['file']['name'][0],
+			//$_FILES['file']['tmp_name'][0],
+			$tmpFolder . '/c5dk_blog.jpg',
+			"C5DK_BLOG_uID-" . $C5dkUser->getUserID() . "_Pic_" . $fh->unfilename($_FILES['file']['name'][0]) . '.jpg',
 			FileFolder::getNodeByName('Manager')
 		);
 

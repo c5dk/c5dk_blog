@@ -141,6 +141,8 @@ class BlogPost extends PageController {
 	}
 
 	private function getFormatTags() {
+
+		$tags = array();
 		if ($this->C5dkConfig->blog_format_h1) { $tags[] = 'h1'; }
 		if ($this->C5dkConfig->blog_format_h2) { $tags[] = 'h2'; }
 		if ($this->C5dkConfig->blog_format_h3) { $tags[] = 'h3'; }
@@ -302,9 +304,13 @@ class BlogPost extends PageController {
 		$fileExt	= $fv->getExtension();
 		$tmpFolder	= $fh->getTemporaryDirectory();
 
+		// Create the thumbnail
+		$resource	= $fv->getFileResource();
+		$image		= Image::load($resource->read());
+		$imageBox	= $image->getSize();
 
 		// Calculate the thumbnail area on the original picture
-		$ratio		= $fv->getAttribute('width')/$thumbnail['pictureWidth'];
+		$ratio		= $imageBox->getWidth()/$thumbnail['pictureWidth'];
 		$thumb['x'] = round($ratio * $thumbnail['x']);
 		$thumb['y'] = round($ratio * $thumbnail['y']);
 		$thumb['w'] = round($ratio * $thumbnail['width']);
@@ -315,9 +321,7 @@ class BlogPost extends PageController {
 		$targetHeight	= $C5dkConfig->blog_thumbnail_height;
 		$jpeg_quality	= 90;
 
-		// Create, crop and save the thumbnail
-		$resource	= $fv->getFileResource();
-		$image		= Image::load($resource->read());
+		// Crop and save the thumbnail
 		$image
 			->crop(new Point($thumb['x'], $thumb['y']), new Box($thumb['w'], $thumb['h']))
 			->save($tmpFolder . '/c5dk_blog.' . $fileExt);

@@ -1,13 +1,12 @@
 <?php
 
 defined('C5_EXECUTE') or die("Access Denied.");
-use Concrete\Attribute\Select\OptionList;
 
 $this->requireAsset('javascript', 'tagcanvas');
 
 ?>
 
-<?php if ($options instanceof OptionList && $options->count() > 0): ?>
+<?php if (count($options) > 0): ?>
 
 <div class="ccm-block-tags-wrapper">
 

@@ -15,9 +15,9 @@
             print '<li><i class="fa fa-files-o"></i> <a href="' . $view->controller->getTopicLink($topic) . '" class="c5dk-topic-list-topic-selected">' . t('Show All Topics') . '</a></li>';
             $walk = function($node) use (&$walk, &$view, $selectedTopicID) {
                 print '<ul class="c5dk-topic-list-list">';
-                
+
                 foreach($node->getChildNodes() as $topic) {
-                    if ($topic instanceof \Concrete\Core\Tree\Node\Type\TopicCategory) { ?>
+                    if (is_object($topic)) { ?>
                         <li><i class="fa fa-chevron-circle-right"></i> <?php echo $topic->getTreeNodeDisplayName()?></li>
                     <?php } else { ?>
                         <li><i class="fa fa-file-o"></i> <a href="<?php echo $view->controller->getTopicLink($topic)?>"

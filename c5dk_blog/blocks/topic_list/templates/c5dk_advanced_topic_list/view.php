@@ -17,7 +17,7 @@
                 print '<ul class="c5dk-topic-list-list">';
 
                 foreach($node->getChildNodes() as $topic) {
-                    if (is_object($topic)) { ?>
+                    if (is_object($topic) && $topic->getTreeNodeTypeID() === "2" ) { ?>
                         <li class="c5dk_folder"><i class="fa fa-plus-circle"></i> <?php echo $topic->getTreeNodeDisplayName()?></li>
                     <?php } else { ?>
                         <li><i class="fa fa-file-o"></i> <a href="<?php echo $view->controller->getTopicLink($topic)?>"

@@ -26,7 +26,7 @@ class C5dkInstaller {
 
 		if (is_object($pkg)) {
 			$config = $pkg->getConfig();
-			if (!$config->has($handle) || $override) { $config->save($pkg->getPackageHandle() . '.' . $handle,	$value); }
+			if (!$config->has($pkg->getPackageHandle() . '.' . $handle) || $override) { $config->save($pkg->getPackageHandle() . '.' . $handle,	$value); }
 		} else {
 			// TODO: Get the config from $app and use that instead.
 		}

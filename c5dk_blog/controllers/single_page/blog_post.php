@@ -384,7 +384,7 @@ class BlogPost extends PageController {
 
 		// Convert picture to .jpg
 		$image = Image::open($_FILES['file']['tmp_name'][0]);
-		$image->save($tmpFolder . '/c5dk_blog.jpg', array('jpeg_quality' => 80));
+		$image->save($tmpFolder . '/c5dk_blog.jpg', array('jpeg_quality' => 90));
 
 		// Import file
 		$fi = new FileImporter();

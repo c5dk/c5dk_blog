@@ -24,6 +24,10 @@
 			<label>
 				<?= $form->checkbox('blog_title_editable', 1, $C5dkConfig->blog_title_editable); ?> <?= t('Make title field editable'); ?>
 			</label>
+			<div></div>
+			<label>
+				<?= $form->checkbox('blog_form_slidein', 1, $C5dkConfig->blog_form_slidein); ?> <?= t('Make the Blog Post form as a slidein'); ?>
+			</label>
 		</div>
 
 		<!-- Tab: Image Manager -->

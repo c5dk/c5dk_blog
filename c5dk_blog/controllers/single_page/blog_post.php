@@ -4,6 +4,7 @@ namespace Concrete\Package\C5dkBlog\Controller\SinglePage;
 use Core;
 use User;
 use Page;
+use View;
 use Database;
 use Package;
 use AssetList;
@@ -32,6 +33,7 @@ use C5dk\Blog\C5dkConfig	as C5dkConfig;
 use C5dk\Blog\C5dkUser		as C5dkUser;
 use C5dk\Blog\C5dkRoot		as C5dkRoot;
 use C5dk\Blog\C5dkBlog		as C5dkBlog;
+use C5dk\Blog\BlogPost		as C5dkBlogPost;
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
@@ -52,12 +54,6 @@ class BlogPost extends PageController {
 	public $mode = null;
 	public $redirectID = null;
 
-	public function on_start() {
-
-		$this->registerAssets();
-		$this->requireAsset('css', 'c5dk_blog_css');
-	}
-
 	public function view(){
 
 		// Direct access is not allowed.
@@ -66,66 +62,60 @@ class BlogPost extends PageController {
 
 	public function create($redirectID, $rootID = false) {
 
-		// Setup C5DK objects
-		$this->C5dkUser	= new C5dkUser;
-		$this->C5dkBlog = new C5dkBlog;
+		$C5dkBlogPost = new C5dkBlogPost;
+		$C5dkBlogPost->create($redirectID, $rootID);
 
-		// Setup Blog object properties
-		$this->mode = C5DK_BLOG_MODE_CREATE;
-		$this->redirectID = $redirectID;
-		$this->rootList = $this->getUserRootList();
+		$this->init($C5dkBlogPost);
 
-		// Set Root ID if set or default to the first root in our list we will show
-		$this->C5dkBlog->rootID = (isset($this->rootList[$rootID]))? $rootID : key($this->rootList);
+		// // Setup C5DK objects
+		// $this->C5dkUser	= new C5dkUser;
+		// $this->C5dkBlog = new C5dkBlog;
 
-		// Set the topic attribute id from the blogs root
-		$C5dkRoot = C5dkRoot::getByID($this->C5dkBlog->rootID);
-		$this->topicAttributeID = $C5dkRoot->topicAttributeID;
+		// // Setup Blog object properties
+		// $this->mode = C5DK_BLOG_MODE_CREATE;
+		// $this->redirectID = $redirectID;
+		// $this->rootList = $this->getUserRootList();
 
-		$this->init();
+		// // Set Root ID if set or default to the first root in our list we will show
+		// $this->C5dkBlog->rootID = (isset($this->rootList[$rootID]))? $rootID : key($this->rootList);
+
+		// // Set the topic attribute id from the blogs root
+		// $C5dkRoot = C5dkRoot::getByID($this->C5dkBlog->rootID);
+		// $this->topicAttributeID = $C5dkRoot->topicAttributeID;
+
+		// $this->init();
 	}
 
 	public function edit($blogID) {
 
-		// Setup C5DK objects
-		$this->C5dkUser	= new C5dkUser;
-		$this->C5dkBlog		= C5dkBlog::getByID($blogID);
+		$C5dkBlogPost = new C5dkBlogPost;
+		$C5dkBlogPost->edit($redirectID, $rootID);
 
-		// Setup Blog object properties
-		$this->mode = C5DK_BLOG_MODE_EDIT;
-		$this->blogID = $blogID;
-		$this->redirectID = $blogID;
-		$this->rootList = $this->getUserRootList();
+		$this->init($C5dkBlogPost);
 
-		// Set the topic attribute id from the blogs root
-		$this->topicAttributeID = C5dkRoot::getByID($this->C5dkBlog->rootID)->topicAttributeID;
-		if ($this->C5dkBlog->topics && !$this->topicAttributeID) {
-			$this->C5dkBlog->topics = 0;
-		}
+		// // Setup C5DK objects
+		// $this->C5dkUser	= new C5dkUser;
+		// $this->C5dkBlog		= C5dkBlog::getByID($blogID);
 
-		$this->init();
+		// // Setup Blog object properties
+		// $this->mode = C5DK_BLOG_MODE_EDIT;
+		// $this->blogID = $blogID;
+		// $this->redirectID = $blogID;
+		// $this->rootList = $this->getUserRootList();
+
+		// // Set the topic attribute id from the blogs root
+		// $this->topicAttributeID = C5dkRoot::getByID($this->C5dkBlog->rootID)->topicAttributeID;
+		// if ($this->C5dkBlog->topics && !$this->topicAttributeID) {
+		// 	$this->C5dkBlog->topics = 0;
+		// }
+
+		// $this->init();
 	}
 
-	public function init() {
-
-		// Set the C5dk object
-		$this->C5dkConfig = new C5dkConfig;
-
-		// Setup helpers
-		$this->set('form',	Core::make('helper/form'));
-		$this->set('jh',	Core::make('helper/json'));
-		$this->set('token',	Core::make('token'));
-		// TODO: What is it we need this for?
-		$this->set('identifier', id(new Identifier())->getString(32));
-
-		// Set $settings
-		$settings = array(
-			'format_tags' => $this->getFormatTags(),
-			'youtube' => ($this->C5dkConfig->blog_plugin_youtube? 'youtube,' : '')
-		);
-		$this->set('settings', $settings);
+	public function init($C5dkBlogPost) {
 
 		// Require Assets
+		$this->requireAsset('css', 'c5dk_blog_css');
 		// $this->requireAsset('redactor');
 		$this->requireAsset('javascript', 'c5dkckeditor');
 		$this->requireAsset('core/topics');
@@ -133,23 +123,25 @@ class BlogPost extends PageController {
 		$this->requireAsset('css', 'jcrop');
 		$this->requireAsset('javascript', 'validation');
 
+		// Set the C5dk object
+		// $C5dkBlogPost->C5dkConfig = new C5dkConfig;
+
+		// Setup helpers
+		// TODO: What is it we need this for?
+		// $this->set('identifier', id(new Identifier())->getString(32));
+
+		// Set $settings
+		// $this->set('settings', array(
+		// 	'format_tags' => $C5dkBlogPost->C5dkConfig->getFormat(),
+		// 	'youtube' => ($C5dkBlogPost->C5dkConfig->blog_plugin_youtube? 'youtube,' : '')
+		// ));
+
 		// Set View variables
-		$this->set('BlogPost',		$this);
-		$this->set('C5dkConfig',	$this->C5dkConfig);
-		$this->set('C5dkUser',		$this->C5dkUser);
-		$this->set('C5dkBlog',		$this->C5dkBlog);
-	}
-
-	private function getFormatTags() {
-
-		$tags = array();
-		if ($this->C5dkConfig->blog_format_h1) { $tags[] = 'h1'; }
-		if ($this->C5dkConfig->blog_format_h2) { $tags[] = 'h2'; }
-		if ($this->C5dkConfig->blog_format_h3) { $tags[] = 'h3'; }
-		if ($this->C5dkConfig->blog_format_h4) { $tags[] = 'h4'; }
-		if ($this->C5dkConfig->blog_format_pre) { $tags[] = 'pre'; }
-
-		return implode(";", $tags);
+		$this->set('view',			new View);
+		$this->set('BlogPost',		$C5dkBlogPost);
+		$this->set('C5dkConfig',	$C5dkBlogPost->C5dkConfig);
+		$this->set('C5dkUser',		$C5dkBlogPost->C5dkUser);
+		$this->set('C5dkBlog',		$C5dkBlogPost->C5dkBlog);
 	}
 
 	public function save() {
@@ -259,15 +251,6 @@ class BlogPost extends PageController {
 		}
 
 		exit;
-	}
-
-	private function getUserRootList() {
-
-		foreach($this->C5dkUser->getRootList() as $index => $C5dkRoot) {
-			$rootList[$C5dkRoot->rootID] = $C5dkRoot->getCollectionName();
-		}
-
-		return $rootList;
 	}
 
 	public function saveThumbnail ($thumbnail, $page) {
@@ -505,23 +488,23 @@ class BlogPost extends PageController {
 		exit;
 	}
 
-	public function registerAssets() {
+	// public function registerAssets() {
 
-		// Get the AssetList
-		$al = AssetList::getInstance();
+	// 	// Get the AssetList
+	// 	$al = AssetList::getInstance();
 
-		// CKEditor
-		$al->register('javascript', 'c5dkckeditor', 'js/ckeditor/ckeditor.js', array(), 'c5dk_blog');
+	// 	// CKEditor
+	// 	$al->register('javascript', 'c5dkckeditor', 'js/ckeditor/ckeditor.js', array(), 'c5dk_blog');
 
-		// Register C5DK Blog CSS
-		$al->register('css', 'c5dk_blog_css', 'css/c5dk_blog.min.css', array(), 'c5dk_blog');
+	// 	// Register C5DK Blog CSS
+	// 	$al->register('css', 'c5dk_blog_css', 'css/c5dk_blog.min.css', array(), 'c5dk_blog');
 
-		// Register jQuery Jcrop plugin
-		$al->register('javascript', 'jcrop', 'js/Jcrop/jquery.Jcrop.min.js', array(), 'c5dk_blog');
-		$al->register('css', 'jcrop', 'css/Jcrop/jquery.Jcrop.min.css', array(), 'c5dk_blog');
+	// 	// Register jQuery Jcrop plugin
+	// 	$al->register('javascript', 'jcrop', 'js/Jcrop/jquery.Jcrop.min.js', array(), 'c5dk_blog');
+	// 	$al->register('css', 'jcrop', 'css/Jcrop/jquery.Jcrop.min.css', array(), 'c5dk_blog');
 
-		// Register jQuery Jcrop plugin
-		$al->register('javascript', 'validation', 'js/validation/jquery.validate.js', array(), 'c5dk_blog');
-	}
+	// 	// Register jQuery Jcrop plugin
+	// 	$al->register('javascript', 'validation', 'js/validation/jquery.validate.js', array(), 'c5dk_blog');
+	// }
 
 }

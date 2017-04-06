@@ -8,6 +8,9 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 class C5dkConfig {
 
+	public $blog_title_editable;
+	public $blog_form_slidein;
+
 	public $blog_thumbnail_width;
 	public $blog_thumbnail_height;
 	public $blog_picture_width;
@@ -23,6 +26,7 @@ class C5dkConfig {
 
 		// Settings
 		$this->blog_title_editable		= $config->get('c5dk_blog.blog_title_editable');
+		$this->blog_form_slidein		= $config->get('c5dk_blog.blog_form_slidein');
 
 		// Images & Thumbnails
 		$this->blog_thumbnail_width		= $config->get('c5dk_blog.blog_thumbnail_width');
@@ -43,6 +47,26 @@ class C5dkConfig {
 		$this->blog_format_h3		= $config->get('c5dk_blog.blog_format_h3');
 		$this->blog_format_h4		= $config->get('c5dk_blog.blog_format_h4');
 		$this->blog_format_pre		= $config->get('c5dk_blog.blog_format_pre');
+	}
+
+	public function getFormat() {
+
+		$tags = array('p');
+		if ($this->blog_format_h1) { $tags[] = 'h1'; }
+		if ($this->blog_format_h2) { $tags[] = 'h2'; }
+		if ($this->blog_format_h3) { $tags[] = 'h3'; }
+		if ($this->blog_format_h4) { $tags[] = 'h4'; }
+		if ($this->blog_format_pre) { $tags[] = 'pre'; }
+
+		return implode(";", $tags);
+	}
+
+	public function getPlugins() {
+		if ($this->blog_plugin_youtube) {
+			return 'youtube,';
+		} else {
+			return '';
+		}
 	}
 
 }

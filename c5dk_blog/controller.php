@@ -6,6 +6,7 @@ use Page;
 use PageList;
 use Events;
 use Route;
+use AssetList;
 use Concrete\Core\Editor\Plugin;
 
 use Concrete\Core\Tree\Type\FileManager;
@@ -18,7 +19,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 class Controller extends Package {
 
 	protected $appVersionRequired		= '8.0.1';
-	protected $pkgVersion				= '8.0.6.7';
+	protected $pkgVersion				= '8.0.7.b1';
 	protected $pkgHandle				= 'c5dk_blog';
 	protected $pkgAutoloaderRegistries	= array(
 		'src/C5dkBlog' => '\C5dk\Blog'
@@ -35,6 +36,7 @@ class Controller extends Package {
 
 		$this->registerEvents();
 		$this->registerRoutes();
+		$this->registerAssets();
 	}
 
 	private function registerEvents() {
@@ -47,6 +49,7 @@ class Controller extends Package {
 
 		Route::register('/c5dk/blog/{method}/{blogID}', '\C5dk\Blog\C5dkAjax::blog');
 	}
+
 
 	public function install() {
 
@@ -189,7 +192,6 @@ class Controller extends Package {
 	}
 
 
-
 	public function eventOnUserDelete($event) {
 
 		$uID = $event->getUserInfoObject()->getUserID();
@@ -237,6 +239,29 @@ class Controller extends Package {
 			}
 
 		}
+	}
+
+	public function registerAssets() {
+
+		// Get the AssetList
+		$al = AssetList::getInstance();
+
+		// CKEditor
+		$al->register('javascript', 'c5dkckeditor', 'js/ckeditor/ckeditor.js', array(), 'c5dk_blog');
+
+		// Register C5DK Blog CSS
+		$al->register('css', 'c5dk_blog_css', 'css/c5dk_blog.min.css', array(), 'c5dk_blog');
+
+		// Register jQuery Jcrop plugin
+		$al->register('javascript', 'jcrop', 'js/Jcrop/jquery.Jcrop.min.js', array(), 'c5dk_blog');
+		$al->register('css', 'jcrop', 'css/Jcrop/jquery.Jcrop.min.css', array(), 'c5dk_blog');
+
+		// Register jQuery Jcrop plugin
+		$al->register('javascript', 'validation', 'js/validation/jquery.validate.js', array(), 'c5dk_blog');
+
+		// Slide-in-panel
+		$al->register('javascript', 'slide-in-panel/main', 'js/slide-in-panel/jquery.slidereveal.min.js', array(), 'c5dk_blog');
+
 	}
 
 }

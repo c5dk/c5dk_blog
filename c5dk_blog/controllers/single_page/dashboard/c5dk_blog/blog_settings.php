@@ -28,7 +28,8 @@ class BlogSettings extends DashboardPageController {
 		$config = $pkg->getConfig();
 
 		// Settings
-		$config->save('c5dk_blog.blog_title_editable', ($this->post('blog_title_editable'))? $this->post('blog_title_editable') : 0);
+		$config->save('c5dk_blog.blog_title_editable',	($this->post('blog_title_editable'))? $this->post('blog_title_editable') : 0);
+		$config->save('c5dk_blog.blog_form_slidein',	($this->post('blog_form_slidein'))? $this->post('blog_form_slidein') : 0);
 
 		// Images & Thumbnails
 		$config->save('c5dk_blog.blog_thumbnail_width',		$this->post('blog_thumbnail_width'));

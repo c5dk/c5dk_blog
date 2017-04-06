@@ -1,5 +1,19 @@
 <?php defined('C5_EXECUTE') or die("Access Denied."); ?>
 
+<?php
+print View::element('blog_post', array(
+	'BlogPost' => $BlogPost,
+	'C5dkConfig' => $C5dkConfig,
+	'C5dkUser' => $C5dkUser,
+	'C5dkBlog' => $C5dkBlog,
+	'settings' => $settings,
+	'token' => Core::make('token'),
+	'jh' => Core::make('helper/json'),
+	'form' => Core::make('helper/form')
+), 'c5dk_blog');
+?>
+
+<?php if(false) { ?>
 <div id="c5dk-blog-package">
 
 	<form id="c5dk_blog_form" method="post" action="<?= $this->action('save'); ?>">
@@ -199,329 +213,329 @@
 </div> <!-- c5dk-blog-package wrapper -->
 
 <style type="text/css">
-#c5dk-blog-package .field-invalid {
-    border-color: red !important;
-}
+	#c5dk-blog-package .field-invalid {
+	    border-color: red !important;
+	}
 </style>
 
 <script type="text/javascript">
-var CCM_EDITOR_SECURITY_TOKEN = "<?= Core::make("token")->generate('editor'); ?>";
+	var CCM_EDITOR_SECURITY_TOKEN = "<?= Core::make("token")->generate('editor'); ?>";
 
-if (!c5dk) {
-	var c5dk = {};
-}
-if (!c5dk.blog) {
-	c5dk.blog = {};
-}
-
-c5dk.blog.post = {
-
-	rootList: <?= $jh->encode($BlogPost->rootList); ?>,
-	imageList: '',
-	imageUploadUrl: '<?= $this->action("upload"); ?>',
-	ckeditor: null,
-	jcrop_api: null,
-
-	init: function() {
-
-		// $( ".redactor-editor" ).focus(function() {
-		// 	$('.redactor-box').addClass('redactor-box-infocus');
-		// });
-
-		// $( ".redactor-editor" ).focusout(function() {
-		// 	$('.redactor-box').removeClass('redactor-box-infocus');
-		// });
-
-		$( ".c5dk_bp_title" ).focus(function() {
-			$('.c5dk-title-char-counter').addClass('c5dk-char-counter-highlite');
-		});
-
-		$( ".c5dk_bp_title" ).focusout(function() {
-			$('.c5dk-title-char-counter').removeClass('c5dk-char-counter-highlite');
-		});
-
-		$( "#description" ).focus(function() {
-			$('.c5dk-description-char-counter').addClass('c5dk-char-counter-highlite');
-		});
-
-		$( "#description" ).focusout(function() {
-			$('.c5dk-description-char-counter').removeClass('c5dk-char-counter-highlite');
-		});
-
-		this.eventInit();
-
-		// Init Image Manager fileList
-		c5dk.blog.post.image.getFileList();
-
-		$("#c5dk_blog_form").validate({
-			rules: {
-				title: { required: true },
-				content: { required: true }
-			},
-			errorClass: "field-invalid",
-			errorPlacement: function(error,element) {
-				return true;
-			},
-			submitHandler: function(form) {
-
-				// Submit form
-				$('#title').removeAttr('disabled');
-				$('.c5dk_blogpage_ButtonGreen').addClass('c5dk_blogpage_ButtonDisabled').removeClass('c5dk_blogpage_ButtonGreen').attr('disabled','disabled');
-				return true;
-			}
-		});
-
-		// Make sure session doesn't timeout
-		setInterval(c5dk.blog.post.ping, 60000);
-
-		// Move focus to the title field
-		$('.c5dk_blog_title input').focus();
-
-	},
-
-	eventInit: function() {
-
-		// Root change event to change the topic tree
-		$('#rootID').change(function(event) {
-			window.location = "<?= $this->url('blog_post', 'create', $BlogPost->redirectID); ?>/" + $('#rootID').val();
-		});
-
-		// Title and description char counter
-		$('#title, #description').keyup(function(event) {
-			switch(this.id){
-				case "title":
-					var charLength = 70;
-					var divCounter = "#charNumTitle";
-					break;
-				case "description":
-					var charLength = 156;
-					var divCounter = "#charNumDescription";
-					break;
-			}
-			var len = this.value.length;
-			if (len > charLength) {
-				$(divCounter).text(charLength - len);
-				$(divCounter).addClass('c5dk_blog_cnt_red');
-			} else {
-				$(divCounter).text(charLength - len);
-				$(divCounter).removeClass('c5dk_blog_cnt_red');
-			}
-		}).trigger('keyup');
-
-		// Image upload format checking and submit
-		$('#file').on('change', function(event){
-			// Hide error message if shown
-			$('#c5dk_blog_upload_image_error').hide();
-
-			var split = event.currentTarget.value.split('.');
-			var ext = split[split.length - 1].toLowerCase();
-			var allowedExt = ['jpg', 'jpeg', 'png', 'bmp'];
-			if($.inArray(ext, allowedExt) !== "-1" && $(".ui-dialog #file").val() != "") {
-				$('#c5dk_imageManager progress').hide();
-				var formData = new FormData($('#c5dk_image_upload_form')[0]);
-				$.ajax({
-						url: c5dk.blog.post.imageUploadUrl,
-						type: 'POST',
-						// Custom XMLHttpRequest
-						xhr: function() {
-								var myXhr = $.ajaxSettings.xhr();
-								// Check if upload property exists
-								if(myXhr.upload){
-									$('progress').show();
-									$('#file').hide();
-									myXhr.upload.addEventListener('progress',function(e){
-										if(e.lengthComputable){
-											$('progress').attr({value:e.loaded,max:e.total});
-										}
-									}, false);
-								}
-								return myXhr;
-						},
-						success: function(data){
-							$('#file').val('').show();
-							$('#c5dk_imageManager progress').hide();
-							c5dk.blog.post.image.getFileList();
-						},
-						//error: errorHandler,
-						data: formData,
-						cache: false,
-						contentType: false,
-						processData: false
-				});
-			} else {
-				$('#c5dk_blog_upload_image_error').show();
-				$(this).val('');
-			}
-		});
-
-	},
-
-	ping: function(){
-		$.ajax({
-			type: 'POST',
-			url: '<?= $this->action('ping'); ?>',
-			dataType: 'json'
-		});
-	},
-
-	image: {
-
-		managerMode: null,
-		currentFID: null,
-		fileList: {},
-
-		delete: function(mode, fID) {
-			switch (mode){
-				case "confirm":
-					c5dk.blog.post.image.currentFID = fID;
-					$.fn.dialog.open({
-						element:"#dialog-confirmDeleteImage",
-						title:"<?= t('Confirm Delete'); ?>",
-						height:100,
-						width:300
-					});
-					break;
-
-				case "delete":
-					$.fn.dialog.closeTop();
-					$.ajax({
-						type: 'POST',
-						url: '<?= $this->action('delete', 'image'); ?>/' + c5dk.blog.post.image.currentFID,
-						dataType: 'json',
-						success: function(r) {
-							if (r.status == "success") { c5dk.blog.post.image.getFileList(); }
-						}
-					});
-					break;
-				case "close":
-					$.fn.dialog.closeTop();
-					break;
-			}
-		},
-
-		getFileList: function(){
-			$('progress').hide();
-			$.ajax({
-				type: 'POST',
-				url: '<?= $this->action('getFileList'); ?>',
-				dataType: 'json',
-				success: function(data){
-					c5dk.blog.post.image.fileList = data;
-					c5dk.blog.post.image.updateManager();
-				}
-			});
-		},
-
-		showManager: function (mode) {
-			c5dk.blog.post.image.getFileList();
-			c5dk.blog.post.image.managerMode = (mode == "thumbnail")? mode : "editor";
-			$('#file').val('').show();
-			$('#c5dk_imageManager progress').hide();
-			$.fn.dialog.open({
-				element:"#dialog-imageManager",
-				title:"<?= t('Image Manager'); ?>",
-				height:450,
-				width:620
-			});
-		},
-
-		updateManager: function () {
-			var canDeleteImages = false;
-			$('.redactor-c5dkimagemanager-box').html("");
-			for (val in c5dk.blog.post.image.fileList) {
-				var file = c5dk.blog.post.image.fileList[val];
-				var deleteSpan = (canDeleteImages)? '<span class="fa fa-trash delete-image" style="position: absolute; left:84px; width:16px; height:16px; background-color:#fff; cursor: pointer"></span>' : '';
-				var img = '<img class="c5dk_image_thumbs" src="' + file.thumbnail.src + '" data-fid="' + file.fID + '" data-src="' + file.picture.src + '" data-width="' + file.picture.width + '" data-height="' + file.picture.height + '" style="max-width: 110px; max-height: 85px; cursor: pointer; border: 3px solid #ddd;" />';
-				$('.redactor-c5dkimagemanager-box').append($('<div data-fid="' + file.fID + '" style="position:relative; float:left; width:110px; height:110px; margin-right: 5px;">' + deleteSpan + img + '</div>'));
-
-			}
-
-			$(".c5dk_image_thumbs").on('click', function(event) {
-				switch (c5dk.blog.post.image.managerMode) {
-					case "editor":
-						var element = CKEDITOR.dom.element.createFromHtml( '<img src="' + $(event.target).data('src') + '" />' );
-						c5dk.blog.post.ckeditor.insertElement( element );
-						$.fn.dialog.closeTop();
-						break;
-
-					case "thumbnail":
-						var el = $(event.target);
-						c5dk.blog.post.thumbnail.useAsThumb(el.data('fid'), el.data('src'), el.data('width'), el.data('height'));
-						$.fn.dialog.closeTop();
-						break;
-				}
-			});
-
-			$(".delete-image").on('click', function (event) {
-				c5dk.blog.post.image.delete('confirm', $(event.target).closest('div').data('fid'));
-			});
-		}
-
-	},
-
-	thumbnail: {
-		preview:{
-			width: 150,
-			height: Math.round((150 / (<?= $C5dkConfig->blog_thumbnail_width; ?> / 100)) * (<?= $C5dkConfig->blog_thumbnail_height; ?> / 100))
-		},
-
-		save:{
-			width: <?= $C5dkConfig->blog_thumbnail_width; ?>,
-			height:	<?= $C5dkConfig->blog_thumbnail_height; ?>
-		},
-
-		image:{
-			maxWidth: 500,
-			width: null,
-			height: null
-		},
-
-		remove:function () {
-			$('#thumbnailID').val(-1);
-			if(c5dk.blog.post.jcrop_api){ c5dk.blog.post.jcrop_api.destroy(); }
-			$('img#c5dk_crop_pic, #c5dk_blog_thumbnail').attr('src', "").hide();
-		},
-
-		useAsThumb:function (fID, src, width, height) {
-			if(c5dk.blog.post.jcrop_api){ c5dk.blog.post.jcrop_api.destroy(); }
-			$('#thumbnailID').val(fID);
-			this.image.height = (width < this.image.maxWidth)? height : ((this.image.maxWidth/width)*height);
-			this.image.width = (width < this.image.maxWidth)? width : this.image.maxWidth;
-			$('#c5dk_crop_pic, #c5dk_blog_thumbnail').attr({'src': src, 'width': this.image.width, 'height': this.image.height}).show();
-			$('#c5dk_crop_pic').Jcrop({
-				onChange: c5dk.blog.post.thumbnail.showPreview,
-				onSelect: c5dk.blog.post.thumbnail.showPreview,
-				aspectRatio: (c5dk.blog.post.thumbnail.save.width / c5dk.blog.post.thumbnail.save.height),
-				setSelect: [ 0, 0, c5dk.blog.post.thumbnail.save.width, c5dk.blog.post.thumbnail.save.height ]
-			},function(){
-				c5dk.blog.post.jcrop_api = this;
-			});
-		},
-
-		showPreview:function(coords){
-			var ry = c5dk.blog.post.thumbnail.preview.height / coords.h;
-			var rx = c5dk.blog.post.thumbnail.preview.width / coords.w;
-
-			$('#c5dk_blog_thumbnail').css({
-				height: Math.round(ry * c5dk.blog.post.thumbnail.image.height) + 'px',
-				width: Math.round(rx * c5dk.blog.post.thumbnail.image.width) + 'px',
-				marginLeft: '-' + Math.round(rx * coords.x) + 'px',
-				marginTop: '-' + Math.round(ry * coords.y) + 'px'
-			});
-
-			// Set form objects
-			$('#thumbnailX').val(coords.x);
-			$('#thumbnailY').val(coords.y);
-			$('#thumbnailWidth').val(coords.w);
-			$('#thumbnailHeight').val(coords.h);
-			$('#pictureWidth').val($('#c5dk_crop_pic').width());
-			$('#pictureHeight').val($('#c5dk_crop_pic').height());
-		}
+	if (!c5dk) {
+		var c5dk = {};
+	}
+	if (!c5dk.blog) {
+		c5dk.blog = {};
 	}
 
-}
+	c5dk.blog.post = {
 
-$(document).ready( function(){ c5dk.blog.post.init(); });
+		rootList: <?= $jh->encode($BlogPost->rootList); ?>,
+		imageList: '',
+		imageUploadUrl: '<?= $this->action("upload"); ?>',
+		ckeditor: null,
+		jcrop_api: null,
+
+		init: function() {
+
+			// $( ".redactor-editor" ).focus(function() {
+			// 	$('.redactor-box').addClass('redactor-box-infocus');
+			// });
+
+			// $( ".redactor-editor" ).focusout(function() {
+			// 	$('.redactor-box').removeClass('redactor-box-infocus');
+			// });
+
+			$( ".c5dk_bp_title" ).focus(function() {
+				$('.c5dk-title-char-counter').addClass('c5dk-char-counter-highlite');
+			});
+
+			$( ".c5dk_bp_title" ).focusout(function() {
+				$('.c5dk-title-char-counter').removeClass('c5dk-char-counter-highlite');
+			});
+
+			$( "#description" ).focus(function() {
+				$('.c5dk-description-char-counter').addClass('c5dk-char-counter-highlite');
+			});
+
+			$( "#description" ).focusout(function() {
+				$('.c5dk-description-char-counter').removeClass('c5dk-char-counter-highlite');
+			});
+
+			this.eventInit();
+
+			// Init Image Manager fileList
+			c5dk.blog.post.image.getFileList();
+
+			$("#c5dk_blog_form").validate({
+				rules: {
+					title: { required: true },
+					content: { required: true }
+				},
+				errorClass: "field-invalid",
+				errorPlacement: function(error,element) {
+					return true;
+				},
+				submitHandler: function(form) {
+
+					// Submit form
+					$('#title').removeAttr('disabled');
+					$('.c5dk_blogpage_ButtonGreen').addClass('c5dk_blogpage_ButtonDisabled').removeClass('c5dk_blogpage_ButtonGreen').attr('disabled','disabled');
+					return true;
+				}
+			});
+
+			// Make sure session doesn't timeout
+			setInterval(c5dk.blog.post.ping, 60000);
+
+			// Move focus to the title field
+			$('.c5dk_blog_title input').focus();
+
+		},
+
+		eventInit: function() {
+
+			// Root change event to change the topic tree
+			$('#rootID').change(function(event) {
+				window.location = "<?= $this->url('blog_post', 'create', $BlogPost->redirectID); ?>/" + $('#rootID').val();
+			});
+
+			// Title and description char counter
+			$('#title, #description').keyup(function(event) {
+				switch(this.id){
+					case "title":
+						var charLength = 70;
+						var divCounter = "#charNumTitle";
+						break;
+					case "description":
+						var charLength = 156;
+						var divCounter = "#charNumDescription";
+						break;
+				}
+				var len = this.value.length;
+				if (len > charLength) {
+					$(divCounter).text(charLength - len);
+					$(divCounter).addClass('c5dk_blog_cnt_red');
+				} else {
+					$(divCounter).text(charLength - len);
+					$(divCounter).removeClass('c5dk_blog_cnt_red');
+				}
+			}).trigger('keyup');
+
+			// Image upload format checking and submit
+			$('#file').on('change', function(event){
+				// Hide error message if shown
+				$('#c5dk_blog_upload_image_error').hide();
+
+				var split = event.currentTarget.value.split('.');
+				var ext = split[split.length - 1].toLowerCase();
+				var allowedExt = ['jpg', 'jpeg', 'png', 'bmp'];
+				if($.inArray(ext, allowedExt) !== "-1" && $(".ui-dialog #file").val() != "") {
+					$('#c5dk_imageManager progress').hide();
+					var formData = new FormData($('#c5dk_image_upload_form')[0]);
+					$.ajax({
+							url: c5dk.blog.post.imageUploadUrl,
+							type: 'POST',
+							// Custom XMLHttpRequest
+							xhr: function() {
+									var myXhr = $.ajaxSettings.xhr();
+									// Check if upload property exists
+									if(myXhr.upload){
+										$('progress').show();
+										$('#file').hide();
+										myXhr.upload.addEventListener('progress',function(e){
+											if(e.lengthComputable){
+												$('progress').attr({value:e.loaded,max:e.total});
+											}
+										}, false);
+									}
+									return myXhr;
+							},
+							success: function(data){
+								$('#file').val('').show();
+								$('#c5dk_imageManager progress').hide();
+								c5dk.blog.post.image.getFileList();
+							},
+							//error: errorHandler,
+							data: formData,
+							cache: false,
+							contentType: false,
+							processData: false
+					});
+				} else {
+					$('#c5dk_blog_upload_image_error').show();
+					$(this).val('');
+				}
+			});
+
+		},
+
+		ping: function(){
+			$.ajax({
+				type: 'POST',
+				url: '<?= $this->action('ping'); ?>',
+				dataType: 'json'
+			});
+		},
+
+		image: {
+
+			managerMode: null,
+			currentFID: null,
+			fileList: {},
+
+			delete: function(mode, fID) {
+				switch (mode){
+					case "confirm":
+						c5dk.blog.post.image.currentFID = fID;
+						$.fn.dialog.open({
+							element:"#dialog-confirmDeleteImage",
+							title:"<?= t('Confirm Delete'); ?>",
+							height:100,
+							width:300
+						});
+						break;
+
+					case "delete":
+						$.fn.dialog.closeTop();
+						$.ajax({
+							type: 'POST',
+							url: '<?= $this->action('delete', 'image'); ?>/' + c5dk.blog.post.image.currentFID,
+							dataType: 'json',
+							success: function(r) {
+								if (r.status == "success") { c5dk.blog.post.image.getFileList(); }
+							}
+						});
+						break;
+					case "close":
+						$.fn.dialog.closeTop();
+						break;
+				}
+			},
+
+			getFileList: function(){
+				$('progress').hide();
+				$.ajax({
+					type: 'POST',
+					url: '<?= $this->action('getFileList'); ?>',
+					dataType: 'json',
+					success: function(data){
+						c5dk.blog.post.image.fileList = data;
+						c5dk.blog.post.image.updateManager();
+					}
+				});
+			},
+
+			showManager: function (mode) {
+				c5dk.blog.post.image.getFileList();
+				c5dk.blog.post.image.managerMode = (mode == "thumbnail")? mode : "editor";
+				$('#file').val('').show();
+				$('#c5dk_imageManager progress').hide();
+				$.fn.dialog.open({
+					element:"#dialog-imageManager",
+					title:"<?= t('Image Manager'); ?>",
+					height:450,
+					width:620
+				});
+			},
+
+			updateManager: function () {
+				var canDeleteImages = false;
+				$('.redactor-c5dkimagemanager-box').html("");
+				for (val in c5dk.blog.post.image.fileList) {
+					var file = c5dk.blog.post.image.fileList[val];
+					var deleteSpan = (canDeleteImages)? '<span class="fa fa-trash delete-image" style="position: absolute; left:84px; width:16px; height:16px; background-color:#fff; cursor: pointer"></span>' : '';
+					var img = '<img class="c5dk_image_thumbs" src="' + file.thumbnail.src + '" data-fid="' + file.fID + '" data-src="' + file.picture.src + '" data-width="' + file.picture.width + '" data-height="' + file.picture.height + '" style="max-width: 110px; max-height: 85px; cursor: pointer; border: 3px solid #ddd;" />';
+					$('.redactor-c5dkimagemanager-box').append($('<div data-fid="' + file.fID + '" style="position:relative; float:left; width:110px; height:110px; margin-right: 5px;">' + deleteSpan + img + '</div>'));
+
+				}
+
+				$(".c5dk_image_thumbs").on('click', function(event) {
+					switch (c5dk.blog.post.image.managerMode) {
+						case "editor":
+							var element = CKEDITOR.dom.element.createFromHtml( '<img src="' + $(event.target).data('src') + '" />' );
+							c5dk.blog.post.ckeditor.insertElement( element );
+							$.fn.dialog.closeTop();
+							break;
+
+						case "thumbnail":
+							var el = $(event.target);
+							c5dk.blog.post.thumbnail.useAsThumb(el.data('fid'), el.data('src'), el.data('width'), el.data('height'));
+							$.fn.dialog.closeTop();
+							break;
+					}
+				});
+
+				$(".delete-image").on('click', function (event) {
+					c5dk.blog.post.image.delete('confirm', $(event.target).closest('div').data('fid'));
+				});
+			}
+
+		},
+
+		thumbnail: {
+			preview:{
+				width: 150,
+				height: Math.round((150 / (<?= $C5dkConfig->blog_thumbnail_width; ?> / 100)) * (<?= $C5dkConfig->blog_thumbnail_height; ?> / 100))
+			},
+
+			save:{
+				width: <?= $C5dkConfig->blog_thumbnail_width; ?>,
+				height:	<?= $C5dkConfig->blog_thumbnail_height; ?>
+			},
+
+			image:{
+				maxWidth: 500,
+				width: null,
+				height: null
+			},
+
+			remove:function () {
+				$('#thumbnailID').val(-1);
+				if(c5dk.blog.post.jcrop_api){ c5dk.blog.post.jcrop_api.destroy(); }
+				$('img#c5dk_crop_pic, #c5dk_blog_thumbnail').attr('src', "").hide();
+			},
+
+			useAsThumb:function (fID, src, width, height) {
+				if(c5dk.blog.post.jcrop_api){ c5dk.blog.post.jcrop_api.destroy(); }
+				$('#thumbnailID').val(fID);
+				this.image.height = (width < this.image.maxWidth)? height : ((this.image.maxWidth/width)*height);
+				this.image.width = (width < this.image.maxWidth)? width : this.image.maxWidth;
+				$('#c5dk_crop_pic, #c5dk_blog_thumbnail').attr({'src': src, 'width': this.image.width, 'height': this.image.height}).show();
+				$('#c5dk_crop_pic').Jcrop({
+					onChange: c5dk.blog.post.thumbnail.showPreview,
+					onSelect: c5dk.blog.post.thumbnail.showPreview,
+					aspectRatio: (c5dk.blog.post.thumbnail.save.width / c5dk.blog.post.thumbnail.save.height),
+					setSelect: [ 0, 0, c5dk.blog.post.thumbnail.save.width, c5dk.blog.post.thumbnail.save.height ]
+				},function(){
+					c5dk.blog.post.jcrop_api = this;
+				});
+			},
+
+			showPreview:function(coords){
+				var ry = c5dk.blog.post.thumbnail.preview.height / coords.h;
+				var rx = c5dk.blog.post.thumbnail.preview.width / coords.w;
+
+				$('#c5dk_blog_thumbnail').css({
+					height: Math.round(ry * c5dk.blog.post.thumbnail.image.height) + 'px',
+					width: Math.round(rx * c5dk.blog.post.thumbnail.image.width) + 'px',
+					marginLeft: '-' + Math.round(rx * coords.x) + 'px',
+					marginTop: '-' + Math.round(ry * coords.y) + 'px'
+				});
+
+				// Set form objects
+				$('#thumbnailX').val(coords.x);
+				$('#thumbnailY').val(coords.y);
+				$('#thumbnailWidth').val(coords.w);
+				$('#thumbnailHeight').val(coords.h);
+				$('#pictureWidth').val($('#c5dk_crop_pic').width());
+				$('#pictureHeight').val($('#c5dk_crop_pic').height());
+			}
+		}
+
+	}
+
+	$(document).ready( function(){ c5dk.blog.post.init(); });
 
 </script>
 
@@ -576,3 +590,4 @@ $(document).ready( function(){ c5dk.blog.post.init(); });
 		font-weight: bold;
 	}
 </style>
+<?php } ?>

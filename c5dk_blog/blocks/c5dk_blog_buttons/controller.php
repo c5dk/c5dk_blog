@@ -5,6 +5,7 @@ use Core;
 use Page;
 use Concrete\Core\Block\BlockController;
 
+use C5dk\Blog\C5dkConfig as C5dkConfig;
 use C5dk\Blog\C5dkUser as C5dkUser;
 use C5dk\Blog\C5dkBlog as C5dkBlog;
 
@@ -21,13 +22,22 @@ class Controller extends BlockController {
 	public function view() {
 
 		// Init Objects
-		$C5dkUser = new C5dkUser;
-		$this->set('C5dkUser', $C5dkUser);
+		$this->set('C5dkConfig', new C5dkConfig);
+		$this->set('C5dkUser', new C5dkUser);
 		$this->set('C5dkBlog', C5dkBlog::getByID(Page::getCurrentPage()->getCollectionID()));
 		$this->set('form', Core::make('helper/form'));
 
 		// Require Asset
 		$this->requireAsset('core/app');
+		$this->requireAsset('selectize');
+		$this->requireAsset('css', 'c5dk_blog_css');
+		// $this->requireAsset('redactor');
+		$this->requireAsset('javascript', 'c5dkckeditor');
+		$this->requireAsset('core/topics');
+		$this->requireAsset('javascript', 'jcrop');
+		$this->requireAsset('css', 'jcrop');
+		$this->requireAsset('javascript', 'validation');
+		$this->requireAsset('javascript', 'slide-in-panel/main');
 	}
 
 }

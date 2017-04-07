@@ -72,7 +72,7 @@
 						dataType: 'json',
 						data: {
 							slidein: 1,
-							mode: 'create',
+							mode: '<?= C5DK_BLOG_MODE_CREATE; ?>',
 							blogID: blogID,
 							rootID: rootID
 						},
@@ -110,7 +110,7 @@
 						dataType: 'json',
 						data: {
 							slidein: 1,
-							mode: 'edit',
+							mode: '<?= C5DK_BLOG_MODE_EDIT; ?>',
 							blogID: blogID,
 							rootID: rootID
 						},

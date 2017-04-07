@@ -39,7 +39,7 @@ class C5dkAjax extends Controller {
 
 		$C5dkBlogPost = new C5dkBlogPost;
 
-		if ($request['mode'] == 'create') {
+		if ($request['mode'] == C5DK_BLOG_MODE_CREATE) {
 			$C5dkBlogPost->create($request['blogID'], $request['rootID']);
 		} else {
 			$C5dkBlogPost->edit($request['blogID']);

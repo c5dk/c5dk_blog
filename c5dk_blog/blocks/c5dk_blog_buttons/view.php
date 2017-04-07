@@ -53,69 +53,87 @@
 
 			form: {
 
+				state: {
+					create: 0,
+					edit: 0
+				},
+
 				create: null,
 				edit: null
 			},
 
 			create: function(blogID, rootID) {
 
-				$.ajax({
-					type: 'POST',
-					dataType: 'json',
-					data: {
-						slidein: 1,
-						mode: 'create',
-						blogID: blogID,
-						rootID: rootID
-					},
-					url: '<?= \URL::to("/c5dk/blog/get/form"); ?>',
-					success: function(response){
-						if (response.form) {
-							$('#c5dk_form_slidein').html(response.form);
-						}
+				if (c5dk.blog.buttons.form.create) {
+					c5dk.blog.buttons.form.create.slideReveal("show");
+				} else {
+					$.ajax({
+						type: 'POST',
+						dataType: 'json',
+						data: {
+							slidein: 1,
+							mode: 'create',
+							blogID: blogID,
+							rootID: rootID
+						},
+						url: '<?= \URL::to("/c5dk/blog/get/form"); ?>',
+						success: function(response){
+							if (response.form) {
+								$('#c5dk_form_slidein').html(response.form);
+							}
 
-						c5dk.blog.buttons.form.create = $('#c5dk_form_slidein').slideReveal({
-							// trigger: $("#c5dk_form_slidein"),
-							width: "1100px",
-							push: false,
-							position: "right",
-							overlay: true,
-							overlaycolor: "green"
-						});
-						c5dk.blog.buttons.form.create.slideReveal("show");
-					}
-				});
+							c5dk.blog.buttons.form.create = $('#c5dk_form_slidein').slideReveal({
+								// trigger: $("#c5dk_form_slidein"),
+								width: "1100px",
+								push: false,
+								autoEscape: true,
+								position: "right",
+								overlay: true,
+								overlaycolor: "green"
+							});
+							c5dk.blog.buttons.form.create.slideReveal("show");
+						}
+					});
+				}
+
 				return false;
 			},
 
 			edit: function(blogID, rootID) {
 
-				$.ajax({
-					type: 'POST',
-					dataType: 'json',
-					data: {
-						slidein: 1,
-						mode: 'edit',
-						blogID: blogID,
-						rootID: rootID
-					},
-					url: '<?= \URL::to("/c5dk/blog/get/form"); ?>',
-					success: function(response){
-						if (response.form) {
-							$('#c5dk_form_slidein').html(response.form);
-						}
+				if (c5dk.blog.buttons.form.edit) {
+					c5dk.blog.buttons.form.edit.slideReveal("show");
+				} else {
 
-						c5dk.blog.buttons.form.edit = $('#c5dk_form_slidein').slideReveal({
-							// trigger: $("#c5dk_form_slidein"),
-							width: "1100px",
-							push: false,
-							position: "right",
-							overlay: true,
-							overlaycolor: "green"
-						});
-						c5dk.blog.buttons.form.edit.slideReveal("show");
-					}
-				});
+					$.ajax({
+						type: 'POST',
+						dataType: 'json',
+						data: {
+							slidein: 1,
+							mode: 'edit',
+							blogID: blogID,
+							rootID: rootID
+						},
+						url: '<?= \URL::to("/c5dk/blog/get/form"); ?>',
+						success: function(response){
+							if (response.form) {
+								$('#c5dk_form_slidein').html(response.form);
+							}
+
+							c5dk.blog.buttons.form.edit = $('#c5dk_form_slidein').slideReveal({
+								// trigger: $("#c5dk_form_slidein"),
+								width: "1100px",
+								push: false,
+								autoEscape: true,
+								position: "right",
+								overlay: true,
+								overlaycolor: "green"
+							});
+							c5dk.blog.buttons.form.edit.slideReveal("show");
+						}
+					});
+				}
+
 				return false;
 			},
 
@@ -149,6 +167,11 @@
 						$.fn.dialog.closeTop();
 						break;
 				}
+			},
+
+			cancel: function() {
+				c5dk.blog.buttons.form.create.slideReveal("hide");
+				c5dk.blog.buttons.form.edit.slideReveal("hide");
 			}
 
 		};

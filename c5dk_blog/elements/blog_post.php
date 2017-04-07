@@ -15,7 +15,7 @@
 			<!-- Form buttons -->
 			<div class="c5dk_blog_buttons">
 				<input class="c5dk_blogpage_ButtonGreen" type="submit" value="<?= ($BlogPost->mode == C5DK_BLOG_MODE_CREATE)? t('Post') : t('Update'); ?>" name="submit">
-				<input class="c5dk_blogpage_ButtonBlue" onclick="window.history.back();" type="button" value="<?= t('Cancel'); ?>">
+				<input class="c5dk_blogpage_ButtonBlue" onclick="c5dk.blog.post.blog.cancel();" type="button" value="<?= t('Cancel'); ?>">
 			</div>
 		</div>
 
@@ -154,7 +154,7 @@
 			<!-- Form buttons -->
 			<div class="c5dk_blog_buttons">
 				<input class="c5dk_blogpage_ButtonGreen" type="submit" value="<?= ($BlogPost->mode == C5DK_BLOG_MODE_CREATE)? t('Post') : t('Update'); ?>" name="submit">
-				<input class="c5dk_blogpage_ButtonBlue" onclick="window.history.back();" type="button" value="<?= t('Cancel'); ?>">
+				<input class="c5dk_blogpage_ButtonBlue" onclick="c5dk.blog.post.blog.cancel();" type="button" value="<?= t('Cancel'); ?>">
 			</div>
 		</div>
 
@@ -359,6 +359,9 @@ c5dk.blog.post = {
 
 	blog: {
 
+		mode: <?= $BlogPost->mode == C5DK_BLOG_MODE_CREATE? C5DK_BLOG_MODE_CREATE : C5DK_BLOG_MODE_EDIT; ?>,
+		slidein: <?= $C5dkConfig->blog_form_slidein; ?>,
+
 		save: function () {
 
 			$.ajax({
@@ -383,6 +386,14 @@ c5dk.blog.post = {
 					$('#searchText').focus();
 				}
 			});
+		},
+
+		cancel: function() {
+			if (c5dk.blog.post.blog.mode) {
+				c5dk.blog.buttons.cancel();
+			} else {
+				window.history.back();
+			}
 		}
 	},
 

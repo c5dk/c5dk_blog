@@ -170,8 +170,8 @@
 			},
 
 			cancel: function() {
-				c5dk.blog.buttons.form.create.slideReveal("hide");
-				c5dk.blog.buttons.form.edit.slideReveal("hide");
+				if (c5dk.blog.buttons.form.create) { c5dk.blog.buttons.form.create.slideReveal("hide"); }
+				if (c5dk.blog.buttons.form.edit) { c5dk.blog.buttons.form.edit.slideReveal("hide"); }
 			}
 
 		};

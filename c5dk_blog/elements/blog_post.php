@@ -1,6 +1,6 @@
 <?php defined('C5_EXECUTE') or die("Access Denied."); ?>
 
-<div id="c5dk-blog-package">
+<div id="c5dk-blog-package" class="container main-wrap">
 
 	<form id="c5dk_blog_form" method="post" action="<?= \URL::to('/blog_post/save'); ?>">
 

@@ -84,11 +84,11 @@
 
 							c5dk.blog.buttons.form.create = $('#c5dk_form_slidein').slideReveal({
 								// trigger: $("#c5dk_form_slidein"),
-								width: "1100px",
+								width: "100%",
 								push: false,
-								autoEscape: true,
+								autoEscape: false,
 								position: "right",
-								overlay: true,
+								overlay: false,
 								overlaycolor: "green"
 							});
 							c5dk.blog.buttons.form.create.slideReveal("show");
@@ -122,11 +122,11 @@
 
 							c5dk.blog.buttons.form.edit = $('#c5dk_form_slidein').slideReveal({
 								// trigger: $("#c5dk_form_slidein"),
-								width: "1100px",
+								width: "100%",
 								push: false,
-								autoEscape: true,
+								autoEscape: false,
 								position: "right",
-								overlay: true,
+								overlay: false,
 								overlaycolor: "green"
 							});
 							c5dk.blog.buttons.form.edit.slideReveal("show");

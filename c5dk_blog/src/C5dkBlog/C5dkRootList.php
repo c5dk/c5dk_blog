@@ -40,7 +40,8 @@ class C5dkRootList extends DatabaseItemList implements PermissionableListItemInt
 		// Get results from PageList
 		$roots = array();
 		$pl = new PageList;
-		$pl->filterByAttribute('c5dk_blog_root', true);
+		$pl->setSiteTreeToAll();
+		$pl->filterByC5dkBlogRoot(true);
 		foreach($pl->get($itemsToGet, intval($offset)) as $row) {
 			$roots[$row->cID] = C5dkRoot::getByID($row->cID);
 		}

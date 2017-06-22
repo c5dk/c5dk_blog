@@ -9,6 +9,7 @@ use Database;
 use Package;
 use AssetList;
 use CollectionAttributeKey;
+use Concrete\Core\Multilingual\Page\Section\Section;
 
 use Image;
 use Imagine\Image\Box;
@@ -99,8 +100,11 @@ class BlogPost {
 
 	private function getUserRootList() {
 
+		$sectionList = Section::getList();
+
 		foreach($this->C5dkUser->getRootList() as $index => $C5dkRoot) {
-			$rootList[$C5dkRoot->rootID] = $C5dkRoot->getCollectionName() . ' (' . $C5dkRoot->getSiteTreeObject()->getLocale()->getLanguageText() . ')';
+			$languageText = count($sectionList)? ' ('. $C5dkRoot->getSiteTreeObject()->getLocale()->getLanguageText() . ')' : '';
+			$rootList[$C5dkRoot->rootID] = $C5dkRoot->getCollectionName() . $languageText;
 		}
 
 		return $rootList;

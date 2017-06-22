@@ -100,7 +100,7 @@ class BlogPost {
 	private function getUserRootList() {
 
 		foreach($this->C5dkUser->getRootList() as $index => $C5dkRoot) {
-			$rootList[$C5dkRoot->rootID] = $C5dkRoot->getCollectionName();
+			$rootList[$C5dkRoot->rootID] = $C5dkRoot->getCollectionName() . ' (' . $C5dkRoot->getSiteTreeObject()->getLocale()->getLanguageText() . ')';
 		}
 
 		return $rootList;

@@ -19,7 +19,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 class Controller extends Package {
 
 	protected $appVersionRequired		= '8.2';
-	protected $pkgVersion				= '8.0.7.b7';
+	protected $pkgVersion				= '8.0.7.b8';
 	protected $pkgHandle				= 'c5dk_blog';
 	protected $pkgAutoloaderRegistries	= array(
 		'src/C5dkBlog' => '\C5dk\Blog'
@@ -92,6 +92,7 @@ class Controller extends Package {
 
 		// Settings
 		C5dkInstaller::installConfigKey('blog_title_editable',		false,		$pkg);
+		C5dkInstaller::installConfigKey('blog_form_slidein',		false,		$pkg);
 
 		// Images & Thumbnails
 		C5dkInstaller::installConfigKey('blog_thumbnail_width',		360,		$pkg);
@@ -250,7 +251,7 @@ class Controller extends Package {
 		$al->register('javascript', 'c5dkckeditor', 'js/ckeditor/ckeditor.js', array(), 'c5dk_blog');
 
 		// Register C5DK Blog CSS
-		$al->register('css', 'c5dk_blog_css', 'css/c5dk_blog.min.css', array(), 'c5dk_blog');
+		$al->register('css', 'c5dk_blog_css', 'css/c5dk_blog.css', array(), 'c5dk_blog');
 
 		// Register jQuery Jcrop plugin
 		$al->register('javascript', 'jcrop', 'js/Jcrop/jquery.Jcrop.min.js', array(), 'c5dk_blog');

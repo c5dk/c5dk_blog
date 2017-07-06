@@ -231,6 +231,8 @@
 	border-left: solid 8px #004a89;
 	font-size:16px;
 	font-weight: lighter;
+    line-height: 20px !important;
+    vertical-align: top;
 	padding:6px 10px;
 	text-decoration:none;
 	text-align: center;
@@ -261,8 +263,11 @@
 	border-top: solid 1px #019620;
 	border-right: solid 1px #019620;
 	border-left: solid 8px #019620;
+    border-radius: 0;
 	font-size:16px;
 	font-weight: lighter;
+    line-height: 20px !important;
+    vertical-align: top;
 	padding:6px 10px;
 	text-decoration:none;
 	text-align: center;
@@ -272,6 +277,10 @@
 	-webkit-transition: all ease 0.5s;
 	-moz-transition: all ease 0.5s;
 	transition: all ease 0.5s;
+}
+
+#c5dk-blog-package .c5dk_blogpage_ButtonGreen.c5dk_blogpage_ButtonGreen_thumb {
+    width: 100%;
 }
 
 #c5dk-blog-package .c5dk_blogpage_ButtonGreen:hover {
@@ -313,6 +322,8 @@
 	border-left: solid 8px #ff0113;
 	font-size:16px;
 	font-weight: lighter;
+    line-height: 20px !important;
+    vertical-align: top;
 	padding:6px 10px;
 	text-decoration:none;
 	text-align: center;
@@ -333,4 +344,11 @@
 #c5dk-blog-package .c5dk_blog_ButtonRed:active {
 	position:relative;
 	top:1px;
+}
+
+#c5dk-blog-package .slider {
+    background-color: #FFFFFF;
+    color: #222222;
+    padding: 20px;
+    overflow: auto;
 }

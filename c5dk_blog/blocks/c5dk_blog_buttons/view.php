@@ -86,6 +86,7 @@
 								// trigger: $("#c5dk_form_slidein"),
 								width: "100%",
 								push: false,
+								speed: 700,
 								autoEscape: false,
 								position: "right",
 								overlay: false,
@@ -124,6 +125,7 @@
 								// trigger: $("#c5dk_form_slidein"),
 								width: "100%",
 								push: false,
+								speed: 700,
 								autoEscape: false,
 								position: "right",
 								overlay: false,
@@ -183,6 +185,7 @@
 			color: #222222;
 			padding: 20px;
 			overflow: auto;
+			z-index: 2000;
 		}
 
 	</style>

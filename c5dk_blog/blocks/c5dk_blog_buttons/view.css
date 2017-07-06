@@ -30,7 +30,10 @@
 	margin: 0 auto;
 }
 
-.c5dk-dialog { display: none; }
+.c5dk-dialog {
+	display: none;
+	border: 1px solid black !important;
+}
 .c5dk_admin_frame{ background-color: #DDD; padding: 5px; }
 
 /* C5DK Buttons styling */

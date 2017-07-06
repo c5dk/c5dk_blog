@@ -57,9 +57,9 @@
 		</div>
 
 
+		<!-- Blog Body -->
 		<div class="c5dk_blog_section">
 
-			<!-- Blog Body -->
 			<?= $form->label('content', '<h4>' . t('Blog Content') . ' <sup><i style="color: #E50000; font-size: 12px;" class="fa fa-asterisk"></i></sup></h4>'); ?>
 			<?= $form->textarea('content', $C5dkBlog->content); ?>
 			<script type="text/javascript">
@@ -95,9 +95,9 @@
 
 		</div>
 
+		<!-- Blog Tags -->
 		<div class="c5dk_blog_section">
 
-			<!-- Blog Tags -->
 			<?php $casTags = CollectionAttributeKey::getByHandle('tags'); ?>
 			<h4><?= t('Tags'); ?></h4>
 			<?= $casTags->render('form', $C5dkBlog->tags, true); ?>
@@ -113,9 +113,9 @@
 		</div>
 
 
+		<!-- Blog Thumbnail -->
 		<div class="c5dk_blog_section">
 
-			<!-- Blog Thumbnail -->
 			<input id="thumbnailID" name="thumbnail[id]" type="hidden" value="<?= (is_object($C5dkBlog->thumbnail))? $C5dkBlog->thumbnail->getFileID() : 0; ?>">
 			<input id="thumbnailX" name="thumbnail[x]" type="hidden" value="0">
 			<input id="thumbnailY" name="thumbnail[y]" type="hidden" value="0">
@@ -126,7 +126,7 @@
 			<div class="c5dk_blog_box_thumbnail">
 				<div class="c5dk_blog_box_thumbnail_header">
 					<?= $form->label('thumbailID', '<h4>' . t('Thumbnail') . '</h4>'); ?>
-					<input class="c5dk_blogpage_ButtonGreen" type="button" onclick="c5dk.blog.post.image.showManager('thumbnail')" value="<?= t("Select"); ?>">
+					<input class="c5dk_blogpage_ButtonGreen c5dk_blogpage_ButtonGreen_thumb" type="button" onclick="c5dk.blog.post.image.showManager('thumbnail')" value="<?= t("Select"); ?>">
 					<input class="c5dk_blog_ButtonRed" type="button" onclick="c5dk.blog.post.thumbnail.remove()" value="<?= t("Remove"); ?>">
 				</div>
 
@@ -147,11 +147,11 @@
 			</div>
 		</div>
 
+		<!-- Form buttons -->
 		<div class="c5dk_blog_button_section c5dk_top_border_line">
 
 			<!-- C5DK Blog Icon -->
 			<div class="c5dk_blog_page_icon"><img src="<?= REL_DIR_PACKAGES; ?>/c5dk_blog/images/c5blog.png" alt="C5DK Blog Icon" height="40" width="40"></div>
-			<!-- Form buttons -->
 			<div class="c5dk_blog_buttons">
 				<input class="c5dk_blogpage_ButtonGreen" type="submit" value="<?= ($BlogPost->mode == C5DK_BLOG_MODE_CREATE)? t('Post') : t('Update'); ?>" name="submit">
 				<input class="c5dk_blogpage_ButtonBlue" onclick="c5dk.blog.post.blog.cancel();" type="button" value="<?= t('Cancel'); ?>">
@@ -196,13 +196,8 @@
 			</div>
 		</div>
 	</div>
-</div> <!-- c5dk-blog-package wrapper -->
 
-<style type="text/css">
-#c5dk-blog-package .field-invalid {
-	border-color: red !important;
-}
-</style>
+</div> <!-- c5dk-blog-package wrapper -->
 
 <script type="text/javascript">
 var CCM_EDITOR_SECURITY_TOKEN = "<?= Core::make("token")->generate('editor'); ?>";
@@ -362,34 +357,34 @@ c5dk.blog.post = {
 		mode: <?= $BlogPost->mode == C5DK_BLOG_MODE_CREATE? C5DK_BLOG_MODE_CREATE : C5DK_BLOG_MODE_EDIT; ?>,
 		slidein: <?= $C5dkConfig->blog_form_slidein; ?>,
 
-		save: function () {
+		// save: function () {
 
-			$.ajax({
-				type: 'POST',
-				dataType: 'json',
-				data: { search: 1 },
-				url: '<?= \URL::to("/blog_post/save"); ?>/',
-				success: function(response){
-					if (response.form) {
-						$('#order_edit_form').html(response.form);
-					}
+		// 	$.ajax({
+		// 		type: 'POST',
+		// 		dataType: 'json',
+		// 		data: { search: 1 },
+		// 		url: '<?= \URL::to("/blog_post/save"); ?>/',
+		// 		success: function(response){
+		// 			if (response.form) {
+		// 				$('#order_edit_form').html(response.form);
+		// 			}
 
-					c5dk.ttp.private.form.new = $('#order_edit_form').slideReveal({
-						width: "1100px",
-						push: false,
-						position: "right",
-						overlay: true,
-						overlaycolor: "green"
-					});
-					c5dk.ttp.private.form.new.slideReveal("show");
+		// 			c5dk.ttp.private.form.new = $('#order_edit_form').slideReveal({
+		// 				width: "1100px",
+		// 				push: false,
+		// 				position: "right",
+		// 				overlay: true,
+		// 				overlaycolor: "green"
+		// 			});
+		// 			c5dk.ttp.private.form.new.slideReveal("show");
 
-					$('#searchText').focus();
-				}
-			});
-		},
+		// 			$('#searchText').focus();
+		// 		}
+		// 	});
+		// },
 
 		cancel: function() {
-			if (c5dk.blog.post.blog.mode) {
+			if (c5dk.blog.post.blog.slidein) {
 				c5dk.blog.buttons.cancel();
 			} else {
 				window.history.back();
@@ -559,6 +554,12 @@ c5dk.blog.post = {
 $(document).ready( function(){ c5dk.blog.post.init(); });
 
 </script>
+
+<style type="text/css">
+	#c5dk-blog-package .field-invalid {
+		border-color: red !important;
+	}
+</style>
 
 <style>
 	#c5dk-blog-package .c5dk_blog_box_thumbnail{

@@ -19,7 +19,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 class Controller extends Package {
 
 	protected $appVersionRequired		= '8.2';
-	protected $pkgVersion				= '8.0.7.b8';
+	protected $pkgVersion				= '8.0.7.b9';
 	protected $pkgHandle				= 'c5dk_blog';
 	protected $pkgAutoloaderRegistries	= array(
 		'src/C5dkBlog' => '\C5dk\Blog'
@@ -95,9 +95,10 @@ class Controller extends Package {
 		C5dkInstaller::installConfigKey('blog_form_slidein',		false,		$pkg);
 
 		// Images & Thumbnails
+		C5dkInstaller::installConfigKey('blog_picture_width',		1200,		$pkg);
+		C5dkInstaller::installConfigKey('blog_picture_height',		800,		$pkg);
 		C5dkInstaller::installConfigKey('blog_thumbnail_width',		360,		$pkg);
 		C5dkInstaller::installConfigKey('blog_thumbnail_height',	360,		$pkg);
-		C5dkInstaller::installConfigKey('blog_picture_width',		1200,		$pkg);
 
 		// Styling
 		C5dkInstaller::installConfigKey('blog_headline_size',		12,			$pkg);

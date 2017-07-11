@@ -60,11 +60,11 @@
 		<!-- Blog Body -->
 		<div class="c5dk_blog_section">
 
-			<?= $form->label('content', '<h4>' . t('Blog Content') . ' <sup><i style="color: #E50000; font-size: 12px;" class="fa fa-asterisk"></i></sup></h4>'); ?>
-			<?= $form->textarea('content', $C5dkBlog->content); ?>
+			<?= $form->label('c5dk_blog_content', '<h4>' . t('Blog Content') . ' <sup><i style="color: #E50000; font-size: 12px;" class="fa fa-asterisk"></i></sup></h4>'); ?>
+			<?= $form->textarea('c5dk_blog_content', $C5dkBlog->content); ?>
 			<script type="text/javascript">
 				$(document).ready(function() {
-					CKEDITOR.replace('content', {
+					CKEDITOR.replace('c5dk_blog_content', {
 						// customConfig: 'c5dk_blog_config.js',
 						format_tags: '<?= $C5dkConfig->getFormat(); ?>',
 						autoGrow_minHeight: 300,
@@ -127,7 +127,7 @@
 				<div class="c5dk_blog_box_thumbnail_header">
 					<?= $form->label('thumbailID', '<h4>' . t('Thumbnail') . '</h4>'); ?>
 					<input class="c5dk_blogpage_ButtonGreen c5dk_blogpage_ButtonGreen_thumb" type="button" onclick="c5dk.blog.post.image.showManager('thumbnail')" value="<?= t("Select"); ?>">
-					<input class="c5dk_blog_ButtonRed" type="button" onclick="c5dk.blog.post.thumbnail.remove()" value="<?= t("Remove"); ?>">
+					<input class="c5dk_blog_ButtonRed c5dk_blogpage_ButtonRed_thumb" type="button" onclick="c5dk.blog.post.thumbnail.remove()" value="<?= t("Remove"); ?>">
 				</div>
 
 				<div style="clear:both;"></div>
@@ -355,7 +355,7 @@ c5dk.blog.post = {
 	blog: {
 
 		mode: <?= $BlogPost->mode == C5DK_BLOG_MODE_CREATE? C5DK_BLOG_MODE_CREATE : C5DK_BLOG_MODE_EDIT; ?>,
-		slidein: <?= $C5dkConfig->blog_form_slidein; ?>,
+		slidein: <?= (int) $C5dkConfig->blog_form_slidein; ?>,
 
 		// save: function () {
 
@@ -559,9 +559,6 @@ $(document).ready( function(){ c5dk.blog.post.init(); });
 	#c5dk-blog-package .field-invalid {
 		border-color: red !important;
 	}
-</style>
-
-<style>
 	#c5dk-blog-package .c5dk_blog_box_thumbnail{
 		position: relative;
 		width: auto;

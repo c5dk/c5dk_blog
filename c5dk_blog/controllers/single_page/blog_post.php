@@ -14,6 +14,9 @@ use Image;
 use Imagine\Image\Box;
 use Imagine\Image\Point;
 use Imagine\Image\ImageInterface;
+use Imagine\Filter\Basic\Autorotate;
+use Imagine\Filter\Transformation;
+use Imagine\Image\Metadata\ExifMetadataReader;
 
 use File;
 use FileList;
@@ -23,6 +26,9 @@ use Concrete\Core\Tree\Node\Type\FileFolder		as FileFolder;
 use Concrete\Core\Tree\Type\Topic				as TopicTree;
 use Concrete\Core\Utility\Service\Identifier	as Identifier;
 use Concrete\Core\Html\Service\Navigation		as Navigation;
+use Concrete\Core\File\ImportProcessor\ConstrainImageProcessor;
+use Concrete\Core\File\ImportProcessor\SetJPEGQualityProcessor;
+use Concrete\Core\File\ImportProcessor\AutorotateImageProcessor;
 use Concrete\Core\File\StorageLocation\StorageLocation;
 
 use Concrete\Core\Editor\Plugin;
@@ -66,75 +72,25 @@ class BlogPost extends PageController {
 		$C5dkBlogPost->create($redirectID, $rootID);
 
 		$this->init($C5dkBlogPost);
-
-		// // Setup C5DK objects
-		// $this->C5dkUser	= new C5dkUser;
-		// $this->C5dkBlog = new C5dkBlog;
-
-		// // Setup Blog object properties
-		// $this->mode = C5DK_BLOG_MODE_CREATE;
-		// $this->redirectID = $redirectID;
-		// $this->rootList = $this->getUserRootList();
-
-		// // Set Root ID if set or default to the first root in our list we will show
-		// $this->C5dkBlog->rootID = (isset($this->rootList[$rootID]))? $rootID : key($this->rootList);
-
-		// // Set the topic attribute id from the blogs root
-		// $C5dkRoot = C5dkRoot::getByID($this->C5dkBlog->rootID);
-		// $this->topicAttributeID = $C5dkRoot->topicAttributeID;
-
-		// $this->init();
 	}
 
 	public function edit($blogID) {
 
 		$C5dkBlogPost = new C5dkBlogPost;
-		$C5dkBlogPost->edit($redirectID, $rootID);
+		$C5dkBlogPost->edit($blogID);
 
 		$this->init($C5dkBlogPost);
-
-		// // Setup C5DK objects
-		// $this->C5dkUser	= new C5dkUser;
-		// $this->C5dkBlog		= C5dkBlog::getByID($blogID);
-
-		// // Setup Blog object properties
-		// $this->mode = C5DK_BLOG_MODE_EDIT;
-		// $this->blogID = $blogID;
-		// $this->redirectID = $blogID;
-		// $this->rootList = $this->getUserRootList();
-
-		// // Set the topic attribute id from the blogs root
-		// $this->topicAttributeID = C5dkRoot::getByID($this->C5dkBlog->rootID)->topicAttributeID;
-		// if ($this->C5dkBlog->topics && !$this->topicAttributeID) {
-		// 	$this->C5dkBlog->topics = 0;
-		// }
-
-		// $this->init();
 	}
 
 	public function init($C5dkBlogPost) {
 
 		// Require Assets
 		$this->requireAsset('css', 'c5dk_blog_css');
-		// $this->requireAsset('redactor');
 		$this->requireAsset('javascript', 'c5dkckeditor');
 		$this->requireAsset('core/topics');
 		$this->requireAsset('javascript', 'jcrop');
 		$this->requireAsset('css', 'jcrop');
 		$this->requireAsset('javascript', 'validation');
-
-		// Set the C5dk object
-		// $C5dkBlogPost->C5dkConfig = new C5dkConfig;
-
-		// Setup helpers
-		// TODO: What is it we need this for?
-		// $this->set('identifier', id(new Identifier())->getString(32));
-
-		// Set $settings
-		// $this->set('settings', array(
-		// 	'format_tags' => $C5dkBlogPost->C5dkConfig->getFormat(),
-		// 	'youtube' => ($C5dkBlogPost->C5dkConfig->blog_plugin_youtube? 'youtube,' : '')
-		// ));
 
 		// Set View variables
 		$this->set('view',			new View);
@@ -157,7 +113,7 @@ class BlogPost extends PageController {
 
 		// Add require fields to the validation helper
 		$error->addRequired('title', t('The Blog Title field is a required field and cannot be empty.'));
-		$error->addRequired('content', t('The Blog Content field is a required field and cannot be empty.'));
+		$error->addRequired('c5dk_blog_content', t('The Blog Content field is a required field and cannot be empty.'));
 
 		// Get or create the C5dkNews Object
 		$C5dkBlog = ($this->post('mode') == C5DK_BLOG_MODE_CREATE)? new C5dkBlog : C5dkBlog::getByID($this->post('blogID'));
@@ -171,7 +127,7 @@ class BlogPost extends PageController {
 				"userID"			=> $this->C5dkUser->getUserID(),
 				"title"				=> $this->post("title"),
 				"description"		=> $this->post('description'),
-				"content"			=> $this->post("content"),
+				"content"			=> $this->post("c5dk_blog_content"),
 				"topicAttributeID"	=> $this->post('topicAttributeID')
 			));
 			$C5dkBlog = $C5dkBlog->save($this->post('mode'));
@@ -199,7 +155,7 @@ class BlogPost extends PageController {
 			$this->rootID			= $this->post("rootID");
 			$this->title			= $this->post("title");
 			$this->description		= $this->post("description");
-			$this->content			= $this->post("content");
+			$this->content			= $this->post("c5dk_blog_content");
 			$this->topicAttributeID	= $this->post('topicAttributeID');
 
 			$this->init();
@@ -365,14 +321,25 @@ class BlogPost extends PageController {
 
 		$tmpFolder	= $fh->getTemporaryDirectory();
 
-		// Convert picture to .jpg
-		$image = Image::open($_FILES['file']['tmp_name'][0]);
-		$image->save($tmpFolder . '/c5dk_blog.jpg', array('jpeg_quality' => 90));
+		// Get image facade and open image
+        $imagine = $this->app->make(Image::getFacadeAccessor());
+        // $imagine->setMetadataReader(new ExifMetadataReader);
+        $image = $imagine->open($_FILES['file']['tmp_name'][0]);
+
+        // Autorotate image
+        $transformation = new Transformation($imagine);
+        $transformation->applyFilter($image, new Autorotate());
+
+        // Resize image
+		$image = $image->thumbnail(new Box($C5dkConfig->blog_picture_width, $C5dkConfig->blog_picture_height), ImageInterface::THUMBNAIL_INSET);
+
+ 		// Save image as .jpg
+		$image->save($tmpFolder . '/c5dk_blog.jpg', array('jpeg_quality' => 80));
 
 		// Import file
 		$fi = new FileImporter();
 		$fv = $fi->import(
-			//$_FILES['file']['tmp_name'][0],
+			// $_FILES['file']['tmp_name'][0],
 			$tmpFolder . '/c5dk_blog.jpg',
 			"C5DK_BLOG_uID-" . $C5dkUser->getUserID() . "_Pic_" . $fh->unfilename($_FILES['file']['name'][0]) . '.jpg',
 			FileFolder::getNodeByName('Manager')
@@ -385,12 +352,13 @@ class BlogPost extends PageController {
 			$fsf = $fileSet->addFileToSet($fv);
 
 			// Resize
-			$resource = $fv->getFileResource();
-			$image = Image::load($resource->read());
-			$image = $image->thumbnail(new Box($C5dkConfig->blog_picture_width, 9999), ImageInterface::THUMBNAIL_INSET);
+			// $resource = $fv->getFileResource();
+			// $image = Image::load($resource->read());
+			// $image = $image->thumbnail(new Box($C5dkConfig->blog_picture_width, 9999), ImageInterface::THUMBNAIL_INSET);
 
 			// Now let's update the image
 			$fv->updateContents($image->get($fv->getExtension()));
+			$fv->rescanThumbnails();
 
 			switch ($mode) {
 				case 'dnd':
@@ -401,8 +369,8 @@ class BlogPost extends PageController {
 
 				default:
 					// Get FileList
-					$files = $this->getFileList($fileSet);
-					rsort($files);
+					// $files = $this->getFileList($fileSet);
+					// rsort($files);
 					$data = array(
 						'file' => $file,
 						'fileList' => $files,
@@ -487,24 +455,5 @@ class BlogPost extends PageController {
 
 		exit;
 	}
-
-	// public function registerAssets() {
-
-	// 	// Get the AssetList
-	// 	$al = AssetList::getInstance();
-
-	// 	// CKEditor
-	// 	$al->register('javascript', 'c5dkckeditor', 'js/ckeditor/ckeditor.js', array(), 'c5dk_blog');
-
-	// 	// Register C5DK Blog CSS
-	// 	$al->register('css', 'c5dk_blog_css', 'css/c5dk_blog.min.css', array(), 'c5dk_blog');
-
-	// 	// Register jQuery Jcrop plugin
-	// 	$al->register('javascript', 'jcrop', 'js/Jcrop/jquery.Jcrop.min.js', array(), 'c5dk_blog');
-	// 	$al->register('css', 'jcrop', 'css/Jcrop/jquery.Jcrop.min.css', array(), 'c5dk_blog');
-
-	// 	// Register jQuery Jcrop plugin
-	// 	$al->register('javascript', 'validation', 'js/validation/jquery.validate.js', array(), 'c5dk_blog');
-	// }
 
 }

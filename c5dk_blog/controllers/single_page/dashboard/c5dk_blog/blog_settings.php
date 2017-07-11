@@ -32,9 +32,10 @@ class BlogSettings extends DashboardPageController {
 		$config->save('c5dk_blog.blog_form_slidein',	($this->post('blog_form_slidein'))? $this->post('blog_form_slidein') : 0);
 
 		// Images & Thumbnails
+		$config->save('c5dk_blog.blog_picture_width',		$this->post('blog_picture_width'));
+		$config->save('c5dk_blog.blog_picture_height',		$this->post('blog_picture_height'));
 		$config->save('c5dk_blog.blog_thumbnail_width',		$this->post('blog_thumbnail_width'));
 		$config->save('c5dk_blog.blog_thumbnail_height',	$this->post('blog_thumbnail_height'));
-		$config->save('c5dk_blog.blog_picture_width',		$this->post('blog_picture_width'));
 
 		// Styling
 		$config->save('c5dk_blog.blog_headline_size',		$this->post('blog_headline_size'));

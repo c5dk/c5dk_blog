@@ -334,6 +334,9 @@
 	-moz-transition: all ease 0.5s;
 	transition: all ease 0.5s;
 }
+#c5dk-blog-package .c5dk_blog_ButtonRed.c5dk_blogpage_ButtonRed_thumb {
+    width: 100%;
+}
 #c5dk-blog-package button.c5dk_blog_ButtonRed {
 	border: none;
 }

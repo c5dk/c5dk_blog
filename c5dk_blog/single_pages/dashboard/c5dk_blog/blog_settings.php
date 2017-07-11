@@ -35,6 +35,8 @@
 			<h3><?= t("Picture Save Size"); ?></h3>
 			<?= $form->label("blog_picture_width", t("Blog Picture Max Width in Pixels")); ?>
 			<?= $form->number("blog_picture_width", $C5dkConfig->blog_picture_width, array("min" => "1", "max" => "9999")); ?>
+			<?= $form->label("blog_picture_height", t("Blog Picture Max Height in Pixels")); ?>
+			<?= $form->number("blog_picture_height", $C5dkConfig->blog_picture_height, array("min" => "1", "max" => "9999")); ?>
 			<br />
 
 			<h3><?= t("Thumbnail Save Size"); ?></h3>

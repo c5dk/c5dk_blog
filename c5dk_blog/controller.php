@@ -19,7 +19,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 class Controller extends Package {
 
 	protected $appVersionRequired		= '8.2';
-	protected $pkgVersion				= '8.0.7.b9';
+	protected $pkgVersion				= '8.0.7.b10';
 	protected $pkgHandle				= 'c5dk_blog';
 	protected $pkgAutoloaderRegistries	= array(
 		'src/C5dkBlog' => '\C5dk\Blog'
@@ -261,9 +261,8 @@ class Controller extends Package {
 		// Register jQuery Jcrop plugin
 		$al->register('javascript', 'validation', 'js/validation/jquery.validate.js', array(), 'c5dk_blog');
 
-		// Slide-in-panel
+		// Register JQuery Slide-in-panel
 		$al->register('javascript', 'slide-in-panel/main', 'js/slide-in-panel/jquery.slidereveal.min.js', array(), 'c5dk_blog');
-
 	}
 
 }

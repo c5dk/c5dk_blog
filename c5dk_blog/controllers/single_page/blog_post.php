@@ -88,6 +88,7 @@ class BlogPost extends PageController {
 		$this->requireAsset('css', 'c5dk_blog_css');
 		$this->requireAsset('javascript', 'c5dkckeditor');
 		$this->requireAsset('core/topics');
+		$this->requireAsset('core/app');
 		$this->requireAsset('javascript', 'jcrop');
 		$this->requireAsset('css', 'jcrop');
 		$this->requireAsset('javascript', 'validation');
@@ -106,7 +107,7 @@ class BlogPost extends PageController {
 		$this->C5dkUser	= new C5dkUser;
 
 		// Load Core helper objects
-		$error = Core::make('helper/validation/form');
+		$error = $this->app->make('helper/validation/form');
 
 		// Set the form data to validate
 		$error->setData($this->post());
@@ -165,7 +166,7 @@ class BlogPost extends PageController {
 	public function delete ($type, $id) {
 
 		// Load Core Objects
-		$jh = Core::make('helper/json');
+		$jh = $this->app->make('helper/json');
 
 		switch ($type) {
 			// Delete page
@@ -186,7 +187,7 @@ class BlogPost extends PageController {
 					// Delete the page
 					$C5dkBlog->moveToTrash();
 
-					$nh = Core::make('helper/navigation');
+					$nh = $this->app->make('helper/navigation');
 					$data['status'] = 'success';
 					$data['url'] = C5dkRoot::getByID($rootID)->getCollectionLink();
 				}
@@ -230,7 +231,7 @@ class BlogPost extends PageController {
 
 		// Init objects
 		$fi = new FileImporter();
-		$fh = Core::make('helper/file');
+		$fh = $this->app->make('helper/file');
 
 		// Init C5DK Objects
 		$C5dkConfig	= new C5dkConfig;
@@ -306,12 +307,13 @@ class BlogPost extends PageController {
 	public function upload($mode = null){
 
 		// Get helper objects
-		$jh = Core::make('helper/json');
-		$fh = Core::make('helper/file');
+		$jh = $this->app->make('helper/json');
+		$fh = $this->app->make('helper/file');
 
 		// Get C5dk Objects
 		$C5dkConfig = new C5dkConfig;
 		$C5dkUser = new C5dkUser();
+		$uID = $C5dkUser->getUserID();
 
 		// Data to send back if something fails
 		$data = array(
@@ -323,7 +325,6 @@ class BlogPost extends PageController {
 
 		// Get image facade and open image
         $imagine = $this->app->make(Image::getFacadeAccessor());
-        // $imagine->setMetadataReader(new ExifMetadataReader);
         $image = $imagine->open($_FILES['file']['tmp_name'][0]);
 
         // Autorotate image
@@ -331,7 +332,9 @@ class BlogPost extends PageController {
         $transformation->applyFilter($image, new Autorotate());
 
         // Resize image
-		$image = $image->thumbnail(new Box($C5dkConfig->blog_picture_width, $C5dkConfig->blog_picture_height), ImageInterface::THUMBNAIL_INSET);
+        $width = $C5dkConfig->blog_picture_width;
+        $height = $C5dkConfig->blog_picture_height;
+		$image = $image->thumbnail(new Box($width, $height), ImageInterface::THUMBNAIL_INSET);
 
  		// Save image as .jpg
 		$image->save($tmpFolder . '/c5dk_blog.jpg', array('jpeg_quality' => 80));
@@ -341,43 +344,33 @@ class BlogPost extends PageController {
 		$fv = $fi->import(
 			// $_FILES['file']['tmp_name'][0],
 			$tmpFolder . '/c5dk_blog.jpg',
-			"C5DK_BLOG_uID-" . $C5dkUser->getUserID() . "_Pic_" . $fh->unfilename($_FILES['file']['name'][0]) . '.jpg',
+			"C5DK_BLOG_uID-" . $uID . "_Pic_" . $fh->unfilename($_FILES['file']['name'][0]) . '.jpg',
 			FileFolder::getNodeByName('Manager')
 		);
+
+		// // Delete our imported file - DO NOT WORK
+		// $filesystem = StorageLocation::getDefault()->getFileSystemObject();
+		// $filesystem->delete('/application/files/tmp/c5dk_blog.jpg');
+		// 	// $tmpFolder . '/c5dk_blog.jpg');
 
 		if(is_object($fv)){
 
 			// Create and get FileSet if not exist and add file to the set
-			$fileSet = FileSet::createAndGetSet("C5DK_BLOG_uID-" . $C5dkUser->getUserID(), FileSet::TYPE_PUBLIC, $C5dkUser->getUserID());
+			$fileSet = FileSet::createAndGetSet("C5DK_BLOG_uID-" . $uID, FileSet::TYPE_PUBLIC, $uID);
 			$fsf = $fileSet->addFileToSet($fv);
-
-			// Resize
-			// $resource = $fv->getFileResource();
-			// $image = Image::load($resource->read());
-			// $image = $image->thumbnail(new Box($C5dkConfig->blog_picture_width, 9999), ImageInterface::THUMBNAIL_INSET);
 
 			// Now let's update the image
 			$fv->updateContents($image->get($fv->getExtension()));
 			$fv->rescanThumbnails();
 
-			switch ($mode) {
-				case 'dnd':
-					$data = array(
-						'filelink' => File::getRelativePathFromID($fv->getFileID())
-					);
-					break;
-
-				default:
-					// Get FileList
-					// $files = $this->getFileList($fileSet);
-					// rsort($files);
-					$data = array(
-						'file' => $file,
-						'fileList' => $files,
-						'status' => 1
-					);
-					break;
-			}
+			// Get FileList
+			// $files = $this->getFileList($fileSet);
+			// rsort($files);
+			$data = array(
+				'file' => $file,
+				'fileList' => $this->getFilesFromUserSet(),
+				'status' => 1
+			);
 		}
 
 		header('Content-type: application/json');
@@ -389,14 +382,23 @@ class BlogPost extends PageController {
 	public function getFileList($fs = null){
 
 		// Get helper objects
-		$im = Core::make('helper/image');
-		$jh = Core::make('helper/json');
+		$jh = $this->app->make('helper/json');
+
+		header('Content-type: application/json');
+		echo $jh->encode($this->getFilesFromUserSet());
+
+		exit;
+	}
+
+	public function getFilesFromUserSet() {
+
+		// Get helper objects
+		$im = $this->app->make('helper/image');
 
 		$C5dkUser = new C5dkUser();
 		if(!$C5dkUser->isLoggedIn()){
-			echo "{}";
 
-			exit;
+			return "{}";
 
 		}
 
@@ -404,9 +406,8 @@ class BlogPost extends PageController {
 		if(!is_object($fs)){
 			$fs = FileSet::getByName("C5DK_BLOG_uID-" . $C5dkUser->getUserID());
 			if (!is_object($fs)) {
-				echo "{}";
 
-				exit;
+				return "{}";
 
 			}
 		}
@@ -434,10 +435,7 @@ class BlogPost extends PageController {
 
 		};
 
-		header('Content-type: application/json');
-		echo $jh->encode($files);
-
-		exit;
+		return $files;
 	}
 
 	// Keep the active login session active
@@ -450,7 +448,7 @@ class BlogPost extends PageController {
 			'status' => $status
 		);
 
-		$jh = Core::make('helper/json');
+		$jh = $this->app->make('helper/json');
 		echo $jh->encode($data);
 
 		exit;

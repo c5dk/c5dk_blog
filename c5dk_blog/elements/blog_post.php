@@ -328,7 +328,8 @@ c5dk.blog.post = {
 						success: function(data){
 							$('#file').val('').show();
 							$('#c5dk_imageManager progress').hide();
-							c5dk.blog.post.image.getFileList();
+							c5dk.blog.post.image.fileList = data.fileList;
+							c5dk.blog.post.image.updateManager();
 						},
 						//error: errorHandler,
 						data: formData,
@@ -354,34 +355,8 @@ c5dk.blog.post = {
 
 	blog: {
 
-		mode: <?= $BlogPost->mode == C5DK_BLOG_MODE_CREATE? C5DK_BLOG_MODE_CREATE : C5DK_BLOG_MODE_EDIT; ?>,
+		// mode: <?= $BlogPost->mode == C5DK_BLOG_MODE_CREATE? C5DK_BLOG_MODE_CREATE : C5DK_BLOG_MODE_EDIT; ?>,
 		slidein: <?= (int) $C5dkConfig->blog_form_slidein; ?>,
-
-		// save: function () {
-
-		// 	$.ajax({
-		// 		type: 'POST',
-		// 		dataType: 'json',
-		// 		data: { search: 1 },
-		// 		url: '<?= \URL::to("/blog_post/save"); ?>/',
-		// 		success: function(response){
-		// 			if (response.form) {
-		// 				$('#order_edit_form').html(response.form);
-		// 			}
-
-		// 			c5dk.ttp.private.form.new = $('#order_edit_form').slideReveal({
-		// 				width: "1100px",
-		// 				push: false,
-		// 				position: "right",
-		// 				overlay: true,
-		// 				overlaycolor: "green"
-		// 			});
-		// 			c5dk.ttp.private.form.new.slideReveal("show");
-
-		// 			$('#searchText').focus();
-		// 		}
-		// 	});
-		// },
 
 		cancel: function() {
 			if (c5dk.blog.post.blog.slidein) {
@@ -418,7 +393,9 @@ c5dk.blog.post = {
 						url: '<?= \URL::to('/blog_post/delete', 'image'); ?>/' + c5dk.blog.post.image.currentFID,
 						dataType: 'json',
 						success: function(r) {
-							if (r.status == "success") { c5dk.blog.post.image.getFileList(); }
+							if (r.status == "success") {
+								c5dk.blog.post.image.getFileList();
+							}
 						}
 					});
 					break;
@@ -443,7 +420,7 @@ c5dk.blog.post = {
 		},
 
 		showManager: function (mode) {
-			c5dk.blog.post.image.getFileList();
+			// c5dk.blog.post.image.getFileList();
 			c5dk.blog.post.image.managerMode = (mode == "thumbnail")? mode : "editor";
 			$('#file').val('').show();
 			$('#c5dk_imageManager progress').hide();
@@ -456,14 +433,20 @@ c5dk.blog.post = {
 		},
 
 		updateManager: function () {
+
+
+			/*****************************/
+			/* Delete images is disabled */
+			/*****************************/
 			var canDeleteImages = false;
 			$('.redactor-c5dkimagemanager-box').html("");
 			for (val in c5dk.blog.post.image.fileList) {
-				var file = c5dk.blog.post.image.fileList[val];
-				var deleteSpan = (canDeleteImages)? '<span class="fa fa-trash delete-image" style="position: absolute; left:84px; width:16px; height:16px; background-color:#fff; cursor: pointer"></span>' : '';
-				var img = '<img class="c5dk_image_thumbs" src="' + file.thumbnail.src + '" data-fid="' + file.fID + '" data-src="' + file.picture.src + '" data-width="' + file.picture.width + '" data-height="' + file.picture.height + '" style="max-width: 110px; max-height: 85px; cursor: pointer; border: 3px solid #ddd;" />';
-				$('.redactor-c5dkimagemanager-box').append($('<div data-fid="' + file.fID + '" style="position:relative; float:left; width:110px; height:110px; margin-right: 5px;">' + deleteSpan + img + '</div>'));
-
+				if (c5dk.blog.post.image.fileList[val]) {
+					var file = c5dk.blog.post.image.fileList[val];
+					var deleteSpan = (canDeleteImages)? '<span class="fa fa-trash delete-image" style="position: absolute; left:0px; width:16px; height:16px; background-color:#fff; cursor: pointer"></span>' : '';
+					var img = '<img class="c5dk_image_thumbs" src="' + file.thumbnail.src + '" data-fid="' + file.fID + '" data-src="' + file.picture.src + '" data-width="' + file.picture.width + '" data-height="' + file.picture.height + '" style="max-width: 110px; max-height: 85px; cursor: pointer; border: 3px solid #ddd;" />';
+					$('.redactor-c5dkimagemanager-box').append($('<div data-fid="' + file.fID + '" style="position:relative; float:left; width:110px; height:110px; margin-right: 5px;">' + deleteSpan + img + '</div>'));
+				}
 			}
 
 			$(".c5dk_image_thumbs").on('click', function(event) {

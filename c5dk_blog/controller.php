@@ -19,7 +19,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 class Controller extends Package {
 
 	protected $appVersionRequired		= '8.2';
-	protected $pkgVersion				= '8.0.7.b10';
+	protected $pkgVersion				= '8.0.7.b11';
 	protected $pkgHandle				= 'c5dk_blog';
 	protected $pkgAutoloaderRegistries	= array(
 		'src/C5dkBlog' => '\C5dk\Blog'
@@ -249,7 +249,7 @@ class Controller extends Package {
 		$al = AssetList::getInstance();
 
 		// CKEditor
-		$al->register('javascript', 'c5dkckeditor', 'js/ckeditor/ckeditor.js', array(), 'c5dk_blog');
+		$al->register('javascript', 'c5dkckeditor', 'js/ckeditor/ckeditor.js', array('minify' => false, 'combine' => false), 'c5dk_blog');
 
 		// Register C5DK Blog CSS
 		$al->register('css', 'c5dk_blog_css', 'css/c5dk_blog.css', array(), 'c5dk_blog');

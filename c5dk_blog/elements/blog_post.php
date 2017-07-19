@@ -444,8 +444,8 @@ c5dk.blog.post = {
 				if (c5dk.blog.post.image.fileList[val]) {
 					var file = c5dk.blog.post.image.fileList[val];
 					var deleteSpan = (canDeleteImages)? '<span class="fa fa-trash delete-image" style="position: absolute; left:0px; width:16px; height:16px; background-color:#fff; cursor: pointer"></span>' : '';
-					var img = '<img class="c5dk_image_thumbs" src="' + file.thumbnail.src + '" data-fid="' + file.fID + '" data-src="' + file.picture.src + '" data-width="' + file.picture.width + '" data-height="' + file.picture.height + '" style="max-width: 110px; max-height: 85px; cursor: pointer; border: 3px solid #ddd;" />';
-					$('.redactor-c5dkimagemanager-box').append($('<div data-fid="' + file.fID + '" style="position:relative; float:left; width:110px; height:110px; margin-right: 5px;">' + deleteSpan + img + '</div>'));
+					var img = '<img class="c5dk_image_thumbs" src="' + file.thumbnail.src + '" data-fid="' + file.fID + '" data-src="' + file.picture.src + '" data-width="' + file.picture.width + '" data-height="' + file.picture.height + '" />';
+					$('.redactor-c5dkimagemanager-box').append($('<div data-fid="' + file.fID + '" class="c5dk-thumb-frame">' + deleteSpan + img + '</div>'));
 				}
 			}
 

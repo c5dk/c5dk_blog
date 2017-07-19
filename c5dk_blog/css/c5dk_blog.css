@@ -213,6 +213,37 @@
     border: none;
 }
 
+#redactor-c5dkimagemanager-box .redactor-c5dkimagemanager-box {
+    float: left;
+}
+
+#redactor-c5dkimagemanager-box .c5dk-thumb-frame {
+    border: 2px solid #aaaaaa;
+    border-radius: 3px;
+    margin: 0 9px 10px 0;
+    position:relative;
+    display: inline-grid;
+    float:left;
+    width:114px;
+    height:114px;
+}
+
+#redactor-c5dkimagemanager-box .c5dk-thumb-frame:hover {
+    border: 2px solid #019620;
+    -webkit-box-shadow: 3px 3px 5px 0px rgba(50, 50, 50, 0.5);
+    -moz-box-shadow:    3px 3px 5px 0px rgba(50, 50, 50, 0.5);
+    box-shadow:         3px 3px 5px 0px rgba(50, 50, 50, 0.5);
+}
+
+#redactor-c5dkimagemanager-box .c5dk-thumb-frame img {
+    max-width: 110px;
+    max-height: 110px;
+    cursor: pointer;
+    border: 1px solid #eeeeee;
+    display: block;
+    margin: auto;
+}
+
 #c5dk_blog_upload_image_error {
     margin-top: 10px;
     display: none;

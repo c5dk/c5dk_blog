@@ -73,6 +73,10 @@ class BlogPost {
 		$C5dkRoot = C5dkRoot::getByID($this->C5dkBlog->rootID);
 		$this->topicAttributeID = $C5dkRoot->topicAttributeID;
 
+		// Show tags and thumbnails be shown
+		$this->tagsEnabled = $C5dkRoot->tags;
+		$this->thumbnailsEnabled = $C5dkRoot->thumbnails;
+
 		return $this;
 	}
 

@@ -98,7 +98,7 @@
 		<div class="c5dk_blog_section">
 
 			<!-- Blog Tags -->
-			<?php if($C5dkRoot->tags) { ?>
+			<?php if($BlogPost->tagsEnabled) { ?>
 				<?php $casTags = CollectionAttributeKey::getByHandle('tags'); ?>
 				<h4><?= t('Tags'); ?></h4>
 				<?= $casTags->render('form', $C5dkBlog->tags, true); ?>
@@ -116,7 +116,7 @@
 
 
 		<!-- Blog Thumbnail -->
-		<?php if ($C5dkRoot->thumbnails) { ?>
+		<?php if ($BlogPost->thumbnailsEnabled) { ?>
 			<div class="c5dk_blog_section">
 
 				<input id="thumbnailID" name="thumbnail[id]" type="hidden" value="<?= (is_object($C5dkBlog->thumbnail))? $C5dkBlog->thumbnail->getFileID() : 0; ?>">

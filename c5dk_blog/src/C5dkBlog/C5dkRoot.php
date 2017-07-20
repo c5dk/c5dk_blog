@@ -12,8 +12,8 @@ class C5dkRoot extends Page {
 	public $rootID				= null;
 	public $groups				= array();
 	public $pageTypeID			= null;
-	public $tags				= 0;
-	public $thumbnails			= 0;
+	public $tags				= 1;
+	public $thumbnails			= 1;
 	public $topicAttributeID	= null;
 
 	public static function getByID($rootID, $version = 'RECENT', $class = 'Concrete\Package\C5dkBlog\Src\C5dkBlog\C5dkRoot\C5dkRoot') {

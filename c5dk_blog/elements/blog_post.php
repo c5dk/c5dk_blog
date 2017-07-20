@@ -95,12 +95,14 @@
 
 		</div>
 
-		<!-- Blog Tags -->
 		<div class="c5dk_blog_section">
 
-			<?php $casTags = CollectionAttributeKey::getByHandle('tags'); ?>
-			<h4><?= t('Tags'); ?></h4>
-			<?= $casTags->render('form', $C5dkBlog->tags, true); ?>
+			<!-- Blog Tags -->
+			<?php if($C5dkRoot->tags) { ?>
+				<?php $casTags = CollectionAttributeKey::getByHandle('tags'); ?>
+				<h4><?= t('Tags'); ?></h4>
+				<?= $casTags->render('form', $C5dkBlog->tags, true); ?>
+			<?php } ?>
 
 			<!-- Blog Topics -->
 			<?php if ($BlogPost->topicAttributeID) { ?>
@@ -114,38 +116,40 @@
 
 
 		<!-- Blog Thumbnail -->
-		<div class="c5dk_blog_section">
+		<?php if ($C5dkRoot->thumbnails) { ?>
+			<div class="c5dk_blog_section">
 
-			<input id="thumbnailID" name="thumbnail[id]" type="hidden" value="<?= (is_object($C5dkBlog->thumbnail))? $C5dkBlog->thumbnail->getFileID() : 0; ?>">
-			<input id="thumbnailX" name="thumbnail[x]" type="hidden" value="0">
-			<input id="thumbnailY" name="thumbnail[y]" type="hidden" value="0">
-			<input id="thumbnailWidth" name="thumbnail[width]" type="hidden" value="0">
-			<input id="thumbnailHeight" name="thumbnail[height]" type="hidden" value="0">
-			<input id="pictureWidth" name="thumbnail[pictureWidth]" type="hidden" value="0">
-			<input id="pictureHeight" name="thumbnail[pictureHeight]" type="hidden" value="0">
-			<div class="c5dk_blog_box_thumbnail">
-				<div class="c5dk_blog_box_thumbnail_header">
-					<?= $form->label('thumbailID', '<h4>' . t('Thumbnail') . '</h4>'); ?>
-					<input class="c5dk_blogpage_ButtonGreen c5dk_blogpage_ButtonGreen_thumb" type="button" onclick="c5dk.blog.post.image.showManager('thumbnail')" value="<?= t("Select"); ?>">
-					<input class="c5dk_blog_ButtonRed c5dk_blogpage_ButtonRed_thumb" type="button" onclick="c5dk.blog.post.thumbnail.remove()" value="<?= t("Remove"); ?>">
-				</div>
-
-				<div style="clear:both;"></div>
-
-				<div class="c5dk_blog_thumbnail_preview_frame">
-					<div class="c5dk_blog_thumbnail_preview">
-						<img id="c5dk_blog_thumbnail" class="c5dk_blog_thumbnail" src="<?= (is_object($C5dkBlog->thumbnail))? File::getRelativePathFromID($C5dkBlog->thumbnail->getFileID()) : ""; ?>"<?= (is_object($C5dkBlog->thumbnail))? '' : ' style="display:none;'; ?>>
+				<input id="thumbnailID" name="thumbnail[id]" type="hidden" value="<?= (is_object($C5dkBlog->thumbnail))? $C5dkBlog->thumbnail->getFileID() : 0; ?>">
+				<input id="thumbnailX" name="thumbnail[x]" type="hidden" value="0">
+				<input id="thumbnailY" name="thumbnail[y]" type="hidden" value="0">
+				<input id="thumbnailWidth" name="thumbnail[width]" type="hidden" value="0">
+				<input id="thumbnailHeight" name="thumbnail[height]" type="hidden" value="0">
+				<input id="pictureWidth" name="thumbnail[pictureWidth]" type="hidden" value="0">
+				<input id="pictureHeight" name="thumbnail[pictureHeight]" type="hidden" value="0">
+				<div class="c5dk_blog_box_thumbnail">
+					<div class="c5dk_blog_box_thumbnail_header">
+						<?= $form->label('thumbailID', '<h4>' . t('Thumbnail') . '</h4>'); ?>
+						<input class="c5dk_blogpage_ButtonGreen c5dk_blogpage_ButtonGreen_thumb" type="button" onclick="c5dk.blog.post.image.showManager('thumbnail')" value="<?= t("Select"); ?>">
+						<input class="c5dk_blog_ButtonRed c5dk_blogpage_ButtonRed_thumb" type="button" onclick="c5dk.blog.post.thumbnail.remove()" value="<?= t("Remove"); ?>">
 					</div>
-					<div class="c5dk_blog_thumbnail_preview_subtext">
-						<?= t('Preview'); ?>
-					</div>
-				</div>
 
-				<div class="c5dk_blog_thumbnail_jcrop">
-					<img id="c5dk_crop_pic" src="" style="display:none;" />
+					<div style="clear:both;"></div>
+
+					<div class="c5dk_blog_thumbnail_preview_frame">
+						<div class="c5dk_blog_thumbnail_preview">
+							<img id="c5dk_blog_thumbnail" class="c5dk_blog_thumbnail" src="<?= (is_object($C5dkBlog->thumbnail))? File::getRelativePathFromID($C5dkBlog->thumbnail->getFileID()) : ""; ?>"<?= (is_object($C5dkBlog->thumbnail))? '' : ' style="display:none;'; ?>>
+						</div>
+						<div class="c5dk_blog_thumbnail_preview_subtext">
+							<?= t('Preview'); ?>
+						</div>
+					</div>
+
+					<div class="c5dk_blog_thumbnail_jcrop">
+						<img id="c5dk_crop_pic" src="" style="display:none;" />
+					</div>
 				</div>
 			</div>
-		</div>
+		<?php } ?>
 
 		<!-- Form buttons -->
 		<div class="c5dk_blog_button_section c5dk_top_border_line">

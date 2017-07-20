@@ -52,10 +52,12 @@ class BlogRoots extends DashboardPageController {
 			if(substr($postKey, 0, 12) == "root_groups_" && is_array($postVal)) {
 				foreach ($postVal as $groupID) {
 					$rootID = substr($postKey, 12);
-					$db->Execute('INSERT INTO C5dkBlogRootPermissions (rootID, groupID, pageTypeID, topicAttributeID) VALUES (?, ?, ?, ?)', array(
+					$db->Execute('INSERT INTO C5dkBlogRootPermissions (rootID, groupID, pageTypeID, tags, thumbnails, topicAttributeID) VALUES (?, ?, ?, ?, ?, ?)', array(
 						$rootID,
 						$groupID,
 						$postData["pageTypeID_" . $rootID],
+						($postData["tags_" . $rootID]? 1 : 0),
+						($postData["thumbnails_" . $rootID]? 1 : 0),
 						$postData["topicAttributeID_" . $rootID]
 					));
 				}

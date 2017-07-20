@@ -19,6 +19,7 @@ Core::make('help')->display(t('On the "Blog Roots" settings page, is where you c
 
 	<!-- Form for the content of the blog -->
 	<form id="c5dk-blog" action="<?= $this->action('save'); ?>" method="post" class="ccm-ui">
+
 		<!-- Display roots -->
 		<div class="ccm-pane-body">
 			<div class="table-responsive">
@@ -29,6 +30,8 @@ Core::make('help')->display(t('On the "Blog Roots" settings page, is where you c
 							<th><?= t("Path"); ?></th>
 							<th><?= t("Group(s) who can blog"); ?></th>
 							<th><?= t("Page Type"); ?></th>
+							<th><?= t("Tags"); ?></th>
+							<th><?= t("Thumbnails"); ?></th>
 							<th><?= t("Topic Attribute"); ?></th>
 							<th><?= t("Action"); ?></th>
 						</tr>
@@ -40,6 +43,8 @@ Core::make('help')->display(t('On the "Blog Roots" settings page, is where you c
 								<td><?= $C5dkRoot->cPath; ?></td>
 								<td><?= $form->selectMultiple('root_groups_' . $rootID, $groupList, $C5dkRoot->groups, array('class' => 'c5dk_blog_select2', 'style' => 'width:360px;')); ?></td>
 								<td><?= $form->select('pageTypeID_' . $rootID, $pageTypeList, $C5dkRoot->pageTypeID); ?></td>
+								<td><?= $form->checkbox('tags_' . $rootID, 1, $C5dkRoot->tags); ?></td>
+								<td><?= $form->checkbox('thumbnails_' . $rootID, 1, $C5dkRoot->thumbnails); ?></td>
 								<td><?= $form->select('topicAttributeID_' . $rootID, $topicAttributeList, $C5dkRoot->topicAttributeID); ?></td>
 								<td><a class="btn btn-danger delete_root" href="<?= \URL::to('/dashboard/c5dk_blog/blog_roots/delete', array($rootID)); ?>" title="<?= t("Delete root"); ?>"><i class="fa fa-trash"></i></a></td>
 							</tr>

@@ -12,6 +12,8 @@ class C5dkRoot extends Page {
 	public $rootID				= null;
 	public $groups				= array();
 	public $pageTypeID			= null;
+	public $tags				= 0;
+	public $thumbnails			= 0;
 	public $topicAttributeID	= null;
 
 	public static function getByID($rootID, $version = 'RECENT', $class = 'Concrete\Package\C5dkBlog\Src\C5dkBlog\C5dkRoot\C5dkRoot') {
@@ -23,11 +25,13 @@ class C5dkRoot extends Page {
 		$db = $app->make('database')->connection();
 
 		// Get this roots values
-		$rs = $db->fetchAll("SELECT rootID, groupID, pageTypeID, topicAttributeID FROM C5dkBlogRootPermissions WHERE rootID = ?", array($rootID));
+		$rs = $db->fetchAll("SELECT rootID, groupID, pageTypeID, tags, thumbnails, topicAttributeID FROM C5dkBlogRootPermissions WHERE rootID = ?", array($rootID));
 		foreach ($rs as $row) {
 			$C5dkRoot->rootID			= $row["rootID"];
 			$C5dkRoot->groups[]			= $row["groupID"];
 			$C5dkRoot->pageTypeID		= $row["pageTypeID"];
+			$C5dkRoot->tags				= $row["tags"];
+			$C5dkRoot->thumbnails		= $row["thumbnails"];
 			$C5dkRoot->topicAttributeID	= $C5dkRoot->getTopicAttributeID($row["topicAttributeID"]);
 		}
 

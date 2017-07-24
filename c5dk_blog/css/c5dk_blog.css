@@ -220,7 +220,7 @@
 #redactor-c5dkimagemanager-box .c5dk-thumb-frame {
     border: 2px solid #aaaaaa;
     border-radius: 3px;
-    margin: 0 9px 10px 0;
+    margin: 0 5px 10px 0;
     position:relative;
     display: inline-grid;
     float:left;
@@ -332,8 +332,11 @@
 	border-top: solid 1px #444;
 	border-right: solid 1px #444;
 	border-left: solid 8px #444;
+	border-radius: 0;
 	font-size:16px;
 	font-weight: lighter;
+    line-height: 20px !important;
+    vertical-align: top;
 	padding:6px 10px;
 	text-decoration:none;
 	text-align: center;

@@ -71,8 +71,9 @@
 						autoGrow_maxHeight: 800,
 						autoGrow_onStartup: true,
 						extraAllowedContent: 'img[alt,!src]',
+						allowedContent: true,
 						//disallowedContent: 'img{border*,margin*,width,height,float}',
-						extraPlugins: 'c5dkimagemanager,<?= $C5dkConfig->getPlugins(); ?>autogrow,widget',
+						extraPlugins: 'c5dkimagemanager,<?= $C5dkConfig->getPlugins(); ?>autogrow,lineutils,widget',
 						toolbarGroups: [
 							{ name: 'tools',		groups: [ 'tools' ] },
 							{ name: 'document',		groups: [ 'mode', 'document', 'doctools' ] },
@@ -98,7 +99,7 @@
 		<div class="c5dk_blog_section">
 
 			<!-- Blog Tags -->
-			<?php if($BlogPost->tagsEnabled) { ?>
+			<?php if ($BlogPost->tagsEnabled) { ?>
 				<?php $casTags = CollectionAttributeKey::getByHandle('tags'); ?>
 				<h4><?= t('Tags'); ?></h4>
 				<?= $casTags->render('form', $C5dkBlog->tags, true); ?>

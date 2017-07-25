@@ -276,7 +276,17 @@ c5dk.blog.post = {
 
 		// Root change event to change the topic tree
 		$('#rootID').change(function(event) {
-			window.location = "<?= \URL::to('blog_post', 'create', $BlogPost->redirectID); ?>/" + $('#rootID').val();
+			if (c5dk.blog.post.blog.slidein) {
+				if (c5dk.blog.post.blog.mode == '<?= C5DK_BLOG_MODE_CREATE; ?>') {
+					c5dk.blog.buttons.form.create = null;
+					c5dk.blog.buttons.create($('#blogID').val(), $('#rootID').val());
+				} else {
+					c5dk.blog.buttons.form.edit = null;
+					c5dk.blog.buttons.edit($('#blogID').val(), $('#rootID').val());
+				}
+			} else {
+				window.location = "<?= \URL::to('blog_post', 'create', $BlogPost->redirectID); ?>/" + $('#rootID').val();
+			}
 		});
 
 		// Title and description char counter
@@ -360,7 +370,7 @@ c5dk.blog.post = {
 
 	blog: {
 
-		// mode: <?= $BlogPost->mode == C5DK_BLOG_MODE_CREATE? C5DK_BLOG_MODE_CREATE : C5DK_BLOG_MODE_EDIT; ?>,
+		mode: <?= $BlogPost->mode == C5DK_BLOG_MODE_CREATE? C5DK_BLOG_MODE_CREATE : C5DK_BLOG_MODE_EDIT; ?>,
 		slidein: <?= (int) $C5dkConfig->blog_form_slidein; ?>,
 
 		cancel: function() {

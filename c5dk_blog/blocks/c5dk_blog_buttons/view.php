@@ -83,7 +83,6 @@
 							}
 
 							c5dk.blog.buttons.form.create = $('#c5dk_form_slidein').slideReveal({
-								// trigger: $("#c5dk_form_slidein"),
 								width: "100%",
 								push: false,
 								speed: 700,
@@ -122,7 +121,6 @@
 							}
 
 							c5dk.blog.buttons.form.edit = $('#c5dk_form_slidein').slideReveal({
-								// trigger: $("#c5dk_form_slidein"),
 								width: "100%",
 								push: false,
 								speed: 700,

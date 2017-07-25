@@ -92,6 +92,9 @@ class BlogPost extends PageController {
 		$this->requireAsset('javascript', 'jcrop');
 		$this->requireAsset('css', 'jcrop');
 		$this->requireAsset('javascript', 'validation');
+		$this->requireAsset('javascript', 'slide-in-panel/main');
+		$this->requireAsset('javascript', 'jquery/fileupload');
+		$this->requireAsset('javascript', 'fileupload/loadImage');
 
 		// Set View variables
 		$this->set('view',			new View);

@@ -15,29 +15,11 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 class C5dkAjax extends Controller {
 
-	public function blog($method, $blogID) {
-
-		// What should we do?
-		switch ($method) {
-
-			case "get":
-				$this->getForm($this->post());
-				break;
-
-			case "save":
-				$this->save($blogID);
-				break;
-
-			case "delete":
-				$this->delete($blogID);
-				break;
-
-		}
-	}
-
-	public function getForm($request) {
+	public function getForm() {
 
 		$C5dkBlogPost = new C5dkBlogPost;
+
+		$request = $this->post();
 
 		if ($request['mode'] == C5DK_BLOG_MODE_CREATE) {
 			$C5dkBlogPost->create($request['blogID'], $request['rootID']);
@@ -112,6 +94,10 @@ class C5dkAjax extends Controller {
 				'result' => $C5dkBlog->moveToTrash()
 			));
 		}
+	}
+
+	public function upload() {
+
 	}
 
 	public function link($link) {

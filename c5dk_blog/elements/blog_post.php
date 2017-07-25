@@ -33,7 +33,7 @@
 			<div class="c5dk_blog_section">
 				<?php // Show select input with all the roots the user have access to ?>
 				<?= $form->label('rootID', '<h4>' . t('Post your blog under') . '</h4>'); ?>
-				<?= $form->select('rootID', $BlogPost->rootList, $C5dkBlog->rootID, ''); ?>
+				<?= $form->select('rootID', $BlogPost->rootList, $C5dkBlog->rootID); ?>
 			</div>
 		<?php } ?>
 

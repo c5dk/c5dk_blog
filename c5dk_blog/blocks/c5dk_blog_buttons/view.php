@@ -96,6 +96,8 @@
 					});
 				}
 
+				c5dk.blog.buttons.form.edit = null;
+
 				return false;
 			},
 
@@ -133,6 +135,8 @@
 						}
 					});
 				}
+
+				c5dk.blog.buttons.form.create = null;
 
 				return false;
 			},

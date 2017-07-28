@@ -186,7 +186,6 @@
 
 		<hr />
 
-		<div id="redactor-c5dkimagemanager-box" class="redactor-c5dkimagemanager-box"></div>
 	</div>
 
 	<!-- Delete Image Dialog -->
@@ -208,6 +207,7 @@
 		<form>
 			<input id="c5dk_file_upload" multiple class="ccm-input-file" accept="image/jpeg" type="file" name="files[]">
 		</form>
+		<div id="redactor-c5dkimagemanager-box" class="redactor-c5dkimagemanager-box"></div>
 
 	</div>
 
@@ -252,6 +252,7 @@ c5dk.blog.post = {
 		this.eventInit();
 
 		// Init Image Manager fileList
+		$("#c5dk_filemanager_slidein").hide();
 		c5dk.blog.post.image.getFileList();
 
 		$("#c5dk_blog_form").validate({
@@ -312,57 +313,33 @@ c5dk.blog.post = {
 
 		// Image upload format checking and submit
 		$('#c5dk_file_upload').fileupload({
+			dropZone: $("#c5dk_filemanager_slidein"),
 			url: '<?= \URL::to("/c5dk/blog/image/upload"); ?>',
-			sequentialUploads: true,
-    		formData: {script: true}
-		});
+			dataType: 'json',
+		    // Enable image resizing, except for Android and Opera,
+		    // which actually support image resizing, but fail to
+		    // send Blob objects via XHR requests:
+		    disableImageResize: /Android(?!.*Chrome)|Opera/.test(window.navigator && navigator.userAgent),
+		    imageOrientation: true,
+		    imageMaxWidth: <?= $C5dkConfig->blog_picture_width; ?>,
+		    imageMaxHeight: <?= $C5dkConfig->blog_picture_height; ?>,
+		    // imageCrop: true // Force cropped images
 
+		}).on('fileuploaddone', function (e, data) {
 
-		// $('#file').on('change', function(event){
-		// 	// Hide error message if shown
-		// 	$('#c5dk_blog_upload_image_error').hide();
+			c5dk.blog.post.image.fileList = data.result.fileList
+			c5dk.blog.post.image.updateManager();
 
-		// 	var split = event.currentTarget.value.split('.');
-		// 	var ext = split[split.length - 1].toLowerCase();
-		// 	var allowedExt = ['jpg', 'jpeg', 'png', 'bmp'];
-		// 	if($.inArray(ext, allowedExt) !== "-1" && $(".ui-dialog #file").val() != "") {
-		// 		$('#c5dk_imageManager progress').hide();
-		// 		var formData = new FormData($('#c5dk_image_upload_form')[0]);
-		// 		$.ajax({
-		// 				url: c5dk.blog.post.imageUploadUrl,
-		// 				type: 'POST',
-		// 				// Custom XMLHttpRequest
-		// 				xhr: function() {
-		// 						var myXhr = $.ajaxSettings.xhr();
-		// 						// Check if upload property exists
-		// 						if(myXhr.upload){
-		// 							$('progress').show();
-		// 							$('#file').hide();
-		// 							myXhr.upload.addEventListener('progress',function(e){
-		// 								if(e.lengthComputable){
-		// 									$('progress').attr({value:e.loaded,max:e.total});
-		// 								}
-		// 							}, false);
-		// 						}
-		// 						return myXhr;
-		// 				},
-		// 				success: function(data){
-		// 					$('#file').val('').show();
-		// 					$('#c5dk_imageManager progress').hide();
-		// 					c5dk.blog.post.image.fileList = data.fileList;
-		// 					c5dk.blog.post.image.updateManager();
-		// 				},
-		// 				//error: errorHandler,
-		// 				data: formData,
-		// 				cache: false,
-		// 				contentType: false,
-		// 				processData: false
-		// 		});
-		// 	} else {
-		// 		$('#c5dk_blog_upload_image_error').show();
-		// 		$(this).val('');
-		// 	}
-		// });
+	    }).on('fileuploadfail', function (e, data) {
+
+	        $.each(data.files, function (index) {
+	            var error = $('<span class="text-danger"/>').text('File upload failed.');
+	            $(data.context.children()[index])
+	                .append('<br>')
+	                .append(error);
+	        });
+
+	    });
 
 	},
 
@@ -444,6 +421,7 @@ c5dk.blog.post = {
 		},
 
 		showManager: function (mode) {
+		$("#c5dk_filemanager_slidein").show();
 
 			// c5dk.blog.post.image.getFileList();
 			c5dk.blog.post.image.managerMode = (mode == "thumbnail")? mode : "editor";
@@ -455,7 +433,7 @@ c5dk.blog.post = {
 				speed: 700,
 				autoEscape: false,
 				position: "right",
-				overlay: false,
+				overlay: true,
 				overlaycolor: "green"
 			});
 			c5dk.blog.post.image.filemanager.slideReveal("show");
@@ -472,6 +450,7 @@ c5dk.blog.post = {
 			/* Delete images is disabled */
 			/*****************************/
 			var canDeleteImages = false;
+
 			$('.redactor-c5dkimagemanager-box').html("");
 			for (val in c5dk.blog.post.image.fileList) {
 				if (c5dk.blog.post.image.fileList[val]) {
@@ -487,13 +466,15 @@ c5dk.blog.post = {
 					case "editor":
 						var element = CKEDITOR.dom.element.createFromHtml( '<img src="' + $(event.target).data('src') + '" />' );
 						c5dk.blog.post.ckeditor.insertElement( element );
-						$.fn.dialog.closeTop();
+						// $.fn.dialog.closeTop();
+						c5dk.blog.post.image.hideManager();
 						break;
 
 					case "thumbnail":
 						var el = $(event.target);
 						c5dk.blog.post.thumbnail.useAsThumb(el.data('fid'), el.data('src'), el.data('width'), el.data('height'));
-						$.fn.dialog.closeTop();
+						// $.fn.dialog.closeTop();
+						c5dk.blog.post.image.hideManager();
 						break;
 				}
 			});
@@ -533,6 +514,7 @@ c5dk.blog.post = {
 			$('#thumbnailID').val(fID);
 			this.image.height = (width < this.image.maxWidth)? height : ((this.image.maxWidth/width)*height);
 			this.image.width = (width < this.image.maxWidth)? width : this.image.maxWidth;
+			console.dir({width: this.image.width, height: this.image.height});
 			$('#c5dk_crop_pic, #c5dk_blog_thumbnail').attr({'src': src, 'width': this.image.width, 'height': this.image.height}).show();
 			$('#c5dk_crop_pic').Jcrop({
 				onChange: c5dk.blog.post.thumbnail.showPreview,

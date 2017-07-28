@@ -7,6 +7,20 @@ use Page;
 use View;
 use Controller;
 
+use Image;
+// use Imagine\Image\Box;
+// use Imagine\Image\Point;
+// use Imagine\Image\ImageInterface;
+// use Imagine\Filter\Basic\Autorotate;
+// use Imagine\Filter\Transformation;
+// use Imagine\Image\Metadata\ExifMetadataReader;
+
+use File;
+use FileList;
+use FileImporter;
+use FileSet;
+use Concrete\Core\Tree\Node\Type\FileFolder		as FileFolder;
+
 use C5dk\Blog\C5dkUser as C5dkUser;
 use C5dk\Blog\C5dkBlog as C5dkBlog;
 use C5dk\Blog\BlogPost as C5dkBlogPost;
@@ -98,6 +112,124 @@ class C5dkAjax extends Controller {
 
 	public function upload() {
 
+		// Get helper objects
+		$jh = $this->app->make('helper/json');
+		$fh = $this->app->make('helper/file');
+
+		// Get C5dk Objects
+		$C5dkConfig = new C5dkConfig;
+		$C5dkUser = new C5dkUser();
+		$uID = $C5dkUser->getUserID();
+
+		// Data to send back if something fails
+		$data = array(
+			'fileList' => array(),
+			'status' => 0
+		);
+
+		$tmpFolder	= $fh->getTemporaryDirectory();
+
+		// Get image facade and open image
+		$imagine = $this->app->make(Image::getFacadeAccessor());
+		$image = $imagine->open($_FILES['files']['tmp_name'][0]);
+
+		// Autorotate image
+		// $transformation = new Transformation($imagine);
+		// $transformation->applyFilter($image, new Autorotate());
+
+		// Resize image
+		// $width = $C5dkConfig->blog_picture_width;
+		// $height = $C5dkConfig->blog_picture_height;
+		// $image = $image->thumbnail(new Box($width, $height), ImageInterface::THUMBNAIL_INSET);
+
+		// Save image as .jpg
+		$image->save($tmpFolder . '/c5dk_blog.jpg', array('jpeg_quality' => 80));
+
+		// Import file
+		$fi = new FileImporter();
+		$fv = $fi->import(
+			// $_FILES['file']['tmp_name'][0],
+			$tmpFolder . '/c5dk_blog.jpg',
+			"C5DK_BLOG_uID-" . $uID . "_Pic_" . $fh->unfilename($_FILES['file']['name'][0]) . '.jpg',
+			FileFolder::getNodeByName('Manager')
+		);
+
+		// // Delete our imported file - DO NOT WORK
+		// $filesystem = StorageLocation::getDefault()->getFileSystemObject();
+		// $filesystem->delete('/application/files/tmp/c5dk_blog.jpg');
+		// 	// $tmpFolder . '/c5dk_blog.jpg');
+
+		if(is_object($fv)){
+
+			// Create and get FileSet if not exist and add file to the set
+			$fileSet = FileSet::createAndGetSet("C5DK_BLOG_uID-" . $uID, FileSet::TYPE_PUBLIC, $uID);
+			$fsf = $fileSet->addFileToSet($fv);
+
+			// Now let's update the image
+			$fv->updateContents($image->get($fv->getExtension()));
+			$fv->rescanThumbnails();
+
+			// Get FileList
+			// $files = $this->getFileList($fileSet);
+			// rsort($files);
+			$data = array(
+				'file' => $file,
+				'fileList' => $this->getFilesFromUserSet(),
+				'status' => 1
+			);
+		}
+
+		header('Content-type: application/json');
+		echo $jh->encode($data);
+
+		exit;
+
+	}
+
+	public function getFilesFromUserSet() {
+
+		// Get helper objects
+		$im = $this->app->make('helper/image');
+
+		$C5dkUser = new C5dkUser();
+		if(!$C5dkUser->isLoggedIn()){
+
+			return "{}";
+
+		}
+
+		// Is $fs a FileSet object or a FileSet handle?
+		$fs = FileSet::getByName("C5DK_BLOG_uID-" . $C5dkUser->getUserID());
+		if (!is_object($fs)) {
+
+			return "{}";
+
+		}
+
+		// Get files from FileSet
+		$fl = new FileList();
+		$fl->filterBySet($fs);
+		foreach ($fl->get() as $key => $file) {
+			$f = File::getByID($file->getFileID());
+			$fv = $f->getRecentVersion();
+			$fp = explode("_", $fv->getFileName());
+			if ($fp[3] != "Thumb") {
+				$files[$key] = array(
+					"obj" => $f,
+					"fID" => $f->getFIleID(),
+					"thumbnail" => $im->getThumbnail($f, 150, 150),
+					"picture"		=> array(
+						"src"			=> File::getRelativePathFromID($file->getFileID()),
+						"width"		=> $fv->getAttribute("width"),
+						"height"	=> $fv->getAttribute("height")
+					),
+					"FileFolder" => \Concrete\Core\Tree\Node\Type\FileFolder::getNodeByName('C5DK Blog')
+				);
+			}
+
+		};
+
+		return $files;
 	}
 
 	public function link($link) {

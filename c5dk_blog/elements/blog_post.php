@@ -145,8 +145,8 @@
 						</div>
 					</div>
 
-					<div class="c5dk_blog_thumbnail_jcrop">
-						<img id="c5dk_crop_pic" src="" style="display:none;" />
+					<div id="jcrop_frame" class="c5dk_blog_thumbnail_jcrop">
+
 					</div>
 				</div>
 			</div>
@@ -167,28 +167,6 @@
 
 	</form>
 
-	<!-- Dialogs/Modals -->
-	<div id="dialog-imageManager" class="c5dk-dialog" style="display:none;">
-		<form id="c5dk_image_upload_form" method="post" action="<?= \URL::to('/blog_post/upload'); ?>" class="ccm-file-manager-submit-single" enctype="multipart/form-data">
-
-			<!-- Token -->
-			<?= $token->output('upload');?>
-
-			<!-- Form Error Messages -->
-			<div id="c5dk_upload_form_message"></div>
-
-			<!-- Upload input fields -->
-			<input id="file" class="ccm-input-file" accept="image/jpeg" type="file" name="file[]">
-			<div id="c5dk_blog_upload_image_error" class="alert alert-danger"><?= t("Only .jpg or .jpeg is supported at the moment."); ?></div>
-			<progress value="0" style="display:none;"></progress>
-
-		</form>
-
-		<hr />
-
-		<div id="redactor-c5dkimagemanager-box" class="redactor-c5dkimagemanager-box"></div>
-	</div>
-
 	<!-- Delete Image Dialog -->
 	<div id="dialog-confirmDeleteImage" class="c5dk-dialog" style="display:none;">
 		<div class="ccm-ui">
@@ -200,6 +178,16 @@
 				<input class="btn btn-default primary" onclick="c5dk.blog.post.image.delete('close')" type="button" value="<?= t('Cancel'); ?>">
 			</div>
 		</div>
+	</div>
+
+	<!-- Image Manager: Slide-In -->
+	<div id="c5dk_filemanager_slidein" class="slider">
+		<input class="" onclick="c5dk.blog.post.image.hideManager();" type="button" value="<?= t('Cancel'); ?>">
+		<form><input id="c5dk_file_upload" multiple class="ccm-input-file" accept="image/jpeg" type="file" name="files[]" /></form>
+
+		<!-- Image List -->
+		<div id="redactor-c5dkimagemanager-box" class="redactor-c5dkimagemanager-box"><?= $BlogPost->C5dkUser->getImageListHTML(); ?></div>
+
 	</div>
 
 </div> <!-- c5dk-blog-package wrapper -->
@@ -243,7 +231,8 @@ c5dk.blog.post = {
 		this.eventInit();
 
 		// Init Image Manager fileList
-		c5dk.blog.post.image.getFileList();
+		$("#c5dk_filemanager_slidein").hide();
+		// c5dk.blog.post.image.getFileList();
 
 		$("#c5dk_blog_form").validate({
 			rules: {
@@ -312,50 +301,33 @@ c5dk.blog.post = {
 		}).trigger('keyup');
 
 		// Image upload format checking and submit
-		$('#file').on('change', function(event){
-			// Hide error message if shown
-			$('#c5dk_blog_upload_image_error').hide();
+		$('#c5dk_file_upload').fileupload({
+			dropZone: $("#c5dk_filemanager_slidein"),
+			url: '<?= \URL::to("/c5dk/blog/image/upload"); ?>',
+			dataType: 'json',
+			// Enable image resizing, except for Android and Opera,
+			// which actually support image resizing, but fail to
+			// send Blob objects via XHR requests:
+			disableImageResize: /Android(?!.*Chrome)|Opera/.test(window.navigator && navigator.userAgent),
+			imageOrientation: true,
+			imageMaxWidth: <?= $C5dkConfig->blog_picture_width; ?>,
+			imageMaxHeight: <?= $C5dkConfig->blog_picture_height; ?>,
+			// imageCrop: true // Force cropped images
 
-			var split = event.currentTarget.value.split('.');
-			var ext = split[split.length - 1].toLowerCase();
-			var allowedExt = ['jpg', 'jpeg', 'png', 'bmp'];
-			if($.inArray(ext, allowedExt) !== "-1" && $(".ui-dialog #file").val() != "") {
-				$('#c5dk_imageManager progress').hide();
-				var formData = new FormData($('#c5dk_image_upload_form')[0]);
-				$.ajax({
-						url: c5dk.blog.post.imageUploadUrl,
-						type: 'POST',
-						// Custom XMLHttpRequest
-						xhr: function() {
-								var myXhr = $.ajaxSettings.xhr();
-								// Check if upload property exists
-								if(myXhr.upload){
-									$('progress').show();
-									$('#file').hide();
-									myXhr.upload.addEventListener('progress',function(e){
-										if(e.lengthComputable){
-											$('progress').attr({value:e.loaded,max:e.total});
-										}
-									}, false);
-								}
-								return myXhr;
-						},
-						success: function(data){
-							$('#file').val('').show();
-							$('#c5dk_imageManager progress').hide();
-							c5dk.blog.post.image.fileList = data.fileList;
-							c5dk.blog.post.image.updateManager();
-						},
-						//error: errorHandler,
-						data: formData,
-						cache: false,
-						contentType: false,
-						processData: false
-				});
-			} else {
-				$('#c5dk_blog_upload_image_error').show();
-				$(this).val('');
-			}
+		}).on('fileuploaddone', function (e, data) {
+
+			c5dk.blog.post.image.fileList = data.result.fileList
+			c5dk.blog.post.image.updateManager();
+
+		}).on('fileuploadfail', function (e, data) {
+
+			$.each(data.files, function (index) {
+				var error = $('<span class="text-danger"/>').text('File upload failed.');
+				$(data.context.children()[index])
+					.append('<br>')
+					.append(error);
+			});
+
 		});
 
 	},
@@ -387,8 +359,10 @@ c5dk.blog.post = {
 		managerMode: null,
 		currentFID: null,
 		fileList: {},
+		filemanager: null,
 
 		delete: function(mode, fID) {
+
 			switch (mode){
 
 				case "confirm":
@@ -405,11 +379,12 @@ c5dk.blog.post = {
 					$.fn.dialog.closeTop();
 					$.ajax({
 						type: 'POST',
-						url: '<?= \URL::to('/blog_post/delete', 'image'); ?>/' + c5dk.blog.post.image.currentFID,
+						url: '<?= \URL::to('/c5dk/blog/image/delete'); ?>/' + c5dk.blog.post.image.currentFID,
 						dataType: 'json',
 						success: function(r) {
 							if (r.status == "success") {
-								c5dk.blog.post.image.getFileList();
+								$('#redactor-c5dkimagemanager-box').html(r.imageListHtml);
+								// c5dk.blog.post.image.getFileList();
 							}
 						}
 					});
@@ -421,69 +396,29 @@ c5dk.blog.post = {
 			}
 		},
 
-		getFileList: function(){
-			$('progress').hide();
-			$.ajax({
-				type: 'POST',
-				url: '<?= \URL::to('/blog_post/getFileList'); ?>',
-				dataType: 'json',
-				success: function(data){
-					c5dk.blog.post.image.fileList = data;
-					c5dk.blog.post.image.updateManager();
-				}
-			});
-		},
-
 		showManager: function (mode) {
+		$("#c5dk_filemanager_slidein").show();
+
 			// c5dk.blog.post.image.getFileList();
 			c5dk.blog.post.image.managerMode = (mode == "thumbnail")? mode : "editor";
 			$('#file').val('').show();
-			$('#c5dk_imageManager progress').hide();
-			$.fn.dialog.open({
-				element:"#dialog-imageManager",
-				title:"<?= t('Image Manager'); ?>",
-				height:450,
-				width:620
+			c5dk.blog.post.image.filemanager = $('#c5dk_filemanager_slidein').slideReveal({
+				// trigger: $("#c5dk_form_slidein"),
+				width: "700px",
+				push: false,
+				speed: 700,
+				autoEscape: false,
+				position: "right",
+				overlay: true,
+				overlaycolor: "green"
 			});
+			c5dk.blog.post.image.filemanager.slideReveal("show");
 		},
 
-		updateManager: function () {
+		hideManager: function () {
 
-
-			/*****************************/
-			/* Delete images is disabled */
-			/*****************************/
-			var canDeleteImages = false;
-			$('.redactor-c5dkimagemanager-box').html("");
-			for (val in c5dk.blog.post.image.fileList) {
-				if (c5dk.blog.post.image.fileList[val]) {
-					var file = c5dk.blog.post.image.fileList[val];
-					var deleteSpan = (canDeleteImages)? '<span class="fa fa-trash delete-image" style="position: absolute; left:0px; width:16px; height:16px; background-color:#fff; cursor: pointer"></span>' : '';
-					var img = '<img class="c5dk_image_thumbs" src="' + file.thumbnail.src + '" data-fid="' + file.fID + '" data-src="' + file.picture.src + '" data-width="' + file.picture.width + '" data-height="' + file.picture.height + '" />';
-					$('.redactor-c5dkimagemanager-box').append($('<div data-fid="' + file.fID + '" class="c5dk-thumb-frame">' + deleteSpan + img + '</div>'));
-				}
-			}
-
-			$(".c5dk_image_thumbs").on('click', function(event) {
-				switch (c5dk.blog.post.image.managerMode) {
-					case "editor":
-						var element = CKEDITOR.dom.element.createFromHtml( '<img src="' + $(event.target).data('src') + '" />' );
-						c5dk.blog.post.ckeditor.insertElement( element );
-						$.fn.dialog.closeTop();
-						break;
-
-					case "thumbnail":
-						var el = $(event.target);
-						c5dk.blog.post.thumbnail.useAsThumb(el.data('fid'), el.data('src'), el.data('width'), el.data('height'));
-						$.fn.dialog.closeTop();
-						break;
-				}
-			});
-
-			$(".delete-image").on('click', function (event) {
-				c5dk.blog.post.image.delete('confirm', $(event.target).closest('div').data('fid'));
-			});
-		}
+			c5dk.blog.post.image.filemanager.slideReveal("hide");
+		},
 
 	},
 
@@ -499,7 +434,7 @@ c5dk.blog.post = {
 		},
 
 		image:{
-			maxWidth: 500,
+			maxWidth: 600,
 			width: null,
 			height: null
 		},
@@ -507,26 +442,47 @@ c5dk.blog.post = {
 		remove:function () {
 			$('#thumbnailID').val(-1);
 			if(c5dk.blog.post.jcrop_api){ c5dk.blog.post.jcrop_api.destroy(); }
-			$('img#c5dk_crop_pic, #c5dk_blog_thumbnail').attr('src', "").hide();
+			$('#c5dk_crop_pic').remove();
+			$('#c5dk_blog_thumbnail').attr('src', "").hide();
 		},
 
 		useAsThumb:function (fID, src, width, height) {
-			if(c5dk.blog.post.jcrop_api){ c5dk.blog.post.jcrop_api.destroy(); }
-			$('#thumbnailID').val(fID);
+
+			// Hide the slide-in Image manager
+			c5dk.blog.post.image.hideManager();
+
+			// Destroy old Jcrop instance if exist
+			c5dk.blog.post.thumbnail.remove();
+
+			// Old calculation (Not changed for a long long time)
 			this.image.height = (width < this.image.maxWidth)? height : ((this.image.maxWidth/width)*height);
 			this.image.width = (width < this.image.maxWidth)? width : this.image.maxWidth;
-			$('#c5dk_crop_pic, #c5dk_blog_thumbnail').attr({'src': src, 'width': this.image.width, 'height': this.image.height}).show();
+
+			// Update
+			$('#c5dk_blog_thumbnail').attr('src', src).width(this.image.width).height(this.image.height).show();
+			$('#jcrop_frame').append('<img id="c5dk_crop_pic" src="' + src + '" width="' + this.image.width + '" height="' + this.image.height + '" />')
+
 			$('#c5dk_crop_pic').Jcrop({
-				onChange: c5dk.blog.post.thumbnail.showPreview,
-				onSelect: c5dk.blog.post.thumbnail.showPreview,
 				aspectRatio: (c5dk.blog.post.thumbnail.save.width / c5dk.blog.post.thumbnail.save.height),
-				setSelect: [ 0, 0, c5dk.blog.post.thumbnail.save.width, c5dk.blog.post.thumbnail.save.height ]
+				setSelect: [ 0, 0, c5dk.blog.post.thumbnail.preview.width, c5dk.blog.post.thumbnail.preview.height ]
+				,boxWidth: 600
 			},function(){
 				c5dk.blog.post.jcrop_api = this;
+				thumbnail = this.initComponent('Thumbnailer', { width: c5dk.blog.post.thumbnail.preview.width, height: c5dk.blog.post.thumbnail.preview.height });
 			});
+			c5dk.blog.post.jcrop_api.ui.selection.element.on('cropstart cropmove cropend',function(e,s,c){
+				c5dk.blog.post.thumbnail.showPreview(c);
+			});
+
+			$('#thumbnailID').val(fID);
+
+
 		},
 
-		showPreview:function(coords){
+		showPreview:function(coords) {
+
+console.log("x:" + coords.x + ", Y:" + coords.y + ", H:" + coords.h + ", W:" + coords.w);
+
 			var ry = c5dk.blog.post.thumbnail.preview.height / coords.h;
 			var rx = c5dk.blog.post.thumbnail.preview.width / coords.w;
 
@@ -554,6 +510,14 @@ $(document).ready( function(){ c5dk.blog.post.init(); });
 </script>
 
 <style type="text/css">
+
+.jcrop-thumb {
+  top: 200px;
+  left: -192px;
+}
+
+
+
 	#c5dk-blog-package .field-invalid {
 		border-color: red !important;
 	}

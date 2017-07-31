@@ -3,6 +3,7 @@ namespace Concrete\Package\C5dkBlog\Block\C5dkBlogButtons;
 
 use Core;
 use Page;
+use AssetList;
 use Concrete\Core\Block\BlockController;
 
 use C5dk\Blog\C5dkConfig as C5dkConfig;
@@ -22,22 +23,31 @@ class Controller extends BlockController {
 	public function view() {
 
 		// Init Objects
-		$this->set('C5dkConfig', new C5dkConfig);
+		$C5dkConfig = new C5dkConfig;
+		$this->set('C5dkConfig', $C5dkConfig);
 		$this->set('C5dkUser', new C5dkUser);
 		$this->set('C5dkBlog', C5dkBlog::getByID(Page::getCurrentPage()->getCollectionID()));
 		$this->set('form', Core::make('helper/form'));
 
 		// Require Asset
-		$this->requireAsset('core/app');
-		$this->requireAsset('selectize');
 		$this->requireAsset('css', 'c5dk_blog_css');
-		// $this->requireAsset('redactor');
-		$this->requireAsset('javascript', 'c5dkckeditor');
-		$this->requireAsset('core/topics');
-		$this->requireAsset('javascript', 'jcrop');
-		$this->requireAsset('css', 'jcrop');
-		$this->requireAsset('javascript', 'validation');
-		$this->requireAsset('javascript', 'slide-in-panel/main');
+		$this->requireAsset('core/app');
+
+
+		if ($C5dkConfig->blog_form_slidein) {
+
+			// Core Assets
+			$this->requireAsset('selectize');
+			$this->requireAsset('core/topics');
+
+			// C5DK Assets
+			$this->requireAsset('javascript', 'c5dkckeditor');
+			$this->requireAsset('javascript', 'jcrop');
+			$this->requireAsset('css', 'jcrop');
+			$this->requireAsset('javascript', 'validation');
+			$this->requireAsset('javascript', 'slide-in-panel/main');
+			$this->requireAsset('c5dkFileupload/all');
+		}
 	}
 
 }

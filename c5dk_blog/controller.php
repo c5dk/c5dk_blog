@@ -19,7 +19,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 class Controller extends Package {
 
 	protected $appVersionRequired		= '8.2';
-	protected $pkgVersion				= '8.2.0.4';
+	protected $pkgVersion				= '8.2.0.5.b2';
 	protected $pkgHandle				= 'c5dk_blog';
 	protected $pkgAutoloaderRegistries	= array(
 		'src/C5dkBlog' => '\C5dk\Blog'
@@ -38,7 +38,6 @@ class Controller extends Package {
 		$this->registerRoutes();
 		$this->registerAssets();
 	}
-
 	private function registerEvents() {
 
 		Events::addListener('on_user_delete', array($this, 'eventOnUserDelete'));
@@ -47,7 +46,11 @@ class Controller extends Package {
 
 	private function registerRoutes() {
 
-		Route::register('/c5dk/blog/{method}/{blogID}', '\C5dk\Blog\C5dkAjax::blog');
+		Route::register('/c5dk/blog/get/{blogID}', '\C5dk\Blog\C5dkAjax::getForm');
+		Route::register('/c5dk/blog/save/{blogID}', '\C5dk\Blog\C5dkAjax::save');
+		Route::register('/c5dk/blog/delete/{blogID}', '\C5dk\Blog\C5dkAjax::delete');
+		Route::register('/c5dk/blog/image/upload', '\C5dk\Blog\C5dkAjax::upload');
+		Route::register('/c5dk/blog/image/delete/{fID}', '\C5dk\Blog\C5dkAjax::imageDelete');
 	}
 
 
@@ -133,10 +136,10 @@ class Controller extends Package {
 		$rootFolder = C5dkInstaller::installFileFolder('-root-', 'C5DK Blog');
 
 		// Get the C5DK Blog folder object
-        $manager = FileManager::get();
-        $fldC5dkBlog = $manager->getNodeByDisplayPath("/C5DK Blog");
+		$manager = FileManager::get();
+		$fldC5dkBlog = $manager->getNodeByDisplayPath("/C5DK Blog");
 
-        // Create Thumbs and Manager folders in the C5DK Blog folder
+		// Create Thumbs and Manager folders in the C5DK Blog folder
 		$thumbs = C5dkInstaller::installFileFolder($fldC5dkBlog, 'Thumbs');
 		$manager = C5dkInstaller::installFileFolder($fldC5dkBlog, 'Manager');
 
@@ -255,14 +258,31 @@ class Controller extends Package {
 		$al->register('css', 'c5dk_blog_css', 'css/c5dk_blog.min.css', array(), 'c5dk_blog');
 
 		// Register jQuery Jcrop plugin
-		$al->register('javascript', 'jcrop', 'js/Jcrop/jquery.Jcrop.min.js', array(), 'c5dk_blog');
-		$al->register('css', 'jcrop', 'css/Jcrop/jquery.Jcrop.min.css', array(), 'c5dk_blog');
+		$al->register('javascript', 'jcrop', 'js/Jcrop/Jcrop.min.js', array(), 'c5dk_blog');
+		$al->register('css', 'jcrop', 'css/Jcrop/Jcrop.min.css', array(), 'c5dk_blog');
 
 		// Register jQuery Jcrop plugin
 		$al->register('javascript', 'validation', 'js/validation/jquery.validate.js', array(), 'c5dk_blog');
 
 		// Register JQuery Slide-in-panel
 		$al->register('javascript', 'slide-in-panel/main', 'js/slide-in-panel/jquery.slidereveal.min.js', array(), 'c5dk_blog');
+
+		// Register extra js files from fileupload
+		$al->register('javascript', 'c5dkFileupload/loadImage', 'js/fileUpload/load-image.all.min.js', array(), 'c5dk_blog');
+		$al->register('javascript', 'c5dkFileupload/canvastoblob', 'js/fileUpload/canvas-to-blob.min.js', array(), 'c5dk_blog');
+		$al->register('javascript', 'c5dkFileupload/iframeTransport', 'js/fileUpload/jquery.iframe-transport.js', array(), 'c5dk_blog');
+		$al->register('javascript', 'c5dkFileupload/fileupload', 'js/fileUpload/jquery.fileupload.js', array(), 'c5dk_blog');
+		$al->register('javascript', 'c5dkFileupload/fileuploadProcess', 'js/fileUpload/jquery.fileupload-process.js', array(), 'c5dk_blog');
+		$al->register('javascript', 'c5dkFileupload/fileuploadImage', 'js/fileUpload/jquery.fileupload-image.js', array(), 'c5dk_blog');
+		$al->registerGroup('c5dkFileupload/all', array(
+			array('javascript', 'c5dkFileupload/loadImage'),
+			array('javascript', 'c5dkFileupload/canvastoblob'),
+			array('javascript', 'c5dkFileupload/iframeTransport'),
+			array('javascript', 'c5dkFileupload/fileupload'),
+			array('javascript', 'c5dkFileupload/fileuploadProcess'),
+			array('javascript', 'c5dkFileupload/fileuploadImage'),
+		));
+
 	}
 
 }

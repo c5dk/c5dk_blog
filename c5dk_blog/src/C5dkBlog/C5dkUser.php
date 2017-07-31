@@ -6,6 +6,11 @@ use UserInfo;
 use Page;
 use Group;
 use Database;
+use View;
+
+use File;
+use FileList;
+use FileSet;
 
 use C5dk\Blog\C5dkBlog as C5dkBlog;
 use C5dk\Blog\C5dkRoot as C5dkRoot;
@@ -82,6 +87,70 @@ class C5dkUser extends User {
 		}
 
 		return $this->rootList;
+
+	}
+
+	public function getFilesFromUserSet() {
+
+		// Get helper objects
+		$app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
+		$im = $app->make('helper/image');
+
+		$files = array();
+
+		if($this->isLoggedIn()){
+
+
+			// Is $fs a FileSet object or a FileSet handle?
+			$fs = FileSet::getByName("C5DK_BLOG_uID-" . $this->getUserID());
+			if (is_object($fs)) {
+
+
+				// Get files from FileSet
+				$fl = new FileList();
+				$fl->filterBySet($fs);
+
+				foreach ($fl->get() as $key => $file) {
+					$f = File::getByID($file->getFileID());
+					$fv = $f->getRecentVersion();
+					$fp = explode("_", $fv->getFileName());
+					if ($fp[3] != "Thumb") {
+						$files[$key] = array(
+							'fObj' => $f,
+							'fv' => $fv,
+							"fID" => $f->getFIleID(),
+							"thumbnail" => $im->getThumbnail($f, 150, 150),
+							"picture"		=> array(
+								"src"		=> File::getRelativePathFromID($file->getFileID()),
+								"width"		=> $fv->getAttribute("width"),
+								"height"	=> $fv->getAttribute("height")
+							)
+						);
+					}
+
+				};
+			}
+
+		}
+
+		return $files;
+	}
+
+	public function getImageListHTML() {
+
+		$app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
+
+		ob_start();
+		print View::element('image_manager/list_simple', array(
+			'C5dkUser'			=> $this,
+			'fileList'			=> $this->getFilesFromUserSet(),
+			'image'				=> $app->make('helper/image'),
+			'canDeleteImages'	=> false
+		), 'c5dk_blog');
+		$html = ob_get_contents();
+		ob_end_clean();
+
+		return $html;
 
 	}
 

@@ -232,6 +232,23 @@ class C5dkAjax extends Controller {
 		return $files;
 	}
 
+	public function imageDelete($fID) {
+
+		$jh = $this->app->make('helper/json');
+
+		$C5dkUser = new C5dkUser();
+		$fs = FileSet::getByName("C5DK_BLOG_uID-" . $C5dkUser->getUserID());
+		$file = File::getByID($fID);
+		if (is_object($file) && $file->inFileSet($fs)) {
+			$file->delete();
+			$data = array(
+				'status' => 'success',
+				'imageListHtml' => $C5dkUser->getImageListHTML()
+			);
+		}
+		echo $jh->encode($data);
+	}
+
 	public function link($link) {
 
 		$this->redirect($link);

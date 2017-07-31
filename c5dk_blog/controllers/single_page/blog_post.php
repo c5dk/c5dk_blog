@@ -366,11 +366,9 @@ class BlogPost extends PageController {
 			$fv->rescanThumbnails();
 
 			// Get FileList
-			// $files = $this->getFileList($fileSet);
-			// rsort($files);
 			$data = array(
 				'file' => $file,
-				'fileList' => $this->getFilesFromUserSet(),
+				'fileList' => $C5dkUser->getFilesFromUserSet(),
 				'status' => 1
 			);
 		}
@@ -381,64 +379,64 @@ class BlogPost extends PageController {
 		exit;
 	}
 
-	public function getFileList($fs = null){
+	// public function getFileList($fs = null){
 
-		// Get helper objects
-		$jh = $this->app->make('helper/json');
+	// 	// Get helper objects
+	// 	$jh = $this->app->make('helper/json');
 
-		header('Content-type: application/json');
-		echo $jh->encode($this->getFilesFromUserSet());
+	// 	header('Content-type: application/json');
+	// 	echo $jh->encode($this->getFilesFromUserSet());
 
-		exit;
-	}
+	// 	exit;
+	// }
 
-	public function getFilesFromUserSet() {
+	// public function getFilesFromUserSet() {
 
-		// Get helper objects
-		$im = $this->app->make('helper/image');
+	// 	// Get helper objects
+	// 	$im = $this->app->make('helper/image');
 
-		$C5dkUser = new C5dkUser();
-		if(!$C5dkUser->isLoggedIn()){
+	// 	$C5dkUser = new C5dkUser();
+	// 	if(!$C5dkUser->isLoggedIn()){
 
-			return "{}";
+	// 		return "{}";
 
-		}
+	// 	}
 
-		// Is $fs a FileSet object or a FileSet handle?
-		if(!is_object($fs)){
-			$fs = FileSet::getByName("C5DK_BLOG_uID-" . $C5dkUser->getUserID());
-			if (!is_object($fs)) {
+	// 	// Is $fs a FileSet object or a FileSet handle?
+	// 	if(!is_object($fs)){
+	// 		$fs = FileSet::getByName("C5DK_BLOG_uID-" . $C5dkUser->getUserID());
+	// 		if (!is_object($fs)) {
 
-				return "{}";
+	// 			return "{}";
 
-			}
-		}
+	// 		}
+	// 	}
 
-		// Get files from FileSet
-		$fl = new FileList();
-		$fl->filterBySet($fs);
-		foreach ($fl->get() as $key => $file) {
-			$f = File::getByID($file->getFileID());
-			$fv = $f->getRecentVersion();
-			$fp = explode("_", $fv->getFileName());
-			if ($fp[3] != "Thumb") {
-				$files[$key] = array(
-					"obj" => $f,
-					"fID" => $f->getFIleID(),
-					"thumbnail" => $im->getThumbnail($f, 150, 150),
-					"picture"		=> array(
-						"src"			=> File::getRelativePathFromID($file->getFileID()),
-						"width"		=> $fv->getAttribute("width"),
-						"height"	=> $fv->getAttribute("height")
-					),
-					"FileFolder" => \Concrete\Core\Tree\Node\Type\FileFolder::getNodeByName('C5DK Blog')
-				);
-			}
+	// 	// Get files from FileSet
+	// 	$fl = new FileList();
+	// 	$fl->filterBySet($fs);
+	// 	foreach ($fl->get() as $key => $file) {
+	// 		$f = File::getByID($file->getFileID());
+	// 		$fv = $f->getRecentVersion();
+	// 		$fp = explode("_", $fv->getFileName());
+	// 		if ($fp[3] != "Thumb") {
+	// 			$files[$key] = array(
+	// 				"obj" => $f,
+	// 				"fID" => $f->getFIleID(),
+	// 				"thumbnail" => $im->getThumbnail($f, 150, 150),
+	// 				"picture"		=> array(
+	// 					"src"			=> File::getRelativePathFromID($file->getFileID()),
+	// 					"width"		=> $fv->getAttribute("width"),
+	// 					"height"	=> $fv->getAttribute("height")
+	// 				),
+	// 				"FileFolder" => \Concrete\Core\Tree\Node\Type\FileFolder::getNodeByName('C5DK Blog')
+	// 			);
+	// 		}
 
-		};
+	// 	};
 
-		return $files;
-	}
+	// 	return $files;
+	// }
 
 	// Keep the active login session active
 	public function ping(){

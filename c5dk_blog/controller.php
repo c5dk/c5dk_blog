@@ -19,7 +19,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 class Controller extends Package {
 
 	protected $appVersionRequired		= '8.2';
-	protected $pkgVersion				= '8.2.0.5.b1';
+	protected $pkgVersion				= '8.2.0.5.b2';
 	protected $pkgHandle				= 'c5dk_blog';
 	protected $pkgAutoloaderRegistries	= array(
 		'src/C5dkBlog' => '\C5dk\Blog'
@@ -50,6 +50,7 @@ class Controller extends Package {
 		Route::register('/c5dk/blog/save/{blogID}', '\C5dk\Blog\C5dkAjax::save');
 		Route::register('/c5dk/blog/delete/{blogID}', '\C5dk\Blog\C5dkAjax::delete');
 		Route::register('/c5dk/blog/image/upload', '\C5dk\Blog\C5dkAjax::upload');
+		Route::register('/c5dk/blog/image/delete/{fID}', '\C5dk\Blog\C5dkAjax::imageDelete');
 	}
 
 
@@ -257,8 +258,8 @@ class Controller extends Package {
 		$al->register('css', 'c5dk_blog_css', 'css/c5dk_blog.min.css', array(), 'c5dk_blog');
 
 		// Register jQuery Jcrop plugin
-		$al->register('javascript', 'jcrop', 'js/Jcrop/jquery.Jcrop.min.js', array(), 'c5dk_blog');
-		$al->register('css', 'jcrop', 'css/Jcrop/jquery.Jcrop.min.css', array(), 'c5dk_blog');
+		$al->register('javascript', 'jcrop', 'js/Jcrop/Jcrop.min.js', array(), 'c5dk_blog');
+		$al->register('css', 'jcrop', 'css/Jcrop/Jcrop.min.css', array(), 'c5dk_blog');
 
 		// Register jQuery Jcrop plugin
 		$al->register('javascript', 'validation', 'js/validation/jquery.validate.js', array(), 'c5dk_blog');

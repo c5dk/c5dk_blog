@@ -14,6 +14,10 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 class C5dkRootList extends DatabaseItemList implements PermissionableListItemInterface {
 
+	public function getPermissionsChecker() {}
+
+	public function enablePermissions() {}
+
 	protected function getAttributeKeyClassName() {
 
 		return '\\Concrete\\Core\\Attribute\\Key\\CollectionKey';

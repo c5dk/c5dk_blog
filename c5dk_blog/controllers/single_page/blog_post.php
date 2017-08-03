@@ -89,8 +89,10 @@ class BlogPost extends PageController {
 		$this->requireAsset('javascript', 'c5dkckeditor');
 		$this->requireAsset('core/topics');
 		$this->requireAsset('core/app');
-		$this->requireAsset('javascript', 'jcrop');
-		$this->requireAsset('css', 'jcrop');
+		// $this->requireAsset('javascript', 'jcrop');
+		// $this->requireAsset('css', 'jcrop');
+		$this->requireAsset('javascript', 'cropper');
+		$this->requireAsset('css', 'cropper');
 		$this->requireAsset('javascript', 'validation');
 		$this->requireAsset('javascript', 'slide-in-panel/main');
 		$this->requireAsset('c5dkFileupload/all');

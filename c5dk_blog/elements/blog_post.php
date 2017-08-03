@@ -146,8 +146,10 @@
 					</div>
 
 					<div id="jcrop_frame" class="c5dk_blog_thumbnail_jcrop">
-
+						<img id="c5dk_crop_pic" src="" />
 					</div>
+
+					<div id="cropper_preview" style="width: 150px; height: 150px; overflow: hidden;"></div>
 				</div>
 			</div>
 		<?php } ?>
@@ -208,7 +210,8 @@ c5dk.blog.post = {
 	imageList: '',
 	imageUploadUrl: '<?= \URL::to("/blog_post/upload"); ?>',
 	ckeditor: null,
-	jcrop_api: null,
+	// jcrop_api: null,
+	// cropper: null,
 
 	init: function() {
 
@@ -232,8 +235,11 @@ c5dk.blog.post = {
 
 		// Init Image Manager fileList
 		$("#c5dk_filemanager_slidein").hide();
-		// c5dk.blog.post.image.getFileList();
 
+		// Init img tag for our cropper plugin
+		c5dk.blog.post.thumbnail.crop_img = $('#c5dk_crop_pic');
+
+		// Init our validation plugin
 		$("#c5dk_blog_form").validate({
 			rules: {
 				title: { required: true },
@@ -248,7 +254,7 @@ c5dk.blog.post = {
 				// Submit form
 				$('#title').removeAttr('disabled');
 				$('.c5dk_blogpage_ButtonGreen').addClass('c5dk_blogpage_ButtonDisabled').removeClass('c5dk_blogpage_ButtonGreen').attr('disabled','disabled');
-				// c5dk.blog.post.blog.save();
+
 				return true;
 			}
 		});
@@ -439,11 +445,15 @@ c5dk.blog.post = {
 			height: null
 		},
 
+		crop_img: null,
+
 		remove:function () {
 			$('#thumbnailID').val(-1);
-			if(c5dk.blog.post.jcrop_api){ c5dk.blog.post.jcrop_api.destroy(); }
-			$('#c5dk_crop_pic').remove();
-			$('#c5dk_blog_thumbnail').attr('src', "").hide();
+			// $('#c5dk_crop_pic').hide();
+			if (c5dk.blog.post.thumbnail.crop_img) {
+				c5dk.blog.post.thumbnail.crop_img.cropper('destroy');
+			}
+			$('#c5dk_blog_thumbnail, #c5dk_crop_pic').attr('src', "").hide();
 		},
 
 		useAsThumb:function (fID, src, width, height) {
@@ -454,37 +464,61 @@ c5dk.blog.post = {
 			// Destroy old Jcrop instance if exist
 			c5dk.blog.post.thumbnail.remove();
 
-			// Old calculation (Not changed for a long long time)
+			// Jcrop size calculation
 			this.image.height = (width < this.image.maxWidth)? height : ((this.image.maxWidth/width)*height);
 			this.image.width = (width < this.image.maxWidth)? width : this.image.maxWidth;
 
-			// Update
-			$('#c5dk_blog_thumbnail').attr('src', src).width(this.image.width).height(this.image.height).show();
-			$('#jcrop_frame').append('<img id="c5dk_crop_pic" src="' + src + '" width="' + this.image.width + '" height="' + this.image.height + '" />')
 
-			$('#c5dk_crop_pic').Jcrop({
+			// Update
+			// $('#jcrop_frame').append('<img id="c5dk_crop_pic" src="' + src + '" width="' + this.image.width + '" height="' + this.image.height + '" />');
+			$('#c5dk_crop_pic').attr('src', src).width(this.image.width).height(this.image.height).show()
+			$('#c5dk_blog_thumbnail').attr('src', src).width(this.image.width).height(this.image.height).show();
+
+			c5dk.blog.post.thumbnail.crop_img = $('#c5dk_crop_pic');
+
+			// $('#c5dk_crop_pic').Jcrop({
+			// 	aspectRatio: (c5dk.blog.post.thumbnail.save.width / c5dk.blog.post.thumbnail.save.height),
+			// 	setSelect: [ 0, 0, c5dk.blog.post.thumbnail.preview.width, c5dk.blog.post.thumbnail.preview.height ],
+			// 	boxWidth: 600,
+			// 	trueSize: [c5dk.blog.post.thumbnail.image.width, c5dk.blog.post.thumbnail.image.height]
+			// });
+
+			// c5dk.blog.post.jcrop_api = $('#c5dk_crop_pic').Jcrop('api');
+
+			// c5dk.blog.post.jcrop_api.ui.selection.element.on('cropstart cropmove cropend', function(e,s,c) {
+			// 	c5dk.blog.post.thumbnail.showPreview(c);
+			// });
+
+			c5dk.blog.post.thumbnail.crop_img.cropper({
 				aspectRatio: (c5dk.blog.post.thumbnail.save.width / c5dk.blog.post.thumbnail.save.height),
-				setSelect: [ 0, 0, c5dk.blog.post.thumbnail.preview.width, c5dk.blog.post.thumbnail.preview.height ]
-				,boxWidth: 600
-			},function(){
-				c5dk.blog.post.jcrop_api = this;
-				thumbnail = this.initComponent('Thumbnailer', { width: c5dk.blog.post.thumbnail.preview.width, height: c5dk.blog.post.thumbnail.preview.height });
-			});
-			c5dk.blog.post.jcrop_api.ui.selection.element.on('cropstart cropmove cropend',function(e,s,c){
-				c5dk.blog.post.thumbnail.showPreview(c);
+				preview: '#cropper_preview',
+				autoCropArea: 0,
+				strict: false,
+				guides: false,
+				highlight: false,
+				dragCrop: false,
+				cropBoxMovable: false,
+				cropBoxResizable: false,
+				built: function () {
+					c5dk.blog.post.thumbnail.crop_img.cropper("setCropBoxData", {
+						width: "100",
+						height: "100"
+					});
+				},
+				crop: function(e) {
+					// Output the result data for cropping image.
+					c5dk.blog.post.thumbnail.showPreview(e);
+				}
 			});
 
 			$('#thumbnailID').val(fID);
-
 
 		},
 
 		showPreview:function(coords) {
 
-console.log("x:" + coords.x + ", Y:" + coords.y + ", H:" + coords.h + ", W:" + coords.w);
-
-			var ry = c5dk.blog.post.thumbnail.preview.height / coords.h;
-			var rx = c5dk.blog.post.thumbnail.preview.width / coords.w;
+			var ry = c5dk.blog.post.thumbnail.preview.height / coords.height;
+			var rx = c5dk.blog.post.thumbnail.preview.width / coords.width;
 
 			$('#c5dk_blog_thumbnail').css({
 				height: Math.round(ry * c5dk.blog.post.thumbnail.image.height) + 'px',
@@ -496,8 +530,8 @@ console.log("x:" + coords.x + ", Y:" + coords.y + ", H:" + coords.h + ", W:" + c
 			// Set form objects
 			$('#thumbnailX').val(coords.x);
 			$('#thumbnailY').val(coords.y);
-			$('#thumbnailWidth').val(coords.w);
-			$('#thumbnailHeight').val(coords.h);
+			$('#thumbnailWidth').val(coords.width);
+			$('#thumbnailHeight').val(coords.height);
 			$('#pictureWidth').val($('#c5dk_crop_pic').width());
 			$('#pictureHeight').val($('#c5dk_crop_pic').height());
 		}
@@ -510,13 +544,6 @@ $(document).ready( function(){ c5dk.blog.post.init(); });
 </script>
 
 <style type="text/css">
-
-.jcrop-thumb {
-  top: 200px;
-  left: -192px;
-}
-
-
 
 	#c5dk-blog-package .field-invalid {
 		border-color: red !important;

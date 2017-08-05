@@ -19,11 +19,9 @@ defined('C5_EXECUTE') or die("Access Denied.");
 class Controller extends Package {
 
 	protected $appVersionRequired		= '8.2';
-	protected $pkgVersion				= '8.2.0.5';
+	protected $pkgVersion				= '8.2.1.0.b1';
 	protected $pkgHandle				= 'c5dk_blog';
-	protected $pkgAutoloaderRegistries	= array(
-		'src/C5dkBlog' => '\C5dk\Blog'
-	);
+	protected $pkgAutoloaderRegistries	= array('src/C5dkBlog' => '\C5dk\Blog');
 
 	public function getPackageName() {			return t("C5DK Blog"); }
 	public function getPackageDescription() {	return t("A blog application for your C5 site, so even normal users can blog."); }
@@ -49,8 +47,9 @@ class Controller extends Package {
 		Route::register('/c5dk/blog/get/{blogID}', '\C5dk\Blog\C5dkAjax::getForm');
 		Route::register('/c5dk/blog/save/{blogID}', '\C5dk\Blog\C5dkAjax::save');
 		Route::register('/c5dk/blog/delete/{blogID}', '\C5dk\Blog\C5dkAjax::delete');
-		Route::register('/c5dk/blog/image/upload', '\C5dk\Blog\C5dkAjax::upload');
+		Route::register('/c5dk/blog/image/upload', '\C5dk\Blog\C5dkAjax::imageUpload');
 		Route::register('/c5dk/blog/image/delete/{fID}', '\C5dk\Blog\C5dkAjax::imageDelete');
+		Route::register('/c5dk/blog/thumbnail/upload', '\C5dk\Blog\C5dkAjax::thumbnailUpload');
 	}
 
 
@@ -258,8 +257,10 @@ class Controller extends Package {
 		$al->register('css', 'c5dk_blog_css', 'css/c5dk_blog.min.css', array(), 'c5dk_blog');
 
 		// Register jQuery Jcrop plugin
-		$al->register('javascript', 'jcrop', 'js/Jcrop/Jcrop.min.js', array(), 'c5dk_blog');
-		$al->register('css', 'jcrop', 'css/Jcrop/Jcrop.min.css', array(), 'c5dk_blog');
+		// $al->register('javascript', 'jcrop', 'js/Jcrop/Jcrop.min.js', array(), 'c5dk_blog');
+		// $al->register('css', 'jcrop', 'css/Jcrop/Jcrop.min.css', array(), 'c5dk_blog');
+		$al->register('javascript', 'cropper', 'js/cropper/cropper.min.js', array(), 'c5dk_blog');
+		$al->register('css', 'cropper', 'css/cropper/cropper.min.css', array(), 'c5dk_blog');
 
 		// Register jQuery Jcrop plugin
 		$al->register('javascript', 'validation', 'js/validation/jquery.validate.js', array(), 'c5dk_blog');

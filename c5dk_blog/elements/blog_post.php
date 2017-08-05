@@ -137,7 +137,7 @@
 					<div style="clear:both;"></div>
 
 					<div class="c5dk_blog_thumbnail_preview_frame">
-						<div class="c5dk_blog_thumbnail_preview">
+						<div id="cropper_preview" class="c5dk_blog_thumbnail_preview">
 							<img id="c5dk_blog_thumbnail" class="c5dk_blog_thumbnail" src="<?= (is_object($C5dkBlog->thumbnail))? File::getRelativePathFromID($C5dkBlog->thumbnail->getFileID()) : ""; ?>"<?= (is_object($C5dkBlog->thumbnail))? '' : ' style="display:none;'; ?>>
 						</div>
 						<div class="c5dk_blog_thumbnail_preview_subtext">
@@ -146,8 +146,9 @@
 					</div>
 
 					<div id="jcrop_frame" class="c5dk_blog_thumbnail_jcrop">
-
+						<img id="c5dk_crop_pic" src="" style="display: none;" />
 					</div>
+
 				</div>
 			</div>
 		<?php } ?>
@@ -208,7 +209,8 @@ c5dk.blog.post = {
 	imageList: '',
 	imageUploadUrl: '<?= \URL::to("/blog_post/upload"); ?>',
 	ckeditor: null,
-	jcrop_api: null,
+	// jcrop_api: null,
+	// cropper: null,
 
 	init: function() {
 
@@ -232,8 +234,8 @@ c5dk.blog.post = {
 
 		// Init Image Manager fileList
 		$("#c5dk_filemanager_slidein").hide();
-		// c5dk.blog.post.image.getFileList();
 
+		// Init our validation plugin
 		$("#c5dk_blog_form").validate({
 			rules: {
 				title: { required: true },
@@ -247,9 +249,23 @@ c5dk.blog.post = {
 
 				// Submit form
 				$('#title').removeAttr('disabled');
-				$('.c5dk_blogpage_ButtonGreen').addClass('c5dk_blogpage_ButtonDisabled').removeClass('c5dk_blogpage_ButtonGreen').attr('disabled','disabled');
-				// c5dk.blog.post.blog.save();
-				return true;
+				$('input[type="submit"]').addClass('c5dk_blogpage_ButtonDisabled').removeClass('c5dk_blogpage_ButtonGreen').attr('disabled','disabled');
+
+				c5dk.blog.post.blog.formData = new FormData(document.forms["c5dk_blog_form"]);
+				c5dk.blog.post.blog.formData.set('c5dk_blog_content', CKEDITOR.instances.c5dk_blog_content.getData());
+
+				if (c5dk.blog.post.thumbnail.crop_img) {
+					c5dk.blog.post.thumbnail.crop_img.cropper('getCroppedCanvas').toBlob(function (blob) {
+
+						c5dk.blog.post.blog.formData.append('croppedImage', blob);
+						c5dk.blog.post.blog.save();
+
+					}, "image/jpeg", 80);
+				} else {
+					c5dk.blog.post.blog.save();
+				}
+
+				return false;
 			}
 		});
 
@@ -317,7 +333,8 @@ c5dk.blog.post = {
 		}).on('fileuploaddone', function (e, data) {
 
 			c5dk.blog.post.image.fileList = data.result.fileList
-			c5dk.blog.post.image.updateManager();
+			// c5dk.blog.post.image.updateManager();
+			$('#redactor-c5dkimagemanager-box').html(data.result.html);
 
 		}).on('fileuploadfail', function (e, data) {
 
@@ -344,6 +361,25 @@ c5dk.blog.post = {
 
 		mode: <?= $BlogPost->mode == C5DK_BLOG_MODE_CREATE? C5DK_BLOG_MODE_CREATE : C5DK_BLOG_MODE_EDIT; ?>,
 		slidein: <?= (int) $C5dkConfig->blog_form_slidein; ?>,
+		formData: null,
+
+		save: function () {
+
+			$.ajax('<?= \URL::to('/c5dk/blog/save'); ?>/' + $('#blogID').val(), {
+				method: "POST",
+				data: c5dk.blog.post.blog.formData,
+				processData: false,
+				contentType: false,
+				success: function (result) {
+					if (result.status) {
+						window.location = '<?= \URL::to('/'); ?>' + result.redirectLink;
+					}
+				},
+				error: function () {
+					console.log('Upload error');
+				}
+			});
+		},
 
 		cancel: function() {
 			if (c5dk.blog.post.blog.slidein) {
@@ -439,11 +475,16 @@ c5dk.blog.post = {
 			height: null
 		},
 
+		crop_img: null,
+
 		remove:function () {
 			$('#thumbnailID').val(-1);
-			if(c5dk.blog.post.jcrop_api){ c5dk.blog.post.jcrop_api.destroy(); }
-			$('#c5dk_crop_pic').remove();
-			$('#c5dk_blog_thumbnail').attr('src', "").hide();
+			// $('#c5dk_crop_pic').hide();
+			if (c5dk.blog.post.thumbnail.crop_img) {
+				c5dk.blog.post.thumbnail.crop_img.cropper('destroy');
+				c5dk.blog.post.thumbnail.crop_img = null;
+			}
+			$('#c5dk_blog_thumbnail, #c5dk_crop_pic').attr('src', "").hide();
 		},
 
 		useAsThumb:function (fID, src, width, height) {
@@ -454,53 +495,101 @@ c5dk.blog.post = {
 			// Destroy old Jcrop instance if exist
 			c5dk.blog.post.thumbnail.remove();
 
-			// Old calculation (Not changed for a long long time)
+			$('#thumbnailID').val(fID);
+
+			// Jcrop size calculation
 			this.image.height = (width < this.image.maxWidth)? height : ((this.image.maxWidth/width)*height);
 			this.image.width = (width < this.image.maxWidth)? width : this.image.maxWidth;
 
+
 			// Update
-			$('#c5dk_blog_thumbnail').attr('src', src).width(this.image.width).height(this.image.height).show();
-			$('#jcrop_frame').append('<img id="c5dk_crop_pic" src="' + src + '" width="' + this.image.width + '" height="' + this.image.height + '" />')
+			$('#c5dk_crop_pic').attr('src', src).width(this.image.width).height(this.image.height).show()
+			// $('#c5dk_blog_thumbnail').attr('src', src).width(this.image.width).height(this.image.height).show();
 
-			$('#c5dk_crop_pic').Jcrop({
+			c5dk.blog.post.thumbnail.crop_img = $('#c5dk_crop_pic');
+
+			c5dk.blog.post.thumbnail.crop_img.cropper({
 				aspectRatio: (c5dk.blog.post.thumbnail.save.width / c5dk.blog.post.thumbnail.save.height),
-				setSelect: [ 0, 0, c5dk.blog.post.thumbnail.preview.width, c5dk.blog.post.thumbnail.preview.height ]
-				,boxWidth: 600
-			},function(){
-				c5dk.blog.post.jcrop_api = this;
-				thumbnail = this.initComponent('Thumbnailer', { width: c5dk.blog.post.thumbnail.preview.width, height: c5dk.blog.post.thumbnail.preview.height });
+				preview: '#cropper_preview',
+				// autoCropArea: 0,
+				// built: function () {
+				// 	c5dk.blog.post.thumbnail.crop_img.cropper("setCropBoxData", {
+				// 		width: "100",
+				// 		height: "100"
+				// 	});
+				// },
+				crop: function(e) {
+					// Output the result data for cropping image.
+					c5dk.blog.post.thumbnail.showPreview(e);
+				}
 			});
-			c5dk.blog.post.jcrop_api.ui.selection.element.on('cropstart cropmove cropend',function(e,s,c){
-				c5dk.blog.post.thumbnail.showPreview(c);
-			});
-
-			$('#thumbnailID').val(fID);
-
 
 		},
 
 		showPreview:function(coords) {
 
-console.log("x:" + coords.x + ", Y:" + coords.y + ", H:" + coords.h + ", W:" + coords.w);
+			// var ry = coords.height; // c5dk.blog.post.thumbnail.preview.height / coords.height;
+			// var rx = coords.width; // c5dk.blog.post.thumbnail.preview.width / coords.width;
 
-			var ry = c5dk.blog.post.thumbnail.preview.height / coords.h;
-			var rx = c5dk.blog.post.thumbnail.preview.width / coords.w;
-
-			$('#c5dk_blog_thumbnail').css({
-				height: Math.round(ry * c5dk.blog.post.thumbnail.image.height) + 'px',
-				width: Math.round(rx * c5dk.blog.post.thumbnail.image.width) + 'px',
-				marginLeft: '-' + Math.round(rx * coords.x) + 'px',
-				marginTop: '-' + Math.round(ry * coords.y) + 'px'
-			});
+			// $('#c5dk_blog_thumbnail').css({
+			// 	height: Math.round(coords.height) + 'px',
+			// 	width: Math.round(coords.width) + 'px',
+			// 	marginLeft: '-' + Math.round(coords.x) + 'px',
+			// 	marginTop: '-' + Math.round(coords.y) + 'px'
+			// });
 
 			// Set form objects
 			$('#thumbnailX').val(coords.x);
 			$('#thumbnailY').val(coords.y);
-			$('#thumbnailWidth').val(coords.w);
-			$('#thumbnailHeight').val(coords.h);
+			$('#thumbnailWidth').val(coords.width);
+			$('#thumbnailHeight').val(coords.height);
 			$('#pictureWidth').val($('#c5dk_crop_pic').width());
 			$('#pictureHeight').val($('#c5dk_crop_pic').height());
-		}
+		},
+
+		// upload: function () {
+		// 	c5dk.blog.post.thumbnail.crop_img.cropper('getCroppedCanvas').toBlob(function (blob) {
+		// 		var formData = new FormData();
+
+		// 		formData.append('croppedImage', blob);
+
+		// 		$.ajax('<?= \URL::to('/c5dk/blog/thumbnail/upload'); ?>', {
+		// 			method: "POST",
+		// 			data: formData,
+		// 			processData: false,
+		// 			contentType: false,
+		// 			success: function () {
+		// 				console.log('Upload success');
+		// 			},
+		// 			error: function () {
+		// 				console.log('Upload error');
+		// 			}
+		// 		});
+		// 	});
+		// },
+
+		// getBlob: function () {
+		// 	c5dk.blog.post.thumbnail.crop_img.cropper('getCroppedCanvas').toBlob(function (blob) {
+
+		// 		var formData = new FormData(document.forms["c5dk_blog_form"]);
+
+		// 		formData.append('croppedImage', c5dk.blog.post.thumbnail.getBlob());
+
+		// 		$.ajax('<?= \URL::to('/c5dk/blog/save'); ?>/' + $('#blogID').val(), {
+		// 			method: "POST",
+		// 			data: formData,
+		// 			processData: false,
+		// 			contentType: false,
+		// 			success: function (result) {
+		// 				console.dir(result);
+		// 			},
+		// 			error: function () {
+		// 				console.log('Upload error');
+		// 			}
+		// 		});
+		// 	}, "image/jpeg", 80);
+
+		// }
 	}
 
 }
@@ -510,13 +599,6 @@ $(document).ready( function(){ c5dk.blog.post.init(); });
 </script>
 
 <style type="text/css">
-
-.jcrop-thumb {
-  top: 200px;
-  left: -192px;
-}
-
-
 
 	#c5dk-blog-package .field-invalid {
 		border-color: red !important;

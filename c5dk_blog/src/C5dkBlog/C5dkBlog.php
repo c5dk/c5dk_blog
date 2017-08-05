@@ -34,7 +34,7 @@ class C5dkBlog extends Page {
 	public $tags			= null;
 	public $topics			= null;
 
-	public static function getByID($blogID, $version = 'RECENT', $class = 'Concrete\Package\C5dkBlog\Src\C5dkBlog\C5dkBlog\C5dkBlog') {
+	public static function getByID($blogID, $version = 'RECENT', $class = 'C5dk\Blog\C5dkBlog') {
 
 		$blog = parent::getByID($blogID, $version, $class);
 		$blog->blogID 		= $blogID;
@@ -165,13 +165,19 @@ class C5dkBlog extends Page {
 		}
 	}
 
-	public function deleteThumbnail () {
+	public function deleteThumbnail() {
 
 		// Remove old thumbnail from filemanager
 		$thumbnail = $this->getAttribute('thumbnail');
 		$u = new user;
 		if (is_object($thumbnail) && $thumbnail->getRecentVersion()->getFileName() == "C5DK_BLOG_uID-" . $u->getUserID() . "_Thumb_cID-" . $this->blogID . "." . $thumbnail->getRecentVersion()->getExtension()) {
 			$thumbnail->delete();
+		}
+
+		// Clear the thumbnail attribute
+		$cak = CollectionAttributeKey::getByHandle('thumbnail');
+		if ($C5dkBlog instanceof C5dkBlog && is_object($cak)) {
+			$C5dkBlog->clearAttribute($cak);
 		}
 	}
 

@@ -19,11 +19,9 @@ defined('C5_EXECUTE') or die("Access Denied.");
 class Controller extends Package {
 
 	protected $appVersionRequired		= '8.2';
-	protected $pkgVersion				= '8.2.0.5.b2';
+	protected $pkgVersion				= '8.2.1.0.b1';
 	protected $pkgHandle				= 'c5dk_blog';
-	protected $pkgAutoloaderRegistries	= array(
-		'src/C5dkBlog' => '\C5dk\Blog'
-	);
+	protected $pkgAutoloaderRegistries	= array('src/C5dkBlog' => '\C5dk\Blog');
 
 	public function getPackageName() {			return t("C5DK Blog"); }
 	public function getPackageDescription() {	return t("A blog application for your C5 site, so even normal users can blog."); }
@@ -49,8 +47,9 @@ class Controller extends Package {
 		Route::register('/c5dk/blog/get/{blogID}', '\C5dk\Blog\C5dkAjax::getForm');
 		Route::register('/c5dk/blog/save/{blogID}', '\C5dk\Blog\C5dkAjax::save');
 		Route::register('/c5dk/blog/delete/{blogID}', '\C5dk\Blog\C5dkAjax::delete');
-		Route::register('/c5dk/blog/image/upload', '\C5dk\Blog\C5dkAjax::upload');
+		Route::register('/c5dk/blog/image/upload', '\C5dk\Blog\C5dkAjax::imageUpload');
 		Route::register('/c5dk/blog/image/delete/{fID}', '\C5dk\Blog\C5dkAjax::imageDelete');
+		Route::register('/c5dk/blog/thumbnail/upload', '\C5dk\Blog\C5dkAjax::thumbnailUpload');
 	}
 
 

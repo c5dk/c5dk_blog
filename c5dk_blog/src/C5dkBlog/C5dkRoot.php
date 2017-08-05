@@ -16,7 +16,7 @@ class C5dkRoot extends Page {
 	public $thumbnails			= 1;
 	public $topicAttributeID	= null;
 
-	public static function getByID($rootID, $version = 'RECENT', $class = 'Concrete\Package\C5dkBlog\Src\C5dkBlog\C5dkRoot\C5dkRoot') {
+	public static function getByID($rootID, $version = 'RECENT', $class = 'C5dk\Blog\C5dkRoot') {
 
 		// Get the C5dkRoot object and add the permissions fields
 		$C5dkRoot = parent::getByID($rootID, $version, $class);

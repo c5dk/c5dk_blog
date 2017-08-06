@@ -37,7 +37,7 @@
 			</div>
 		<?php } ?>
 
-
+		<!-- Title and Description -->
 		<div class="c5dk_blog_section">
 
 			<!-- Blog Title -->
@@ -54,8 +54,48 @@
 				<?= $form->textarea('description', Core::make('helper/text')->entities($C5dkBlog->description), array('class' => 'c5dk-blog-full-width', 'rows' => 4))?>
 			</div>
 
-		</div>
+			<script type="text/javascript">
+				$(document).ready(function() {
+					// Title and description char counter
+					$('#title, #description').keyup(function(event) {
+						switch(this.id){
+							case "title":
+								var charLength = 70;
+								var divCounter = "#charNumTitle";
+								break;
+							case "description":
+								var charLength = 156;
+								var divCounter = "#charNumDescription";
+								break;
+						}
+						var len = this.value.length;
+						if (len > charLength) {
+							$(divCounter).text(charLength - len);
+							$(divCounter).addClass('c5dk_blog_cnt_red');
+						} else {
+							$(divCounter).text(charLength - len);
+							$(divCounter).removeClass('c5dk_blog_cnt_red');
+						}
+					}).trigger('keyup');
 
+					$( ".c5dk_bp_title" ).focus(function() {
+						$('.c5dk-title-char-counter').addClass('c5dk-char-counter-highlite');
+					});
+
+					$( ".c5dk_bp_title" ).focusout(function() {
+						$('.c5dk-title-char-counter').removeClass('c5dk-char-counter-highlite');
+					});
+
+					$( "#description" ).focus(function() {
+						$('.c5dk-description-char-counter').addClass('c5dk-char-counter-highlite');
+					});
+
+					$( "#description" ).focusout(function() {
+						$('.c5dk-description-char-counter').removeClass('c5dk-char-counter-highlite');
+					});
+				});
+			</script>
+		</div>
 
 		<!-- Blog Body -->
 		<div class="c5dk_blog_section">
@@ -93,9 +133,9 @@
 					});
 				});
 			</script>
-
 		</div>
 
+		<!-- Tags and Topics -->
 		<div class="c5dk_blog_section">
 
 			<!-- Blog Tags -->
@@ -112,13 +152,11 @@
 				<?php $casTopics = CollectionAttributeKey::getByHandle($BlogPost->topicAttributeID); ?>
 				<?= $casTopics->render('form', $C5dkBlog->topics, true); ?>
 			<?php } ?>
-
 		</div>
-
 
 		<!-- Blog Thumbnail -->
 		<?php if ($BlogPost->thumbnailsEnabled) { ?>
-			<div class="c5dk_blog_section">
+			<div id="thumbnail" class="c5dk_blog_section">
 
 				<input id="thumbnailID" name="thumbnail[id]" type="hidden" value="<?= (is_object($C5dkBlog->thumbnail))? $C5dkBlog->thumbnail->getFileID() : 0; ?>">
 				<input id="thumbnailX" name="thumbnail[x]" type="hidden" value="0">
@@ -188,7 +226,6 @@
 
 		<!-- Image List -->
 		<div id="redactor-c5dkimagemanager-box" class="redactor-c5dkimagemanager-box"><?= $BlogPost->C5dkUser->getImageListHTML(); ?></div>
-
 	</div>
 
 </div> <!-- c5dk-blog-package wrapper -->
@@ -209,26 +246,8 @@ c5dk.blog.post = {
 	imageList: '',
 	imageUploadUrl: '<?= \URL::to("/blog_post/upload"); ?>',
 	ckeditor: null,
-	// jcrop_api: null,
-	// cropper: null,
 
 	init: function() {
-
-		$( ".c5dk_bp_title" ).focus(function() {
-			$('.c5dk-title-char-counter').addClass('c5dk-char-counter-highlite');
-		});
-
-		$( ".c5dk_bp_title" ).focusout(function() {
-			$('.c5dk-title-char-counter').removeClass('c5dk-char-counter-highlite');
-		});
-
-		$( "#description" ).focus(function() {
-			$('.c5dk-description-char-counter').addClass('c5dk-char-counter-highlite');
-		});
-
-		$( "#description" ).focusout(function() {
-			$('.c5dk-description-char-counter').removeClass('c5dk-char-counter-highlite');
-		});
 
 		this.eventInit();
 
@@ -294,28 +313,6 @@ c5dk.blog.post = {
 			}
 		});
 
-		// Title and description char counter
-		$('#title, #description').keyup(function(event) {
-			switch(this.id){
-				case "title":
-					var charLength = 70;
-					var divCounter = "#charNumTitle";
-					break;
-				case "description":
-					var charLength = 156;
-					var divCounter = "#charNumDescription";
-					break;
-			}
-			var len = this.value.length;
-			if (len > charLength) {
-				$(divCounter).text(charLength - len);
-				$(divCounter).addClass('c5dk_blog_cnt_red');
-			} else {
-				$(divCounter).text(charLength - len);
-				$(divCounter).removeClass('c5dk_blog_cnt_red');
-			}
-		}).trigger('keyup');
-
 		// Image upload format checking and submit
 		$('#c5dk_file_upload').fileupload({
 			dropZone: $("#c5dk_filemanager_slidein"),
@@ -328,13 +325,16 @@ c5dk.blog.post = {
 			imageOrientation: true,
 			imageMaxWidth: <?= $C5dkConfig->blog_picture_width; ?>,
 			imageMaxHeight: <?= $C5dkConfig->blog_picture_height; ?>,
-			// imageCrop: true // Force cropped images
+			// imageCrop: true // Force cropped images,
+			submit: function () {}
 
+		}).on('fileuploadsubmit', function (e, data) {
+			c5dk.blog.modal.waiting();
 		}).on('fileuploaddone', function (e, data) {
 
-			c5dk.blog.post.image.fileList = data.result.fileList
-			// c5dk.blog.post.image.updateManager();
+			// c5dk.blog.post.image.fileList = data.result.fileList
 			$('#redactor-c5dkimagemanager-box').html(data.result.html);
+			c5dk.blog.modal.exitModal();
 
 		}).on('fileuploadfail', function (e, data) {
 
@@ -365,7 +365,11 @@ c5dk.blog.post = {
 
 		save: function () {
 
-			$.ajax('<?= \URL::to('/c5dk/blog/save'); ?>/' + $('#blogID').val(), {
+			var blogID = $('#blogID').val()? $('#blogID').val() : 0;
+
+			c5dk.blog.modal.waiting();
+
+			$.ajax('<?= \URL::to('/c5dk/blog/save'); ?>/' + blogID, {
 				method: "POST",
 				data: c5dk.blog.post.blog.formData,
 				processData: false,
@@ -394,7 +398,6 @@ c5dk.blog.post = {
 
 		managerMode: null,
 		currentFID: null,
-		fileList: {},
 		filemanager: null,
 
 		delete: function(mode, fID) {
@@ -420,7 +423,6 @@ c5dk.blog.post = {
 						success: function(r) {
 							if (r.status == "success") {
 								$('#redactor-c5dkimagemanager-box').html(r.imageListHtml);
-								// c5dk.blog.post.image.getFileList();
 							}
 						}
 					});
@@ -433,13 +435,12 @@ c5dk.blog.post = {
 		},
 
 		showManager: function (mode) {
-		$("#c5dk_filemanager_slidein").show();
 
-			// c5dk.blog.post.image.getFileList();
+			$("#c5dk_filemanager_slidein").show();
+
 			c5dk.blog.post.image.managerMode = (mode == "thumbnail")? mode : "editor";
 			$('#file').val('').show();
 			c5dk.blog.post.image.filemanager = $('#c5dk_filemanager_slidein').slideReveal({
-				// trigger: $("#c5dk_form_slidein"),
 				width: "700px",
 				push: false,
 				speed: 700,
@@ -479,7 +480,6 @@ c5dk.blog.post = {
 
 		remove:function () {
 			$('#thumbnailID').val(-1);
-			// $('#c5dk_crop_pic').hide();
 			if (c5dk.blog.post.thumbnail.crop_img) {
 				c5dk.blog.post.thumbnail.crop_img.cropper('destroy');
 				c5dk.blog.post.thumbnail.crop_img = null;
@@ -488,6 +488,8 @@ c5dk.blog.post = {
 		},
 
 		useAsThumb:function (fID, src, width, height) {
+
+			document.getElementById('thumbnail').scrollIntoView();
 
 			// Hide the slide-in Image manager
 			c5dk.blog.post.image.hideManager();
@@ -498,13 +500,12 @@ c5dk.blog.post = {
 			$('#thumbnailID').val(fID);
 
 			// Jcrop size calculation
-			this.image.height = (width < this.image.maxWidth)? height : ((this.image.maxWidth/width)*height);
-			this.image.width = (width < this.image.maxWidth)? width : this.image.maxWidth;
+			this.image.height = height; //(width < this.image.maxWidth)? height : ((this.image.maxWidth/width)*height);
+			this.image.width = width; //(width < this.image.maxWidth)? width : this.image.maxWidth;
 
 
 			// Update
 			$('#c5dk_crop_pic').attr('src', src).width(this.image.width).height(this.image.height).show()
-			// $('#c5dk_blog_thumbnail').attr('src', src).width(this.image.width).height(this.image.height).show();
 
 			c5dk.blog.post.thumbnail.crop_img = $('#c5dk_crop_pic');
 
@@ -528,16 +529,6 @@ c5dk.blog.post = {
 
 		showPreview:function(coords) {
 
-			// var ry = coords.height; // c5dk.blog.post.thumbnail.preview.height / coords.height;
-			// var rx = coords.width; // c5dk.blog.post.thumbnail.preview.width / coords.width;
-
-			// $('#c5dk_blog_thumbnail').css({
-			// 	height: Math.round(coords.height) + 'px',
-			// 	width: Math.round(coords.width) + 'px',
-			// 	marginLeft: '-' + Math.round(coords.x) + 'px',
-			// 	marginTop: '-' + Math.round(coords.y) + 'px'
-			// });
-
 			// Set form objects
 			$('#thumbnailX').val(coords.x);
 			$('#thumbnailY').val(coords.y);
@@ -545,52 +536,30 @@ c5dk.blog.post = {
 			$('#thumbnailHeight').val(coords.height);
 			$('#pictureWidth').val($('#c5dk_crop_pic').width());
 			$('#pictureHeight').val($('#c5dk_crop_pic').height());
-		},
+		}
 
-		// upload: function () {
-		// 	c5dk.blog.post.thumbnail.crop_img.cropper('getCroppedCanvas').toBlob(function (blob) {
-		// 		var formData = new FormData();
-
-		// 		formData.append('croppedImage', blob);
-
-		// 		$.ajax('<?= \URL::to('/c5dk/blog/thumbnail/upload'); ?>', {
-		// 			method: "POST",
-		// 			data: formData,
-		// 			processData: false,
-		// 			contentType: false,
-		// 			success: function () {
-		// 				console.log('Upload success');
-		// 			},
-		// 			error: function () {
-		// 				console.log('Upload error');
-		// 			}
-		// 		});
-		// 	});
-		// },
-
-		// getBlob: function () {
-		// 	c5dk.blog.post.thumbnail.crop_img.cropper('getCroppedCanvas').toBlob(function (blob) {
-
-		// 		var formData = new FormData(document.forms["c5dk_blog_form"]);
-
-		// 		formData.append('croppedImage', c5dk.blog.post.thumbnail.getBlob());
-
-		// 		$.ajax('<?= \URL::to('/c5dk/blog/save'); ?>/' + $('#blogID').val(), {
-		// 			method: "POST",
-		// 			data: formData,
-		// 			processData: false,
-		// 			contentType: false,
-		// 			success: function (result) {
-		// 				console.dir(result);
-		// 			},
-		// 			error: function () {
-		// 				console.log('Upload error');
-		// 			}
-		// 		});
-		// 	}, "image/jpeg", 80);
-
-		// }
 	}
+
+}
+
+c5dk.blog.modal = {
+    openModal: function (content) {
+        var whiteout = $(".c5dk-blog-whiteout");
+
+        if (whiteout.length) {
+            whiteout.empty().html(content);
+        } else {
+            $(".ccm-page").append("<div class='c5dk-blog-whiteout'>" + content + "</div>");
+        }
+    },
+
+    waiting: function () {
+        c5dk.blog.modal.openModal("<div class='c5dk-blog-spinner-container'><div class='c5dk-blog-spinner'></div></div>");
+    },
+
+    exitModal: function () {
+        $(".c5dk-blog-whiteout").remove();
+    }
 
 }
 
@@ -599,6 +568,71 @@ $(document).ready( function(){ c5dk.blog.post.init(); });
 </script>
 
 <style type="text/css">
+
+/* Loading/Modal */
+.c5dk-blog-whiteout {
+    position: fixed;
+    z-index: 9999;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.4);
+}
+
+/* Spinner */
+.c5dk-blog-spinner-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-top: -33px;
+    margin-left: -33px;
+    background: transparent;
+    padding: 20px;
+}
+
+.c5dk-blog-spinner {
+    min-width: 26px;
+    min-height: 26px;
+}
+
+.c5dk-blog-spinner:before {
+    content: '...';
+    text-align: center;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 20px;
+    height: 20px;
+    margin-top: -14px;
+    margin-left: -14px;
+    font-size: 36px;
+    line-height: 16px;
+    font-family: arial, sans-serif; /* Non animation fallback */
+}
+
+.c5dk-blog-spinner:not(:required):before {
+    content: '';
+    border-radius: 50%;
+    border: 4px solid rgba(0, 0, 0, .2);
+    border-top-color: rgba(0, 0, 0, .6);
+    animation: spinner .6s linear infinite;
+    -webkit-animation: spinner .6s linear infinite;
+    box-sizing: content-box;
+}
+
+@keyframes spinner {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@-webkit-keyframes spinner {
+    to {
+        -webkit-transform: rotate(360deg);
+    }
+}
+
 
 	#c5dk-blog-package .field-invalid {
 		border-color: red !important;

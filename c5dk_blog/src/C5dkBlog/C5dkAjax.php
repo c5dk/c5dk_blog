@@ -150,7 +150,7 @@ class C5dkAjax extends Controller {
 
 		// Data to send back if something fails
 		$data = array(
-			'fileList' => array(),
+			'html' => '<div class="error-message">' . t('An error has occurred!') . '</div>',
 			'status' => 0
 		);
 
@@ -200,10 +200,10 @@ class C5dkAjax extends Controller {
 			// $files = $this->getFileList($fileSet);
 			// rsort($files);
 			$data = array(
-				'file' => $file,
-				'fileList' => $this->getFilesFromUserSet(),
-				'html'		=> $C5dkUser->getImageListHTML(),
-				'status' => 1
+				'status' => 1,
+				'html'		=> $C5dkUser->getImageListHTML()
+				// 'file' => $file,
+				// 'fileList' => $this->getFilesFromUserSet(),
 			);
 		}
 

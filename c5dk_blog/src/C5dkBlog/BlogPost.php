@@ -1,34 +1,7 @@
 <?php
 namespace C5dk\Blog;
 
-// use Core;
-// use User;
-// use Page;
-// use View;
-// use Database;
-// use Package;
-// use AssetList;
-// use CollectionAttributeKey;
 use Concrete\Core\Multilingual\Page\Section\Section;
-
-// use Image;
-// use Imagine\Image\Box;
-// use Imagine\Image\Point;
-// use Imagine\Image\ImageInterface;
-
-// use File;
-// use FileList;
-// use FileImporter;
-// use FileSet;
-// use Concrete\Core\Tree\Node\Type\FileFolder		as FileFolder;
-// use Concrete\Core\Tree\Type\Topic				as TopicTree;
-// use Concrete\Core\Utility\Service\Identifier	as Identifier;
-// use Concrete\Core\Html\Service\Navigation		as Navigation;
-// use Concrete\Core\File\StorageLocation\StorageLocation;
-
-// use Concrete\Core\Editor\Plugin;
-
-// use Concrete\Core\Page\Controller\PageController;
 
 use C5dk\Blog\C5dkConfig	as C5dkConfig;
 use C5dk\Blog\C5dkUser		as C5dkUser;

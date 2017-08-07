@@ -15,6 +15,7 @@ class C5dkConfig {
 	public $blog_picture_height;
 	public $blog_thumbnail_width;
 	public $blog_thumbnail_height;
+	public $blog_cropper_def_bgcolor;
 
 	public $blog_headline_size;
 	public $blog_headline_color;
@@ -34,6 +35,7 @@ class C5dkConfig {
 		$this->blog_picture_height		= $config->get('c5dk_blog.blog_picture_height');
 		$this->blog_thumbnail_width		= $config->get('c5dk_blog.blog_thumbnail_width');
 		$this->blog_thumbnail_height	= $config->get('c5dk_blog.blog_thumbnail_height');
+		$this->blog_cropper_def_bgcolor	= $config->get('c5dk_blog.blog_cropper_def_bgcolor');
 
 		// Styling
 		$this->blog_headline_size		= $config->get('c5dk_blog.blog_headline_size');

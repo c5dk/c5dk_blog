@@ -168,23 +168,150 @@
 				<div class="c5dk_blog_box_thumbnail">
 					<div class="c5dk_blog_box_thumbnail_header">
 						<?= $form->label('thumbailID', '<h4>' . t('Thumbnail') . '</h4>'); ?>
-						<input class="c5dk_blogpage_ButtonGreen c5dk_blogpage_ButtonGreen_thumb" type="button" onclick="c5dk.blog.post.image.showManager('thumbnail')" value="<?= t("Select"); ?>">
-						<input class="c5dk_blog_ButtonRed c5dk_blogpage_ButtonRed_thumb" type="button" onclick="c5dk.blog.post.thumbnail.remove()" value="<?= t("Remove"); ?>">
 					</div>
-
-					<div style="clear:both;"></div>
-
-					<div class="c5dk_blog_thumbnail_preview_frame">
-						<div id="cropper_preview" class="c5dk_blog_thumbnail_preview">
-							<img id="c5dk_blog_thumbnail" class="c5dk_blog_thumbnail" src="<?= (is_object($C5dkBlog->thumbnail))? File::getRelativePathFromID($C5dkBlog->thumbnail->getFileID()) : ""; ?>"<?= (is_object($C5dkBlog->thumbnail))? '' : ' style="display:none;'; ?>>
+					<div class="c5dk_blog_box_thumbnail_leftframe">
+						<div class="c5dk_blog_thumbnail_preview_frame">
+							<div id="cropper_preview" class="c5dk_blog_thumbnail_preview">
+								<img id="c5dk_blog_thumbnail" class="c5dk_blog_thumbnail" src="<?= (is_object($C5dkBlog->thumbnail))? File::getRelativePathFromID($C5dkBlog->thumbnail->getFileID()) : ""; ?>"<?= (is_object($C5dkBlog->thumbnail))? '' : ' style="display:none;'; ?>>
+							</div>
+							<div class="c5dk_blog_thumbnail_preview_subtext">
+								<?= t('Preview'); ?>
+							</div>
 						</div>
-						<div class="c5dk_blog_thumbnail_preview_subtext">
-							<?= t('Preview'); ?>
+						<div class="c5dk_blog_box_thumbnail_buttons">
+							<input class="c5dk_blogpage_ButtonGreen c5dk_blogpage_ButtonGreen_thumb" type="button" onclick="c5dk.blog.post.image.showManager('thumbnail')" value="<?= t("Select"); ?>">
+							<input class="c5dk_blog_ButtonRed c5dk_blogpage_ButtonRed_thumb" type="button" onclick="c5dk.blog.post.thumbnail.remove()" value="<?= t("Remove"); ?>">
+						</div>
+
+						<!-- Cropper buttons -->
+						<div id="c5dk_cropper_buttons">
+
+							<div class="btn-group">
+								<button type="button" class="btn btn-primary" data-method="setDragMode" data-option="move" title="Move"><span class="fa fa-arrows"></span></button>
+								<button type="button" class="btn btn-primary" data-method="setDragMode" data-option="crop" title="Crop"><span class="fa fa-crop"></span></button>
+							</div>
+
+							<div class="btn-group">
+								<button type="button" class="btn btn-primary" data-method="zoom" data-option="0.1" title="Zoom In"><span class="fa fa-search-plus"></span></button>
+								<button type="button" class="btn btn-primary" data-method="zoom" data-option="-0.1" title="Zoom Out"><span class="fa fa-search-minus"></span></button>
+							</div>
+
+							<div class="btn-group">
+								<button type="button" class="btn btn-primary" data-method="move" data-option="-10" data-second-option="0" title="Move Left"><span class="fa fa-arrow-left"></span></button>
+								<button type="button" class="btn btn-primary" data-method="move" data-option="10" data-second-option="0" title="Move Right"><span class="fa fa-arrow-right"></span></button>
+								<button type="button" class="btn btn-primary" data-method="move" data-option="0" data-second-option="-10" title="Move Up"><span class="fa fa-arrow-up"></span></button>
+								<button type="button" class="btn btn-primary" data-method="move" data-option="0" data-second-option="10" title="Move Down"><span class="fa fa-arrow-down"></span></button>
+							</div>
+
+							<div class="btn-group">
+								<button type="button" class="btn btn-primary" data-method="rotate" data-option="-45" title="Rotate Left"><span class="fa fa-rotate-left"></span></button>
+								<button type="button" class="btn btn-primary" data-method="rotate" data-option="45" title="Rotate Right"><span class="fa fa-rotate-right"></span></button>
+							</div>
+
+							<div class="btn-group">
+								<button type="button" class="btn btn-primary" data-method="scaleX" data-option="-1" title="Flip Horizontal"><span class="fa fa-arrows-h"></span></button>
+								<button type="button" class="btn btn-primary" data-method="scaleY" data-option="-1" title="Flip Vertical"><span class="fa fa-arrows-v"></span></button>
+							</div>
+
+							<div class="btn-group">
+								<button type="button" class="btn btn-primary" data-method="reset" title="Reset"><span class="fa fa-refresh"></span></button>
+							</div>
+
+							<script type="text/javascript">
+								$(document).ready(function() {
+
+									// Methods
+									$('#c5dk_cropper_buttons').on('click', '[data-method]', function () {
+
+										var $this = $(this);
+										var data = $this.data();
+										var $target;
+										var result;
+
+										if ($this.prop('disabled') || $this.hasClass('disabled')) {
+											return;
+										}
+
+										if (c5dk.blog.post.thumbnail.crop_img.data('cropper') && data.method) {
+											data = $.extend({}, data); // Clone a new one
+
+											if (typeof data.target !== 'undefined') {
+												$target = $(data.target);
+
+												if (typeof data.option === 'undefined') {
+													try {
+														data.option = JSON.parse($target.val());
+													} catch (e) {
+														console.log(e.message);
+													}
+												}
+											}
+
+											switch (data.method) {
+												case 'rotate':
+													c5dk.blog.post.thumbnail.crop_img.cropper('clear');
+													break;
+
+											}
+
+											result = c5dk.blog.post.thumbnail.crop_img.cropper(data.method, data.option, data.secondOption);
+
+											switch (data.method) {
+												case 'rotate':
+													c5dk.blog.post.thumbnail.crop_img.cropper('crop');
+													break;
+
+												case 'scaleX':
+												case 'scaleY':
+													$(this).data('option', -data.option);
+													break;
+
+												case 'destroy':
+													if (uploadedImageURL) {
+														URL.revokeObjectURL(uploadedImageURL);
+														uploadedImageURL = '';
+														c5dk.blog.post.thumbnail.crop_img.attr('src', originalImageURL);
+													}
+
+													break;
+											}
+
+											if ($.isPlainObject(result) && $target) {
+												try {
+													$target.val(JSON.stringify(result));
+												} catch (e) {
+													console.log(e.message);
+												}
+											}
+
+										}
+									});
+
+
+									// Keyboard Arrow keys move the image
+									$(document.body).on('keydown', function (e) {
+
+										if (!c5dk.blog.post.thumbnail.crop_img.data('cropper') || this.scrollTop > 300) { return; }
+
+										e.preventDefault();
+
+										switch (e.which) {
+											case 37: c5dk.blog.post.thumbnail.crop_img.cropper('move', -1, 0); break;
+											case 38: c5dk.blog.post.thumbnail.crop_img.cropper('move', 0, -1); break;
+											case 39: c5dk.blog.post.thumbnail.crop_img.cropper('move', 1, 0); break;
+											case 40: c5dk.blog.post.thumbnail.crop_img.cropper('move', 0, 1); break;
+										}
+
+									});
+								});
+							</script>
+
 						</div>
 					</div>
-
-					<div id="jcrop_frame" class="c5dk_blog_thumbnail_jcrop">
-						<img id="c5dk_crop_pic" src="" style="display: none;" />
+					<div class="c5dk_blog_box_thumbnail_rightframe">
+						<div id="jcrop_frame" class="c5dk_blog_thumbnail_jcrop">
+							<img id="c5dk_crop_pic" src="" style="display: none;" />
+						</div>
 					</div>
 
 				</div>
@@ -249,8 +376,6 @@ c5dk.blog.post = {
 
 	init: function() {
 
-		this.eventInit();
-
 		// Init Image Manager fileList
 		$("#c5dk_filemanager_slidein").hide();
 
@@ -274,7 +399,7 @@ c5dk.blog.post = {
 				c5dk.blog.post.blog.formData.set('c5dk_blog_content', CKEDITOR.instances.c5dk_blog_content.getData());
 
 				if (c5dk.blog.post.thumbnail.crop_img) {
-					c5dk.blog.post.thumbnail.crop_img.cropper('getCroppedCanvas').toBlob(function (blob) {
+					c5dk.blog.post.thumbnail.crop_img.cropper('getCroppedCanvas', {fillColor: '<?= $C5dkConfig->blog_cropper_def_bgcolor; ?>'}).toBlob(function (blob) {
 
 						c5dk.blog.post.blog.formData.append('croppedImage', blob);
 						c5dk.blog.post.blog.save();
@@ -288,12 +413,16 @@ c5dk.blog.post = {
 			}
 		});
 
-		// Make sure session doesn't timeout
-		setInterval(c5dk.blog.post.ping, 60000);
+		// Hide Cropper buttons
+		$("#c5dk_cropper_buttons").hide();
 
 		// Move focus to the title field
 		$('.c5dk_blog_title input').focus();
 
+		this.eventInit();
+
+		// Make sure session doesn't timeout
+		setInterval(c5dk.blog.post.ping, 60000);
 	},
 
 	eventInit: function() {
@@ -313,7 +442,7 @@ c5dk.blog.post = {
 			}
 		});
 
-		// Image upload format checking and submit
+		// Image upload
 		$('#c5dk_file_upload').fileupload({
 			dropZone: $("#c5dk_filemanager_slidein"),
 			url: '<?= \URL::to("/c5dk/blog/image/upload"); ?>',
@@ -326,16 +455,14 @@ c5dk.blog.post = {
 			imageMaxWidth: <?= $C5dkConfig->blog_picture_width; ?>,
 			imageMaxHeight: <?= $C5dkConfig->blog_picture_height; ?>,
 			// imageCrop: true // Force cropped images,
-			submit: function () {}
-
 		}).on('fileuploadsubmit', function (e, data) {
+
 			c5dk.blog.modal.waiting();
 		}).on('fileuploaddone', function (e, data) {
 
-			// c5dk.blog.post.image.fileList = data.result.fileList
 			$('#redactor-c5dkimagemanager-box').html(data.result.html);
+			$('#c5dk_file_upload').val('');
 			c5dk.blog.modal.exitModal();
-
 		}).on('fileuploadfail', function (e, data) {
 
 			$.each(data.files, function (index) {
@@ -344,7 +471,6 @@ c5dk.blog.post = {
 					.append('<br>')
 					.append(error);
 			});
-
 		});
 
 	},
@@ -441,7 +567,7 @@ c5dk.blog.post = {
 			c5dk.blog.post.image.managerMode = (mode == "thumbnail")? mode : "editor";
 			$('#file').val('').show();
 			c5dk.blog.post.image.filemanager = $('#c5dk_filemanager_slidein').slideReveal({
-				width: "700px",
+				width: ($(window).width() < 700)? '100%' : '700px',
 				push: false,
 				speed: 700,
 				autoEscape: false,
@@ -485,6 +611,10 @@ c5dk.blog.post = {
 				c5dk.blog.post.thumbnail.crop_img = null;
 			}
 			$('#c5dk_blog_thumbnail, #c5dk_crop_pic').attr('src', "").hide();
+
+			// Hide Cropper buttons
+			$("#c5dk_cropper_buttons").hide();
+
 		},
 
 		useAsThumb:function (fID, src, width, height) {
@@ -497,20 +627,21 @@ c5dk.blog.post = {
 			// Destroy old Jcrop instance if exist
 			c5dk.blog.post.thumbnail.remove();
 
+			// Show Cropper buttons
+			$("#c5dk_cropper_buttons").show();
+
 			$('#thumbnailID').val(fID);
 
-			// Jcrop size calculation
-			this.image.height = height; //(width < this.image.maxWidth)? height : ((this.image.maxWidth/width)*height);
-			this.image.width = width; //(width < this.image.maxWidth)? width : this.image.maxWidth;
-
-
 			// Update
-			$('#c5dk_crop_pic').attr('src', src).width(this.image.width).height(this.image.height).show()
+			$('#c5dk_crop_pic').attr('src', src).show()
 
-			c5dk.blog.post.thumbnail.crop_img = $('#c5dk_crop_pic');
-
-			c5dk.blog.post.thumbnail.crop_img.cropper({
+			c5dk.blog.post.thumbnail.crop_img = $('#c5dk_crop_pic').cropper({
 				aspectRatio: (c5dk.blog.post.thumbnail.save.width / c5dk.blog.post.thumbnail.save.height),
+				responsive: true,
+				// movable: false,
+				// zoomable: true,
+				// rotatable: false,
+				// scalable: false,
 				preview: '#cropper_preview',
 				// autoCropArea: 0,
 				// built: function () {
@@ -519,48 +650,39 @@ c5dk.blog.post = {
 				// 		height: "100"
 				// 	});
 				// },
-				crop: function(e) {
-					// Output the result data for cropping image.
-					c5dk.blog.post.thumbnail.showPreview(e);
+				crop: function(coords) {
+					// Set form objects
+					$('#thumbnailX').val(coords.x);
+					$('#thumbnailY').val(coords.y);
+					$('#thumbnailWidth').val(coords.width);
+					$('#thumbnailHeight').val(coords.height);
+					$('#pictureWidth').val($('#c5dk_crop_pic').width());
+					$('#pictureHeight').val($('#c5dk_crop_pic').height());
 				}
 			});
-
-		},
-
-		showPreview:function(coords) {
-
-			// Set form objects
-			$('#thumbnailX').val(coords.x);
-			$('#thumbnailY').val(coords.y);
-			$('#thumbnailWidth').val(coords.width);
-			$('#thumbnailHeight').val(coords.height);
-			$('#pictureWidth').val($('#c5dk_crop_pic').width());
-			$('#pictureHeight').val($('#c5dk_crop_pic').height());
 		}
-
 	}
-
 }
 
 c5dk.blog.modal = {
-    openModal: function (content) {
-        var whiteout = $(".c5dk-blog-whiteout");
 
-        if (whiteout.length) {
-            whiteout.empty().html(content);
-        } else {
-            $(".ccm-page").append("<div class='c5dk-blog-whiteout'>" + content + "</div>");
-        }
-    },
+	openModal: function (content) {
+		var whiteout = $(".c5dk-blog-whiteout");
 
-    waiting: function () {
-        c5dk.blog.modal.openModal("<div class='c5dk-blog-spinner-container'><div class='c5dk-blog-spinner'></div></div>");
-    },
+		if (whiteout.length) {
+			whiteout.empty().html(content);
+		} else {
+			$(".ccm-page").append("<div class='c5dk-blog-whiteout'>" + content + "</div>");
+		}
+	},
 
-    exitModal: function () {
-        $(".c5dk-blog-whiteout").remove();
-    }
+	waiting: function () {
+		c5dk.blog.modal.openModal("<div class='c5dk-blog-spinner-container'><div class='c5dk-blog-spinner'></div></div>");
+	},
 
+	exitModal: function () {
+		$(".c5dk-blog-whiteout").remove();
+	}
 }
 
 $(document).ready( function(){ c5dk.blog.post.init(); });
@@ -569,69 +691,69 @@ $(document).ready( function(){ c5dk.blog.post.init(); });
 
 <style type="text/css">
 
-/* Loading/Modal */
-.c5dk-blog-whiteout {
-    position: fixed;
-    z-index: 9999;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(255, 255, 255, 0.4);
-}
+	/* Loading/Modal */
+	.c5dk-blog-whiteout {
+		position: fixed;
+		z-index: 9999;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		background: rgba(255, 255, 255, 0.4);
+	}
 
-/* Spinner */
-.c5dk-blog-spinner-container {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    margin-top: -33px;
-    margin-left: -33px;
-    background: transparent;
-    padding: 20px;
-}
+	/* Spinner */
+	.c5dk-blog-spinner-container {
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		margin-top: -33px;
+		margin-left: -33px;
+		background: transparent;
+		padding: 20px;
+	}
 
-.c5dk-blog-spinner {
-    min-width: 26px;
-    min-height: 26px;
-}
+	.c5dk-blog-spinner {
+		min-width: 26px;
+		min-height: 26px;
+	}
 
-.c5dk-blog-spinner:before {
-    content: '...';
-    text-align: center;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 20px;
-    height: 20px;
-    margin-top: -14px;
-    margin-left: -14px;
-    font-size: 36px;
-    line-height: 16px;
-    font-family: arial, sans-serif; /* Non animation fallback */
-}
+	.c5dk-blog-spinner:before {
+		content: '...';
+		text-align: center;
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		width: 20px;
+		height: 20px;
+		margin-top: -14px;
+		margin-left: -14px;
+		font-size: 36px;
+		line-height: 16px;
+		font-family: arial, sans-serif; /* Non animation fallback */
+	}
 
-.c5dk-blog-spinner:not(:required):before {
-    content: '';
-    border-radius: 50%;
-    border: 4px solid rgba(0, 0, 0, .2);
-    border-top-color: rgba(0, 0, 0, .6);
-    animation: spinner .6s linear infinite;
-    -webkit-animation: spinner .6s linear infinite;
-    box-sizing: content-box;
-}
+	.c5dk-blog-spinner:not(:required):before {
+		content: '';
+		border-radius: 50%;
+		border: 4px solid rgba(0, 0, 0, .2);
+		border-top-color: rgba(0, 0, 0, .6);
+		animation: spinner .6s linear infinite;
+		-webkit-animation: spinner .6s linear infinite;
+		box-sizing: content-box;
+	}
 
-@keyframes spinner {
-    to {
-        transform: rotate(360deg);
-    }
-}
+	@keyframes spinner {
+		to {
+			transform: rotate(360deg);
+		}
+	}
 
-@-webkit-keyframes spinner {
-    to {
-        -webkit-transform: rotate(360deg);
-    }
-}
+	@-webkit-keyframes spinner {
+		to {
+			-webkit-transform: rotate(360deg);
+		}
+	}
 
 
 	#c5dk-blog-package .field-invalid {
@@ -643,14 +765,30 @@ $(document).ready( function(){ c5dk.blog.post.init(); });
 		height: auto;
 	}
 	#c5dk-blog-package .c5dk_blog_box_thumbnail_header{
+		width: 100%;
+		float: left;
+	}
+	#c5dk-blog-package .c5dk_blog_box_thumbnail_leftframe {
+		width: 178px;
+		margin: 0 30px 0 0;
+		float: left;
+	}
+	#c5dk-blog-package .c5dk_blog_box_thumbnail_buttons{
 		float: left;
 		padding-bottom: 10px;
 		width: 178px;
 	}
+	#c5dk-blog-package .c5dk_blog_box_thumbnail_rightframe {
+		width: 100%;
+		max-width: 860px;
+		max-height: 600px;
+		float: left;
+	}
 	#c5dk-blog-package .c5dk_blog_thumbnail_preview_frame {
 		float: left;
-		margin: 0 30px 5px 0;
-		padding: 12px;
+		margin: 0 0 30px 0;
+		width: 178px;
+		padding: 14px;
 		border: 1px solid #ccc;
 		-webkit-border-radius: 4px;
 		-moz-border-radius: 4px;
@@ -663,7 +801,7 @@ $(document).ready( function(){ c5dk.blog.post.init(); });
 		float: left;
 		overflow: hidden;
 		border: 1px solid #ccc;
-		background-color: #eee;
+		background-color: <?= $C5dkConfig->blog_cropper_def_bgcolor; ?>;
 		width: 150px;
 		height: <?= intval((150 / ( $C5dkConfig->blog_thumbnail_width / 100)) * ($C5dkConfig->blog_thumbnail_height  / 100)); ?>px;
 		/*cursor: pointer;*/
@@ -675,16 +813,15 @@ $(document).ready( function(){ c5dk.blog.post.init(); });
 	}
 	#c5dk-blog-package .c5dk_blog_thumbnail_jcrop{
 		float: left;
-		-webkit-box-shadow: 2px 2px 5px 1px rgba(0,0,0,0.3);
-		-moz-box-shadow: 2px 2px 5px 1px rgba(0,0,0,0.3);
-		box-shadow: 2px 2px 5px 1px rgba(0,0,0,0.3);
+		width: 100%;
+		max-height: 600px;
 	}
 	#c5dk-blog-package .c5dk_blog_box_thumbnail img{
-		max-width: none!important;
+		width: 100%;
+		max-height: 600px;
 	}
 	#c5dk-blog-package .c5dk_blog_cnt_red {
 		color: #FF0000;
 		font-weight: bold;
 	}
-
 </style>

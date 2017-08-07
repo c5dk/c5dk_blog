@@ -36,6 +36,7 @@ class BlogSettings extends DashboardPageController {
 		$config->save('c5dk_blog.blog_picture_height',		$this->post('blog_picture_height'));
 		$config->save('c5dk_blog.blog_thumbnail_width',		$this->post('blog_thumbnail_width'));
 		$config->save('c5dk_blog.blog_thumbnail_height',	$this->post('blog_thumbnail_height'));
+		$config->save('c5dk_blog.blog_cropper_def_bgcolor',	$this->post('blog_cropper_def_bgcolor'));
 
 		// Styling
 		$config->save('c5dk_blog.blog_headline_size',		$this->post('blog_headline_size'));

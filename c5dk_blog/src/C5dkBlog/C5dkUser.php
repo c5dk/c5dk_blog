@@ -52,7 +52,6 @@ class C5dkUser extends User {
 
 		// Is current user an Administrator
 		$this->isAdmin = ($this->superUser || $this->inGroup(Group::getByName("Administrators")))? true : false;
-
 	}
 
 	public static function getByUserID($uID, $login = false, $cacheItemsOnLogin = true) {
@@ -70,7 +69,6 @@ class C5dkUser extends User {
 
 		// Return the User object
 		return $u;
-
 	}
 
 	public function getRootList() {
@@ -87,7 +85,6 @@ class C5dkUser extends User {
 		}
 
 		return $this->rootList;
-
 	}
 
 	public function getFilesFromUserSet() {
@@ -151,7 +148,6 @@ class C5dkUser extends User {
 		ob_end_clean();
 
 		return $html;
-
 	}
 
 }

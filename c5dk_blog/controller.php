@@ -19,7 +19,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 class Controller extends Package {
 
 	protected $appVersionRequired		= '8.2';
-	protected $pkgVersion				= '8.2.1.0.b2';
+	protected $pkgVersion				= '8.2.1.0.b3';
 	protected $pkgHandle				= 'c5dk_blog';
 	protected $pkgAutoloaderRegistries	= array('src/C5dkBlog' => '\C5dk\Blog');
 
@@ -36,6 +36,7 @@ class Controller extends Package {
 		$this->registerRoutes();
 		$this->registerAssets();
 	}
+
 	private function registerEvents() {
 
 		Events::addListener('on_user_delete', array($this, 'eventOnUserDelete'));
@@ -78,7 +79,6 @@ class Controller extends Package {
 	}
 
 
-
 	private function c5dkInstall($pkg) {
 
 		$this->setupConfig($pkg);
@@ -101,6 +101,7 @@ class Controller extends Package {
 		C5dkInstaller::installConfigKey('blog_picture_height',		800,		$pkg);
 		C5dkInstaller::installConfigKey('blog_thumbnail_width',		360,		$pkg);
 		C5dkInstaller::installConfigKey('blog_thumbnail_height',	360,		$pkg);
+		C5dkInstaller::installConfigKey('blog_cropper_def_bgcolor', '#FFF', 	$pkg);
 
 		// Styling
 		C5dkInstaller::installConfigKey('blog_headline_size',		12,			$pkg);
@@ -283,7 +284,6 @@ class Controller extends Package {
 			array('javascript', 'c5dkFileupload/fileuploadProcess'),
 			array('javascript', 'c5dkFileupload/fileuploadImage'),
 		));
-
 	}
 
 }

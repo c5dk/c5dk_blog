@@ -45,6 +45,9 @@
 
 			<?= $form->label("blog_thumbnail_height", t("Blog Thumbnail Height in Pixels")); ?>
 			<?= $form->number("blog_thumbnail_height", $C5dkConfig->blog_thumbnail_height, array("min" => "1", "max" => "9999")); ?>
+
+			<?= $form->label("blog_cropper_def_bgcolor", t("Blog Thumbnail Cropper Default Background Color")); ?>
+			<?= $form->text("blog_cropper_def_bgcolor", $C5dkConfig->blog_cropper_def_bgcolor); ?>
 			<br />
 		</div>
 

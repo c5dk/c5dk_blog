@@ -118,7 +118,6 @@ class C5dkAjax extends Controller {
 		echo $jh->encode($data);
 
 		exit;
-
 	}
 
 	public function delete($blogID) {
@@ -211,7 +210,6 @@ class C5dkAjax extends Controller {
 		echo $jh->encode($data);
 
 		exit;
-
 	}
 
 	public function saveThumbnail($C5dkBlog) {
@@ -326,5 +324,4 @@ class C5dkAjax extends Controller {
 
 		$this->redirect($link);
 	}
-
 }

@@ -184,37 +184,40 @@
 						</div>
 
 						<!-- Cropper buttons -->
-						<div id="c5dk_cropper_buttons">
+						<div id="c5dk_cropper_buttons"  class="c5dk_blog_box_cropper_buttons">
 
-							<div class="btn-group">
-								<button type="button" class="btn btn-primary" data-method="setDragMode" data-option="move" title="Move"><span class="fa fa-arrows"></span></button>
-								<button type="button" class="btn btn-primary" data-method="setDragMode" data-option="crop" title="Crop"><span class="fa fa-crop"></span></button>
+							<div class="c5dk-cropper-btn-group">
+								<button type="button" class="c5dk_cropper_ButtonBlue" data-method="setDragMode" data-option="move" title="Move"><span class="fa fa-arrows"></span></button>
+								<button type="button" class="c5dk_cropper_ButtonBlue" data-method="setDragMode" data-option="crop" title="Crop"><span class="fa fa-crop"></span></button>
 							</div>
 
-							<div class="btn-group">
-								<button type="button" class="btn btn-primary" data-method="zoom" data-option="0.1" title="Zoom In"><span class="fa fa-search-plus"></span></button>
-								<button type="button" class="btn btn-primary" data-method="zoom" data-option="-0.1" title="Zoom Out"><span class="fa fa-search-minus"></span></button>
+							<div class="c5dk-cropper-btn-group">
+								<button type="button" class="c5dk_cropper_ButtonBlue" data-method="zoom" data-option="0.1" title="Zoom In"><span class="fa fa-search-plus"></span></button>
+								<button type="button" class="c5dk_cropper_ButtonBlue" data-method="zoom" data-option="-0.1" title="Zoom Out"><span class="fa fa-search-minus"></span></button>
 							</div>
 
-							<div class="btn-group">
-								<button type="button" class="btn btn-primary" data-method="move" data-option="-10" data-second-option="0" title="Move Left"><span class="fa fa-arrow-left"></span></button>
-								<button type="button" class="btn btn-primary" data-method="move" data-option="10" data-second-option="0" title="Move Right"><span class="fa fa-arrow-right"></span></button>
-								<button type="button" class="btn btn-primary" data-method="move" data-option="0" data-second-option="-10" title="Move Up"><span class="fa fa-arrow-up"></span></button>
-								<button type="button" class="btn btn-primary" data-method="move" data-option="0" data-second-option="10" title="Move Down"><span class="fa fa-arrow-down"></span></button>
+							<div class="c5dk-cropper-btn-group">
+								<button type="button" class="c5dk_cropper_ButtonBlue" data-method="move" data-option="-10" data-second-option="0" title="Move Left"><span class="fa fa-arrow-left"></span></button>
+								<button type="button" class="c5dk_cropper_ButtonBlue" data-method="move" data-option="10" data-second-option="0" title="Move Right"><span class="fa fa-arrow-right"></span></button>
+							</div>
+							
+							<div class="c5dk-cropper-btn-group">
+								<button type="button" class="c5dk_cropper_ButtonBlue" data-method="move" data-option="0" data-second-option="-10" title="Move Up"><span class="fa fa-arrow-up"></span></button>
+								<button type="button" class="c5dk_cropper_ButtonBlue" data-method="move" data-option="0" data-second-option="10" title="Move Down"><span class="fa fa-arrow-down"></span></button>
 							</div>
 
-							<div class="btn-group">
-								<button type="button" class="btn btn-primary" data-method="rotate" data-option="-45" title="Rotate Left"><span class="fa fa-rotate-left"></span></button>
-								<button type="button" class="btn btn-primary" data-method="rotate" data-option="45" title="Rotate Right"><span class="fa fa-rotate-right"></span></button>
+							<div class="c5dk-cropper-btn-group">
+								<button type="button" class="c5dk_cropper_ButtonBlue" data-method="rotate" data-option="-45" title="Rotate Left"><span class="fa fa-rotate-left"></span></button>
+								<button type="button" class="c5dk_cropper_ButtonBlue" data-method="rotate" data-option="45" title="Rotate Right"><span class="fa fa-rotate-right"></span></button>
 							</div>
 
-							<div class="btn-group">
-								<button type="button" class="btn btn-primary" data-method="scaleX" data-option="-1" title="Flip Horizontal"><span class="fa fa-arrows-h"></span></button>
-								<button type="button" class="btn btn-primary" data-method="scaleY" data-option="-1" title="Flip Vertical"><span class="fa fa-arrows-v"></span></button>
+							<div class="c5dk-cropper-btn-group">
+								<button type="button" class="c5dk_cropper_ButtonBlue" data-method="scaleX" data-option="-1" title="Flip Horizontal"><span class="fa fa-arrows-h"></span></button>
+								<button type="button" class="c5dk_cropper_ButtonBlue" data-method="scaleY" data-option="-1" title="Flip Vertical"><span class="fa fa-arrows-v"></span></button>
 							</div>
 
-							<div class="btn-group">
-								<button type="button" class="btn btn-primary" data-method="reset" title="Reset"><span class="fa fa-refresh"></span></button>
+							<div class="c5dk-cropper-btn-group">
+								<button type="button" class="c5dk_cropper_ButtonBlue c5dk_cropper_btn_large" data-method="reset" title="Reset"><span class="fa fa-refresh"></span></button>
 							</div>
 
 							<script type="text/javascript">
@@ -777,6 +780,59 @@ $(document).ready( function(){ c5dk.blog.post.init(); });
 		float: left;
 		padding-bottom: 10px;
 		width: 178px;
+	}
+	#c5dk-blog-package .c5dk_blog_box_cropper_buttons{
+		float: left;
+		padding-bottom: 10px;
+		width: 178px;
+	}
+	.c5dk-cropper-btn-group {
+		position: relative;
+		display: inline-block;
+		vertical-align: middle;
+	}
+
+	#c5dk-blog-package .c5dk_blog_box_cropper_buttons .c5dk_cropper_ButtonBlue {
+		display: inline-block;
+		cursor: pointer;
+		color: #444;
+		background-color: #fefefe;
+		font-family: Helvetica;
+		border-bottom: solid 1px #004a89;
+		border-top: solid 1px #004a89;
+		border-right: solid 1px #004a89;
+		border-left: solid 8px #004a89;
+		font-size: 16px;
+		font-weight: lighter;
+		line-height: 20px !important;
+		vertical-align: top;
+		padding: 6px 10px;
+		text-decoration: none;
+		text-align: center;
+		width: 87px;
+		margin-bottom: 10px;
+		box-shadow: inset 0 0 0 0 #004a89;
+		-webkit-transition: all ease .5s;
+		-moz-transition: all ease .5s;
+		transition: all ease .5s;
+	}
+	#c5dk-blog-package .c5dk_blog_box_cropper_buttons .c5dk_cropper_btn_large{
+		width: 178px;
+	}
+	#c5dk-blog-package .c5dk_blog_box_cropper_buttons .c5dk_cropper_ButtonBlue:hover {
+		box-shadow: inset 200px 0 0 0 #004a89;
+		color:#ffffff;
+	}
+	#c5dk-blog-package .c5dk_blog_box_cropper_buttons .c5dk_cropper_ButtonBlue:active {
+		position:relative;
+		top:1px;
+	}
+
+	#c5dk-blog-package .c5dk_blog_box_cropper_buttons .btn-group button.btn{
+		padding: 10px 36px 10px 36px;
+	}
+	#c5dk-blog-package .c5dk_blog_box_cropper_buttons .btn-group button.btn span{
+		min-width: 14px;
 	}
 	#c5dk-blog-package .c5dk_blog_box_thumbnail_rightframe {
 		width: 100%;

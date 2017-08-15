@@ -200,7 +200,7 @@
 								<button type="button" class="c5dk_cropper_ButtonBlue" data-method="move" data-option="-10" data-second-option="0" title="Move Left"><span class="fa fa-arrow-left"></span></button>
 								<button type="button" class="c5dk_cropper_ButtonBlue" data-method="move" data-option="10" data-second-option="0" title="Move Right"><span class="fa fa-arrow-right"></span></button>
 							</div>
-							
+
 							<div class="c5dk-cropper-btn-group">
 								<button type="button" class="c5dk_cropper_ButtonBlue" data-method="move" data-option="0" data-second-option="-10" title="Move Up"><span class="fa fa-arrow-up"></span></button>
 								<button type="button" class="c5dk_cropper_ButtonBlue" data-method="move" data-option="0" data-second-option="10" title="Move Down"><span class="fa fa-arrow-down"></span></button>
@@ -398,8 +398,9 @@ c5dk.blog.post = {
 				$('#title').removeAttr('disabled');
 				$('input[type="submit"]').addClass('c5dk_blogpage_ButtonDisabled').removeClass('c5dk_blogpage_ButtonGreen').attr('disabled','disabled');
 
+				$('#c5dk_blog_content').val(CKEDITOR.instances.c5dk_blog_content.getData());
 				c5dk.blog.post.blog.formData = new FormData(document.forms["c5dk_blog_form"]);
-				c5dk.blog.post.blog.formData.set('c5dk_blog_content', CKEDITOR.instances.c5dk_blog_content.getData());
+				// c5dk.blog.post.blog.formData.set('c5dk_blog_content', CKEDITOR.instances.c5dk_blog_content.getData());
 
 				if (c5dk.blog.post.thumbnail.crop_img) {
 					c5dk.blog.post.thumbnail.crop_img.cropper('getCroppedCanvas', {fillColor: '<?= $C5dkConfig->blog_cropper_def_bgcolor; ?>'}).toBlob(function (blob) {

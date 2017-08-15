@@ -19,7 +19,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 class Controller extends Package {
 
 	protected $appVersionRequired		= '8.2';
-	protected $pkgVersion				= '8.2.1.0.b4';
+	protected $pkgVersion				= '8.2.1.0.b5';
 	protected $pkgHandle				= 'c5dk_blog';
 	protected $pkgAutoloaderRegistries	= array('src/C5dkBlog' => '\C5dk\Blog');
 
@@ -261,7 +261,7 @@ class Controller extends Package {
 		// $al->register('javascript', 'jcrop', 'js/Jcrop/Jcrop.min.js', array(), 'c5dk_blog');
 		// $al->register('css', 'jcrop', 'css/Jcrop/Jcrop.min.css', array(), 'c5dk_blog');
 		$al->register('javascript', 'cropper', 'js/cropper/cropper.min.js', array(), 'c5dk_blog');
-		$al->register('css', 'cropper', 'css/cropper/cropper.min.css', array(), 'c5dk_blog');
+		//$al->register('css', 'cropper', 'css/cropper/cropper.min.css', array(), 'c5dk_blog');
 
 		// Register jQuery Jcrop plugin
 		$al->register('javascript', 'validation', 'js/validation/jquery.validate.js', array(), 'c5dk_blog');

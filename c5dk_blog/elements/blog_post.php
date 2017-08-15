@@ -351,11 +351,24 @@
 
 	<!-- Image Manager: Slide-In -->
 	<div id="c5dk_filemanager_slidein" class="slider">
-		<input class="" onclick="c5dk.blog.post.image.hideManager();" type="button" value="<?= t('Cancel'); ?>">
-		<form><input id="c5dk_file_upload" multiple class="ccm-input-file" accept="image/jpeg" type="file" name="files[]" /></form>
-
-		<!-- Image List -->
-		<div id="redactor-c5dkimagemanager-box" class="redactor-c5dkimagemanager-box"><?= $BlogPost->C5dkUser->getImageListHTML(); ?></div>
+		<div class="c5dk-slidein-area-wrapper">
+			<div class="c5dk-slider-button-container">
+				<form>
+					<input id="c5dk_file_upload" multiple class="c5dk-inputfile" accept="image/jpeg" type="file" name="files[]" />
+					<label id="c5dk-upload-photo-label" for="c5dk_file_upload"><?php echo t('Upload Files...'); ?> </label>
+				</form>
+			</div>
+			<div class="c5dk-slider-button-container">
+				<input class="c5dk-file-upload-cancel" onclick="c5dk.blog.post.image.hideManager();" type="button" value="<?= t('Cancel'); ?>">
+			</div>
+		</div>
+		<div class="c5dk-slidein-area-wrapper">
+			<hr>
+		</div>
+		<div class="c5dk-slidein-area-wrapper">
+			<!-- Image List -->
+			<div id="redactor-c5dkimagemanager-box" class="redactor-c5dkimagemanager-box"><?= $BlogPost->C5dkUser->getImageListHTML(); ?></div>
+		</div>
 	</div>
 
 </div> <!-- c5dk-blog-package wrapper -->
@@ -461,7 +474,7 @@ c5dk.blog.post = {
 			// imageCrop: true // Force cropped images,
 		}).on('fileuploadsubmit', function (e, data) {
 
-			c5dk.blog.modal.waiting();
+			c5dk.blog.modal.waiting("<?= t('Uploading File(s)'); ?>");
 		}).on('fileuploaddone', function (e, data) {
 
 			$('#redactor-c5dkimagemanager-box').html(data.result.html);
@@ -497,7 +510,7 @@ c5dk.blog.post = {
 
 			var blogID = $('#blogID').val()? $('#blogID').val() : 0;
 
-			c5dk.blog.modal.waiting();
+			c5dk.blog.modal.waiting("<?= t('Saving your blog'); ?>");
 
 			$.ajax('<?= \URL::to('/c5dk/blog/save'); ?>/' + blogID, {
 				method: "POST",
@@ -680,8 +693,8 @@ c5dk.blog.modal = {
 		}
 	},
 
-	waiting: function () {
-		c5dk.blog.modal.openModal("<div class='c5dk-blog-spinner-container'><div class='c5dk-blog-spinner'></div></div>");
+	waiting: function (text) {
+		c5dk.blog.modal.openModal("<div class='c5dk-blog-spinner-container'><div class='c5dk-blog-spinner'></div><div class='c5dk-blog-spinner-text'>" + text + "</div></div>");
 	},
 
 	exitModal: function () {
@@ -759,6 +772,19 @@ $(document).ready( function(){ c5dk.blog.post.init(); });
 		}
 	}
 
+	.c5dk-blog-spinner-text {
+		margin: 50px 0 0 0;
+		font-size: 24px;
+		line-height: 16px;
+		font-family: arial, sans-serif; /* Non animation fallback */
+		color: #ffffff;
+		text-transform: uppercase;
+		display: inline-block;
+	}
+	.c5dk-blog-spinner-text:before {
+		
+		text-align: center;
+	}
 
 	#c5dk-blog-package .field-invalid {
 		border-color: red !important;
@@ -810,7 +836,7 @@ $(document).ready( function(){ c5dk.blog.post.init(); });
 		padding: 6px 10px;
 		text-decoration: none;
 		text-align: center;
-		width: 87px;
+		width: 86px;
 		margin-bottom: 10px;
 		box-shadow: inset 0 0 0 0 #004a89;
 		-webkit-transition: all ease .5s;
@@ -881,4 +907,267 @@ $(document).ready( function(){ c5dk.blog.post.init(); });
 		color: #FF0000;
 		font-weight: bold;
 	}
+	/* Upload button */
+	#c5dk_file_upload {
+		height: 0;
+		width: 0;
+	}
+	#c5dk-upload-photo-label {
+		display: inline-block;
+		cursor: pointer;
+		color: #444;
+		background-color: #fefefe;
+		font-family: Helvetica;
+		border-bottom: solid 1px #019620;
+		border-top: solid 1px #019620;
+		border-right: solid 1px #019620;
+		border-left: solid 8px #019620;
+		font-size: 16px;
+		font-weight: lighter;
+		line-height: 20px !important;
+		vertical-align: top;
+		padding: 6px 10px;
+		text-decoration: none;
+		text-align: center;
+		width: 200px;
+		margin-bottom: 10px;
+		box-shadow: inset 0 0 0 0 #019620;
+		-webkit-transition: all ease .5s;
+		-moz-transition: all ease .5s;
+		transition: all ease .5s;
+	}
+	#c5dk-upload-photo-label:active{
+		position:relative;
+		top:1px;
+	}
+	#c5dk-upload-photo-label:hover{
+		box-shadow: inset 200px 0 0 0 #019620;
+		color:#ffffff;
+	}
+	#c5dk-blog-package .slider .c5dk-file-upload-cancel{
+		display: inline-block;
+		cursor: pointer;
+		color: #444;
+		background-color: #fefefe;
+		font-family: Helvetica;
+		border-bottom: solid 1px #004a89;
+		border-top: solid 1px #004a89;
+		border-right: solid 1px #004a89;
+		border-left: solid 8px #004a89;
+		font-size: 16px;
+		font-weight: lighter;
+		line-height: 20px !important;
+		vertical-align: top;
+		padding: 6px 10px;
+		text-decoration: none;
+		text-align: center;
+		width: 200px;
+		margin-bottom: 10px;
+		box-shadow: inset 0 0 0 0 #004a89;
+		-webkit-transition: all ease .5s;
+		-moz-transition: all ease .5s;
+		transition: all ease .5s;
+	}
+	#c5dk-blog-package .slider .c5dk-file-upload-cancel:active{
+		position:relative;
+		top:1px;
+	}
+	#c5dk-blog-package .slider .c5dk-file-upload-cancel:hover{
+		box-shadow: inset 200px 0 0 0 #004a89;
+		color:#ffffff;
+	}
+	/* Styling slidein */
+	#c5dk-blog-package .slider .c5dk-slidein-area-wrapper{
+		width: 100%;
+		float: left;
+	}
+	#c5dk-blog-package .slider .c5dk-slider-button-container{
+		width: 100%;
+		max-width: 220px;
+		float: left;
+	}
+	#c5dk-blog-package .slider hr{
+		margin: 10px 0;
+		width: 100%;
+	}
+
+/*Media Query Styling */	
+@media only screen
+and (min-device-width : 768px)
+and (max-device-width : 1024px)  {
+     /* STYLES GO HERE */
+    #c5dk-blog-package .c5dk_blog_box_thumbnail_rightframe {
+		width: 100%;
+		max-width: 700px;
+		max-height: 600px;
+		float: left;
+	}
+    
+    
+}
+
+/* iPad in landscape */
+@media only screen
+and (min-device-width : 768px)
+and (max-device-width : 1024px)
+and (orientation : landscape) {
+     /* STYLES GO HERE */
+    #c5dk-blog-package .c5dk_blog_box_thumbnail_rightframe {
+		width: 100%;
+		max-width: 650px;
+		max-height: 600px;
+		float: left;
+	}
+    
+    
+}
+
+/* iPad in portrait */
+@media only screen
+and (min-device-width : 768px)
+and (max-device-width : 1024px)
+and (orientation : portrait) {
+     /* STYLES GO HERE */
+    #c5dk-blog-package .c5dk_blog_box_thumbnail_rightframe {
+		width: 100%;
+		max-width: 450px;
+		max-height: 600px;
+		float: left;
+	}
+    
+    
+}
+
+/* iPhone 6 in portrait & landscape */
+@media only screen
+and (min-device-width : 375px)
+and (max-device-width : 667px) {
+     /* STYLES GO HERE */
+    #c5dk-blog-package .c5dk_blog_box_thumbnail_rightframe {
+		width: 100%;
+		max-width: 300px;
+		max-height: 600px;
+		float: left;
+	}
+    
+    
+}
+
+/* iPhone 6 in landscape */
+@media only screen
+and (min-device-width : 375px)
+and (max-device-width : 667px)
+and (orientation : landscape) {
+     /* STYLES GO HERE */
+    
+    
+    
+}
+
+/* iPhone 6 in portrait */
+@media only screen
+and (min-device-width : 375px)
+and (max-device-width : 667px)
+and (orientation : portrait) {
+     /* STYLES GO HERE */
+    
+    
+    
+}
+
+/* iPhone 6 Plus in portrait & landscape */
+@media only screen
+and (min-device-width : 414px)
+and (max-device-width : 736px) {
+     /* STYLES GO HERE */
+    
+    
+    
+}
+
+/* iPhone 6 Plus in landscape */
+@media only screen
+and (min-device-width : 414px)
+and (max-device-width : 736px)
+and (orientation : landscape) {
+     /* STYLES GO HERE */
+    
+    
+    
+}
+
+/* iPhone 6 Plus in portrait */
+@media only screen
+and (min-device-width : 414px)
+and (max-device-width : 736px)
+and (orientation : portrait) {
+     /* STYLES GO HERE */
+    
+    
+    
+}
+
+/* iPhone 5 & 5S in portrait & landscape */
+@media only screen
+and (min-device-width : 320px)
+and (max-device-width : 568px) {
+     /* STYLES GO HERE */
+    
+    
+    
+}
+
+/* iPhone 5 & 5S in landscape */
+@media only screen
+and (min-device-width : 320px)
+and (max-device-width : 568px)
+and (orientation : landscape) {
+     /* STYLES GO HERE */
+    
+    
+    
+}
+
+/* iPhone 5 & 5S in portrait */
+@media only screen
+and (min-device-width : 320px)
+and (max-device-width : 568px)
+and (orientation : portrait) {
+     /* STYLES GO HERE */
+    
+    
+    
+}
+
+/* iPhone 2G-4S in portrait & landscape */
+@media only screen
+and (min-device-width : 320px)
+and (max-device-width : 480px) {
+     /* STYLES GO HERE */
+    
+    
+    
+}
+
+/* iPhone 2G-4S in landscape */
+@media only screen
+and (min-device-width : 320px)
+and (max-device-width : 480px)
+and (orientation : landscape) {
+     /* STYLES GO HERE */
+    
+    
+    
+}
+
+/* iPhone 2G-4S in portrait */
+@media only screen
+and (min-device-width : 320px)
+and (max-device-width : 480px)
+and (orientation : portrait) {
+     /* STYLES GO HERE */
+    
+    
+    
+}
 </style>

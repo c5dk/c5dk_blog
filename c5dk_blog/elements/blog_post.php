@@ -780,6 +780,7 @@ $(document).ready( function(){ c5dk.blog.post.init(); });
 		color: #ffffff;
 		text-transform: uppercase;
 		display: inline-block;
+		text-shadow: 2px 2px 4px rgba(71, 71, 71, 1);
 	}
 	.c5dk-blog-spinner-text:before {
 		

@@ -5,7 +5,7 @@
 		<div class="c5dk_blog_section">
 			<div class="c5dk_blog_btn_title"><h4><?= t('Blog Editor'); ?></h4></div>
 			<!-- Blogging Buttons -->
-			<div class="c5dk_blog_buttons">
+			<div class="c5dk_blog_btn">
 				<div class="c5dk-blog-btn-wrap">
 				<a class="c5dk_blog_ButtonGreen"
 					<?php if ($C5dkConfig->blog_form_slidein) { ?>

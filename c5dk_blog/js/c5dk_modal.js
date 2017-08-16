@@ -1,13 +1,7 @@
 c5dk.blog.modal = {
 
 	openModal: function (content) {
-		var whiteout = $(".c5dk-blog-whiteout");
-
-		if (whiteout.length) {
-			whiteout.empty().html(content);
-		} else {
-			$(".ccm-page").append("<div class='c5dk-blog-whiteout'>" + content + "</div>");
-		}
+		$(".ccm-page").append("<div class='c5dk-blog-whiteout'>" + content + "</div>");
 	},
 
 	waiting: function (text) {

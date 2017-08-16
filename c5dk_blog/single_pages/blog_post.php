@@ -11,4 +11,6 @@ print View::element('blog_post', array(
 	'jh' => Core::make('helper/json'),
 	'form' => Core::make('helper/form')
 ), 'c5dk_blog');
+
+print View::element('image_manager/main', array('C5dkUser' => new \C5dk\Blog\C5dkUser), 'c5dk_blog');
 ?>

@@ -44,6 +44,10 @@
 
 	<div id="c5dk_form_slidein" class="slider"></div>
 
+	<!-- If Blog post slide-in is active. Get the slide-in element -->
+	<?php if ($C5dkConfig->blog_form_slidein) { print View::element('image_manager/main', array('C5dkUser' => new \C5dk\Blog\C5dkUser), 'c5dk_blog'); } ?>
+
+
 	<div style="clear: both;"></div>
 
 	<script type="text/javascript">
@@ -88,8 +92,9 @@
 								speed: 700,
 								autoEscape: false,
 								position: "right",
-								overlay: false,
-								overlaycolor: "green"
+								overlay: true,
+								overlaycolor: "green",
+								zIndex: 1049
 							});
 							c5dk.blog.buttons.form.create.slideReveal("show");
 						}
@@ -128,8 +133,9 @@
 								speed: 700,
 								autoEscape: false,
 								position: "right",
-								overlay: false,
-								overlaycolor: "green"
+								overlay: true,
+								overlaycolor: "green",
+								zIndex: 1049
 							});
 							c5dk.blog.buttons.form.edit.slideReveal("show");
 						}
@@ -187,7 +193,7 @@
 			color: #222222;
 			padding: 20px;
 			overflow: auto;
-			z-index: 2000;
+			/*z-index: 2000;*/
 		}
 
 	</style>

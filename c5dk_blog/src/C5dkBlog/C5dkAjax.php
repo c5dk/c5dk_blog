@@ -69,7 +69,7 @@ class C5dkAjax extends Controller {
 		$jh = $this->app->make('helper/json');
 
 		// Set C5dk Objects
-		$this->C5dkUser	= new C5dkUser;
+		$C5dkUser	= new C5dkUser;
 
 		// Get or create the C5dkNews Object
 		$C5dkBlog = ($this->post('mode') == C5DK_BLOG_MODE_CREATE)? new C5dkBlog : C5dkBlog::getByID($blogID);
@@ -77,7 +77,7 @@ class C5dkAjax extends Controller {
 		// Setup blog and save it
 		$C5dkBlog->setPropertiesFromArray( array(
 			"rootID"			=> $this->post("rootID"),
-			"userID"			=> $this->C5dkUser->getUserID(),
+			"userID"			=> $C5dkUser->getUserID(),
 			"title"				=> $this->post("title"),
 			"description"		=> $this->post('description'),
 			"content"			=> $this->post("c5dk_blog_content"),

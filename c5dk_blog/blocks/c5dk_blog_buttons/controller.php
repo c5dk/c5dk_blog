@@ -41,6 +41,7 @@ class Controller extends BlockController {
 			$this->requireAsset('core/topics');
 
 			// C5DK Assets
+			$this->requireAsset('javascript', 'c5dkBlog/modal');
 			$this->requireAsset('javascript', 'c5dkckeditor');
 			// $this->requireAsset('javascript', 'jcrop');
 			// $this->requireAsset('css', 'jcrop');

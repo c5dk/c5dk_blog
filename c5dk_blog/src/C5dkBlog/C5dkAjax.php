@@ -10,11 +10,7 @@ use CollectionAttributeKey;
 
 use Image;
 use Imagine\Image\Box;
-// use Imagine\Image\Point;
 use Imagine\Image\ImageInterface;
-// use Imagine\Filter\Basic\Autorotate;
-// use Imagine\Filter\Transformation;
-// use Imagine\Image\Metadata\ExifMetadataReader;
 
 use File;
 use FileList;
@@ -204,8 +200,6 @@ class C5dkAjax extends Controller {
 				'status'	=> 1,
 				'html'		=> $C5dkUser->getImageListHTML(),
 				'filename'	=> $filename
-				// 'file' => $file,
-				// 'fileList' => $this->getFilesFromUserSet(),
 			);
 		}
 

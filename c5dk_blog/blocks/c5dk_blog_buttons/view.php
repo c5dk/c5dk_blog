@@ -3,7 +3,9 @@
 
 	<div id="c5dk-blog-package">
 		<div class="c5dk_blog_section">
+
 			<div class="c5dk_blog_btn_title"><h4><?= t('Blog Editor'); ?></h4></div>
+
 			<!-- Blogging Buttons -->
 			<div class="c5dk_blog_btn">
 				<div class="c5dk-blog-btn-wrap">
@@ -39,6 +41,7 @@
 					</div>
 				</div>
 			</div>
+
 		</div>
 	</div>
 
@@ -67,10 +70,11 @@
 			},
 
 			create: function(blogID, rootID) {
-
 				if (c5dk.blog.buttons.form.create) {
 					c5dk.blog.buttons.form.create.slideReveal("show");
 				} else {
+
+					c5dk.blog.modal.waiting("<?= t('Getting blog form'); ?>");
 					$.ajax({
 						type: 'POST',
 						dataType: 'json',
@@ -82,6 +86,7 @@
 						},
 						url: '<?= \URL::to("/c5dk/blog/get/form"); ?>',
 						success: function(response){
+
 							if (response.form) {
 								$('#c5dk_form_slidein').html(response.form);
 							}
@@ -97,6 +102,7 @@
 								zIndex: 1049
 							});
 							c5dk.blog.buttons.form.create.slideReveal("show");
+							c5dk.blog.modal.exitModal();
 						}
 					});
 				}
@@ -112,6 +118,7 @@
 					c5dk.blog.buttons.form.edit.slideReveal("show");
 				} else {
 
+					c5dk.blog.modal.waiting("<?= t('Getting blog form'); ?>");
 					$.ajax({
 						type: 'POST',
 						dataType: 'json',
@@ -123,6 +130,7 @@
 						},
 						url: '<?= \URL::to("/c5dk/blog/get/form"); ?>',
 						success: function(response){
+
 							if (response.form) {
 								$('#c5dk_form_slidein').html(response.form);
 							}
@@ -138,6 +146,7 @@
 								zIndex: 1049
 							});
 							c5dk.blog.buttons.form.edit.slideReveal("show");
+							c5dk.blog.modal.exitModal();
 						}
 					});
 				}

@@ -259,12 +259,10 @@ class Controller extends Package {
 
 		// Register C5DK Blog CSS
 		$al->register('css', 'c5dk_blog_css', 'css/c5dk_blog.min.css', array(), 'c5dk_blog');
+		//$al->register('css', 'c5dk_blog_css', 'css/c5dk_blog.css', array(), 'c5dk_blog');
 
-		// Register jQuery Jcrop plugin
-		// $al->register('javascript', 'jcrop', 'js/Jcrop/Jcrop.min.js', array(), 'c5dk_blog');
-		// $al->register('css', 'jcrop', 'css/Jcrop/Jcrop.min.css', array(), 'c5dk_blog');
+		// Register jQuery cropper plugin
 		$al->register('javascript', 'cropper', 'js/cropper/cropper.min.js', array(), 'c5dk_blog');
-		//$al->register('css', 'cropper', 'css/cropper/cropper.min.css', array(), 'c5dk_blog');
 
 		// Register jQuery Jcrop plugin
 		$al->register('javascript', 'validation', 'js/validation/jquery.validate.js', array(), 'c5dk_blog');

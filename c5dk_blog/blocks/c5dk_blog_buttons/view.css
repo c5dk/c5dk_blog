@@ -143,3 +143,10 @@
 	position:relative;
 	top:1px;
 }
+	.slider {
+			background-color: #FFFFFF;
+			color: #222222;
+			padding: 20px;
+			overflow: auto;
+			/*z-index: 2000;*/
+		}

@@ -195,17 +195,6 @@
 
 		};
 	</script>
-
-	<style type="text/css">
-		.slider {
-			background-color: #FFFFFF;
-			color: #222222;
-			padding: 20px;
-			overflow: auto;
-			/*z-index: 2000;*/
-		}
-
-	</style>
 <?php } else if ($C5dkBlog->isEditMode() || $C5dkUser->isAdmin) { ?>
 
 	<?php // SuperAdmin/Administrator view if they aren't allowed to block or if the page is in edit mode ?>

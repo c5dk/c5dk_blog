@@ -1,3 +1,5 @@
+<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
+
 <?php foreach ($fileList as $file) { ?>
 
 	<?php $deleteSpan = ($canDeleteImages)? '<span class="fa fa-trash delete-image" style="position: absolute; left:0px; width:16px; height:16px; background-color:#fff; cursor: pointer"></span>' : ''; ?>

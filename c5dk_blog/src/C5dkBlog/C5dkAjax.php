@@ -168,21 +168,23 @@ class C5dkAjax extends Controller {
 		// $height = $C5dkConfig->blog_picture_height;
 		// $image = $image->thumbnail(new Box($width, $height), ImageInterface::THUMBNAIL_INSET);
 
+		$filename = (microtime(true) * 10000) . ".jpg";
+
 		// Save image as .jpg
-		$image->save($tmpFolder . '/c5dk_blog.jpg', array('jpeg_quality' => 80));
+		$image->save($tmpFolder . $filename, array('jpeg_quality' => 80));
 
 		// Import file
 		$fi = new FileImporter();
 		$fv = $fi->import(
 			// $_FILES['file']['tmp_name'][0],
-			$tmpFolder . '/c5dk_blog.jpg',
+			$tmpFolder . $filename,
 			"C5DK_BLOG_uID-" . $uID . "_Pic_" . $fh->unfilename($_FILES['file']['name'][0]) . '.jpg',
 			FileFolder::getNodeByName('Manager')
 		);
 
 		// Delete our imported file
 		$fs = new \Illuminate\Filesystem\Filesystem();
-		$fs->delete($tmpFolder . '/c5dk_blog.jpg');
+		$fs->delete($tmpFolder . $filename);
 
 
 		if(is_object($fv)){
@@ -199,8 +201,9 @@ class C5dkAjax extends Controller {
 			// $files = $this->getFileList($fileSet);
 			// rsort($files);
 			$data = array(
-				'status' => 1,
-				'html'		=> $C5dkUser->getImageListHTML()
+				'status'	=> 1,
+				'html'		=> $C5dkUser->getImageListHTML(),
+				'filename'	=> $filename
 				// 'file' => $file,
 				// 'fileList' => $this->getFilesFromUserSet(),
 			);
@@ -224,6 +227,7 @@ class C5dkAjax extends Controller {
 		$uID = $C5dkUser->getUserID();
 
 		$tmpFolder	= $fh->getTemporaryDirectory();
+		$filename = (microtime(true) * 10000) . ".jpg";
 
 		// Get image facade and open image
 		$imagine = $this->app->make(Image::getFacadeAccessor());
@@ -233,11 +237,11 @@ class C5dkAjax extends Controller {
 		$image = $image->resize(new Box($C5dkConfig->blog_thumbnail_width, $C5dkConfig->blog_thumbnail_height));
 
 		// Save image as .jpg
-		$image->save($tmpFolder . '/c5dk_blog_thumbnail.jpg', array('jpeg_quality' => 80));
+		$image->save($tmpFolder . $filename, array('jpeg_quality' => 80));
 
 		// Import thumbnail into the File Manager
 		$fv = $fi->import(
-			$tmpFolder . '/c5dk_blog_thumbnail.jpg',
+			$tmpFolder . $filename,
 			"C5DK_BLOG_uID-" . $C5dkUser->getUserID() . "_Thumb_cID-" . $C5dkBlog->getCollectionID() . ".jpg",
 			FileFolder::getNodeByName('Thumbs')
 		);
@@ -250,7 +254,7 @@ class C5dkAjax extends Controller {
 
 			// Delete tmp file
 			$fs = new \Illuminate\Filesystem\Filesystem();
-			$fs->delete($tmpFolder . '/c5dk_blog_thumbnail.jpg');
+			$fs->delete($tmpFolder . $filename);
 
 			// Return the File Object
 			return $fv->getFile();

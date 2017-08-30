@@ -19,7 +19,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 class Controller extends Package {
 
 	protected $appVersionRequired		= '8.2';
-	protected $pkgVersion				= '8.2.1.0';
+	protected $pkgVersion				= '8.2.1.1.b1';
 	protected $pkgHandle				= 'c5dk_blog';
 	protected $pkgAutoloaderRegistries	= array('src/C5dkBlog' => '\C5dk\Blog');
 

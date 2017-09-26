@@ -16,11 +16,11 @@ use File;
 use FileList;
 use FileImporter;
 use FileSet;
-use Concrete\Core\Tree\Node\Type\FileFolder		as FileFolder;
+use Concrete\Core\Tree\Node\Type\FileFolder	as FileFolder;
 
-use C5dk\Blog\C5dkUser as C5dkUser;
-use C5dk\Blog\C5dkBlog as C5dkBlog;
-use C5dk\Blog\BlogPost as C5dkBlogPost;
+use C5dk\Blog\C5dkUser	as C5dkUser;
+use C5dk\Blog\C5dkBlog	as C5dkBlog;
+use C5dk\Blog\BlogPost	as C5dkBlogPost;
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
@@ -44,14 +44,14 @@ class C5dkAjax extends Controller {
 			'C5dkConfig' => $C5dkBlogPost->C5dkConfig,
 			'C5dkUser' => $C5dkBlogPost->C5dkUser,
 			'C5dkBlog' => $C5dkBlogPost->C5dkBlog,
-			'token' => Core::make('token'),
-			'jh' => Core::make('helper/json'),
-			'form' => Core::make('helper/form')
+			'token' => $this->app->make('token'),
+			'jh' => $this->app->make('helper/json'),
+			'form' => $this->app->make('helper/form')
 		), 'c5dk_blog');
 		$content = ob_get_contents();
 		ob_end_clean();
 
-		$jh = Core::make('helper/json');
+		$jh = $this->app->make('helper/json');
 		echo $jh->encode((object) array(
 				'form' => $content
 			));
@@ -124,7 +124,7 @@ class C5dkAjax extends Controller {
 
 		// Delete the blog if the current user is the owner
 		if ($C5dkBlog instanceof C5dkBlog && $C5dkBlog->getAttribute('c5dk_blog_author_id') == $C5dkUser->getUserID()) {
-			$jh = Core::make('helper/json');
+			$jh = $this->app->make('helper/json');
 			echo $jh->encode(array(
 				'url' => Page::getByID($C5dkBlog->rootID)->getCollectionLink(),
 				'result' => $C5dkBlog->moveToTrash()

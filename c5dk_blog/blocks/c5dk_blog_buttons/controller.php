@@ -27,7 +27,7 @@ class Controller extends BlockController {
 		$this->set('C5dkConfig', $C5dkConfig);
 		$this->set('C5dkUser', new C5dkUser);
 		$this->set('C5dkBlog', C5dkBlog::getByID(Page::getCurrentPage()->getCollectionID()));
-		$this->set('form', Core::make('helper/form'));
+		$this->set('form', $this->app->make('helper/form'));
 
 		// Require Asset
 		$this->requireAsset('css', 'c5dk_blog_css');

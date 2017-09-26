@@ -16,7 +16,7 @@ class UserDeletion extends DashboardPageController {
 	public function view($uID){
 
 		// Set helpers
-		$this->set('form', Core::make('helper/form'));
+		$this->set('form', $this->app->make('helper/form'));
 
 		$this->set('uID', $uID);
 	}

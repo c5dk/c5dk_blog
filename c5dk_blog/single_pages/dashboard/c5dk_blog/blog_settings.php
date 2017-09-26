@@ -47,24 +47,25 @@
 			<?= $form->number("blog_thumbnail_height", $C5dkConfig->blog_thumbnail_height, array("min" => "1", "max" => "9999")); ?>
 
 			<?= $form->label("blog_cropper_def_bgcolor", t("Blog Thumbnail Cropper Default Background Color")); ?>
-			<?= $form->text("blog_cropper_def_bgcolor", $C5dkConfig->blog_cropper_def_bgcolor); ?>
+			<div><?php $colorPicker->output('blog_cropper_def_bgcolor', $C5dkConfig->blog_cropper_def_bgcolor, array('preferredFormat' => 'hex')); ?></div>
 			<br />
 		</div>
 
 		<!-- Tab: Styling -->
 		<div id="ccm-tab-content-styling" class="ccm-tab-content">
 			<h3><?= t("CSS Style Customization for Header and Pagelist blocks"); ?></h3>
-			<?= $form->label("blog_headline_size", t('"Posted By" Font Size')); ?>
+			<?= $form->label("blog_headline_size", t('"Posted By" Font Size')); ?><br>
 			<?= $form->number("blog_headline_size", $C5dkConfig->blog_headline_size); ?>
 
 			<?= $form->label("blog_headline_color", t('"Posted By" Color')); ?>
-			<?= $form->text("blog_headline_color", $C5dkConfig->blog_headline_color); ?>
+			<div><?php $colorPicker->output('blog_headline_color', $C5dkConfig->blog_headline_color, array('preferredFormat' => 'hex')); ?></div>
+
 
 			<?= $form->label("blog_headline_margin", t('"Posted By" Margin')); ?>
 			<?= $form->text("blog_headline_margin", $C5dkConfig->blog_headline_margin); ?>
 
 			<?= $form->label("blog_headline_icon_color", t('"Posted By" Icons Color')); ?>
-			<?= $form->text("blog_headline_icon_color", $C5dkConfig->blog_headline_icon_color); ?>
+			<div><?php $colorPicker->output('blog_headline_icon_color', $C5dkConfig->blog_headline_icon_color, array('preferredFormat' => 'hex')); ?></div>
 			<br />
 		</div>
 

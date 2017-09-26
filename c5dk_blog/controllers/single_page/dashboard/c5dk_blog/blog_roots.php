@@ -32,7 +32,7 @@ class BlogRoots extends DashboardPageController {
 		$this->set('topicAttributeList',	$this->getTopicsAttributeList());
 
 		// Set helpers
-		$this->set('form', Core::make('helper/form'));
+		$this->set('form', $this->app->make('helper/form'));
 
 		// Require Assets
 		$this->requireAsset('select2');

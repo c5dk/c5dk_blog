@@ -15,7 +15,7 @@ class Add extends DashboardPageController {
 	public function view() {
 
 		// Set helper object
-		$this->set('pageSelector', Core::make('helper/form/page_selector'));
+		$this->set('pageSelector', $this->app->make('helper/form/page_selector'));
 
 		// Set cookies
 		Cookie::set('includeSystemPages', false);

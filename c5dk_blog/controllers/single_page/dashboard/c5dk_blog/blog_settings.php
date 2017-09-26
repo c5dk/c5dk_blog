@@ -20,7 +20,8 @@ class BlogSettings extends DashboardPageController {
 		$this->requireAsset('core/app');
 
 		// Set helpers
-		$this->set('form', Core::make('helper/form'));
+		$this->set('form', $this->app->make('helper/form'));
+		$this->set('colorPicker', $this->app->make('helper/form/color'));
 	}
 
 	public function save() {

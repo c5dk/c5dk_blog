@@ -683,4 +683,5 @@ $(document).ready( function(){ c5dk.blog.post.init(); });
 		max-width: none;
 	}
 
+	.ui-dialog { z-index: 10020!important; }
 </style>

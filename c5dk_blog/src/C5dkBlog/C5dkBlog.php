@@ -234,7 +234,8 @@ class C5dkBlog extends Page {
 
 	private function getUrlSlug($name){
 
-		$name = $this->app->make('helper/text')->urlify($name);
+		$app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
+		$name = $app->make('helper/text')->urlify($name);
 		$ret = Events::fire('on_page_urlify', $name);
 
 		return (!$ret)? $name : $ret;

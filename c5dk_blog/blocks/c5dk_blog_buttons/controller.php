@@ -33,7 +33,6 @@ class Controller extends BlockController {
 		$this->requireAsset('css', 'c5dk_blog_css');
 		$this->requireAsset('core/app');
 
-
 		if ($C5dkConfig->blog_form_slidein && !Page::getCurrentPage()->isEditMode()) {
 
 			// Core Assets
@@ -43,8 +42,6 @@ class Controller extends BlockController {
 			// C5DK Assets
 			$this->requireAsset('javascript', 'c5dkBlog/modal');
 			$this->requireAsset('javascript', 'c5dkckeditor');
-			// $this->requireAsset('javascript', 'jcrop');
-			// $this->requireAsset('css', 'jcrop');
 			$this->requireAsset('javascript', 'cropper');
 			$this->requireAsset('css', 'cropper');
 			$this->requireAsset('javascript', 'validation');

@@ -6,8 +6,8 @@ use Database;
 use Page;
 use PageType;
 use GroupList;
-use Concrete\Core\Attribute\Type as attributeType;
 use CollectionAttributeKey;
+use Concrete\Core\Attribute\Type as attributeType;
 use Concrete\Core\Attribute\Key\CollectionKey;
 
 use Concrete\Core\Tree\Type\Topic as TopicTree;

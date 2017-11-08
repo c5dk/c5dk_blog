@@ -11,7 +11,7 @@
 	);
 ?>
 
-<form id="c5dk_bp" action="<?= $this->action('save'); ?>" method="post">
+<form id="c5dk_bp" action="<?= $this->action('save'); ?>" method="post" class="ccm-ui">
 
 	<div class="ccm-pane-body">
 
@@ -73,6 +73,11 @@
 		<div id="ccm-tab-content-editor" class="ccm-tab-content">
 			<h3><?= t("Plugins"); ?></h3>
 			<label><?= $form->checkbox('blog_plugin_youtube', 1, $C5dkConfig->blog_plugin_youtube); ?> <?= t('YouTube'); ?></label>
+			<div>
+				<label><?= $form->checkbox('blog_plugin_sitemap', 1, $C5dkConfig->blog_plugin_sitemap); ?> <?= t('Sitemap'); ?></label>
+				<label for="blog_plugin_sitemap_groups"><?= t('Groups to allow access'); ?></label>
+					<?= $form->selectMultiple('blog_plugin_sitemap_groups', $groupList, $sitemapGroups, array('class' => 'c5dk_blog_select2', 'style' => 'width:360px;')); ?>
+			</div>
 
 			<h3><?= t("Formats"); ?></h3>
 			<label><?= $form->checkbox('blog_format_h1', 1, $C5dkConfig->blog_format_h1); ?> <?= t('h1'); ?></label>
@@ -92,3 +97,9 @@
 	</div>
 
 </form>
+
+<script type="text/javascript">
+$(document).ready(function() {
+	$('.c5dk_blog_select2').removeClass('form-control').select2();
+});
+</script>

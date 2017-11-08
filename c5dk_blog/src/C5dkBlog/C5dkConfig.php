@@ -8,19 +8,19 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 class C5dkConfig {
 
-	public $blog_title_editable;
-	public $blog_form_slidein;
+	// public $blog_title_editable;
+	// public $blog_form_slidein;
 
-	public $blog_picture_width;
-	public $blog_picture_height;
-	public $blog_thumbnail_width;
-	public $blog_thumbnail_height;
-	public $blog_cropper_def_bgcolor;
+	// public $blog_picture_width;
+	// public $blog_picture_height;
+	// public $blog_thumbnail_width;
+	// public $blog_thumbnail_height;
+	// public $blog_cropper_def_bgcolor;
 
-	public $blog_headline_size;
-	public $blog_headline_color;
-	public $blog_headline_margin;
-	public $blog_headline_icon_color;
+	// public $blog_headline_size;
+	// public $blog_headline_color;
+	// public $blog_headline_margin;
+	// public $blog_headline_icon_color;
 
 	public function __construct() {
 		$pkg = Package::getByHandle('c5dk_blog');
@@ -44,7 +44,9 @@ class C5dkConfig {
 		$this->blog_headline_icon_color	= $config->get('c5dk_blog.blog_headline_icon_color');
 
 		// Editor
-		$this->blog_plugin_youtube	= $config->get('c5dk_blog.blog_plugin_youtube');
+		$this->blog_plugin_youtube			= $config->get('c5dk_blog.blog_plugin_youtube');
+		$this->blog_plugin_sitemap			= $config->get('c5dk_blog.blog_plugin_sitemap');
+		$this->blog_plugin_sitemap_groups	= $config->get('c5dk_blog.blog_plugin_sitemap_groups');
 
 		$this->blog_format_h1		= $config->get('c5dk_blog.blog_format_h1');
 		$this->blog_format_h2		= $config->get('c5dk_blog.blog_format_h2');
@@ -66,8 +68,17 @@ class C5dkConfig {
 	}
 
 	public function getPlugins() {
+
+		$plugins = array();
 		if ($this->blog_plugin_youtube) {
-			return 'youtube,';
+			$plugins[] = 'youtube';
+		}
+		if ($this->blog_plugin_sitemap) {
+			$plugins[] = 'concrete5link';
+		}
+
+		if (count($plugins)) {
+			return ',' . implode(',', $plugins);
 		} else {
 			return '';
 		}

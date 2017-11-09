@@ -46,7 +46,6 @@ class C5dkConfig {
 		// Editor
 		$this->blog_plugin_youtube			= $config->get('c5dk_blog.blog_plugin_youtube');
 		$this->blog_plugin_sitemap			= $config->get('c5dk_blog.blog_plugin_sitemap');
-		$this->blog_plugin_sitemap_groups	= $config->get('c5dk_blog.blog_plugin_sitemap_groups');
 
 		$this->blog_format_h1		= $config->get('c5dk_blog.blog_format_h1');
 		$this->blog_format_h2		= $config->get('c5dk_blog.blog_format_h2');

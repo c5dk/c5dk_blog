@@ -74,9 +74,44 @@
 			<h3><?= t("Plugins"); ?></h3>
 			<label><?= $form->checkbox('blog_plugin_youtube', 1, $C5dkConfig->blog_plugin_youtube); ?> <?= t('YouTube'); ?></label>
 			<div>
+				<!-- Sitemap with permissions -->
 				<label><?= $form->checkbox('blog_plugin_sitemap', 1, $C5dkConfig->blog_plugin_sitemap); ?> <?= t('Sitemap'); ?></label>
-				<label for="blog_plugin_sitemap_groups"><?= t('Groups to allow access'); ?></label>
-					<?= $form->selectMultiple('blog_plugin_sitemap_groups', $groupList, $sitemapGroups, array('class' => 'c5dk_blog_select2', 'style' => 'width:360px;')); ?>
+				<label id="sitemap_permissions"><?= t('Groups to allow access'); ?>
+					<div class="ccm-permission-grid-name" id="ccm-permission-grid-name-<?= $pk->getPermissionKeyID()?>"><strong><a dialog-title="<?= $pk->getPermissionKeyDisplayName()?>" data-pkID="<?= $pk->getPermissionKeyID()?>" data-paID="<?= $pk->getPermissionAccessID()?>" onclick="ccm_permissionLaunchDialog(this)" href="javascript:void(0)"><?= $pk->getPermissionKeyDisplayName()?></a></strong></div>
+					<div id="ccm-permission-grid-cell-<?= $pk->getPermissionKeyID()?>" class="ccm-permission-grid-cell"><?= Loader::element('permission/labels', array('pk' => $pk))?></div>
+					<script type="text/javascript">
+						c5dk_sitemap_state = function() {
+							if ($('input#blog_plugin_sitemap').prop('checked')) {
+								$('#sitemap_permissions').show();
+							} else {
+								$('#sitemap_permissions').hide();
+							}
+						};
+
+						ccm_permissionLaunchDialog = function(link) {
+							var dupe = $(link).attr('data-duplicate');
+							if (dupe != 1) {
+								dupe = 0;
+							}
+
+							jQuery.fn.dialog.open({
+								title: $(link).attr('dialog-title'),
+								href: '<?php echo REL_DIR_FILES_TOOLS_REQUIRED?>/permissions/dialogs/miscellaneous?duplicate=' + dupe + '&pkID=' + $(link).attr('data-pkID') + '&paID=' + $(link).attr('data-paID'),
+								modal: true,
+								width: 500,
+								height: 380
+							});
+						};
+
+						$(document).ready(function() {
+							$('input#blog_plugin_sitemap').on('change', function(event){
+								c5dk_sitemap_state();
+							});
+							c5dk_sitemap_state();
+						});
+					</script>
+				</label>
+
 			</div>
 
 			<h3><?= t("Formats"); ?></h3>

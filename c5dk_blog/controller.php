@@ -19,7 +19,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 class Controller extends Package {
 
 	protected $appVersionRequired		= '8.2';
-	protected $pkgVersion				= '8.2.1.1.b4';
+	protected $pkgVersion				= '8.2.1.1.b5';
 	protected $pkgHandle				= 'c5dk_blog';
 	protected $pkgAutoloaderRegistries	= array('src/C5dkBlog' => '\C5dk\Blog');
 
@@ -111,6 +111,7 @@ class Controller extends Package {
 
 		// Editor
 		C5dkInstaller::installConfigKey('blog_plugin_youtube',		true,		$pkg);
+		C5dkInstaller::installConfigKey('blog_plugin_sitemap',		false,		$pkg);
 
 		C5dkInstaller::installConfigKey('blog_format_h1',			false,		$pkg);
 		C5dkInstaller::installConfigKey('blog_format_h2',			true,		$pkg);

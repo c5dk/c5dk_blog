@@ -24,6 +24,7 @@ class BlogSettings extends DashboardPageController {
 		$C5dkConfig = new C5dkConfig;
 		$this->set('C5dkConfig', $C5dkConfig);
 		$this->set('sitemapGroups', $this->getSitemapGroups());
+		$this->set('pk', PermissionKey::getByHandle('access_sitemap'));
 
 		// Require Assets
 		$this->requireAsset('core/app');
@@ -62,7 +63,6 @@ class BlogSettings extends DashboardPageController {
 		// Editor
 		$config->save('c5dk_blog.blog_plugin_youtube',			$this->post('blog_plugin_youtube'));
 		$config->save('c5dk_blog.blog_plugin_sitemap',			$this->post('blog_plugin_sitemap'));
-		// $config->save('c5dk_blog.blog_plugin_sitemap_groups',	implode(',', $this->post('blog_plugin_sitemap_groups')));
 		$config->save('c5dk_blog.blog_format_h1',				$this->post('blog_format_h1'));
 		$config->save('c5dk_blog.blog_format_h2',				$this->post('blog_format_h2'));
 		$config->save('c5dk_blog.blog_format_h3',				$this->post('blog_format_h3'));
@@ -70,8 +70,17 @@ class BlogSettings extends DashboardPageController {
 		$config->save('c5dk_blog.blog_format_pre',				$this->post('blog_format_pre'));
 
 		// Set Sitemap permissions
-		if ($this->post('blog_plugin_sitemap_groups')) {
-			$this->setSitemapGroups($this->post('blog_plugin_sitemap_groups'));
+		if ($this->post('blog_plugin_sitemap')) {
+			$pk = PermissionKey::getByHandle('access_sitemap');
+			$paID = $this->post('pkID')[$pk->getPermissionKeyID()];
+			$pt = $pk->getPermissionAssignmentObject();
+			$pt->clearPermissionAssignment();
+			if ($paID > 0) {
+				$pa = PermissionAccess::getByID($paID, $pk);
+				if (is_object($pa)) {
+					$pt->assignPermissionAccess($pa);
+				}
+			}
 		}
 
 		$this->set('message', t('Settings saved.'));
@@ -84,14 +93,14 @@ class BlogSettings extends DashboardPageController {
 		$groups = array();
 
 		$pk = PermissionKey::getByHandle('access_sitemap');
-	    $pa = $pk->getPermissionAccessObject();
-	    $assignments = $pa->getAccessListItems(PermissionKey::ACCESS_TYPE_ALL);
-	    foreach ($assignments as $assignment) {
-	        $entity = $assignment->getAccessEntityObject();
-	        $title = $entity->getAccessEntityLabel();
-	        $group = Group::getByName($entity->getAccessEntityLabel());
-	    	$groups[] = $group->getGroupID();
-	    }
+		$pa = $pk->getPermissionAccessObject();
+		$assignments = $pa->getAccessListItems(PermissionKey::ACCESS_TYPE_ALL);
+		foreach ($assignments as $assignment) {
+			$entity = $assignment->getAccessEntityObject();
+			$title = $entity->getAccessEntityLabel();
+			$group = Group::getByName($entity->getAccessEntityLabel());
+			$groups[] = $group->getGroupID();
+		}
 
 		return $groups;
 	}

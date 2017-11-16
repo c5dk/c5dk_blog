@@ -684,4 +684,5 @@ $(document).ready( function(){ c5dk.blog.post.init(); });
 	}
 
 	.ui-dialog { z-index: 10020!important; }
+	#ccm-sitemap-search-selector ul.nav-tabs li:nth-child(1n+2) { display: none; }
 </style>

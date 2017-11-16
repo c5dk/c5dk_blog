@@ -3,6 +3,7 @@ namespace Concrete\Package\C5dkBlog\Controller\SinglePage\Dashboard\C5dkBLog;
 
 use Core;
 use Database;
+use Session;
 use Page;
 use PageType;
 use GroupList;
@@ -36,6 +37,13 @@ class BlogRoots extends DashboardPageController {
 
 		// Require Assets
 		$this->requireAsset('select2');
+
+		// Should we show a message?
+		$message = Session::get('c5dk_blog_message');
+		if ($message) {
+			Session::set('c5dk_blog_message', '');
+			$this->set('message', $message);
+		}
 	}
 
 	public function save(){
@@ -64,9 +72,8 @@ class BlogRoots extends DashboardPageController {
 			}
 		}
 
-		$this->set('message', t('Root values saved.'));
-		$this->view();
-
+		Session::set('c5dk_blog_message', t('Root values saved.'));
+		$this->redirect('/dashboard/c5dk_blog/blog_roots');
 	}
 
 	public function delete($rootID) {

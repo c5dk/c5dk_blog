@@ -19,7 +19,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 class Controller extends Package {
 
 	protected $appVersionRequired		= '8.2';
-	protected $pkgVersion				= '8.2.1.1.b5';
+	protected $pkgVersion				= '8.2.1.1.b6';
 	protected $pkgHandle				= 'c5dk_blog';
 	protected $pkgAutoloaderRegistries	= array('src/C5dkBlog' => '\C5dk\Blog');
 
@@ -45,12 +45,12 @@ class Controller extends Package {
 
 	private function registerRoutes() {
 
-		Route::register('/c5dk/blog/get/{blogID}', '\C5dk\Blog\C5dkAjax::getForm');
-		Route::register('/c5dk/blog/save/{blogID}', '\C5dk\Blog\C5dkAjax::save');
-		Route::register('/c5dk/blog/delete/{blogID}', '\C5dk\Blog\C5dkAjax::delete');
-		Route::register('/c5dk/blog/image/upload', '\C5dk\Blog\C5dkAjax::imageUpload');
-		Route::register('/c5dk/blog/image/delete/{fID}', '\C5dk\Blog\C5dkAjax::imageDelete');
-		Route::register('/c5dk/blog/thumbnail/upload', '\C5dk\Blog\C5dkAjax::thumbnailUpload');
+		Route::register('/c5dk/blog/get/{blogID}',			'\C5dk\Blog\C5dkAjax::getForm');
+		Route::register('/c5dk/blog/save/{blogID}',			'\C5dk\Blog\C5dkAjax::save');
+		Route::register('/c5dk/blog/delete/{blogID}',		'\C5dk\Blog\C5dkAjax::delete');
+		Route::register('/c5dk/blog/image/upload',			'\C5dk\Blog\C5dkAjax::imageUpload');
+		Route::register('/c5dk/blog/image/delete/{fID}',	'\C5dk\Blog\C5dkAjax::imageDelete');
+		Route::register('/c5dk/blog/thumbnail/upload',		'\C5dk\Blog\C5dkAjax::thumbnailUpload');
 	}
 
 

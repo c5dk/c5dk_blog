@@ -4,6 +4,7 @@ namespace Concrete\Package\C5dkBlog\Controller\SinglePage\Dashboard\C5dkBlog;
 use Core;
 use Package;
 use Database;
+use Session;
 use Group;
 use GroupList;
 use \Concrete\Core\Page\Controller\DashboardPageController;
@@ -23,7 +24,7 @@ class BlogSettings extends DashboardPageController {
 		// Set the C5dk object
 		$C5dkConfig = new C5dkConfig;
 		$this->set('C5dkConfig', $C5dkConfig);
-		$this->set('sitemapGroups', $this->getSitemapGroups());
+		// $this->set('sitemapGroups', $this->getSitemapGroups());
 		$this->set('pk', PermissionKey::getByHandle('access_sitemap'));
 
 		// Require Assets
@@ -36,6 +37,13 @@ class BlogSettings extends DashboardPageController {
 
 		// Set group list
 		$this->set('groupList', $this->getAllGroups());
+
+		// Should we show a message?
+		$message = Session::get('c5dk_blog_message');
+		if ($message) {
+			Session::set('c5dk_blog_message', '');
+			$this->set('message', $message);
+		}
 	}
 
 	public function save() {
@@ -44,8 +52,8 @@ class BlogSettings extends DashboardPageController {
 		$config = $pkg->getConfig();
 
 		// Settings
-		$config->save('c5dk_blog.blog_title_editable',	($this->post('blog_title_editable'))? $this->post('blog_title_editable') : 0);
-		$config->save('c5dk_blog.blog_form_slidein',	($this->post('blog_form_slidein'))? $this->post('blog_form_slidein') : 0);
+		$config->save('c5dk_blog.blog_title_editable',		($this->post('blog_title_editable'))? $this->post('blog_title_editable') : 0);
+		$config->save('c5dk_blog.blog_form_slidein',		($this->post('blog_form_slidein'))? $this->post('blog_form_slidein') : 0);
 
 		// Images & Thumbnails
 		$config->save('c5dk_blog.blog_picture_width',		$this->post('blog_picture_width'));
@@ -61,13 +69,13 @@ class BlogSettings extends DashboardPageController {
 		$config->save('c5dk_blog.blog_headline_icon_color',	$this->post('blog_headline_icon_color'));
 
 		// Editor
-		$config->save('c5dk_blog.blog_plugin_youtube',			$this->post('blog_plugin_youtube'));
-		$config->save('c5dk_blog.blog_plugin_sitemap',			$this->post('blog_plugin_sitemap'));
-		$config->save('c5dk_blog.blog_format_h1',				$this->post('blog_format_h1'));
-		$config->save('c5dk_blog.blog_format_h2',				$this->post('blog_format_h2'));
-		$config->save('c5dk_blog.blog_format_h3',				$this->post('blog_format_h3'));
-		$config->save('c5dk_blog.blog_format_h4',				$this->post('blog_format_h4'));
-		$config->save('c5dk_blog.blog_format_pre',				$this->post('blog_format_pre'));
+		$config->save('c5dk_blog.blog_plugin_youtube',		$this->post('blog_plugin_youtube'));
+		$config->save('c5dk_blog.blog_plugin_sitemap',		$this->post('blog_plugin_sitemap'));
+		$config->save('c5dk_blog.blog_format_h1',			$this->post('blog_format_h1'));
+		$config->save('c5dk_blog.blog_format_h2',			$this->post('blog_format_h2'));
+		$config->save('c5dk_blog.blog_format_h3',			$this->post('blog_format_h3'));
+		$config->save('c5dk_blog.blog_format_h4',			$this->post('blog_format_h4'));
+		$config->save('c5dk_blog.blog_format_pre',			$this->post('blog_format_pre'));
 
 		// Set Sitemap permissions
 		if ($this->post('blog_plugin_sitemap')) {
@@ -83,27 +91,26 @@ class BlogSettings extends DashboardPageController {
 			}
 		}
 
-		$this->set('message', t('Settings saved.'));
-
-		$this->view();
+		Session::set('c5dk_blog_message', t('Settings saved.'));
+		$this->redirect('/dashboard/c5dk_blog/blog_settings');
 	}
 
-	public function getSitemapGroups() {
+	// public function getSitemapGroups() {
 
-		$groups = array();
+	// 	$groups = array();
 
-		$pk = PermissionKey::getByHandle('access_sitemap');
-		$pa = $pk->getPermissionAccessObject();
-		$assignments = $pa->getAccessListItems(PermissionKey::ACCESS_TYPE_ALL);
-		foreach ($assignments as $assignment) {
-			$entity = $assignment->getAccessEntityObject();
-			$title = $entity->getAccessEntityLabel();
-			$group = Group::getByName($entity->getAccessEntityLabel());
-			$groups[] = $group->getGroupID();
-		}
+	// 	$pk = PermissionKey::getByHandle('access_sitemap');
+	// 	$pa = $pk->getPermissionAccessObject();
+	// 	$assignments = $pa->getAccessListItems(PermissionKey::ACCESS_TYPE_ALL);
+	// 	foreach ($assignments as $assignment) {
+	// 		$entity = $assignment->getAccessEntityObject();
+	// 		$title = $entity->getAccessEntityLabel();
+	// 		$group = Group::getByName($entity->getAccessEntityLabel());
+	// 		$groups[] = $group->getGroupID();
+	// 	}
 
-		return $groups;
-	}
+	// 	return $groups;
+	// }
 
 	public function setSitemapGroups($groups) {
 		$pk = PermissionKey::getByHandle('access_sitemap');

@@ -49,6 +49,9 @@
 			<?= $form->label("blog_cropper_def_bgcolor", t("Blog Thumbnail Cropper Default Background Color")); ?>
 			<div><?php $colorPicker->output('blog_cropper_def_bgcolor', $C5dkConfig->blog_cropper_def_bgcolor, array('preferredFormat' => 'hex')); ?></div>
 			<br />
+
+			<?php View::element('thumbnail/cropper', array('thumbnail' => null, 'form' => $form, 'C5dkConfig' => $C5dkConfig), 'c5dk_blog'); ?>
+
 		</div>
 
 		<!-- Tab: Styling -->

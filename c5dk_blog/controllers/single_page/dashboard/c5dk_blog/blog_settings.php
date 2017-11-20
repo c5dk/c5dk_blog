@@ -28,8 +28,12 @@ class BlogSettings extends DashboardPageController {
 		$this->set('pk', PermissionKey::getByHandle('access_sitemap'));
 
 		// Require Assets
+		$this->requireAsset('css', 'c5dk_blog_css');
 		$this->requireAsset('core/app');
 		$this->requireAsset('select2');
+		$this->requireAsset('javascript', 'cropper');
+		$this->requireAsset('css', 'cropper');
+		$this->requireAsset('core/file-manager');
 
 		// Set helpers
 		$this->set('form', $this->app->make('helper/form'));

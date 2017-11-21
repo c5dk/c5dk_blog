@@ -16,7 +16,7 @@ use Concrete\Core\Permission\Access\Entity\GroupEntity as GroupPermissionAccessE
 
 use C5dk\Blog\C5dkConfig as C5dkConfig;
 
-use C5dk\Blog\Service\Cropper as Cropper;
+use C5dk\Blog\Service\ThumbnailCropper as ThumbnailCropper;
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
@@ -39,7 +39,7 @@ class BlogSettings extends DashboardPageController {
 		$this->requireAsset('core/file-manager');
 
 		// Set Service
-		$this->set('cropper', new Cropper);
+		$this->set('ThumbnailCropper', new ThumbnailCropper);
 
 		// Set helpers
 		$this->set('form', $this->app->make('helper/form'));

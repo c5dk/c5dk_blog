@@ -322,4 +322,5 @@ class C5dkAjax extends Controller {
 
 		$this->redirect($link);
 	}
+
 }

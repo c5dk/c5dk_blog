@@ -62,4 +62,61 @@ class ThumbnailCropper {
 		}
 	}
 
+	public function save($blogID) {
+		
+		// Get helper objects
+		$jh = $this->app->make('helper/json');
+
+		// Set C5dk Objects
+		$C5dkUser	= new C5dkUser;
+
+		// Get or create the C5dkNews Object
+		$C5dkBlog = ($this->post('mode') == C5DK_BLOG_MODE_CREATE)? new C5dkBlog : C5dkBlog::getByID($blogID);
+
+		// Setup blog and save it
+		$C5dkBlog->setPropertiesFromArray( array(
+			"rootID"			=> $this->post("rootID"),
+			"userID"			=> $C5dkUser->getUserID(),
+			"title"				=> $this->post("title"),
+			"description"		=> $this->post('description'),
+			"content"			=> $this->post("c5dk_blog_content"),
+			"topicAttributeID"	=> $this->post('topicAttributeID')
+		));
+		$C5dkBlog = $C5dkBlog->save($this->post('mode'));
+		$C5dkBlog = C5dkBlog::getByID($C5dkBlog->getCollectionID());
+
+		$thumbnail = $this->post('thumbnail');
+
+		if ($thumbnail['id'] == -1) {
+			// Remove old thumbnail
+			$C5dkBlog->deleteThumbnail();
+		}
+
+		if ($thumbnail['id'] > 0 && isset($_FILES["croppedImage"])) {
+			// Remove old thumbnail
+			$C5dkBlog->deleteThumbnail();
+
+			// Can first save the thumbnail now, because we needed to save the page first.
+			$thumbnail = $this->saveThumbnail($C5dkBlog);
+
+			if (is_object($thumbnail)) {
+				$cakThumbnail = CollectionAttributeKey::getByHandle('thumbnail');
+				$C5dkBlog = $C5dkBlog->getVersionToModify();
+				$C5dkBlog->setAttribute($cakThumbnail, $thumbnail);
+				$C5dkBlog->refreshCache();
+				$C5dkBlog->getVersionObject()->approve();
+			}
+		}
+
+		$data = array(
+			"status"	=> true,
+			"redirectLink"	=> $C5dkBlog->getCollectionPath()
+		);
+
+		header('Content-type: application/json');
+		echo $jh->encode($data);
+
+		exit;
+	}
+		
 }

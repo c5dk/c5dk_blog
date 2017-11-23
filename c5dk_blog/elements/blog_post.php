@@ -9,6 +9,7 @@
 			<div class="alert alert-danger alert-dismissable"><?= $error->output(); ?></div>
 		<?php } ?>
 
+		<!-- Header Button Section -->
 		<div class="c5dk_blog_button_section c5dk_buttom_border_line">
 			<!-- C5DK Blog Icon -->
 			<div class="c5dk_blog_page_icon"><img src="<?= REL_DIR_PACKAGES; ?>/c5dk_blog/images/c5blog.png" alt="C5DK Blog Icon" height="40" width="40"></div>
@@ -321,7 +322,7 @@
 			</div>
 		<?php } ?>
 
-		<!-- Form buttons -->
+		<!-- Footer Button Section -->
 		<div class="c5dk_blog_button_section c5dk_top_border_line">
 
 			<!-- C5DK Blog Icon -->

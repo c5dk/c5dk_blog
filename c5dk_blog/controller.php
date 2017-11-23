@@ -31,8 +31,8 @@ class Controller extends Package {
 	public function on_start() {
 
 		// Set C5dk Blog global defines
-		defined('C5DK_BLOG_MODE_CREATE')	or define('C5DK_BLOG_MODE_CREATE',	'1');
-		defined('C5DK_BLOG_MODE_EDIT')		or define('C5DK_BLOG_MODE_EDIT',	'2');
+		defined('C5DK_BLOG_MODE_CREATE') or define('C5DK_BLOG_MODE_CREATE',	'1');
+		defined('C5DK_BLOG_MODE_EDIT')	 or define('C5DK_BLOG_MODE_EDIT',	'2');
 
 		$this->registerEvents();
 		$this->registerRoutes();
@@ -41,7 +41,7 @@ class Controller extends Package {
 
 	private function registerEvents() {
 
-		Events::addListener('on_user_delete', array($this, 'eventOnUserDelete'));
+		Events::addListener('on_user_delete',	array($this, 'eventOnUserDelete'));
 		Events::addListener('on_before_render', array($this, 'eventAddOpenGraphMeta'));
 	}
 

@@ -1,7 +1,7 @@
 <div id="c5dk-blog-package">
 	<div id="thumbnail" class="c5dk_blog_section">
 
-		<input id="thumbnailID" name="thumbnail[id]" type="hidden" value="<?= $thumbnail? $C5dkBlog->thumbnail->getFileID() : 0; ?>">
+		<input id="thumbnailID" name="thumbnail[id]" type="hidden" value="<?= $thumbnail? $thumbnail->getFileID() : 0; ?>">
 		<input id="thumbnailX" name="thumbnail[x]" type="hidden" value="0">
 		<input id="thumbnailY" name="thumbnail[y]" type="hidden" value="0">
 		<input id="thumbnailWidth" name="thumbnail[width]" type="hidden" value="0">
@@ -15,7 +15,7 @@
 			<div class="c5dk_blog_box_thumbnail_leftframe">
 				<div class="c5dk_blog_thumbnail_preview_frame">
 					<div id="cropper_preview" class="c5dk_blog_thumbnail_preview">
-						<img id="c5dk_blog_thumbnail" class="c5dk_blog_thumbnail" src="<?= $thumbnail? File::getRelativePathFromID($C5dkBlog->thumbnail->getFileID()) : ""; ?>"<?= $thumbnail? '' : ' style="display:none;'; ?>>
+						<img id="c5dk_blog_thumbnail" class="c5dk_blog_thumbnail" src="<?= $thumbnail? File::getRelativePathFromID($thumbnail->getFileID()) : ""; ?>"<?= $thumbnail? '' : ' style="display:none;'; ?>>
 					</div>
 					<div class="c5dk_blog_thumbnail_preview_subtext">
 						<?= t('Preview'); ?>

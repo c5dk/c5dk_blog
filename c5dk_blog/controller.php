@@ -22,7 +22,8 @@ class Controller extends Package {
 	protected $pkgVersion				= '8.2.1.1.b6';
 	protected $pkgHandle				= 'c5dk_blog';
 	protected $pkgAutoloaderRegistries	= array(
-		'src/C5dkBlog' => '\C5dk\Blog'
+		'src/C5dkBlog' => '\C5dk\Blog',
+		'src/Service' => '\C5dk\Blog\Service'
 	);
 
 	public function getPackageName() {			return t("C5DK Blog"); }
@@ -95,31 +96,32 @@ class Controller extends Package {
 	private function setupConfig($pkg) {
 
 		// Settings
-		C5dkInstaller::installConfigKey('blog_title_editable',		false,		$pkg);
-		C5dkInstaller::installConfigKey('blog_form_slidein',		false,		$pkg);
+		C5dkInstaller::installConfigKey('blog_title_editable',			false,		$pkg);
+		C5dkInstaller::installConfigKey('blog_form_slidein',			false,		$pkg);
 
 		// Images & Thumbnails
-		C5dkInstaller::installConfigKey('blog_picture_width',		1200,		$pkg);
-		C5dkInstaller::installConfigKey('blog_picture_height',		800,		$pkg);
-		C5dkInstaller::installConfigKey('blog_thumbnail_width',		360,		$pkg);
-		C5dkInstaller::installConfigKey('blog_thumbnail_height',	360,		$pkg);
-		C5dkInstaller::installConfigKey('blog_cropper_def_bgcolor', '#FFF', 	$pkg);
+		C5dkInstaller::installConfigKey('blog_picture_width',			1200,		$pkg);
+		C5dkInstaller::installConfigKey('blog_picture_height',			800,		$pkg);
+		C5dkInstaller::installConfigKey('blog_thumbnail_width',			360,		$pkg);
+		C5dkInstaller::installConfigKey('blog_thumbnail_height',		360,		$pkg);
+		C5dkInstaller::installConfigKey('blog_default_thumbnail_id',	null,		$pkg);
+		C5dkInstaller::installConfigKey('blog_cropper_def_bgcolor', 	'#FFF', 	$pkg);
 
 		// Styling
-		C5dkInstaller::installConfigKey('blog_headline_size',		12,			$pkg);
-		C5dkInstaller::installConfigKey('blog_headline_color',		'#AAAAAA',	$pkg);
-		C5dkInstaller::installConfigKey('blog_headline_margin',		'5px 0',	$pkg);
-		C5dkInstaller::installConfigKey('blog_headline_icon_color',	'#1685D4',	$pkg);
+		C5dkInstaller::installConfigKey('blog_headline_size',			12,			$pkg);
+		C5dkInstaller::installConfigKey('blog_headline_color',			'#AAAAAA',	$pkg);
+		C5dkInstaller::installConfigKey('blog_headline_margin',			'5px 0',	$pkg);
+		C5dkInstaller::installConfigKey('blog_headline_icon_color',		'#1685D4',	$pkg);
 
 		// Editor
-		C5dkInstaller::installConfigKey('blog_plugin_youtube',		true,		$pkg);
-		C5dkInstaller::installConfigKey('blog_plugin_sitemap',		false,		$pkg);
+		C5dkInstaller::installConfigKey('blog_plugin_youtube',			true,		$pkg);
+		C5dkInstaller::installConfigKey('blog_plugin_sitemap',			false,		$pkg);
 
-		C5dkInstaller::installConfigKey('blog_format_h1',			false,		$pkg);
-		C5dkInstaller::installConfigKey('blog_format_h2',			true,		$pkg);
-		C5dkInstaller::installConfigKey('blog_format_h3',			true,		$pkg);
-		C5dkInstaller::installConfigKey('blog_format_h4',			false,		$pkg);
-		C5dkInstaller::installConfigKey('blog_format_pre',			true,		$pkg);
+		C5dkInstaller::installConfigKey('blog_format_h1',				false,		$pkg);
+		C5dkInstaller::installConfigKey('blog_format_h2',				true,		$pkg);
+		C5dkInstaller::installConfigKey('blog_format_h3',				true,		$pkg);
+		C5dkInstaller::installConfigKey('blog_format_h4',				false,		$pkg);
+		C5dkInstaller::installConfigKey('blog_format_pre',				true,		$pkg);
 	}
 
 	private function setupBlocks($pkg) {
@@ -267,6 +269,10 @@ class Controller extends Package {
 		// Register jQuery cropper plugin
 		$al->register('javascript', 'cropper', 'js/cropper/cropper.min.js', array(), 'c5dk_blog');
 
+		// Register jQuery cropper plugin
+		$al->register('javascript', 'thumbnail_cropper/settings', 'js/service/thumbnail_cropper/settings.js', array(), 'c5dk_blog');
+		$al->register('javascript', 'thumbnail_cropper/blog_post', 'js/service/thumbnail_cropper/blog_post.js', array(), 'c5dk_blog');
+		
 		// Register jQuery Jcrop plugin
 		$al->register('javascript', 'validation', 'js/validation/jquery.validate.js', array(), 'c5dk_blog');
 

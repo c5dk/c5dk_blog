@@ -157,6 +157,10 @@
 
 		<!-- Blog Thumbnail -->
 		<?php if ($BlogPost->thumbnailsEnabled) { ?>
+
+			<!-- Cropper Service -->
+			<?= $ThumbnailCropper->output(); ?>
+			
 			<div id="thumbnail" class="c5dk_blog_section">
 
 				<input id="thumbnailID" name="thumbnail[id]" type="hidden" value="<?= (is_object($C5dkBlog->thumbnail))? $C5dkBlog->thumbnail->getFileID() : 0; ?>">
@@ -411,7 +415,7 @@ c5dk.blog.post = {
 		});
 
 		// Hide Cropper buttons
-		$("#c5dk_cropper_buttons").hide();
+		// $("#c5dk_cropper_buttons").hide();
 
 		// Move focus to the title field
 		$('.c5dk_blog_title input').focus();

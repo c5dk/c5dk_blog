@@ -7,7 +7,8 @@ use Database;
 use Session;
 use Group;
 use GroupList;
-use \Concrete\Core\Page\Controller\DashboardPageController;
+use File;
+use Concrete\Core\Page\Controller\DashboardPageController;
 
 use PermissionKey;
 use TaskPermission;
@@ -36,10 +37,12 @@ class BlogSettings extends DashboardPageController {
 		$this->requireAsset('select2');
 		$this->requireAsset('javascript', 'cropper');
 		$this->requireAsset('css', 'cropper');
+		$this->requireAsset('javascript', 'thumbnail_cropper/settings');
 		$this->requireAsset('core/file-manager');
 
 		// Set Service
-		$this->set('ThumbnailCropper', new ThumbnailCropper);
+		$defThumbnail = $C5dkConfig->getDefaultThumbnailID? File::getByID($C5dkConfig->getDefaultThumbnailID) : null;
+		$this->set('ThumbnailCropper', new ThumbnailCropper(null, $defThumbnail));
 
 		// Set helpers
 		$this->set('form', $this->app->make('helper/form'));
@@ -158,4 +161,5 @@ class BlogSettings extends DashboardPageController {
 
 		return $groups;
 	}
+	
 }

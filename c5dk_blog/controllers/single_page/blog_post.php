@@ -41,6 +41,8 @@ use C5dk\Blog\C5dkRoot		as C5dkRoot;
 use C5dk\Blog\C5dkBlog		as C5dkBlog;
 use C5dk\Blog\BlogPost		as C5dkBlogPost;
 
+use C5dk\Blog\Service\ThumbnailCropper as ThumbnailCropper;
+
 defined('C5_EXECUTE') or die("Access Denied.");
 
 class BlogPost extends PageController {
@@ -99,11 +101,12 @@ class BlogPost extends PageController {
 		$this->requireAsset('c5dkFileupload/all');
 
 		// Set View variables
-		$this->set('view',			new View);
-		$this->set('BlogPost',		$C5dkBlogPost);
-		$this->set('C5dkConfig',	$C5dkBlogPost->C5dkConfig);
-		$this->set('C5dkUser',		$C5dkBlogPost->C5dkUser);
-		$this->set('C5dkBlog',		$C5dkBlogPost->C5dkBlog);
+		$this->set('view',				new View);
+		$this->set('BlogPost',			$C5dkBlogPost);
+		$this->set('C5dkConfig',		$C5dkBlogPost->C5dkConfig);
+		$this->set('C5dkUser',			$C5dkBlogPost->C5dkUser);
+		$this->set('C5dkBlog',			$C5dkBlogPost->C5dkBlog);
+		$this->set('ThumbnailCropper',	new ThumbnailCropper($C5dkBlogPost->C5dkBlog->thumbnail));
 	}
 
 	// Keep the active login session active

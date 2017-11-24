@@ -6,6 +6,7 @@ print View::element('blog_post', array(
 	'C5dkConfig' => $C5dkConfig,
 	'C5dkUser' => $C5dkUser,
 	'C5dkBlog' => $C5dkBlog,
+	'ThumbnailCropper' => $ThumbnailCropper,
 	'settings' => $settings,
 	'token' => Core::make('token'),
 	'jh' => Core::make('helper/json'),

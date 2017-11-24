@@ -2,18 +2,36 @@
 namespace C5dk\Blog\Service;
 
 use View;
+use Concrete\Core\Controller\Controller;
+use Concrete\Core\Support\Facade\Application;
+use File as ThumbnailFile;
+
+use C5dk\Blog\C5dkConfig as C5dkConfig;
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
 class ThumbnailCropper {
 
-	public function __construct() {
+	// protected $app;
 
+	public function __construct(ThumbnailFile $default = null,ThumbnailFile $thumbnail = null) {
+
+		$C5dkConfig = new C5dkConfig;
+
+		$this->app = Application::getFacadeApplication();
 	}
-	
-	public function output($values = array()) {
 
-		return View::element('thumbnail/cropper', $values, 'c5dk_blog');;
+	public function output($values = array(), $type = 'user') {
+		switch ($type) {
+			case 'settings':
+				$values = array_merge(['C5dkConfig' => new C5dkConfig, 'form' => $this->app->make('helper/form')], $values);
+				break;
+
+			default:
+				$values = array_merge(['C5dkConfig' => new C5dkConfig, 'form' => $this->app->make('helper/form')], $values);
+				break;
+		}
+		return View::element('service/thumbnail_cropper/view', $values, 'c5dk_blog');
 	}
 
 	public function saveThumbnail($C5dkBlog) {
@@ -63,7 +81,7 @@ class ThumbnailCropper {
 	}
 
 	public function save($blogID) {
-		
+
 		// Get helper objects
 		$jh = $this->app->make('helper/json');
 
@@ -118,5 +136,5 @@ class ThumbnailCropper {
 
 		exit;
 	}
-		
+
 }

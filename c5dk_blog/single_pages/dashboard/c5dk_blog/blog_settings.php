@@ -16,7 +16,7 @@
 	<div class="ccm-pane-body">
 
 		<!-- Main tabs -->
-		<?php print Core::make('helper/concrete/ui')->tabs($tabs, true, "ccm_activateTabBar"); ?>
+		<?= Core::make('helper/concrete/ui')->tabs($tabs, true, "ccm_activateTabBar"); ?>
 
 		<!-- Tab: General Settings -->
 		<div id="ccm-tab-content-settings" class="ccm-tab-content">
@@ -50,8 +50,8 @@
 			<div><?php $colorPicker->output('blog_cropper_def_bgcolor', $C5dkConfig->blog_cropper_def_bgcolor, array('preferredFormat' => 'hex')); ?></div>
 			<br />
 			
-			<!-- Cropper Service -->
-			<?= $ThumbnailCropper->output(array('thumbnail' => null, 'form' => $form, 'C5dkConfig' => $C5dkConfig)); ?>
+			<!-- Thumbnail Cropper Service -->
+			<?= $ThumbnailCropper->output(); ?>
 
 		</div>
 

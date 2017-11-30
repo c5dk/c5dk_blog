@@ -1,165 +1,176 @@
 <?php
+
 namespace Concrete\Package\C5dkBlog\Controller\SinglePage\Dashboard\C5dkBlog;
 
 use Core;
 use Package;
-use Database;
 use Session;
 use Group;
 use GroupList;
-use File;
-use Concrete\Core\Page\Controller\DashboardPageController;
-
 use PermissionKey;
-use TaskPermission;
+use File;
+use Concrete\Core\Tree\Node\Type\FileFolder as FileFolder;
+use Concrete\Core\Page\Controller\DashboardPageController;
 use Concrete\Core\Permission\Access\Access as PermissionAccess;
 use Concrete\Core\Permission\Access\Entity\GroupEntity as GroupPermissionAccessEntity;
 
 use C5dk\Blog\C5dkConfig as C5dkConfig;
-
 use C5dk\Blog\Service\ThumbnailCropper as ThumbnailCropper;
 
-defined('C5_EXECUTE') or die("Access Denied.");
+defined('C5_EXECUTE') or die('Access Denied.');
 
-class BlogSettings extends DashboardPageController {
+class BlogSettings extends DashboardPageController
+{
+    public function view()
+    {
+        // Set the C5dk object
+        $C5dkConfig = new C5dkConfig;
+        $this->set('C5dkConfig', $C5dkConfig);
+        // $this->set('sitemapGroups', $this->getSitemapGroups());
+        $this->set('pk', PermissionKey::getByHandle('access_sitemap'));
 
-	public function view(){
+        // Require Assets
+        $this->requireAsset('css', 'c5dk_blog_css');
+        $this->requireAsset('core/app');
+        $this->requireAsset('select2');
+        $this->requireAsset('core/file-manager');
+        $this->requireAsset('javascript', 'c5dkBlog/modal');
 
-		// Set the C5dk object
-		$C5dkConfig = new C5dkConfig;
-		$this->set('C5dkConfig', $C5dkConfig);
-		// $this->set('sitemapGroups', $this->getSitemapGroups());
-		$this->set('pk', PermissionKey::getByHandle('access_sitemap'));
+        // Set Service
+        $fID              = $C5dkConfig->blog_default_thumbnail_id;
+        $defThumbnail     = $fID ? File::getByID($fID) : null;
+        $this->set('ThumbnailCropper', new ThumbnailCropper($defThumbnail, null, 'settings'));
+        // $test = $this->app->build('C5dk\Blog\Service\Test');
 
-		// Require Assets
-		$this->requireAsset('css', 'c5dk_blog_css');
-		$this->requireAsset('core/app');
-		$this->requireAsset('select2');
-		$this->requireAsset('javascript', 'cropper');
-		$this->requireAsset('css', 'cropper');
-		$this->requireAsset('javascript', 'thumbnail_cropper/settings');
-		$this->requireAsset('core/file-manager');
+        // Set helpers
+        $this->set('form', $this->app->make('helper/form'));
+        $this->set('colorPicker', $this->app->make('helper/form/color'));
 
-		// Set Service
-		$defThumbnail = $C5dkConfig->getDefaultThumbnailID? File::getByID($C5dkConfig->getDefaultThumbnailID) : null;
-		$this->set('ThumbnailCropper', new ThumbnailCropper(null, $defThumbnail));
+        // Set group list
+        $this->set('groupList', $this->getAllGroups());
 
-		// Set helpers
-		$this->set('form', $this->app->make('helper/form'));
-		$this->set('colorPicker', $this->app->make('helper/form/color'));
+        // Should we show a message?
+        $message = Session::get('c5dk_blog_message');
+        if ($message) {
+            Session::set('c5dk_blog_message', '');
+            $this->set('message', $message);
+        }
+    }
 
-		// Set group list
-		$this->set('groupList', $this->getAllGroups());
+    public function save()
+    {
+        $pkg    = Package::getByHandle('c5dk_blog');
+        $config = $pkg->getConfig();
 
-		// Should we show a message?
-		$message = Session::get('c5dk_blog_message');
-		if ($message) {
-			Session::set('c5dk_blog_message', '');
-			$this->set('message', $message);
-		}
-	}
+        // Settings
+        $config->save('c5dk_blog.blog_title_editable', ($this->post('blog_title_editable')) ? $this->post('blog_title_editable') : 0);
+        $config->save('c5dk_blog.blog_form_slidein', ($this->post('blog_form_slidein')) ? $this->post('blog_form_slidein') : 0);
 
-	public function save() {
+        // Images & Thumbnails
+        $config->save('c5dk_blog.blog_picture_width', $this->post('blog_picture_width'));
+        $config->save('c5dk_blog.blog_picture_height', $this->post('blog_picture_height'));
+        $config->save('c5dk_blog.blog_thumbnail_width', $this->post('blog_thumbnail_width'));
+        $config->save('c5dk_blog.blog_thumbnail_height', $this->post('blog_thumbnail_height'));
+        $config->save('c5dk_blog.blog_default_thumbnail_id', $this->saveThumbnail($this->post('thumbnail')));
+        $config->save('c5dk_blog.blog_cropper_def_bgcolor', $this->post('blog_cropper_def_bgcolor'));
 
-		$pkg = Package::getByHandle('c5dk_blog');
-		$config = $pkg->getConfig();
+        // Styling
+        $config->save('c5dk_blog.blog_headline_size', $this->post('blog_headline_size'));
+        $config->save('c5dk_blog.blog_headline_color', $this->post('blog_headline_color'));
+        $config->save('c5dk_blog.blog_headline_margin', $this->post('blog_headline_margin'));
+        $config->save('c5dk_blog.blog_headline_icon_color', $this->post('blog_headline_icon_color'));
 
-		// Settings
-		$config->save('c5dk_blog.blog_title_editable',		($this->post('blog_title_editable'))? $this->post('blog_title_editable') : 0);
-		$config->save('c5dk_blog.blog_form_slidein',		($this->post('blog_form_slidein'))? $this->post('blog_form_slidein') : 0);
+        // Editor
+        $config->save('c5dk_blog.blog_plugin_youtube', $this->post('blog_plugin_youtube'));
+        $config->save('c5dk_blog.blog_plugin_sitemap', $this->post('blog_plugin_sitemap'));
+        $config->save('c5dk_blog.blog_format_h1', $this->post('blog_format_h1'));
+        $config->save('c5dk_blog.blog_format_h2', $this->post('blog_format_h2'));
+        $config->save('c5dk_blog.blog_format_h3', $this->post('blog_format_h3'));
+        $config->save('c5dk_blog.blog_format_h4', $this->post('blog_format_h4'));
+        $config->save('c5dk_blog.blog_format_pre', $this->post('blog_format_pre'));
 
-		// Images & Thumbnails
-		$config->save('c5dk_blog.blog_picture_width',		$this->post('blog_picture_width'));
-		$config->save('c5dk_blog.blog_picture_height',		$this->post('blog_picture_height'));
-		$config->save('c5dk_blog.blog_thumbnail_width',		$this->post('blog_thumbnail_width'));
-		$config->save('c5dk_blog.blog_thumbnail_height',	$this->post('blog_thumbnail_height'));
-		$config->save('c5dk_blog.blog_cropper_def_bgcolor',	$this->post('blog_cropper_def_bgcolor'));
+        // Set Sitemap permissions
+        if ($this->post('blog_plugin_sitemap')) {
+            $pk   = PermissionKey::getByHandle('access_sitemap');
+            $paID = $this->post('pkID')[$pk->getPermissionKeyID()];
+            $pt   = $pk->getPermissionAssignmentObject();
+            $pt->clearPermissionAssignment();
+            if ($paID > 0) {
+                $pa = PermissionAccess::getByID($paID, $pk);
+                if (is_object($pa)) {
+                    $pt->assignPermissionAccess($pa);
+                }
+            }
+        }
 
-		// Styling
-		$config->save('c5dk_blog.blog_headline_size',		$this->post('blog_headline_size'));
-		$config->save('c5dk_blog.blog_headline_color',		$this->post('blog_headline_color'));
-		$config->save('c5dk_blog.blog_headline_margin',		$this->post('blog_headline_margin'));
-		$config->save('c5dk_blog.blog_headline_icon_color',	$this->post('blog_headline_icon_color'));
+        Session::set('c5dk_blog_message', t('Settings saved.'));
+        $this->redirect('/dashboard/c5dk_blog/blog_settings');
+    }
 
-		// Editor
-		$config->save('c5dk_blog.blog_plugin_youtube',		$this->post('blog_plugin_youtube'));
-		$config->save('c5dk_blog.blog_plugin_sitemap',		$this->post('blog_plugin_sitemap'));
-		$config->save('c5dk_blog.blog_format_h1',			$this->post('blog_format_h1'));
-		$config->save('c5dk_blog.blog_format_h2',			$this->post('blog_format_h2'));
-		$config->save('c5dk_blog.blog_format_h3',			$this->post('blog_format_h3'));
-		$config->save('c5dk_blog.blog_format_h4',			$this->post('blog_format_h4'));
-		$config->save('c5dk_blog.blog_format_pre',			$this->post('blog_format_pre'));
+    // public function getSitemapGroups() {
 
-		// Set Sitemap permissions
-		if ($this->post('blog_plugin_sitemap')) {
-			$pk = PermissionKey::getByHandle('access_sitemap');
-			$paID = $this->post('pkID')[$pk->getPermissionKeyID()];
-			$pt = $pk->getPermissionAssignmentObject();
-			$pt->clearPermissionAssignment();
-			if ($paID > 0) {
-				$pa = PermissionAccess::getByID($paID, $pk);
-				if (is_object($pa)) {
-					$pt->assignPermissionAccess($pa);
-				}
-			}
-		}
+    // 	$groups = array();
 
-		Session::set('c5dk_blog_message', t('Settings saved.'));
-		$this->redirect('/dashboard/c5dk_blog/blog_settings');
-	}
+    // 	$pk = PermissionKey::getByHandle('access_sitemap');
+    // 	$pa = $pk->getPermissionAccessObject();
+    // 	$assignments = $pa->getAccessListItems(PermissionKey::ACCESS_TYPE_ALL);
+    // 	foreach ($assignments as $assignment) {
+    // 		$entity = $assignment->getAccessEntityObject();
+    // 		$title = $entity->getAccessEntityLabel();
+    // 		$group = Group::getByName($entity->getAccessEntityLabel());
+    // 		$groups[] = $group->getGroupID();
+    // 	}
 
-	// public function getSitemapGroups() {
+    // 	return $groups;
+    // }
 
-	// 	$groups = array();
+    // public function setSitemapGroups($groups)
+    // {
+    //     $pk = PermissionKey::getByHandle('access_sitemap');
+    //     $pa = PermissionAccess::create($pk);
+    //     $pt = $pk->getPermissionAssignmentObject();
 
-	// 	$pk = PermissionKey::getByHandle('access_sitemap');
-	// 	$pa = $pk->getPermissionAccessObject();
-	// 	$assignments = $pa->getAccessListItems(PermissionKey::ACCESS_TYPE_ALL);
-	// 	foreach ($assignments as $assignment) {
-	// 		$entity = $assignment->getAccessEntityObject();
-	// 		$title = $entity->getAccessEntityLabel();
-	// 		$group = Group::getByName($entity->getAccessEntityLabel());
-	// 		$groups[] = $group->getGroupID();
-	// 	}
+    //     foreach ($groups as $groupID) {
+    //         $group       = Group::getByID($groupID);
+    //         $groupEntity = GroupPermissionAccessEntity::getOrCreate($group);
 
-	// 	return $groups;
-	// }
+    //         $pa->addListItem($groupEntity);
+    //     }
+    //     $pt->assignPermissionAccess($pa);
 
-	public function setSitemapGroups($groups) {
-		$pk = PermissionKey::getByHandle('access_sitemap');
-		$pa = PermissionAccess::create($pk);
-		$pt = $pk->getPermissionAssignmentObject();
+    //     foreach ($pa->getAccessListItems() as $item) {
+    //         \Log::addEntry($item->getAccessEntityObject()->getAccessEntityLabel());
+    //     }
+    // }
 
-		foreach ($groups as $groupID) {
-			$group = Group::getByID($groupID);
-			$groupEntity = GroupPermissionAccessEntity::getOrCreate($group);
+    public function getAllGroups()
+    {
+        // Get all groups registered in Concrete5
+        $gl = new GroupList();
+        $gl->sortBy('gID', 'asc');
+        $gl->includeAllGroups();
 
-			$pa->addListItem($groupEntity);
-		}
-		$pt->assignPermissionAccess($pa);
+        // Use GroupID as the array key
+        foreach ($gl->getResults() as $key => $value) {
+            // Remove the Guest group
+            if ($value->gID == 1) {
+                continue;
+            }
 
-		foreach ($pa->getAccessListItems() as $item) {
-			\Log::addEntry($item->getAccessEntityObject()->getAccessEntityLabel());
-		}
-	}
+            $groups[$value->gID] = t($value->gName);
+        }
+        asort($groups);
 
-	public function getAllGroups(){
+        return $groups;
+    }
 
-		// Get all groups registered in Concrete5
-		$gl = new GroupList();
-		$gl->sortBy('gID', 'asc');
-		$gl->includeAllGroups();
+    public function saveThumbnail($thumbnail)
+    {
+        $fileName         = 'C5DK_BLOG_Default_Thumbnail.jpg';
+        $fileFolder       = FileFolder::getNodeByName('Thumbs');
 
-		// Use GroupID as the array key
-		foreach ($gl->getResults() as $key => $value) {
-			// Remove the Guest group
-			if($value->gID == 1){ continue; }
+        $ThumbnailCropper =  new ThumbnailCropper;
 
-			$groups[$value->gID] = t($value->gName);
-		}
-		asort($groups);
-
-		return $groups;
-	}
-	
+        return $ThumbnailCropper->saveForm($thumbnail, $fileName, $fileFolder);
+    }
 }

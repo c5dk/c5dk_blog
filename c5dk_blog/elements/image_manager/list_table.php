@@ -46,7 +46,7 @@
 
 			case "thumbnail":
 				var el = $(event.target);
-				c5dk.blog.post.thumbnail.useAsThumb(el.data('fid'), el.data('src'), el.data('width'), el.data('height'));
+				c5dk.blog.post.thumbnail.useAsThumb(el.data('fid'), el.data('src'));
 				c5dk.blog.post.image.hideManager();
 				break;
 		}

@@ -14,6 +14,7 @@ c5dk.blog.service.thumbnailCropper = {
                     jQuery.fn.dialog.hideLoader();
                     c5dk.blog.service.data.thumbnailCropper.file = r.files[0];
                     $('#thumbailID').val(c5dk.blog.service.data.thumbnailCropper.file.fID);
+
                     // Bind onLoad event so we can setup the thumbnails properties and then set the src to the thumbnail
                     $('#c5dk_crop_pic').bind('load', function () {
                         $('#pictureWidth').val($('#c5dk_crop_pic')[0].naturalWidth);
@@ -31,60 +32,60 @@ c5dk.blog.service.thumbnailCropper = {
         });
         
         // $('#c5dk_bp').on('submit', function (e) {
-        //     if (c5dk.blog.service.data.thumbnailCropper.crop_img) {
-        //         c5dk.blog.service.data.thumbnailCropper.crop_img.cropper('getCroppedCanvas', { fillColor: c5dk.blog.service.data.thumbnailCropper.fillColor })
-        //             .toBlob(function (blob) {
-        //                 $('#c5dk_bp').append('croppedImage', blob);
-                        
-        //             }, 'image/jpeg', 80);
+            //     if (c5dk.blog.service.data.thumbnailCropper.crop_img) {
+            //         c5dk.blog.service.data.thumbnailCropper.crop_img.cropper('getCroppedCanvas', { fillColor: c5dk.blog.service.data.thumbnailCropper.fillColor })
+            //             .toBlob(function (blob) {
+            //                 $('#c5dk_bp').append('croppedImage', blob);
+                            
+            //             }, 'image/jpeg', 80);
 
-        //         if (c5dk.blog.service.data.thumbnailCropper.type == 'settings') {
-        //             e.preventDefault();
-        //             c5dk.blog.service.thumbnailCropper.save();
+            //         if (c5dk.blog.service.data.thumbnailCropper.type == 'settings') {
+            //             e.preventDefault();
+            //             c5dk.blog.service.thumbnailCropper.save();
 
-        //         } else {
-        //             c5dk.blog.post.blog.save();
-        //         }
-        //         // [c5dk.blog.service.data.thumbnailCropper.onSaveCallback]();
+            //         } else {
+            //             c5dk.blog.post.blog.save();
+            //         }
+            //         // [c5dk.blog.service.data.thumbnailCropper.onSaveCallback]();
 
-        //     } else {
-        //         return true;
-        //     }
+            //     } else {
+            //         return true;
+            //     }
         // });
     },
 
     // save: function () {
         
-    //     var blogID = $('#blogID').val()? $('#blogID').val() : 0;
+        //     var blogID = $('#blogID').val()? $('#blogID').val() : 0;
 
-    //     c5dk.blog.modal.waiting(c5dk.blog.service.data.thumbnailCropper.text.waiting);
+        //     c5dk.blog.modal.waiting(c5dk.blog.service.data.thumbnailCropper.text.waiting);
 
-    //     $.ajax(c5dk.blog.service.data.thumbnailCropper.url.save + blogID, {
-    //         method: "POST",
-    //         data: new FormData(document.forms["c5dk_blog_form"]),
-    //         processData: false,
-    //         contentType: false,
-    //         success: function (result) {
-    //             if (result.status) {
-    //                 window.location = 'c5dk.blog.service.data.thumbnailCropper.url.webroot' + result.redirectLink;
-    //             }
-    //         },
-    //         error: function () {
-    //             console.log('Upload error');
-    //         }
-    //     });
+        //     $.ajax(c5dk.blog.service.data.thumbnailCropper.url.save + blogID, {
+        //         method: "POST",
+        //         data: new FormData(document.forms["c5dk_blog_form"]),
+        //         processData: false,
+        //         contentType: false,
+        //         success: function (result) {
+        //             if (result.status) {
+        //                 window.location = 'c5dk.blog.service.data.thumbnailCropper.url.webroot' + result.redirectLink;
+        //             }
+        //         },
+        //         error: function () {
+        //             console.log('Upload error');
+        //         }
+        //     });
     // },
     
-    addToForm: function (form) {
+    addToForm: function (form, callback) {
         if (c5dk.blog.service.data.thumbnailCropper.crop_img) {
-            c5dk.blog.service.data.thumbnailCropper.crop_img.cropper('getCroppedCanvas',
+            var canvas = c5dk.blog.service.data.thumbnailCropper.crop_img.cropper('getCroppedCanvas',
                 {
                     fillColor: c5dk.blog.service.data.thumbnailCropper.fillColor
-                })
-                .toBlob(function (blob) {
-                    form.append('croppedImage', blob);
-                    return form;
-                }, 'image/jpeg', 80);
+                });
+            canvas.toBlob(function (blob) {
+                c5dk.blog.settings.form.append('croppedImage', blob);
+                callback();
+            }, 'image/jpeg', 80);
         }
         return form;
     },

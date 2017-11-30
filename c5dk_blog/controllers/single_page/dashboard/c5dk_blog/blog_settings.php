@@ -13,7 +13,6 @@ use Concrete\Core\Tree\Node\Type\FileFolder as FileFolder;
 use Concrete\Core\Page\Controller\DashboardPageController;
 use Concrete\Core\Permission\Access\Access as PermissionAccess;
 use Concrete\Core\Permission\Access\Entity\GroupEntity as GroupPermissionAccessEntity;
-
 use C5dk\Blog\C5dkConfig as C5dkConfig;
 use C5dk\Blog\Service\ThumbnailCropper as ThumbnailCropper;
 
@@ -104,7 +103,19 @@ class BlogSettings extends DashboardPageController
         }
 
         Session::set('c5dk_blog_message', t('Settings saved.'));
-        $this->redirect('/dashboard/c5dk_blog/blog_settings');
+
+        // Send ok status back to browser
+        $jh = $this->app->make('helper/json');
+        echo $jh->encode((object) array(
+            'status' => true,
+            'type' => 'admin_form_company',
+            'post' => $this->post(),
+            'html' => array(
+                'admin_form_company' => $admin_form_company
+            )
+        ));
+        exit;
+        // $this->redirect('/dashboard/c5dk_blog/blog_settings');
     }
 
     // public function getSitemapGroups() {
@@ -166,11 +177,24 @@ class BlogSettings extends DashboardPageController
 
     public function saveThumbnail($thumbnail)
     {
-        $fileName         = 'C5DK_BLOG_Default_Thumbnail.jpg';
-        $fileFolder       = FileFolder::getNodeByName('Thumbs');
+        if (isset($_FILES['croppedImage'])) {
+            
+            // Delete old thumbnail before saving the new
+            $C5dkConfig       = new C5dkConfig;
+            if ($id = $C5dkConfig->blog_default_thumbnail_id) {
+                $oldThumbnail     = File::getByID($C5dkConfig->blog_default_thumbnail_id);
+                $oldThumbnail->delete();
+            }
 
-        $ThumbnailCropper =  new ThumbnailCropper;
+            // Get on with saving the new thumbnail
+            $fileName         = 'C5DK_BLOG_Default_Thumbnail.jpg';
+            $fileFolder       = FileFolder::getNodeByName('Thumbs');
 
-        return $ThumbnailCropper->saveForm($thumbnail, $fileName, $fileFolder);
+            $ThumbnailCropper =  new ThumbnailCropper;
+
+            return $ThumbnailCropper->saveForm($thumbnail, $fileName, $fileFolder, true)->getFileID();
+        } else {
+            return 0;
+        }
     }
 }

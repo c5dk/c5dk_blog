@@ -265,7 +265,7 @@ class Controller extends Package
         // Register jQuery cropper plugin
         $al->register('javascript', 'cropper', 'js/cropper/cropper.min.js', [], 'c5dk_blog');
 
-        // Register jQuery cropper plugin
+        // Register Thumbnail Cropper Service
         $al->register('javascript', 'thumbnail_cropper/main', 'js/service/thumbnail_cropper/main.js', [], 'c5dk_blog');
 
         // Register jQuery Validation plugin

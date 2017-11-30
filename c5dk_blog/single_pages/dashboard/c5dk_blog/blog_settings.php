@@ -154,21 +154,26 @@ c5dk.blog.settings = {
     
             // c5dk.blog.modal.waiting("<?= t('Saving your settings'); ?>");
             c5dk.blog.settings.form = new FormData(document.forms["c5dk_blog_form"]);
-            var data = c5dk.blog.service.thumbnailCropper.addToForm(c5dk.blog.settings.form);
-            $.ajax('<?= \URL::to('/dashboard/c5dk_blog/blog_settings/save'); ?>', {
-                method: "POST",
-                data: data,
-                processData: false,
-                contentType: false,
-                success: function (result) {
-                    if (result.status) {
-                        window.location = '<?= \URL::to('/dashboard/c5dk_blog/blog_settings'); ?>';
-                    }
-                },
-                error: function () {
-                    console.log('Upload error');
+            c5dk.blog.settings.form2 = c5dk.blog.service.thumbnailCropper.addToForm(c5dk.blog.settings.form, c5dk.blog.settings.save);
+
+        });
+    },
+
+    save: function () {
+
+        $.ajax('<?= \URL::to('/dashboard/c5dk_blog/blog_settings/save'); ?>', {
+            method: "POST",
+            data: c5dk.blog.settings.form,
+            processData: false,
+            contentType: false,
+            success: function (result) {
+                if (result.status) {
+                    window.location = '<?= \URL::to('/dashboard/c5dk_blog/blog_settings'); ?>';
                 }
-            });
+            },
+            error: function () {
+                console.log('Upload error');
+            }
         });
     }
 };

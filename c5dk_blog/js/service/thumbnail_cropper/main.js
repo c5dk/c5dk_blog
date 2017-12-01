@@ -30,15 +30,27 @@ c5dk.blog.service.thumbnailCropper = {
         $('a[data-type=post]').on('click', function () {
             c5dk.blog.post.image.showManager('thumbnail');
         });
+
+        $('#c5dk_blog_form').submit(function (e) {
+            
+            if (c5dk.blog.service.data.thumbnailCropper.crop_img) {
+                var canvas = c5dk.blog.service.data.thumbnailCropper.crop_img.cropper('getCroppedCanvas',
+                    {
+                        fillColor: c5dk.blog.service.data.thumbnailCropper.fillColor,
+                        width: c5dk.blog.service.data.thumbnailCropper.save.width,
+                        height: c5dk.blog.service.data.thumbnailCropper.save.height
+                    }
+                );
+                $('#croppedImage').val(canvas.toDataURL('image/jpg', 0.8));
+            }
+        });
     },
 
     addToForm: function (form, callback) {
         if (c5dk.blog.service.data.thumbnailCropper.crop_img) {
             var canvas = c5dk.blog.service.data.thumbnailCropper.crop_img.cropper('getCroppedCanvas',
-                {
-                    fillColor: c5dk.blog.service.data.thumbnailCropper.fillColor
-                });
-            var dataURL = canvas.toDataURL('image/jpg', 0.8);
+                { fillColor: c5dk.blog.service.data.thumbnailCropper.fillColor }
+            );
             canvas.toBlob(function (blob) {
                 form.append('croppedImage', blob);
                 callback(form);

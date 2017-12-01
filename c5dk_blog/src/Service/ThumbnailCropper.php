@@ -85,24 +85,32 @@ class ThumbnailCropper extends Controller
         $fi = new FileImporter();
 
         // Get C5dk Objects
-        $C5dkConfig = new C5dkConfig;
+        $C5dkConfig = $this->config ? $this->config : new C5dkConfig;
 
-        $tmpFolder   = $fh->getTemporaryDirectory();
+        $tmpFolder   = $fh->getTemporaryDirectory() . '/';
         $tmpFilename = (microtime(true) * 10000) . '.jpg';
+        $imagePath = $tmpFolder . $tmpFilename;
+
+        $img = str_replace('data:image/png;base64,', '', $thumbnail['croppedImage']);
+        $img = str_replace(' ', '+', $img);
+        $data = base64_decode($img);
+        $success = file_put_contents($imagePath, $data);
+
+        // $formImage = imagecreatefromstring($data);
 
         // Get image facade and open image
         $imagine = $this->app->make(Image::getFacadeAccessor());
-        $image   = $imagine->open($_FILES['croppedImage']['tmp_name']);
+        $image = $imagine->open($imagePath);
 
         // Resize image
         $image = $image->resize(new Box($C5dkConfig->blog_thumbnail_width, $C5dkConfig->blog_thumbnail_height));
 
         // Save image as .jpg
-        $image->save($tmpFolder . $tmpFilename, ['jpeg_quality' => 80]);
+        $image->save($imagePath, ['jpeg_quality' => 80]);
 
         // Import thumbnail into the File Manager
         $fv = $fi->import(
-            $tmpFolder . $tmpFilename,
+            $imagePath,
             $fileName,
             $fileFolder
         );
@@ -113,7 +121,7 @@ class ThumbnailCropper extends Controller
 
         // Delete tmp file
         $fs = new \Illuminate\Filesystem\Filesystem();
-        $fs->delete($tmpFolder . $tmpFilename);
+        $fs->delete($imagePath);
 
         // Return the File Object
         return $fv->getFile();

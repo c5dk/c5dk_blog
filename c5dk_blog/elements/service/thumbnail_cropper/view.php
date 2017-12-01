@@ -138,7 +138,7 @@
                             // Keyboard Arrow keys move the image
                             $(document.body).on('keydown', function (e) {
 
-                                if (!c5dk.blog.service.data.thumbnailCropper.crop_img.data('cropper') || this.scrollTop > 300) { return; }
+                                if (!c5dk.blog.service.data.thumbnailCropper.crop_img.data('cropper') || this.scrollTop > 300 || e.which < 37 || e.which > 40) { return; }
 
                                 e.preventDefault();
 

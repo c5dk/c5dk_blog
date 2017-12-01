@@ -149,18 +149,18 @@ c5dk.blog.settings = {
 
         $('.c5dk_blog_select2').removeClass('form-control').select2();
         
-        $('#c5dk_blog_form').submit(function (e) {
-            e.preventDefault();
-            c5dk.blog.settings.form = new FormData(document.forms["c5dk_blog_form"]);
+        // $('#c5dk_blog_form').submit(function (e) {
+        //     e.preventDefault();
+        //     c5dk.blog.settings.form = new FormData(document.forms["c5dk_blog_form"]);
 
-            if (c5dk.blog.service.data.thumbnailCropper.crop_img) {
+        //     if (c5dk.blog.service.data.thumbnailCropper.crop_img) {
         
-                c5dk.blog.modal.waiting("<?= t('Saving your settings'); ?>");
-                c5dk.blog.service.thumbnailCropper.addToForm(c5dk.blog.settings.form, c5dk.blog.settings.save);
-            } else {
-                c5dk.blog.settings.save(c5dk.blog.settings.form);
-            }
-        });
+        //         c5dk.blog.modal.waiting("<?= t('Saving your settings'); ?>");
+        //         c5dk.blog.service.thumbnailCropper.addToForm(c5dk.blog.settings.form, c5dk.blog.settings.save);
+        //     } else {
+        //         c5dk.blog.settings.save(c5dk.blog.settings.form);
+        //     }
+        // });
     },
 
     save: function (form) {

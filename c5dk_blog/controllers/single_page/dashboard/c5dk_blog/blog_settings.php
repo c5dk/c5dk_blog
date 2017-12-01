@@ -19,6 +19,8 @@ defined('C5_EXECUTE') or die('Access Denied.');
 
 class BlogSettings extends DashboardPageController
 {
+    private $config;
+
     public function view()
     {
         // Set the C5dk object
@@ -58,34 +60,34 @@ class BlogSettings extends DashboardPageController
     public function save()
     {
         $pkg    = Package::getByHandle('c5dk_blog');
-        $config = $pkg->getConfig();
+        $this->config = $pkg->getConfig();
 
         // Settings
-        $config->save('c5dk_blog.blog_title_editable', ($this->post('blog_title_editable')) ? $this->post('blog_title_editable') : 0);
-        $config->save('c5dk_blog.blog_form_slidein', ($this->post('blog_form_slidein')) ? $this->post('blog_form_slidein') : 0);
+        $this->config->save('c5dk_blog.blog_title_editable', ($this->post('blog_title_editable')) ? $this->post('blog_title_editable') : 0);
+        $this->config->save('c5dk_blog.blog_form_slidein', ($this->post('blog_form_slidein')) ? $this->post('blog_form_slidein') : 0);
 
         // Images & Thumbnails
-        $config->save('c5dk_blog.blog_picture_width', ($this->post('blog_picture_width')) ? $this->post('blog_picture_width') : 1200);
-        $config->save('c5dk_blog.blog_picture_height', ($this->post('blog_picture_height')) ? $this->post('blog_picture_height') : 800);
-        $config->save('c5dk_blog.blog_thumbnail_width', ($this->post('blog_thumbnail_width')) ? $this->post('blog_thumbnail_width') : 360);
-        $config->save('c5dk_blog.blog_thumbnail_height', ($this->post('blog_thumbnail_height')) ? $this->post('blog_thumbnail_width') : 360);
-        $config->save('c5dk_blog.blog_default_thumbnail_id', $this->saveThumbnail($this->post('thumbnail')));
-        $config->save('c5dk_blog.blog_cropper_def_bgcolor', ($this->post('blog_cropper_def_bgcolor')) ? $this->post('blog_cropper_def_bgcolor') : '#FFFFFF');
+        $this->config->save('c5dk_blog.blog_picture_width', ($this->post('blog_picture_width')) ? $this->post('blog_picture_width') : 1200);
+        $this->config->save('c5dk_blog.blog_picture_height', ($this->post('blog_picture_height')) ? $this->post('blog_picture_height') : 800);
+        $this->config->save('c5dk_blog.blog_thumbnail_width', ($this->post('blog_thumbnail_width')) ? $this->post('blog_thumbnail_width') : 360);
+        $this->config->save('c5dk_blog.blog_thumbnail_height', ($this->post('blog_thumbnail_height')) ? $this->post('blog_thumbnail_width') : 360);
+        $this->config->save('c5dk_blog.blog_default_thumbnail_id', $this->saveThumbnail($this->post('thumbnail')));
+        $this->config->save('c5dk_blog.blog_cropper_def_bgcolor', ($this->post('blog_cropper_def_bgcolor')) ? $this->post('blog_cropper_def_bgcolor') : '#FFFFFF');
 
         // Styling
-        $config->save('c5dk_blog.blog_headline_size', ($this->post('blog_headline_size')) ? $this->post('blog_headline_size') : 12);
-        $config->save('c5dk_blog.blog_headline_color', ($this->post('blog_headline_color')) ? $this->post('blog_headline_color') : '#AAAAAA');
-        $config->save('c5dk_blog.blog_headline_margin', ($this->post('blog_headline_margin')) ? $this->post('blog_headline_margin') : '5px 0');
-        $config->save('c5dk_blog.blog_headline_icon_color', ($this->post('blog_headline_icon_color')) ? $this->post('blog_headline_icon_color') : '#1685D4');
+        $this->config->save('c5dk_blog.blog_headline_size', ($this->post('blog_headline_size')) ? $this->post('blog_headline_size') : 12);
+        $this->config->save('c5dk_blog.blog_headline_color', ($this->post('blog_headline_color')) ? $this->post('blog_headline_color') : '#AAAAAA');
+        $this->config->save('c5dk_blog.blog_headline_margin', ($this->post('blog_headline_margin')) ? $this->post('blog_headline_margin') : '5px 0');
+        $this->config->save('c5dk_blog.blog_headline_icon_color', ($this->post('blog_headline_icon_color')) ? $this->post('blog_headline_icon_color') : '#1685D4');
 
         // Editor
-        $config->save('c5dk_blog.blog_plugin_youtube', ($this->post('blog_plugin_youtube')) ? $this->post('blog_plugin_youtube') : 0);
-        $config->save('c5dk_blog.blog_plugin_sitemap', ($this->post('blog_plugin_sitemap')) ? $this->post('blog_plugin_sitemap') : 0);
-        $config->save('c5dk_blog.blog_format_h1', ($this->post('blog_format_h1')) ? $this->post('blog_format_h1') : 0);
-        $config->save('c5dk_blog.blog_format_h2', ($this->post('blog_format_h2')) ? $this->post('blog_format_h2') : 0);
-        $config->save('c5dk_blog.blog_format_h3', ($this->post('blog_format_h3')) ? $this->post('blog_format_h3') : 0);
-        $config->save('c5dk_blog.blog_format_h4', ($this->post('blog_format_h4')) ? $this->post('blog_format_h4') : 0);
-        $config->save('c5dk_blog.blog_format_pre', ($this->post('blog_format_pre')) ? $this->post('blog_format_pre') : 0);
+        $this->config->save('c5dk_blog.blog_plugin_youtube', ($this->post('blog_plugin_youtube')) ? $this->post('blog_plugin_youtube') : 0);
+        $this->config->save('c5dk_blog.blog_plugin_sitemap', ($this->post('blog_plugin_sitemap')) ? $this->post('blog_plugin_sitemap') : 0);
+        $this->config->save('c5dk_blog.blog_format_h1', ($this->post('blog_format_h1')) ? $this->post('blog_format_h1') : 0);
+        $this->config->save('c5dk_blog.blog_format_h2', ($this->post('blog_format_h2')) ? $this->post('blog_format_h2') : 0);
+        $this->config->save('c5dk_blog.blog_format_h3', ($this->post('blog_format_h3')) ? $this->post('blog_format_h3') : 0);
+        $this->config->save('c5dk_blog.blog_format_h4', ($this->post('blog_format_h4')) ? $this->post('blog_format_h4') : 0);
+        $this->config->save('c5dk_blog.blog_format_pre', ($this->post('blog_format_pre')) ? $this->post('blog_format_pre') : 0);
 
         // Set Sitemap permissions
         if ($this->post('blog_plugin_sitemap')) {
@@ -103,15 +105,16 @@ class BlogSettings extends DashboardPageController
 
         Session::set('c5dk_blog_message', t('Settings saved.'));
 
-        // Send ok status back to browser
-        $jh = $this->app->make('helper/json');
+        // // Send ok status back to browser
+        // $jh = $this->app->make('helper/json');
 
-        header('Content-type: application/json');
-        echo $jh->encode((object) [
-            'status' => true
-        ]);
-        exit;
+        // header('Content-type: application/json');
+        // echo $jh->encode((object) [
+        //     'status' => true
+        // ]);
+        // exit;
         // $this->redirect('/dashboard/c5dk_blog/blog_settings');
+        $this->view();
     }
 
     public function getAllGroups()
@@ -137,17 +140,18 @@ class BlogSettings extends DashboardPageController
 
     public function saveThumbnail($thumbnail)
     {
-        if (isset($_FILES['croppedImage'])) {
+        if (isset($thumbnail['croppedImage'])) {
             // Delete old thumbnail before saving the new
-            $C5dkConfig       = new C5dkConfig;
-            if ($id = $C5dkConfig->blog_default_thumbnail_id) {
-                $oldThumbnail     = File::getByID($C5dkConfig->blog_default_thumbnail_id);
+            $C5dkConfig = new C5dkConfig;
+            if ($thumbnail['id'] != $C5dkConfig->blog_default_thumbnail_id && $C5dkConfig->blog_default_thumbnail_id) {
+                $oldThumbnail = File::getByID($C5dkConfig->blog_default_thumbnail_id);
                 $oldThumbnail->delete();
+                $this->config->save('c5dk_blog.blog_default_thumbnail_id', 0);
             }
 
             // Get on with saving the new thumbnail
-            $fileName         = 'C5DK_BLOG_Default_Thumbnail.jpg';
-            $fileFolder       = FileFolder::getNodeByName('Thumbs');
+            $fileName   = 'C5DK_BLOG_Default_Thumbnail.jpg';
+            $fileFolder = FileFolder::getNodeByName('Thumbs');
 
             $ThumbnailCropper =  new ThumbnailCropper;
 

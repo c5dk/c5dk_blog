@@ -1,94 +1,90 @@
 <?php
+
 namespace C5dk\Blog;
 
 use Concrete\Core\Multilingual\Page\Section\Section;
 
-use C5dk\Blog\C5dkConfig	as C5dkConfig;
-use C5dk\Blog\C5dkUser		as C5dkUser;
-use C5dk\Blog\C5dkRoot		as C5dkRoot;
-use C5dk\Blog\C5dkBlog		as C5dkBlog;
+defined('C5_EXECUTE') or die('Access Denied.');
 
-defined('C5_EXECUTE') or die("Access Denied.");
+class BlogPost
+{
+    // Objects
+    public $C5dkConfig;
+    public $C5dkUser;
+    public $C5dkBlog;
 
-class BlogPost {
+    // Variables
+    public $blogID = null;
+    public $rootList;
+    public $topicAttributeID;
+    public $topicAttributeIDList;
 
-	// Objects
-	public $C5dkConfig;
-	public $C5dkUser;
-	public $C5dkBlog;
+    // Flags
+    public $mode       = null;
+    public $redirectID = null;
 
-	// Variables
-	public $blogID = null;
-	public $rootList;
-	public $topicAttributeID;
-	public $topicAttributeIDList;
+    public function create($redirectID, $rootID = false)
+    {
+        // Setup C5DK objects
+        $this->C5dkConfig = new C5dkConfig;
+        $this->C5dkUser	  = new C5dkUser;
+        $this->C5dkBlog   = new C5dkBlog;
 
-	// Flags
-	public $mode = null;
-	public $redirectID = null;
+        // Setup Blog object properties
+        $this->mode       = C5DK_BLOG_MODE_CREATE;
+        $this->redirectID = $redirectID;
+        $this->rootList   = $this->getUserRootList();
 
-	public function create($redirectID, $rootID = false) {
+        // Set Root ID if set or default to the first root in our list we will show
+        $this->C5dkBlog->rootID = (isset($this->rootList[$rootID])) ? $rootID : key($this->rootList);
 
-		// Setup C5DK objects
-		$this->C5dkConfig = new C5dkConfig;
-		$this->C5dkUser	= new C5dkUser;
-		$this->C5dkBlog = new C5dkBlog;
+        // Set the topic attribute id from the blogs root
+        $C5dkRoot               = C5dkRoot::getByID($this->C5dkBlog->rootID);
+        $this->topicAttributeID = $C5dkRoot->topicAttributeID;
 
-		// Setup Blog object properties
-		$this->mode = C5DK_BLOG_MODE_CREATE;
-		$this->redirectID = $redirectID;
-		$this->rootList = $this->getUserRootList();
+        // Should tags and thumbnails be shown
+        $this->tagsEnabled       = $C5dkRoot->tags;
+        $this->thumbnailsEnabled = $C5dkRoot->thumbnails;
 
-		// Set Root ID if set or default to the first root in our list we will show
-		$this->C5dkBlog->rootID = (isset($this->rootList[$rootID]))? $rootID : key($this->rootList);
+        return $this;
+    }
 
-		// Set the topic attribute id from the blogs root
-		$C5dkRoot = C5dkRoot::getByID($this->C5dkBlog->rootID);
-		$this->topicAttributeID = $C5dkRoot->topicAttributeID;
+    public function edit($blogID)
+    {
+        // Setup C5DK objects
+        $this->C5dkConfig = new C5dkConfig;
+        $this->C5dkUser   = new C5dkUser;
+        $this->C5dkBlog   = C5dkBlog::getByID($blogID);
 
-		// Should tags and thumbnails be shown
-		$this->tagsEnabled = $C5dkRoot->tags;
-		$this->thumbnailsEnabled = $C5dkRoot->thumbnails;
+        // Setup Blog object properties
+        $this->mode       = C5DK_BLOG_MODE_EDIT;
+        $this->blogID     = $blogID;
+        $this->redirectID = $blogID;
+        $this->rootList   = $this->getUserRootList();
 
-		return $this;
-	}
+        // Set the topic attribute id from the blogs root
+        $this->topicAttributeID = C5dkRoot::getByID($this->C5dkBlog->rootID)->topicAttributeID;
+        if ($this->C5dkBlog->topics && !$this->topicAttributeID) {
+            $this->C5dkBlog->topics = 0;
+        }
 
-	public function edit($blogID) {
+        // Should tags and thumbnails be shown
+        $C5dkRoot                = C5dkRoot::getByID($this->C5dkBlog->rootID);
+        $this->tagsEnabled       = $C5dkRoot->tags;
+        $this->thumbnailsEnabled = $C5dkRoot->thumbnails;
 
-		// Setup C5DK objects
-		$this->C5dkConfig = new C5dkConfig;
-		$this->C5dkUser	= new C5dkUser;
-		$this->C5dkBlog	= C5dkBlog::getByID($blogID);
+        return $this;
+    }
 
-		// Setup Blog object properties
-		$this->mode = C5DK_BLOG_MODE_EDIT;
-		$this->blogID = $blogID;
-		$this->redirectID = $blogID;
-		$this->rootList = $this->getUserRootList();
+    private function getUserRootList()
+    {
+        $sectionList = Section::getList();
 
-		// Set the topic attribute id from the blogs root
-		$this->topicAttributeID = C5dkRoot::getByID($this->C5dkBlog->rootID)->topicAttributeID;
-		if ($this->C5dkBlog->topics && !$this->topicAttributeID) {
-			$this->C5dkBlog->topics = 0;
-		}
+        foreach ($this->C5dkUser->getRootList() as $index => $C5dkRoot) {
+            $languageText                = count($sectionList) ? ' (' . $C5dkRoot->getSiteTreeObject()->getLocale()->getLanguageText() . ')' : '';
+            $rootList[$C5dkRoot->rootID] = $C5dkRoot->getCollectionName() . $languageText;
+        }
 
-		// Should tags and thumbnails be shown
-		$C5dkRoot = C5dkRoot::getByID($this->C5dkBlog->rootID);
-		$this->tagsEnabled = $C5dkRoot->tags;
-		$this->thumbnailsEnabled = $C5dkRoot->thumbnails;
-
-		return $this;
-	}
-
-	private function getUserRootList() {
-
-		$sectionList = Section::getList();
-
-		foreach($this->C5dkUser->getRootList() as $index => $C5dkRoot) {
-			$languageText = count($sectionList)? ' ('. $C5dkRoot->getSiteTreeObject()->getLocale()->getLanguageText() . ')' : '';
-			$rootList[$C5dkRoot->rootID] = $C5dkRoot->getCollectionName() . $languageText;
-		}
-
-		return $rootList;
-	}
+        return $rootList;
+    }
 }

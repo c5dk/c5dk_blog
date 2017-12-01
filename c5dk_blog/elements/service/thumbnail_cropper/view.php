@@ -8,22 +8,24 @@
         <input id="thumbnailHeight" name="thumbnail[height]" type="hidden" value="0">
         <input id="pictureWidth" name="thumbnail[pictureWidth]" type="hidden" value="0">
         <input id="pictureHeight" name="thumbnail[pictureHeight]" type="hidden" value="0">
+        <input id="croppedImage" name="thumbnail[croppedImage]" type="hidden" value="">
+
         <div class="c5dk_blog_box_thumbnail">
+
             <div class="c5dk_blog_box_thumbnail_header">
                 <?= $form->label('thumbailID', '<h4>' . t('Thumbnail') . '</h4>'); ?>
             </div>
+            
             <div class="c5dk_blog_box_thumbnail_leftframe">
                 <div class="c5dk_blog_thumbnail_preview_frame">
                     <div id="cropper_preview" class="c5dk_blog_thumbnail_preview">
                         <img id="c5dk_blog_thumbnail" class="c5dk_blog_thumbnail" src="<?= $Cropper->getThumbnailID() ? File::getRelativePathFromID($Cropper->getThumbnailID()) : ''; ?>"<?= $Cropper->getThumbnailID() ? '' : ' style="display:none;'; ?>>
                     </div>
-                    <div class="c5dk_blog_thumbnail_preview_subtext">
-                        <?= t('Preview'); ?>
-                    </div>
+                    <div class="c5dk_blog_thumbnail_preview_subtext"><?= t('Preview'); ?></div>
                 </div>
                 <div class="c5dk_blog_box_thumbnail_buttons">
                     <a class="c5dk_blogpage_ButtonGreen c5dk_blogpage_ButtonGreen_thumb" data-type="<?= $Cropper->getType(); ?>">Select</a>
-                    <input class="c5dk_blog_ButtonRed c5dk_blogpage_ButtonRed_thumb" type="button" onclick="c5dk.blog.service.thumbnailCropper.thumbnail.remove()" value="<?= t('Remove'); ?>">
+                    <input class="c5dk_blog_ButtonRed c5dk_blogpage_ButtonRed_thumb" type="button" onclick="c5dk.blog.service.thumbnailCropper.remove()" value="<?= t('Remove'); ?>">
                 </div>
 
                 <!-- Cropper buttons -->
@@ -153,6 +155,7 @@
 
                 </div>
             </div>
+
             <div class="c5dk_blog_box_thumbnail_rightframe">
                 <div id="jcrop_frame" class="c5dk_blog_thumbnail_jcrop">
                     <img id="c5dk_crop_pic" src="" style="display: none;" />
@@ -172,7 +175,7 @@
     c5dk.blog.service.data.thumbnailCropper = {
 
         type: '<?= $Cropper->getType(); ?>',
-        onSelectCallback: '<?php //= $Cropper->getOnSelectCallback(); ?>',
+        onSelectCallback: '<?php //= $Cropper->getOnSelectCallback();?>',
         onSaveCallback: '<?= $Cropper->getOnSaveCallback(); ?>',
         file: null,
         crop_img: null,
@@ -203,11 +206,9 @@
             save: '<?= \URL::to('/c5dk/blog/save'); ?>'
         }
     };
-
 </script>
 
 <style type="text/css">
-
 
     #c5dk-blog-package .c5dk_blog_thumbnail_preview{
         float: left;
@@ -222,5 +223,83 @@
         width: 150px;
         height: <?= intval((150 / ($Cropper->config->blog_thumbnail_width / 100)) * ($Cropper->config->blog_thumbnail_height / 100)); ?>px;
         max-width: none;
+    }
+
+    .c5dk-blog-whiteout {
+        position: fixed;
+        z-index: 9999;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(255, 255, 255, 0.4);
+    }
+
+    /* Spinner */
+    .c5dk-blog-spinner-container {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        margin-top: -33px;
+        margin-left: -33px;
+        background: transparent;
+        padding: 20px;
+    }
+
+    .c5dk-blog-spinner {
+        min-width: 26px;
+        min-height: 26px;
+    }
+
+    .c5dk-blog-spinner:before {
+        content: '...';
+        text-align: center;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 20px;
+        height: 20px;
+        margin-top: -14px;
+        margin-left: -14px;
+        font-size: 36px;
+        line-height: 16px;
+        font-family: arial, sans-serif; /* Non animation fallback */
+    }
+
+    .c5dk-blog-spinner:not(:required):before {
+        content: '';
+        border-radius: 50%;
+        border: 4px solid rgba(0, 0, 0, .2);
+        border-top-color: rgba(0, 0, 0, .6);
+        animation: spinner .6s linear infinite;
+        -webkit-animation: spinner .6s linear infinite;
+        box-sizing: content-box;
+    }
+
+    @keyframes spinner {
+        to {
+            transform: rotate(360deg);
+        }
+    }
+
+    @-webkit-keyframes spinner {
+        to {
+            -webkit-transform: rotate(360deg);
+        }
+    }
+
+    .c5dk-blog-spinner-text {
+        margin: 50px 0 0 0;
+        font-size: 24px;
+        line-height: 16px;
+        font-family: arial, sans-serif; /* Non animation fallback */
+        color: #ffffff;
+        text-transform: uppercase;
+        display: inline-block;
+        text-shadow: 2px 2px 4px rgba(71, 71, 71, 1);
+    }
+    .c5dk-blog-spinner-text:before {
+
+        text-align: center;
     }
 </style>

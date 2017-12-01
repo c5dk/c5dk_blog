@@ -30,61 +30,18 @@ c5dk.blog.service.thumbnailCropper = {
         $('a[data-type=post]').on('click', function () {
             c5dk.blog.post.image.showManager('thumbnail');
         });
-        
-        // $('#c5dk_bp').on('submit', function (e) {
-            //     if (c5dk.blog.service.data.thumbnailCropper.crop_img) {
-            //         c5dk.blog.service.data.thumbnailCropper.crop_img.cropper('getCroppedCanvas', { fillColor: c5dk.blog.service.data.thumbnailCropper.fillColor })
-            //             .toBlob(function (blob) {
-            //                 $('#c5dk_bp').append('croppedImage', blob);
-                            
-            //             }, 'image/jpeg', 80);
-
-            //         if (c5dk.blog.service.data.thumbnailCropper.type == 'settings') {
-            //             e.preventDefault();
-            //             c5dk.blog.service.thumbnailCropper.save();
-
-            //         } else {
-            //             c5dk.blog.post.blog.save();
-            //         }
-            //         // [c5dk.blog.service.data.thumbnailCropper.onSaveCallback]();
-
-            //     } else {
-            //         return true;
-            //     }
-        // });
     },
 
-    // save: function () {
-        
-        //     var blogID = $('#blogID').val()? $('#blogID').val() : 0;
-
-        //     c5dk.blog.modal.waiting(c5dk.blog.service.data.thumbnailCropper.text.waiting);
-
-        //     $.ajax(c5dk.blog.service.data.thumbnailCropper.url.save + blogID, {
-        //         method: "POST",
-        //         data: new FormData(document.forms["c5dk_blog_form"]),
-        //         processData: false,
-        //         contentType: false,
-        //         success: function (result) {
-        //             if (result.status) {
-        //                 window.location = 'c5dk.blog.service.data.thumbnailCropper.url.webroot' + result.redirectLink;
-        //             }
-        //         },
-        //         error: function () {
-        //             console.log('Upload error');
-        //         }
-        //     });
-    // },
-    
     addToForm: function (form, callback) {
         if (c5dk.blog.service.data.thumbnailCropper.crop_img) {
             var canvas = c5dk.blog.service.data.thumbnailCropper.crop_img.cropper('getCroppedCanvas',
                 {
                     fillColor: c5dk.blog.service.data.thumbnailCropper.fillColor
                 });
+            var dataURL = canvas.toDataURL('image/jpg', 0.8);
             canvas.toBlob(function (blob) {
-                c5dk.blog.settings.form.append('croppedImage', blob);
-                callback();
+                form.append('croppedImage', blob);
+                callback(form);
             }, 'image/jpeg', 80);
         }
         return form;
@@ -106,9 +63,6 @@ c5dk.blog.service.thumbnailCropper = {
     useAsThumb: function (fID, src) {
 
         document.getElementById('thumbnail').scrollIntoView();
-
-        // Hide the slide-in Image manager
-        // c5dk.blog.service.data.thumbnailCropper.image.hideManager();
 
         // Destroy old cropper instance if exist
         c5dk.blog.service.thumbnailCropper.remove();

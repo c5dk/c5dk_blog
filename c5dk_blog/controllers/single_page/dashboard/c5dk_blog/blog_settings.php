@@ -12,7 +12,6 @@ use File;
 use Concrete\Core\Tree\Node\Type\FileFolder as FileFolder;
 use Concrete\Core\Page\Controller\DashboardPageController;
 use Concrete\Core\Permission\Access\Access as PermissionAccess;
-use Concrete\Core\Permission\Access\Entity\GroupEntity as GroupPermissionAccessEntity;
 use C5dk\Blog\C5dkConfig as C5dkConfig;
 use C5dk\Blog\Service\ThumbnailCropper as ThumbnailCropper;
 
@@ -66,27 +65,27 @@ class BlogSettings extends DashboardPageController
         $config->save('c5dk_blog.blog_form_slidein', ($this->post('blog_form_slidein')) ? $this->post('blog_form_slidein') : 0);
 
         // Images & Thumbnails
-        $config->save('c5dk_blog.blog_picture_width', $this->post('blog_picture_width'));
-        $config->save('c5dk_blog.blog_picture_height', $this->post('blog_picture_height'));
-        $config->save('c5dk_blog.blog_thumbnail_width', $this->post('blog_thumbnail_width'));
-        $config->save('c5dk_blog.blog_thumbnail_height', $this->post('blog_thumbnail_height'));
+        $config->save('c5dk_blog.blog_picture_width', ($this->post('blog_picture_width')) ? $this->post('blog_picture_width') : 1200);
+        $config->save('c5dk_blog.blog_picture_height', ($this->post('blog_picture_height')) ? $this->post('blog_picture_height') : 800);
+        $config->save('c5dk_blog.blog_thumbnail_width', ($this->post('blog_thumbnail_width')) ? $this->post('blog_thumbnail_width') : 360);
+        $config->save('c5dk_blog.blog_thumbnail_height', ($this->post('blog_thumbnail_height')) ? $this->post('blog_thumbnail_width') : 360);
         $config->save('c5dk_blog.blog_default_thumbnail_id', $this->saveThumbnail($this->post('thumbnail')));
-        $config->save('c5dk_blog.blog_cropper_def_bgcolor', $this->post('blog_cropper_def_bgcolor'));
+        $config->save('c5dk_blog.blog_cropper_def_bgcolor', ($this->post('blog_cropper_def_bgcolor')) ? $this->post('blog_cropper_def_bgcolor') : '#FFFFFF');
 
         // Styling
-        $config->save('c5dk_blog.blog_headline_size', $this->post('blog_headline_size'));
-        $config->save('c5dk_blog.blog_headline_color', $this->post('blog_headline_color'));
-        $config->save('c5dk_blog.blog_headline_margin', $this->post('blog_headline_margin'));
-        $config->save('c5dk_blog.blog_headline_icon_color', $this->post('blog_headline_icon_color'));
+        $config->save('c5dk_blog.blog_headline_size', ($this->post('blog_headline_size')) ? $this->post('blog_headline_size') : 12);
+        $config->save('c5dk_blog.blog_headline_color', ($this->post('blog_headline_color')) ? $this->post('blog_headline_color') : '#AAAAAA');
+        $config->save('c5dk_blog.blog_headline_margin', ($this->post('blog_headline_margin')) ? $this->post('blog_headline_margin') : '5px 0');
+        $config->save('c5dk_blog.blog_headline_icon_color', ($this->post('blog_headline_icon_color')) ? $this->post('blog_headline_icon_color') : '#1685D4');
 
         // Editor
-        $config->save('c5dk_blog.blog_plugin_youtube', $this->post('blog_plugin_youtube'));
-        $config->save('c5dk_blog.blog_plugin_sitemap', $this->post('blog_plugin_sitemap'));
-        $config->save('c5dk_blog.blog_format_h1', $this->post('blog_format_h1'));
-        $config->save('c5dk_blog.blog_format_h2', $this->post('blog_format_h2'));
-        $config->save('c5dk_blog.blog_format_h3', $this->post('blog_format_h3'));
-        $config->save('c5dk_blog.blog_format_h4', $this->post('blog_format_h4'));
-        $config->save('c5dk_blog.blog_format_pre', $this->post('blog_format_pre'));
+        $config->save('c5dk_blog.blog_plugin_youtube', ($this->post('blog_plugin_youtube')) ? $this->post('blog_plugin_youtube') : 0);
+        $config->save('c5dk_blog.blog_plugin_sitemap', ($this->post('blog_plugin_sitemap')) ? $this->post('blog_plugin_sitemap') : 0);
+        $config->save('c5dk_blog.blog_format_h1', ($this->post('blog_format_h1')) ? $this->post('blog_format_h1') : 0);
+        $config->save('c5dk_blog.blog_format_h2', ($this->post('blog_format_h2')) ? $this->post('blog_format_h2') : 0);
+        $config->save('c5dk_blog.blog_format_h3', ($this->post('blog_format_h3')) ? $this->post('blog_format_h3') : 0);
+        $config->save('c5dk_blog.blog_format_h4', ($this->post('blog_format_h4')) ? $this->post('blog_format_h4') : 0);
+        $config->save('c5dk_blog.blog_format_pre', ($this->post('blog_format_pre')) ? $this->post('blog_format_pre') : 0);
 
         // Set Sitemap permissions
         if ($this->post('blog_plugin_sitemap')) {
@@ -106,53 +105,14 @@ class BlogSettings extends DashboardPageController
 
         // Send ok status back to browser
         $jh = $this->app->make('helper/json');
-        echo $jh->encode((object) array(
-            'status' => true,
-            'type' => 'admin_form_company',
-            'post' => $this->post(),
-            'html' => array(
-                'admin_form_company' => $admin_form_company
-            )
-        ));
+
+        header('Content-type: application/json');
+        echo $jh->encode((object) [
+            'status' => true
+        ]);
         exit;
         // $this->redirect('/dashboard/c5dk_blog/blog_settings');
     }
-
-    // public function getSitemapGroups() {
-
-    // 	$groups = array();
-
-    // 	$pk = PermissionKey::getByHandle('access_sitemap');
-    // 	$pa = $pk->getPermissionAccessObject();
-    // 	$assignments = $pa->getAccessListItems(PermissionKey::ACCESS_TYPE_ALL);
-    // 	foreach ($assignments as $assignment) {
-    // 		$entity = $assignment->getAccessEntityObject();
-    // 		$title = $entity->getAccessEntityLabel();
-    // 		$group = Group::getByName($entity->getAccessEntityLabel());
-    // 		$groups[] = $group->getGroupID();
-    // 	}
-
-    // 	return $groups;
-    // }
-
-    // public function setSitemapGroups($groups)
-    // {
-    //     $pk = PermissionKey::getByHandle('access_sitemap');
-    //     $pa = PermissionAccess::create($pk);
-    //     $pt = $pk->getPermissionAssignmentObject();
-
-    //     foreach ($groups as $groupID) {
-    //         $group       = Group::getByID($groupID);
-    //         $groupEntity = GroupPermissionAccessEntity::getOrCreate($group);
-
-    //         $pa->addListItem($groupEntity);
-    //     }
-    //     $pt->assignPermissionAccess($pa);
-
-    //     foreach ($pa->getAccessListItems() as $item) {
-    //         \Log::addEntry($item->getAccessEntityObject()->getAccessEntityLabel());
-    //     }
-    // }
 
     public function getAllGroups()
     {
@@ -178,7 +138,6 @@ class BlogSettings extends DashboardPageController
     public function saveThumbnail($thumbnail)
     {
         if (isset($_FILES['croppedImage'])) {
-            
             // Delete old thumbnail before saving the new
             $C5dkConfig       = new C5dkConfig;
             if ($id = $C5dkConfig->blog_default_thumbnail_id) {

@@ -79,7 +79,7 @@ class C5dkAjax extends Controller
         $C5dkBlog = C5dkBlog::getByID($C5dkBlog->getCollectionID());
 
         // Can first save the thumbnail now, because we needed to save the page first.
-        $this->saveThumbnail($C5dkBlog, $this->post('thumbnail'), $C5dkUser);
+        $this->saveThumbnail($C5dkBlog, $C5dkUser, $this->post('thumbnail'));
 
         header('Content-type: application/json');
         echo $jh->encode([
@@ -181,7 +181,7 @@ class C5dkAjax extends Controller
         exit;
     }
 
-    public function saveThumbnail($C5dkBlog, $thumbnail, $C5dkUser)
+    public function saveThumbnail($C5dkBlog, $C5dkUser, $thumbnail)
     {
         // User wants the thumbnail to be deleted
         if ($thumbnail['id'] == -1) { $C5dkBlog->deleteThumbnail();}

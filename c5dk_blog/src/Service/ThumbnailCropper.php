@@ -92,12 +92,12 @@ class ThumbnailCropper extends Controller
         $img     = str_replace(' ', '+', $img);
         $data    = base64_decode($img);
         $success = file_put_contents($imagePath, $data);
-        
+
         // Get image facade and open image
         $imagine = $this->app->make(Image::getFacadeAccessor());
         $image   = $imagine->open($imagePath);
-        
-        // Resize image
+
+        // Resize image (Chg: we now do it in the browser, but needs testing)
         // $image = $image->resize(new Box($C5dkConfig->blog_thumbnail_width, $C5dkConfig->blog_thumbnail_height));
 
         // Save image as .jpg
@@ -116,7 +116,7 @@ class ThumbnailCropper extends Controller
 
         // Delete tmp file
         $fs = new \Illuminate\Filesystem\Filesystem();
-        // $fs->delete($imagePath);
+        $fs->delete($imagePath);
 
         // Return the File Object
         return $fv->getFile();

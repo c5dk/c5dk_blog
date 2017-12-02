@@ -66,49 +66,51 @@
                     <span class="c5dk-description-char-counter"><?= t('Characters Left ('); ?><span style="font-size: 12px;" id="charNumDescription"></span>)</span>
                 </label>
                 <?= $form->textarea('description', Core::make('helper/text')->entities($C5dkBlog->description), ['class' => 'c5dk-blog-full-width', 'rows' => 4]); ?>
+
+                <!--  -->
+                <script type="text/javascript">
+                    $(document).ready(function() {
+                        // Title and description char counter
+                        $('#title, #description').keyup(function(event) {
+                            switch(this.id){
+                                case "title":
+                                    var charLength = 70;
+                                    var divCounter = "#charNumTitle";
+                                    break;
+                                case "description":
+                                    var charLength = 156;
+                                    var divCounter = "#charNumDescription";
+                                    break;
+                            }
+                            var len = this.value.length;
+                            if (len > charLength) {
+                                $(divCounter).text(charLength - len);
+                                $(divCounter).addClass('c5dk_blog_cnt_red');
+                            } else {
+                                $(divCounter).text(charLength - len);
+                                $(divCounter).removeClass('c5dk_blog_cnt_red');
+                            }
+                        }).trigger('keyup');
+
+                        $( ".c5dk_bp_title" ).focus(function() {
+                            $('.c5dk-title-char-counter').addClass('c5dk-char-counter-highlite');
+                        });
+
+                        $( ".c5dk_bp_title" ).focusout(function() {
+                            $('.c5dk-title-char-counter').removeClass('c5dk-char-counter-highlite');
+                        });
+
+                        $( "#description" ).focus(function() {
+                            $('.c5dk-description-char-counter').addClass('c5dk-char-counter-highlite');
+                        });
+
+                        $( "#description" ).focusout(function() {
+                            $('.c5dk-description-char-counter').removeClass('c5dk-char-counter-highlite');
+                        });
+                    });
+                </script>
             </div>
 
-            <script type="text/javascript">
-                $(document).ready(function() {
-                    // Title and description char counter
-                    $('#title, #description').keyup(function(event) {
-                        switch(this.id){
-                            case "title":
-                                var charLength = 70;
-                                var divCounter = "#charNumTitle";
-                                break;
-                            case "description":
-                                var charLength = 156;
-                                var divCounter = "#charNumDescription";
-                                break;
-                        }
-                        var len = this.value.length;
-                        if (len > charLength) {
-                            $(divCounter).text(charLength - len);
-                            $(divCounter).addClass('c5dk_blog_cnt_red');
-                        } else {
-                            $(divCounter).text(charLength - len);
-                            $(divCounter).removeClass('c5dk_blog_cnt_red');
-                        }
-                    }).trigger('keyup');
-
-                    $( ".c5dk_bp_title" ).focus(function() {
-                        $('.c5dk-title-char-counter').addClass('c5dk-char-counter-highlite');
-                    });
-
-                    $( ".c5dk_bp_title" ).focusout(function() {
-                        $('.c5dk-title-char-counter').removeClass('c5dk-char-counter-highlite');
-                    });
-
-                    $( "#description" ).focus(function() {
-                        $('.c5dk-description-char-counter').addClass('c5dk-char-counter-highlite');
-                    });
-
-                    $( "#description" ).focusout(function() {
-                        $('.c5dk-description-char-counter').removeClass('c5dk-char-counter-highlite');
-                    });
-                });
-            </script>
         </div>
 
         <!-- Blog Body -->
@@ -398,7 +400,7 @@ c5dk.blog.post = {
                 content: { required: true }
             },
             errorClass: "field-invalid",
-            errorPlacement: function(error,element) {
+            errorPlacement: function(error, element) {
                 return true;
             },
             submitHandler: function(form) {
@@ -411,7 +413,7 @@ c5dk.blog.post = {
                 c5dk.blog.post.blog.formData = new FormData(document.forms["c5dk_blog_form"]);
                 // c5dk.blog.post.blog.formData.set('c5dk_blog_content', CKEDITOR.instances.c5dk_blog_content.getData());
 
-                c5dk.blog.post.blog.formData = c5dk.blog.service.thumbnailCropper.addToForm(c5dk.blog.post.blog.formData);
+                // c5dk.blog.post.blog.formData = c5dk.blog.service.thumbnailCropper.addToForm(c5dk.blog.post.blog.formData);
                 // if (c5dk.blog.post.thumbnail.crop_img) {
                 //     c5dk.blog.post.thumbnail.crop_img.cropper('getCroppedCanvas',
                 //         {fillColor: '<?= $C5dkConfig->blog_cropper_def_bgcolor; ?>'}).toBlob(function (blob) {
@@ -424,7 +426,7 @@ c5dk.blog.post = {
                 // }
                 c5dk.blog.post.blog.save();
                 
-                return false;
+                // return false;
             }
         });
 

@@ -16,6 +16,7 @@ use FileImporter;
 use FileSet;
 use Concrete\Core\Tree\Node\Type\FileFolder	as FileFolder;
 use C5dk\Blog\BlogPost	as C5dkBlogPost;
+use C5dk\Blog\Service\ThumbnailCropper as ThumbnailCropper;
 
 defined('C5_EXECUTE') or die('Access Denied.');
 
@@ -77,36 +78,14 @@ class C5dkAjax extends Controller
         $C5dkBlog = $C5dkBlog->save($this->post('mode'));
         $C5dkBlog = C5dkBlog::getByID($C5dkBlog->getCollectionID());
 
-        $thumbnail = $this->post('thumbnail');
-
-        if ($thumbnail['id'] == -1) {
-            // Remove old thumbnail
-            $C5dkBlog->deleteThumbnail();
-        }
-
-        if ($thumbnail['id'] > 0 && isset($_FILES['croppedImage'])) {
-            // Remove old thumbnail
-            $C5dkBlog->deleteThumbnail();
-
-            // Can first save the thumbnail now, because we needed to save the page first.
-            $thumbnail = $this->saveThumbnail($C5dkBlog);
-
-            if (is_object($thumbnail)) {
-                $cakThumbnail = CollectionAttributeKey::getByHandle('thumbnail');
-                $C5dkBlog = $C5dkBlog->getVersionToModify();
-                $C5dkBlog->setAttribute($cakThumbnail, $thumbnail);
-                $C5dkBlog->refreshCache();
-                $C5dkBlog->getVersionObject()->approve();
-            }
-        }
-
-        $data = [
-            'status' => true,
-            'redirectLink' => $C5dkBlog->getCollectionPath()
-        ];
+        // Can first save the thumbnail now, because we needed to save the page first.
+        $this->saveThumbnail($C5dkBlog, $this->post('thumbnail'), $C5dkUser);
 
         header('Content-type: application/json');
-        echo $jh->encode($data);
+        echo $jh->encode([
+            'status' => true,
+            'redirectLink' => $C5dkBlog->getCollectionPath()
+        ]);
 
         exit;
     }
@@ -202,49 +181,74 @@ class C5dkAjax extends Controller
         exit;
     }
 
-    public function saveThumbnail($C5dkBlog)
+    public function saveThumbnail($C5dkBlog, $thumbnail, $C5dkUser)
     {
-        // Get helper objects
-        $fh = $this->app->make('helper/file');
-        $fi = new FileImporter();
+        // User wants the thumbnail to be deleted
+        if ($thumbnail['id'] == -1) { $C5dkBlog->deleteThumbnail();}
 
-        // Get C5dk Objects
-        $C5dkConfig = new C5dkConfig;
-        $C5dkUser = new C5dkUser;
-        $uID = $C5dkUser->getUserID();
+        // Save thumbnail if we have thumbnail data
+        if ($thumbnail['id'] > 0 && strlen($thumbnail['croppedImage'])) {
+            // Remove old thumbnail
+            $C5dkBlog->deleteThumbnail();
 
-        $tmpFolder = $fh->getTemporaryDirectory();
-        $filename = (microtime(true) * 10000) . '.jpg';
+            // Get on with saving the new thumbnail
+            $fileName   = 'C5DK_BLOG_uID-' . $C5dkUser->getUserID() . '_Thumb_cID-' . $C5dkBlog->getCollectionID() . '.jpg';
+            $fileFolder = FileFolder::getNodeByName('Thumbs');
+            $fileSet    = FileSet::createAndGetSet('C5DK_BLOG_uID-' . $C5dkUser->getUserID(), FileSet::TYPE_PUBLIC, $C5dkUser->getUserID());
 
-        // Get image facade and open image
-        $imagine = $this->app->make(Image::getFacadeAccessor());
-        $image = $imagine->open($_FILES['croppedImage']['tmp_name']);
+            $ThumbnailCropper =  new ThumbnailCropper;
+            $thumbnail = $ThumbnailCropper->saveForm($thumbnail, $fileName, $fileFolder, $fileSet);
 
-        // Resize image
-        $image = $image->resize(new Box($C5dkConfig->blog_thumbnail_width, $C5dkConfig->blog_thumbnail_height));
-
-        // Save image as .jpg
-        $image->save($tmpFolder . $filename, ['jpeg_quality' => 80]);
-
-        // Import thumbnail into the File Manager
-        $fv = $fi->import(
-            $tmpFolder . $filename,
-            'C5DK_BLOG_uID-' . $C5dkUser->getUserID() . '_Thumb_cID-' . $C5dkBlog->getCollectionID() . '.jpg',
-            FileFolder::getNodeByName('Thumbs')
-        );
-
-        if (is_object($fv)) {
-            // Create and get FileSet if not exist and add file to the set
-            $fs = FileSet::createAndGetSet('C5DK_BLOG_uID-' . $C5dkUser->getUserID(), FileSet::TYPE_PUBLIC, $C5dkUser->getUserID());
-            $fsf = $fs->addFileToSet($fv);
-
-            // Delete tmp file
-            $fs = new \Illuminate\Filesystem\Filesystem();
-            $fs->delete($tmpFolder . $filename);
-
-            // Return the File Object
-            return $fv->getFile();
+            if (is_object($thumbnail)) {
+                $cakThumbnail = CollectionAttributeKey::getByHandle('thumbnail');
+                $C5dkBlog = $C5dkBlog->getVersionToModify();
+                $C5dkBlog->setAttribute($cakThumbnail, $thumbnail);
+                $C5dkBlog->refreshCache();
+                $C5dkBlog->getVersionObject()->approve();
+            }
         }
+
+        // // Get helper objects
+        // $fh = $this->app->make('helper/file');
+        // $fi = new FileImporter();
+
+        // // Get C5dk Objects
+        // $C5dkConfig = new C5dkConfig;
+        // $C5dkUser = new C5dkUser;
+        // $uID = $C5dkUser->getUserID();
+
+        // $tmpFolder = $fh->getTemporaryDirectory();
+        // $filename = (microtime(true) * 10000) . '.jpg';
+
+        // // Get image facade and open image
+        // $imagine = $this->app->make(Image::getFacadeAccessor());
+        // $image = $imagine->open($_FILES['croppedImage']['tmp_name']);
+
+        // // Resize image
+        // $image = $image->resize(new Box($C5dkConfig->blog_thumbnail_width, $C5dkConfig->blog_thumbnail_height));
+
+        // // Save image as .jpg
+        // $image->save($tmpFolder . $filename, ['jpeg_quality' => 80]);
+
+        // // Import thumbnail into the File Manager
+        // $fv = $fi->import(
+        //     $tmpFolder . $filename,
+        //     'C5DK_BLOG_uID-' . $C5dkUser->getUserID() . '_Thumb_cID-' . $C5dkBlog->getCollectionID() . '.jpg',
+        //     FileFolder::getNodeByName('Thumbs')
+        // );
+
+        // if (is_object($fv)) {
+        //     // Create and get FileSet if not exist and add file to the set
+        //     $fs = FileSet::createAndGetSet('C5DK_BLOG_uID-' . $C5dkUser->getUserID(), FileSet::TYPE_PUBLIC, $C5dkUser->getUserID());
+        //     $fsf = $fs->addFileToSet($fv);
+
+        //     // Delete tmp file
+        //     $fs = new \Illuminate\Filesystem\Filesystem();
+        //     $fs->delete($tmpFolder . $filename);
+
+        //     // Return the File Object
+        //     return $fv->getFile();
+        // }
     }
 
     public function getFilesFromUserSet()

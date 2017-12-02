@@ -92,7 +92,6 @@ class C5dkBlog extends Page
 
         // get all contrrols
         $controls = PageTypeComposerOutputControl::getList($ptt, $pt);
-
         foreach ($controls as $control) {
             $fls = PageTypeComposerFormLayoutSetControl::getByID($control->getPageTypeComposerFormLayoutSetControlID());
 
@@ -152,6 +151,14 @@ class C5dkBlog extends Page
         if (is_object($cak)) {
             $this->setAttribute($cak, $this->thumbnail);
         }
+
+        // if (is_object($thumbnail)) {
+        //     $cakThumbnail = CollectionAttributeKey::getByHandle('thumbnail');
+        //     $C5dkBlog = $C5dkBlog->getVersionToModify();
+        //     $C5dkBlog->setAttribute($cakThumbnail, $thumbnail);
+        //     $C5dkBlog->refreshCache();
+        //     $C5dkBlog->getVersionObject()->approve();
+        // }
     }
 
     public function deleteThumbnail()

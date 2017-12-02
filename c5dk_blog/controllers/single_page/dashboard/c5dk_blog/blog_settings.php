@@ -150,7 +150,7 @@ class BlogSettings extends DashboardPageController
 
             $ThumbnailCropper =  new ThumbnailCropper;
 
-            return $ThumbnailCropper->saveForm($thumbnail, $fileName, $fileFolder, true)->getFileID();
+            return $ThumbnailCropper->saveForm($thumbnail, $fileName, $fileFolder)->getFileID();
         } else {
             return $thumbnail['id'];
         }

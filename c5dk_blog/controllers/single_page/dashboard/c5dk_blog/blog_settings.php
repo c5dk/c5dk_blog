@@ -59,7 +59,7 @@ class BlogSettings extends DashboardPageController
 
     public function save()
     {
-        $pkg    = Package::getByHandle('c5dk_blog');
+        $pkg          = Package::getByHandle('c5dk_blog');
         $this->config = $pkg->getConfig();
 
         // Settings
@@ -105,16 +105,7 @@ class BlogSettings extends DashboardPageController
 
         Session::set('c5dk_blog_message', t('Settings saved.'));
 
-        // // Send ok status back to browser
-        // $jh = $this->app->make('helper/json');
-
-        // header('Content-type: application/json');
-        // echo $jh->encode((object) [
-        //     'status' => true
-        // ]);
-        // exit;
-        // $this->redirect('/dashboard/c5dk_blog/blog_settings');
-        $this->view();
+        $this->redirect('/dashboard/c5dk_blog/blog_settings');
     }
 
     public function getAllGroups()
@@ -140,15 +131,19 @@ class BlogSettings extends DashboardPageController
 
     public function saveThumbnail($thumbnail)
     {
-        if (isset($thumbnail['croppedImage'])) {
-            // Delete old thumbnail before saving the new
-            $C5dkConfig = new C5dkConfig;
-            if ($thumbnail['id'] != $C5dkConfig->blog_default_thumbnail_id && $C5dkConfig->blog_default_thumbnail_id) {
-                $oldThumbnail = File::getByID($C5dkConfig->blog_default_thumbnail_id);
-                $oldThumbnail->delete();
-                $this->config->save('c5dk_blog.blog_default_thumbnail_id', 0);
-            }
+        // Delete old thumbnail before saving the new or if the user removed it altogether
+        $C5dkConfig = new C5dkConfig;
+        if ($thumbnail['id'] == -1 || ($thumbnail['id'] != $C5dkConfig->blog_default_thumbnail_id && $C5dkConfig->blog_default_thumbnail_id)) {
+            $oldThumbnail = File::getByID($C5dkConfig->blog_default_thumbnail_id);
+            $oldThumbnail->delete();
+            $this->config->save('c5dk_blog.blog_default_thumbnail_id', 0);
+        }
 
+        // If we don't have an id, we don't need to save anything
+        if ($thumbnail['id'] < 1) { return 0; }
+
+        // So now we only need to see if we have a new thumbnail or we keep the old one
+        if (strlen($thumbnail['croppedImage'])) {
             // Get on with saving the new thumbnail
             $fileName   = 'C5DK_BLOG_Default_Thumbnail.jpg';
             $fileFolder = FileFolder::getNodeByName('Thumbs');
@@ -157,7 +152,7 @@ class BlogSettings extends DashboardPageController
 
             return $ThumbnailCropper->saveForm($thumbnail, $fileName, $fileFolder, true)->getFileID();
         } else {
-            return 0;
+            return $thumbnail['id'];
         }
     }
 }

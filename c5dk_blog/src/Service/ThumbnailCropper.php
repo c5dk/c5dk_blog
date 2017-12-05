@@ -3,20 +3,9 @@
 namespace C5dk\Blog\Service;
 
 use View;
-use Concrete\Core\Support\Facade\Application;
 use File;
-use FileImporter;
-use FileSet;
-use Concrete\Core\Tree\Node\Type\FileFolder as FileFolder;
-use Image;
-use Imagine\Image\Box;
-use Imagine\Image\Point;
-use Imagine\Image\ImageInterface;
-use Imagine\Filter\Basic\Autorotate;
-use Imagine\Filter\Transformation;
-use Imagine\Image\Metadata\ExifMetadataReader;
+use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Entity\File\File as ThumbnailFile;
-use Illuminate\Filesystem\Filesystem;
 use Concrete\Core\Controller\Controller;
 use C5dk\Blog\C5dkConfig as C5dkConfig;
 
@@ -89,25 +78,4 @@ class ThumbnailCropper extends Controller
     {
         return $this->onSaveCallback;
     }
-
-    // public function saveForm($thumbnail, $fileName, $fileFolder, $fileSet = null)
-    // {
-    //     // Get helper objects
-    //     $fh = $this->app->make('helper/file');
-    //     $fi = new FileImporter();
-
-    //     // Get C5dk Objects
-    //     $C5dkConfig = $this->config ? $this->config : new C5dkConfig;
-
-    //     $tmpFolder   = $fh->getTemporaryDirectory() . '/';
-    //     $tmpFilename = (microtime(true) * 10000) . '.jpg';
-    //     $imagePath   = $tmpFolder . $tmpFilename;
-
-    //     $img     = str_replace('data:image/png;base64,', '', $thumbnail['croppedImage']);
-    //     $img     = str_replace(' ', '+', $img);
-    //     $data    = base64_decode($img);
-    //     $success = file_put_contents($imagePath, $data);
-
-    //     return $imagePath;
-    // }
 }

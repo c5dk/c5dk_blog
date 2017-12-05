@@ -17,30 +17,30 @@ defined('C5_EXECUTE') or die('Access Denied.');
 class C5dkBlog extends Page
 {
     // Data
-    public $blogID = null;
-    public $root = null;
-    public $rootID = null;
-    public $authorID = null;
-    public $thumbnail = null;
-    public $title = '';
+    public $blogID      = null;
+    public $root        = null;
+    public $rootID      = null;
+    public $authorID    = null;
+    public $thumbnail   = null;
+    public $title       = '';
     public $description = '';
-    public $content = '';
-    public $tags = null;
-    public $topics = null;
+    public $content     = '';
+    public $tags        = null;
+    public $topics      = null;
 
     public static function getByID($blogID, $version = 'RECENT', $class = 'C5dk\Blog\C5dkBlog')
     {
-        $blog = parent::getByID($blogID, $version, $class);
-        $blog->blogID = $blogID;
-        $blog->root = $blog->getRoot();
-        $blog->rootID = $blog->getRootID();
-        $blog->title = $blog->getCollectionName();
+        $blog              = parent::getByID($blogID, $version, $class);
+        $blog->blogID      = $blogID;
+        $blog->root        = $blog->getRoot();
+        $blog->rootID      = $blog->getRootID();
+        $blog->title       = $blog->getCollectionName();
         $blog->description = $blog->getCollectionDescription();
-        $blog->authorID = $blog->getAttribute('c5dk_blog_author_id');
-        $blog->content = $blog->getContent();
-        $blog->thumbnail = $blog->getAttribute('thumbnail');
-        $blog->tags = $blog->getAttributeValueObject(CollectionAttributeKey::getByHandle('tags'));
-        $blog->topics = $blog->getTopics();
+        $blog->authorID    = $blog->getAttribute('c5dk_blog_author_id');
+        $blog->content     = $blog->getContent();
+        $blog->thumbnail   = $blog->getAttribute('thumbnail');
+        $blog->tags        = $blog->getAttributeValueObject(CollectionAttributeKey::getByHandle('tags'));
+        $blog->topics      = $blog->getTopics();
 
         return $blog;
     }
@@ -50,8 +50,8 @@ class C5dkBlog extends Page
         switch ($mode) {
             case C5DK_BLOG_MODE_CREATE:
                 $C5dkRoot = C5dkRoot::getByID($this->rootID);
-                $pt = PageType::getByID($C5dkRoot->pageTypeID);
-                $blog = $C5dkRoot->add($pt, [
+                $pt       = PageType::getByID($C5dkRoot->pageTypeID);
+                $blog     = $C5dkRoot->add($pt, [
                     'cName' => $this->title,
                     'cHandle' => $this->getUrlSlug($this->title),
                     'cDescription' => $this->description,
@@ -87,7 +87,7 @@ class C5dkBlog extends Page
         }
 
         // Update the composer content block
-        $pt = PageTemplate::getByID($C5dkBlog->getPageTemplateID());
+        $pt  = PageTemplate::getByID($C5dkBlog->getPageTemplateID());
         $ptt = PageType::getByID($C5dkBlog->getPageTypeID());
 
         // get all contrrols
@@ -107,18 +107,18 @@ class C5dkBlog extends Page
         }
 
         // Save tags to the blog page
-        $cakTags = CollectionAttributeKey::getByHandle('tags');
-        $C5dkBlog = $C5dkBlog->getVersionToModify();
+        $cakTags    = CollectionAttributeKey::getByHandle('tags');
+        $C5dkBlog   = $C5dkBlog->getVersionToModify();
         $controller = $cakTags->getController();
-        $value = $controller->createAttributeValueFromRequest();
+        $value      = $controller->createAttributeValueFromRequest();
         $C5dkBlog->setAttribute($cakTags, $value);
         $C5dkBlog->refreshCache();
 
         // Add topics to the blog page if topics are in use
         if ($this->topicAttributeID) {
-            $cakTopics = CollectionAttributeKey::getByHandle($this->topicAttributeID);
+            $cakTopics  = CollectionAttributeKey::getByHandle($this->topicAttributeID);
             $controller = $cakTopics->getController();
-            $value = $controller->createAttributeValueFromRequest();
+            $value      = $controller->createAttributeValueFromRequest();
             $C5dkBlog->setAttribute($cakTopics, $value);
             $C5dkBlog->refreshCache();
         }
@@ -165,7 +165,7 @@ class C5dkBlog extends Page
     {
         // Remove old thumbnail from filemanager
         $thumbnail = $this->getAttribute('thumbnail');
-        $u = new user;
+        $u         = new user;
         if (is_object($thumbnail) && $thumbnail->getRecentVersion()->getFileName() == 'C5DK_BLOG_uID-' . $u->getUserID() . '_Thumb_cID-' . $this->blogID . '.' . $thumbnail->getRecentVersion()->getExtension()) {
             $thumbnail->delete();
         }
@@ -237,9 +237,9 @@ class C5dkBlog extends Page
 
     private function getUrlSlug($name)
     {
-        $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
+        $app  = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
         $name = $app->make('helper/text')->urlify($name);
-        $ret = Events::fire('on_page_urlify', $name);
+        $ret  = Events::fire('on_page_urlify', $name);
 
         return (!$ret) ? $name : $ret;
     }

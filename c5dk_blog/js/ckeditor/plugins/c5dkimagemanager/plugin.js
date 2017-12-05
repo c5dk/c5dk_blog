@@ -6,7 +6,7 @@ CKEDITOR.plugins.add( 'c5dkimagemanager', {
 
 		editor.addCommand( 'insertBlogImage', {
 			exec: function( editor ) {
-				c5dk.blog.post.image.showManager();
+				c5dk.blog.post.image.showManager('editor');
 			}
 		});
 

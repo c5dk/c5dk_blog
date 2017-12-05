@@ -183,30 +183,94 @@ class C5dkAjax extends Controller
 
     public function saveThumbnail($C5dkBlog, $C5dkUser, $thumbnail)
     {
+        // Init objects
+        $C5dkConfig = new C5dkConfig;
+        
+        // Init Helpers
+        $fh         = $this->app->make('helper/file');
+        
+        // Init variables
+        $uID          = $C5dkUser->getUserID();
+        $fileName   = 'C5DK_BLOG_uID-' . $uID . '_Thumb_cID-' . $C5dkBlog->getCollectionID() . '.jpg';
+        $fileFolder = FileFolder::getNodeByName('Thumbs');
+        $fileSet    = FileSet::createAndGetSet('C5DK_BLOG_uID-' . $uID, FileSet::TYPE_PUBLIC, $uID);
+        $tmpFolder    = $fh->getTemporaryDirectory() . '/';
+        $tmpImagePath = $tmpFolder . $uID . '_' . $fileName;
+        $imagePath    = $tmpFolder . $fileName;
+
+        // Get old thumbnail
+        $oldThumbnail = $C5dkBlog->thumbnail ? $C5dkBlog->thumbnail : 0;
+
         // User wants the thumbnail to be deleted
-        if ($thumbnail['id'] == -1) { $C5dkBlog->deleteThumbnail();}
-
-        // Save thumbnail if we have thumbnail data
-        if ($thumbnail['id'] > 0 && strlen($thumbnail['croppedImage'])) {
-            // Remove old thumbnail
+        if ($thumbnail['id'] == -1) {
             $C5dkBlog->deleteThumbnail();
-
-            // Get on with saving the new thumbnail
-            $fileName   = 'C5DK_BLOG_uID-' . $C5dkUser->getUserID() . '_Thumb_cID-' . $C5dkBlog->getCollectionID() . '.jpg';
-            $fileFolder = FileFolder::getNodeByName('Thumbs');
-            $fileSet    = FileSet::createAndGetSet('C5DK_BLOG_uID-' . $C5dkUser->getUserID(), FileSet::TYPE_PUBLIC, $C5dkUser->getUserID());
-
-            $ThumbnailCropper =  new ThumbnailCropper;
-            $thumbnail = $ThumbnailCropper->saveForm($thumbnail, $fileName, $fileFolder, $fileSet);
-
-            if (is_object($thumbnail)) {
-                $cakThumbnail = CollectionAttributeKey::getByHandle('thumbnail');
-                $C5dkBlog = $C5dkBlog->getVersionToModify();
-                $C5dkBlog->setAttribute($cakThumbnail, $thumbnail);
-                $C5dkBlog->refreshCache();
-                $C5dkBlog->getVersionObject()->approve();
-            }
         }
+
+        // If we don't have an id, we don't need to save anything
+        if ($thumbnail['id'] < 1) {
+            return 0;
+        }
+
+        // So now we only need to see if we have a new thumbnail or we keep the old one
+        if (strlen($thumbnail['croppedImage'])) {
+            // Get on with saving the new thumbnail
+            $img     = str_replace('data:image/png;base64,', '', $thumbnail['croppedImage']);
+            $img     = str_replace(' ', '+', $img);
+            $data    = base64_decode($img);
+            $success = file_put_contents($tmpImagePath, $data);
+
+            // Get image facade and open image
+            // $imagine = $this->app->make(Image::getFacadeAccessor());
+            // $image   = $imagine->open($tmpImagePath);
+
+            // Convert to .jpg
+            $image = Image::open($tmpImagePath);
+            $image->save($tmpImagePath, ['jpeg_quality' => 80]);
+            
+            // Resize image (Chg: we now do it in the browser, but needs testing)
+            // $image = $image->resize(new Box($C5dkConfig->blog_thumbnail_width, $C5dkConfig->blog_thumbnail_height));
+            
+            if ($oldThumbnail) {
+                $fv = $oldThumbnail->getVersionToModify(true);
+                $fv->updateContents($image->get('jpg'));
+            } else {
+
+                // Import thumbnail into the File Manager
+                $fi = new FileImporter();
+                $fv = $fi->import(
+                    $tmpImagePath,
+                    $fileName,
+                    $fileFolder
+                );
+
+                if (is_object($fv) && $fileSet instanceof FileSet) {
+                    $fileSet->addFileToSet($fv);
+                }
+
+                $file = File::getByID($fv->getFileID());
+                if (is_object($file)) {
+                    $cakThumbnail = CollectionAttributeKey::getByHandle('thumbnail');
+                    $C5dkBlog = $C5dkBlog->getVersionToModify();
+                    $C5dkBlog->setAttribute($cakThumbnail, $file);
+                    $C5dkBlog->refreshCache();
+                    $C5dkBlog->getVersionObject()->approve();
+                }
+            }
+
+            // Delete tmp file
+            $fs = new \Illuminate\Filesystem\Filesystem();
+            $fs->delete($tmpImagePath);
+
+            return $fv->getFileID();
+
+        } else {
+            return $thumbnail['id'];
+        }
+        
+
+
+
+
 
         // // Get helper objects
         // $fh = $this->app->make('helper/file');

@@ -7,31 +7,33 @@ c5dk.blog.service.thumbnailCropper = {
     
     init: function () {
         // Settings: Select action
-        $('a[data-type=settings]').on('click', function (e) {
-            e.preventDefault(); // Keeps page from scrolling up
-            ConcreteFileManager.launchDialog(function (data) {
-                ConcreteFileManager.getFileDetails(data.fID, function (r) {
-                    jQuery.fn.dialog.hideLoader();
-                    c5dk.blog.service.data.thumbnailCropper.file = r.files[0];
-                    $('#thumbailID').val(c5dk.blog.service.data.thumbnailCropper.file.fID);
+        // $('a[data-type=settings]').on('click', function (e) {
+        //     e.preventDefault(); // Keeps page from scrolling up
+        //     ConcreteFileManager.launchDialog(function (data) {
+        //         ConcreteFileManager.getFileDetails(data.fID, function (r) {
+        //             jQuery.fn.dialog.hideLoader();
+        //             c5dk.blog.service.data.thumbnailCropper.file = r.files[0];
+        //             $('#thumbailID').val(c5dk.blog.service.data.thumbnailCropper.file.fID);
 
-                    // Bind onLoad event so we can setup the thumbnails properties and then set the src to the thumbnail
-                    $('#c5dk_crop_pic').bind('load', function () {
-                        $('#pictureWidth').val($('#c5dk_crop_pic')[0].naturalWidth);
-                        $('#pictureHeight').val($('#c5dk_crop_pic')[0].naturalHeight);
-                        c5dk.blog.service.thumbnailCropper.useAsThumb(c5dk.blog.service.data.thumbnailCropper.file.fID, c5dk.blog.service.data.thumbnailCropper.file.url);
-                        $('#c5dk_crop_pic').unbind('load');
-                    }).attr('src', c5dk.blog.service.data.thumbnailCropper.file.url).show();
-                });
-            });
-        });
+        //             // Bind onLoad event so we can setup the thumbnails properties and then set the src to the thumbnail
+        //             $('#c5dk_crop_pic').bind('load', function () {
+        //                 $('#pictureWidth').val($('#c5dk_crop_pic')[0].naturalWidth);
+        //                 $('#pictureHeight').val($('#c5dk_crop_pic')[0].naturalHeight);
+        //                 c5dk.blog.service.thumbnailCropper.useAsThumb(c5dk.blog.service.data.thumbnailCropper.file.fID, c5dk.blog.service.data.thumbnailCropper.file.url);
+        //                 $('#c5dk_crop_pic').unbind('load');
+        //             }).attr('src', c5dk.blog.service.data.thumbnailCropper.file.url).show();
+        //         });
+        //     });
+        // });
         
-        // Blog Post: Select thumbnail action
-        $('a[data-type=post]').on('click', function () {
-            c5dk.blog.post.image.showManager('thumbnail');
-        });
+        // // Blog Post: Select thumbnail action
+        // $('a[data-type=post]').on('click', function () {
+        //     c5dk.blog.post.image.showManager('thumbnail');
+        // });
 
-        // $('#c5dk_blog_form').submit(function (e) {
+        $('#c5dk_blog_form').submit(function (e) {
+            c5dk.blog.service.thumbnailCropper.save();
+        });
             
         //     if (c5dk.blog.service.data.thumbnailCropper.crop_img) {
         //         var canvas = c5dk.blog.service.data.thumbnailCropper.crop_img.cropper('getCroppedCanvas',
@@ -46,18 +48,38 @@ c5dk.blog.service.thumbnailCropper = {
         // });
     },
 
-    addToForm: function (form, callback) {
-        if (c5dk.blog.service.data.thumbnailCropper.crop_img) {
-            var canvas = c5dk.blog.service.data.thumbnailCropper.crop_img.cropper('getCroppedCanvas',
-                { fillColor: c5dk.blog.service.data.thumbnailCropper.fillColor }
-            );
-            canvas.toBlob(function (blob) {
-                form.append('croppedImage', blob);
-                callback(form);
-            }, 'image/jpeg', 80);
-        }
-        return form;
+    select: function() {
+        // event.preventDefault(); // Keeps page from scrolling up
+        ConcreteFileManager.launchDialog(function (data) {
+            ConcreteFileManager.getFileDetails(data.fID, function (r) {
+                jQuery.fn.dialog.hideLoader();
+                c5dk.blog.service.data.thumbnailCropper.file = r.files[0];
+                $('#thumbailID').val(c5dk.blog.service.data.thumbnailCropper.file.fID);
+
+                // Bind onLoad event so we can setup the thumbnails properties and then set the src to the thumbnail
+                $('#c5dk_crop_pic').bind('load', function () {
+                    $('#pictureWidth').val($('#c5dk_crop_pic')[0].naturalWidth);
+                    $('#pictureHeight').val($('#c5dk_crop_pic')[0].naturalHeight);
+                    c5dk.blog.service.thumbnailCropper.useAsThumb(c5dk.blog.service.data.thumbnailCropper.file.fID, c5dk.blog.service.data.thumbnailCropper.file.url);
+                    $('#c5dk_crop_pic').unbind('load');
+                }).attr('src', c5dk.blog.service.data.thumbnailCropper.file.url).show();
+            });
+        });
+
     },
+
+    // addToForm: function (form, callback) {
+    //     if (c5dk.blog.service.data.thumbnailCropper.crop_img) {
+    //         var canvas = c5dk.blog.service.data.thumbnailCropper.crop_img.cropper('getCroppedCanvas',
+    //             { fillColor: c5dk.blog.service.data.thumbnailCropper.fillColor }
+    //         );
+    //         canvas.toBlob(function (blob) {
+    //             form.append('croppedImage', blob);
+    //             callback(form);
+    //         }, 'image/jpeg', 80);
+    //     }
+    //     return form;
+    // },
 
     remove: function () {
         $('#thumbnailID').val(-1);
@@ -99,18 +121,25 @@ c5dk.blog.service.thumbnailCropper = {
                 $('#thumbnailHeight').val(coords.height);
                 $('#pictureWidth').val($('#c5dk_crop_pic').width());
                 $('#pictureHeight').val($('#c5dk_crop_pic').height());
-    
-                // Get the cropped image and save it in the hidden input 
-                var canvas = c5dk.blog.service.data.thumbnailCropper.crop_img.cropper('getCroppedCanvas',
-                    {
-                        fillColor: c5dk.blog.service.data.thumbnailCropper.fillColor,
-                        width: c5dk.blog.service.data.thumbnailCropper.save.width,
-                        height: c5dk.blog.service.data.thumbnailCropper.save.height
-                    }
-                );
-                $('#croppedImage').val(canvas.toDataURL());
+
+                c5dk.blog.service.thumbnailCropper.save();
             }
         });
+        // c5dk.blog.service.thumbnailCropper.save();
+    },
+
+    save: function () {
+        // Get the cropped image and save it in the hidden input
+        if (c5dk.blog.service.data.thumbnailCropper.crop_img) {
+            var canvas = c5dk.blog.service.data.thumbnailCropper.crop_img.cropper('getCroppedCanvas',
+                {
+                    fillColor: c5dk.blog.service.data.thumbnailCropper.fillColor,
+                    width: c5dk.blog.service.data.thumbnailCropper.save.width,
+                    height: c5dk.blog.service.data.thumbnailCropper.save.height
+                }
+            );
+            $('#croppedImage').val(canvas.toDataURL());
+        }    
     }
 };
 

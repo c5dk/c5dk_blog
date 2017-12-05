@@ -24,7 +24,7 @@
                     <div class="c5dk_blog_thumbnail_preview_subtext"><?= t('Preview'); ?></div>
                 </div>
                 <div class="c5dk_blog_box_thumbnail_buttons">
-                    <a class="c5dk_blogpage_ButtonGreen c5dk_blogpage_ButtonGreen_thumb" data-type="<?= $Cropper->getType(); ?>">Select</a>
+                    <a class="c5dk_blogpage_ButtonGreen c5dk_blogpage_ButtonGreen_thumb" onclick="<?= $Cropper->getOnSelectCallback(); ?>();">Select</a>
                     <input class="c5dk_blog_ButtonRed c5dk_blogpage_ButtonRed_thumb" type="button" onclick="c5dk.blog.service.thumbnailCropper.remove()" value="<?= t('Remove'); ?>">
                 </div>
 
@@ -138,7 +138,7 @@
                             // Keyboard Arrow keys move the image
                             $(document.body).on('keydown', function (e) {
 
-                                if (!c5dk.blog.service.data.thumbnailCropper.crop_img.data('cropper') || this.scrollTop > 300 || e.which < 37 || e.which > 40) { return; }
+                                if (c5dk.blog.service.data.thumbnailCropper.crop_img && !c5dk.blog.service.data.thumbnailCropper.crop_img.data('cropper') || this.scrollTop > 300 || e.which < 37 || e.which > 40) { return; }
 
                                 e.preventDefault();
 

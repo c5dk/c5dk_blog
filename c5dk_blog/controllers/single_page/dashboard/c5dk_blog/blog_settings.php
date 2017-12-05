@@ -2,6 +2,7 @@
 
 namespace Concrete\Package\C5dkBlog\Controller\SinglePage\Dashboard\C5dkBlog;
 
+use User;
 use Core;
 use Package;
 use Session;
@@ -9,6 +10,10 @@ use Group;
 use GroupList;
 use PermissionKey;
 use File;
+use FileImporter;
+use FileSet;
+use Image;
+use Imagine\Image\Box;
 use Concrete\Core\Tree\Node\Type\FileFolder as FileFolder;
 use Concrete\Core\Page\Controller\DashboardPageController;
 use Concrete\Core\Permission\Access\Access as PermissionAccess;
@@ -33,7 +38,7 @@ class BlogSettings extends DashboardPageController
         $this->requireAsset('css', 'c5dk_blog_css');
         $this->requireAsset('core/app');
         $this->requireAsset('select2');
-        $this->requireAsset('core/file-manager');
+        // $this->requireAsset('core/file-manager');
         $this->requireAsset('javascript', 'c5dkBlog/modal');
 
         // Set Service
@@ -131,26 +136,76 @@ class BlogSettings extends DashboardPageController
 
     public function saveThumbnail($thumbnail)
     {
-        // Delete old thumbnail before saving the new or if the user removed it altogether
+        // Init objects
         $C5dkConfig = new C5dkConfig;
-        if ($thumbnail['id'] == -1 || ($thumbnail['id'] != $C5dkConfig->blog_default_thumbnail_id && $C5dkConfig->blog_default_thumbnail_id)) {
-            $oldThumbnail = File::getByID($C5dkConfig->blog_default_thumbnail_id);
+
+        // Init Helpers
+        $fh         = $this->app->make('helper/file');
+
+        // Init variables
+        $uID          = (new User)->getUserID();
+        $fileFolder   = FileFolder::getNodeByName('Thumbs');
+        $fileName     = 'C5DK_BLOG_Default_Thumbnail.jpg';
+        $tmpFolder    = $fh->getTemporaryDirectory() . '/';
+        $tmpImagePath = $tmpFolder . $uID . '_' . $fileName;
+        $imagePath    = $tmpFolder . $fileName;
+
+        // Get old thumbnail
+        $oldThumbnail = $C5dkConfig->blog_default_thumbnail_id ? File::getByID($C5dkConfig->blog_default_thumbnail_id) : 0;
+
+        // Delete old thumbnail before saving the new or if the user removed it altogether
+        if ($thumbnail['id'] == -1) {
             $oldThumbnail->delete();
             $this->config->save('c5dk_blog.blog_default_thumbnail_id', 0);
         }
 
         // If we don't have an id, we don't need to save anything
-        if ($thumbnail['id'] < 1) { return 0; }
+        if ($thumbnail['id'] < 1) {
+            return 0;
+        }
 
         // So now we only need to see if we have a new thumbnail or we keep the old one
         if (strlen($thumbnail['croppedImage'])) {
             // Get on with saving the new thumbnail
-            $fileName   = 'C5DK_BLOG_Default_Thumbnail.jpg';
-            $fileFolder = FileFolder::getNodeByName('Thumbs');
+            $img     = str_replace('data:image/png;base64,', '', $thumbnail['croppedImage']);
+            $img     = str_replace(' ', '+', $img);
+            $data    = base64_decode($img);
+            $success = file_put_contents($tmpImagePath, $data);
 
-            $ThumbnailCropper =  new ThumbnailCropper;
+            // Get image facade and open image
+            // $imagine = $this->app->make(Image::getFacadeAccessor());
+            // $image   = $imagine->open($tmpImagePath);
 
-            return $ThumbnailCropper->saveForm($thumbnail, $fileName, $fileFolder)->getFileID();
+            // Convert to .jpg
+            $image = Image::open($tmpImagePath);
+            $image->save($tmpImagePath, ['jpeg_quality' => 80]);
+            
+            // Resize image (Chg: we now do it in the browser, but needs testing)
+            // $image = $image->resize(new Box($C5dkConfig->blog_thumbnail_width, $C5dkConfig->blog_thumbnail_height));
+            
+            if ($oldThumbnail) {
+                $fv = $oldThumbnail->getVersionToModify(true);
+                $fv->updateContents($image->get('jpg'));
+            } else {
+
+                // Import thumbnail into the File Manager
+                $fi = new FileImporter();
+                $fv = $fi->import(
+                    $tmpImagePath,
+                    $fileName,
+                    FileFolder::getNodeByName('Thumbs')
+                );
+
+                if (is_object($fv) && $fileSet instanceof FileSet) {
+                    $fileSet->addFileToSet($fv);
+                }
+            }
+
+            // Delete tmp file
+            $fs = new \Illuminate\Filesystem\Filesystem();
+            $fs->delete($tmpImagePath);
+
+            return $fv->getFileID();
         } else {
             return $thumbnail['id'];
         }

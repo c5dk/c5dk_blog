@@ -62,8 +62,7 @@ class BlogPost extends PageController
         $this->requireAsset('javascript', 'c5dkckeditor');
         $this->requireAsset('core/topics');
         $this->requireAsset('core/app');
-        // $this->requireAsset('javascript', 'jcrop');
-        // $this->requireAsset('css', 'jcrop');
+        
         $this->requireAsset('javascript', 'cropper');
         $this->requireAsset('css', 'cropper');
         $this->requireAsset('javascript', 'validation');
@@ -76,7 +75,12 @@ class BlogPost extends PageController
         $this->set('C5dkConfig', $C5dkBlogPost->C5dkConfig);
         $this->set('C5dkUser', $C5dkBlogPost->C5dkUser);
         $this->set('C5dkBlog', $C5dkBlogPost->C5dkBlog);
-        $this->set('ThumbnailCropper', new ThumbnailCropper($C5dkBlogPost->C5dkBlog->thumbnail));
+        $defThumbnailID = $C5dkBlogPost->C5dkConfig->blog_default_thumbnail_id;
+        $defThumbnail = $defaultThumbnailID ? File::getByID($defaultThumbnailID) : null;
+        $Cropper = new ThumbnailCropper($C5dkBlogPost->C5dkBlog->thumbnail, $defThumbnail);
+        $Cropper->setOnSelectCallback('c5dk.blog.post.image.showManager');
+        $Cropper->setOnSaveCallback('c5dk.blog.post.blog.save');
+        $this->set('ThumbnailCropper', $Cropper);
     }
 
     // Keep the active login session active

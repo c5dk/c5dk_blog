@@ -575,7 +575,7 @@ c5dk.blog.post = {
 
             $("#c5dk_filemanager_slidein").show();
 
-            c5dk.blog.post.image.managerMode = (mode == "thumbnail")? mode : "editor";
+            c5dk.blog.post.image.managerMode = (mode == "editor")? mode : "thumbnail";
             $('#file').val('').show();
             c5dk.blog.post.image.filemanager = $('#c5dk_filemanager_slidein').slideReveal({
                 width: ($(window).width() < 700)? '100%' : '700px',
@@ -598,81 +598,81 @@ c5dk.blog.post = {
     },
 
     // thumbnail: {
-    //     preview:{
-    //         width: 150,
-    //         height: Math.round((150 / (<?= $C5dkConfig->blog_thumbnail_width; ?> / 100)) * (<?= $C5dkConfig->blog_thumbnail_height; ?> / 100))
-    //     },
+        //     preview:{
+        //         width: 150,
+        //         height: Math.round((150 / (<?= $C5dkConfig->blog_thumbnail_width; ?> / 100)) * (<?= $C5dkConfig->blog_thumbnail_height; ?> / 100))
+        //     },
 
-    //     save:{
-    //         width: <?= $C5dkConfig->blog_thumbnail_width; ?>,
-    //         height: <?= $C5dkConfig->blog_thumbnail_height; ?>
-    //     },
+        //     save:{
+        //         width: <?= $C5dkConfig->blog_thumbnail_width; ?>,
+        //         height: <?= $C5dkConfig->blog_thumbnail_height; ?>
+        //     },
 
-    //     image:{
-    //         maxWidth: 600,
-    //         width: null,
-    //         height: null
-    //     },
+        //     image:{
+        //         maxWidth: 600,
+        //         width: null,
+        //         height: null
+        //     },
 
-    //     crop_img: null,
+        //     crop_img: null,
 
-    //     remove:function () {
-    //         $('#thumbnailID').val(-1);
-    //         if (c5dk.blog.post.thumbnail.crop_img) {
-    //             c5dk.blog.post.thumbnail.crop_img.cropper('destroy');
-    //             c5dk.blog.post.thumbnail.crop_img = null;
-    //         }
-    //         $('#c5dk_blog_thumbnail, #c5dk_crop_pic').attr('src', "").hide();
+        //     remove:function () {
+        //         $('#thumbnailID').val(-1);
+        //         if (c5dk.blog.post.thumbnail.crop_img) {
+        //             c5dk.blog.post.thumbnail.crop_img.cropper('destroy');
+        //             c5dk.blog.post.thumbnail.crop_img = null;
+        //         }
+        //         $('#c5dk_blog_thumbnail, #c5dk_crop_pic').attr('src', "").hide();
 
-    //         // Hide Cropper buttons
-    //         $("#c5dk_cropper_buttons").hide();
+        //         // Hide Cropper buttons
+        //         $("#c5dk_cropper_buttons").hide();
 
-    //     },
+        //     },
 
-    //     useAsThumb:function (fID, src, width, height) {
+        //     useAsThumb:function (fID, src, width, height) {
 
-    //         document.getElementById('thumbnail').scrollIntoView();
+        //         document.getElementById('thumbnail').scrollIntoView();
 
-    //         // Hide the slide-in Image manager
-    //         c5dk.blog.post.image.hideManager();
+        //         // Hide the slide-in Image manager
+        //         c5dk.blog.post.image.hideManager();
 
-    //         // Destroy old Jcrop instance if exist
-    //         c5dk.blog.post.thumbnail.remove();
+        //         // Destroy old Jcrop instance if exist
+        //         c5dk.blog.post.thumbnail.remove();
 
-    //         // Show Cropper buttons
-    //         $("#c5dk_cropper_buttons").show();
+        //         // Show Cropper buttons
+        //         $("#c5dk_cropper_buttons").show();
 
-    //         $('#thumbnailID').val(fID);
+        //         $('#thumbnailID').val(fID);
 
-    //         // Update
-    //         $('#c5dk_crop_pic').attr('src', src).show()
+        //         // Update
+        //         $('#c5dk_crop_pic').attr('src', src).show()
 
-    //         c5dk.blog.post.thumbnail.crop_img = $('#c5dk_crop_pic').cropper({
-    //             aspectRatio: (c5dk.blog.post.thumbnail.save.width / c5dk.blog.post.thumbnail.save.height),
-    //             responsive: true,
-    //             // movable: false,
-    //             // zoomable: true,
-    //             // rotatable: false,
-    //             // scalable: false,
-    //             preview: '#cropper_preview',
-    //             // autoCropArea: 0,
-    //             // built: function () {
-    //             //  c5dk.blog.post.thumbnail.crop_img.cropper("setCropBoxData", {
-    //             //   width: "100",
-    //             //   height: "100"
-    //             //  });
-    //             // },
-    //             crop: function(coords) {
-    //                 // Set form objects
-    //                 $('#thumbnailX').val(coords.x);
-    //                 $('#thumbnailY').val(coords.y);
-    //                 $('#thumbnailWidth').val(coords.width);
-    //                 $('#thumbnailHeight').val(coords.height);
-    //                 $('#pictureWidth').val($('#c5dk_crop_pic').width());
-    //                 $('#pictureHeight').val($('#c5dk_crop_pic').height());
-    //             }
-    //         });
-    //     }
+        //         c5dk.blog.post.thumbnail.crop_img = $('#c5dk_crop_pic').cropper({
+        //             aspectRatio: (c5dk.blog.post.thumbnail.save.width / c5dk.blog.post.thumbnail.save.height),
+        //             responsive: true,
+        //             // movable: false,
+        //             // zoomable: true,
+        //             // rotatable: false,
+        //             // scalable: false,
+        //             preview: '#cropper_preview',
+        //             // autoCropArea: 0,
+        //             // built: function () {
+        //             //  c5dk.blog.post.thumbnail.crop_img.cropper("setCropBoxData", {
+        //             //   width: "100",
+        //             //   height: "100"
+        //             //  });
+        //             // },
+        //             crop: function(coords) {
+        //                 // Set form objects
+        //                 $('#thumbnailX').val(coords.x);
+        //                 $('#thumbnailY').val(coords.y);
+        //                 $('#thumbnailWidth').val(coords.width);
+        //                 $('#thumbnailHeight').val(coords.height);
+        //                 $('#pictureWidth').val($('#c5dk_crop_pic').width());
+        //                 $('#pictureHeight').val($('#c5dk_crop_pic').height());
+        //             }
+        //         });
+        //     }
     // }
 }
 

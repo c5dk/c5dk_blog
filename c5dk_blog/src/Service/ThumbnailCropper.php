@@ -25,9 +25,12 @@ defined('C5_EXECUTE') or die('Access Denied.');
 class ThumbnailCropper extends Controller
 {
     protected $app;
-
     public $config;
+
     protected $type;
+    protected $onSelectCallback = 'c5dk.blog.service.thumbnailCropper.select';
+    protected $onSaveCallback   = 'c5dk.blog.service.thumbnailCropper.save';
+
     protected $thumbnail_width  = 360;
     protected $thumbnail_height = 300;
 
@@ -48,6 +51,7 @@ class ThumbnailCropper extends Controller
 
         $this->requireAsset('javascript', 'cropper');
         $this->requireAsset('javascript', 'thumbnail_cropper/main');
+        $this->requireAsset('core/file-manager');
         $this->requireAsset('css', 'cropper');
     }
 
@@ -66,59 +70,44 @@ class ThumbnailCropper extends Controller
         return $this->type;
     }
 
+    public function setOnSelectCallback($onSelectCallback)
+    {
+        $this->onSelectCallback = $onSelectCallback;
+    }
+
+    public function getOnSelectCallback()
+    {
+        return $this->onSelectCallback;
+    }
+
+    public function setOnSaveCallback($onSaveCallback)
+    {
+        $this->onSaveCallback = $onSaveCallback;
+    }
+
     public function getOnSaveCallback()
     {
-        if ($this->type == 'post') {
-            return 'c5dk.blog.post.blog.save';
-        } else {
-            return 'c5dk.blog.service.thumbnailCropper.save';
-        }
+        return $this->onSaveCallback;
     }
 
-    public function saveForm($thumbnail, $fileName, $fileFolder, $fileSet = null)
-    {
-        // Get helper objects
-        $fh = $this->app->make('helper/file');
-        $fi = new FileImporter();
+    // public function saveForm($thumbnail, $fileName, $fileFolder, $fileSet = null)
+    // {
+    //     // Get helper objects
+    //     $fh = $this->app->make('helper/file');
+    //     $fi = new FileImporter();
 
-        // Get C5dk Objects
-        $C5dkConfig = $this->config ? $this->config : new C5dkConfig;
+    //     // Get C5dk Objects
+    //     $C5dkConfig = $this->config ? $this->config : new C5dkConfig;
 
-        $tmpFolder   = $fh->getTemporaryDirectory() . '/';
-        $tmpFilename = (microtime(true) * 10000) . '.jpg';
-        $imagePath   = $tmpFolder . $tmpFilename;
+    //     $tmpFolder   = $fh->getTemporaryDirectory() . '/';
+    //     $tmpFilename = (microtime(true) * 10000) . '.jpg';
+    //     $imagePath   = $tmpFolder . $tmpFilename;
 
-        $img     = str_replace('data:image/png;base64,', '', $thumbnail['croppedImage']);
-        $img     = str_replace(' ', '+', $img);
-        $data    = base64_decode($img);
-        $success = file_put_contents($imagePath, $data);
+    //     $img     = str_replace('data:image/png;base64,', '', $thumbnail['croppedImage']);
+    //     $img     = str_replace(' ', '+', $img);
+    //     $data    = base64_decode($img);
+    //     $success = file_put_contents($imagePath, $data);
 
-        // Get image facade and open image
-        $imagine = $this->app->make(Image::getFacadeAccessor());
-        $image   = $imagine->open($imagePath);
-
-        // Resize image (Chg: we now do it in the browser, but needs testing)
-        // $image = $image->resize(new Box($C5dkConfig->blog_thumbnail_width, $C5dkConfig->blog_thumbnail_height));
-
-        // Save image as .jpg
-        $image->save($imagePath, ['jpeg_quality' => 80]);
-
-        // Import thumbnail into the File Manager
-        $fv = $fi->import(
-            $imagePath,
-            $fileName,
-            $fileFolder
-        );
-
-        if (is_object($fv) && $fileSet instanceof FileSet) {
-            $fileSet->addFileToSet($fv);
-        }
-
-        // Delete tmp file
-        $fs = new \Illuminate\Filesystem\Filesystem();
-        $fs->delete($imagePath);
-
-        // Return the File Object
-        return $fv->getFile();
-    }
+    //     return $imagePath;
+    // }
 }

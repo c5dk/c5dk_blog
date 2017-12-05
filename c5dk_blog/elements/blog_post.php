@@ -67,7 +67,7 @@
                 </label>
                 <?= $form->textarea('description', Core::make('helper/text')->entities($C5dkBlog->description), ['class' => 'c5dk-blog-full-width', 'rows' => 4]); ?>
 
-                <!--  -->
+                <!-- Title and Description char counter script-->
                 <script type="text/javascript">
                     $(document).ready(function() {
                         // Title and description char counter

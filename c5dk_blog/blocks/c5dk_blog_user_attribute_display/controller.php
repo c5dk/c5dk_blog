@@ -14,7 +14,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
 
 class Controller extends BlockController
 {
-   	protected $btTable = 'btC5dkUserAttributeDisplay';
+    protected $btTable = 'btC5dkUserAttributeDisplay';
     protected $btDefaultSet = 'c5dk_blog';
     protected $btCacheBlockRecord = false;
 
@@ -22,7 +22,8 @@ class Controller extends BlockController
     public $avatarHeight = 100;
     public $avatarWidth = 100;
 
-    public function view() {
+    public function view()
+    {
         $templateHandle = $this->getTemplateHandle();
         if (in_array($templateHandle, array('date_time', 'boolean'))) {
             $this->render('templates/' . $templateHandle);

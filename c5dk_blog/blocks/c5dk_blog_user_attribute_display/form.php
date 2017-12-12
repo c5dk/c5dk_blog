@@ -1,13 +1,48 @@
+<?php defined('C5_EXECUTE') or die('Access Denied.'); ?>
+
 <?php
-defined('C5_EXECUTE') or die('Access Denied.');
-$form = Core::make('helper/form');
+// $form = Core::make('helper/form');
 $ush = Core::make('helper/form/user_selector');
 
-print Core::make('helper/concrete/ui')->tabs(array(
-    array('add', t('Add'), true),
-    array('options', t('Options')),
-));
+print Core::make('helper/concrete/ui')->tabs([
+    ['add', t('Add'), true],
+    ['options', t('Options')],
+]);
 ?>
+
+<!-- Tab: Add -->
+<div id="ccm-tab-content-add" class="ccm-tab-content">
+    <div class="form-group">
+        <label class="control-label"><?php  echo t('Property to Display:')?></label>
+
+        <select name="attributeHandle" class="form-control">
+        <optgroup label="<?php  echo t('User Values');?>">
+        <?php
+        $corePageValues = $this->controller->getAvailableUserValues();
+        foreach (array_keys($corePageValues) as $cpv) {
+            echo "<option value=\"".$cpv."\" ".($cpv == $this->controller->attributeHandle ? "selected=\"selected\"" : "").">".
+            $corePageValues[$cpv]."</option>\n";
+        }
+        ?>
+        </optgroup>
+        <optgroup label="<?php  echo t('User Attributes');?>">
+        <?php
+        $aks = $this->controller->getAvailableAttributes();
+        foreach ($aks as $ak) {
+            echo "<option value=\"".$ak->getAttributeKeyHandle()."\" ".($ak->getAttributeKeyHandle() == $this->controller->attributeHandle ? "selected=\"selected\"" : "").">".
+            $ak->getAttributeKeyDisplayName()."</option>\n";
+        }
+        ?>
+        </optgroup>
+        </select>
+    </div>
+    <div class="form-group">
+        <label class="control-label"><?php  echo t('Title Text')?></label>
+        <input type="text" class="form-control" name="attributeTitleText" value="<?php  echo $this->controller->attributeTitleText ?>"/>
+    </div>
+</div>
+
+<!-- Tab: Options -->
 <div class="ccm-tab-content" id="ccm-tab-content-options">
     <div class="form-group">
         <label class="control-label"><?php  echo t('Display property with formatting')?></label>
@@ -41,34 +76,3 @@ print Core::make('helper/concrete/ui')->tabs(array(
         </div>
     </fieldset>
 </div>
-<div id="ccm-tab-content-add" class="ccm-tab-content">
-    <div class="form-group">
-        <label class="control-label"><?php  echo t('Property to Display:')?></label>
-
-        <select name="attributeHandle" class="form-control">
-        <optgroup label="<?php  echo t('User Values');?>">
-        <?php
-        $corePageValues = $this->controller->getAvailableUserValues();
-        foreach (array_keys($corePageValues) as $cpv) {
-            echo "<option value=\"".$cpv."\" ".($cpv == $this->controller->attributeHandle ? "selected=\"selected\"" : "").">".
-            $corePageValues[$cpv]."</option>\n";
-        }
-        ?>
-        </optgroup>
-        <optgroup label="<?php  echo t('User Attributes');?>">
-        <?php
-        $aks = $this->controller->getAvailableAttributes();
-        foreach ($aks as $ak) {
-            echo "<option value=\"".$ak->getAttributeKeyHandle()."\" ".($ak->getAttributeKeyHandle() == $this->controller->attributeHandle ? "selected=\"selected\"" : "").">".
-            $ak->getAttributeKeyDisplayName()."</option>\n";
-        }
-        ?>
-        </optgroup>
-        </select>
-    </div>
-    <div class="form-group">
-        <label class="control-label"><?php  echo t('Title Text')?></label>
-        <input type="text" class="form-control" name="attributeTitleText" value="<?php  echo $this->controller->attributeTitleText ?>"/>
-    </div>
-</div>
-

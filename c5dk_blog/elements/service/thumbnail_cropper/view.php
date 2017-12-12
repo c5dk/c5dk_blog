@@ -20,6 +20,9 @@
                 <div class="c5dk_blog_thumbnail_preview_frame">
                     <div id="cropper_preview" class="c5dk_blog_thumbnail_preview">
                         <img id="c5dk_blog_thumbnail" class="c5dk_blog_thumbnail" src="<?= $Cropper->getThumbnailID() ? File::getRelativePathFromID($Cropper->getThumbnailID()) : ''; ?>"<?= $Cropper->getThumbnailID() ? '' : ' style="display:none;'; ?>>
+                        <?php if ($Cropper->hasDefaultThumbnail()) :?>
+                            <img id="c5dk_blog_defaultthumbnail" class="c5dk_blog_defaultthumbnail" src="<?= $Cropper->getDefaultThumbnail()->getRelativePath(); ?>">
+                        <?php endif ?>
                     </div>
                     <div class="c5dk_blog_thumbnail_preview_subtext"><?= t('Preview'); ?></div>
                 </div>
@@ -223,6 +226,14 @@
         width: 150px;
         height: <?= intval((150 / ($Cropper->config->blog_thumbnail_width / 100)) * ($Cropper->config->blog_thumbnail_height / 100)); ?>px;
         max-width: none;
+    }
+
+    #c5dk-blog-package .c5dk_blog_thumbnail {
+        position: absolute;
+        z-index: 100;
+    }
+    #c5dk-blog-package .c5dk_blog_defaultthumbnail {
+        z-index: 90;
     }
 
     .c5dk-blog-whiteout {

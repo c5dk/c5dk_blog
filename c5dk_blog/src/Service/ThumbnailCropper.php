@@ -78,4 +78,14 @@ class ThumbnailCropper extends Controller
     {
         return $this->onSaveCallback;
     }
+
+    public function hasDefaultThumbnail()
+    {
+        return is_object($this->defaultThumbnail) ? true : false;
+    }
+
+    public function getDefaultThumbnail()
+    {
+        return $this->defaultThumbnail;
+    }
 }

@@ -18,7 +18,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
 class Controller extends Package
 {
     protected $appVersionRequired      = '8.2';
-    protected $pkgVersion              = '8.2.1.1.b8';
+    protected $pkgVersion              = '8.2.1.1.b9';
     protected $pkgHandle               = 'c5dk_blog';
     protected $pkgAutoloaderRegistries = [
         'src/C5dkBlog' => '\C5dk\Blog',
@@ -137,6 +137,7 @@ class Controller extends Package
         C5dkInstaller::installBlockType('c5dk_blog_buttons', $pkg);
         C5dkInstaller::installBlockType('c5dk_blog_header', $pkg);
         C5dkInstaller::installBlockType('c5dk_blog_goback', $pkg);
+        C5dkInstaller::installBlockType('c5dk_blog_user_attribute_display', $pkg);
     }
 
     private function setupFilesystem($pkg)

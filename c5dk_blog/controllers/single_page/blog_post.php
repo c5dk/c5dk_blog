@@ -87,7 +87,7 @@ class BlogPost extends PageController
         $Cropper->setOnSaveCallback('c5dk.blog.post.blog.save');
         $this->set('ThumbnailCropper', $Cropper);
     }
-
+    
     public function save()
     {
         // Set C5dk Objects
@@ -174,7 +174,7 @@ class BlogPost extends PageController
             $fs->delete($tmpImagePath);
 
             $file = File::getByID($fv->getFileID());
-        } elseif ($C5dkConfig->blog_default_thumbnail_id != $thumbnail['id'] && in_array($thumbnail['id'], [-1, 0])) {
+        } elseif ($C5dkConfig->blog_default_thumbnail_id && $C5dkConfig->blog_default_thumbnail_id != $thumbnail['id'] && in_array($thumbnail['id'], [-1, 0])) {
             $file = File::getByID($C5dkConfig->blog_default_thumbnail_id);
         }
 

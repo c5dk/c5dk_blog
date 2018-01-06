@@ -2,11 +2,12 @@
 
 namespace C5dk\Blog;
 
+use Controller;
 use Concrete\Core\Multilingual\Page\Section\Section;
 
 defined('C5_EXECUTE') or die('Access Denied.');
 
-class BlogPost
+class BlogPost extends Controller
 {
     // Objects
     public $C5dkConfig;
@@ -27,8 +28,13 @@ class BlogPost
     {
         // Setup C5DK objects
         $this->C5dkConfig = new C5dkConfig;
-        $this->C5dkUser	  = new C5dkUser;
+        $this->C5dkUser   = new C5dkUser;
         $this->C5dkBlog   = new C5dkBlog;
+
+        // Check if user can blog?
+        if (!$this->C5dkUser->isBlogger) {
+            $this->redirect('/');
+        }
 
         // Setup Blog object properties
         $this->mode       = C5DK_BLOG_MODE_CREATE;
@@ -55,6 +61,11 @@ class BlogPost
         $this->C5dkConfig = new C5dkConfig;
         $this->C5dkUser   = new C5dkUser;
         $this->C5dkBlog   = C5dkBlog::getByID($blogID);
+
+        // Check if user is owner of blog?
+        if ($this->C5dkBlog->authorID != $this->C5dkUser->getUserID()) {
+            $this->redirect('/');
+        }
 
         // Setup Blog object properties
         $this->mode       = C5DK_BLOG_MODE_EDIT;

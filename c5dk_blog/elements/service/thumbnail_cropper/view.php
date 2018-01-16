@@ -22,6 +22,7 @@
                         <img id="c5dk_blog_thumbnail" class="c5dk_blog_thumbnail" src="<?= $Cropper->getThumbnailID() ? File::getRelativePathFromID($Cropper->getThumbnailID()) : ''; ?>"<?= $Cropper->getThumbnailID() ? '' : ' style="display:none;'; ?>>
                         <?php if ($Cropper->hasDefaultThumbnail()) :?>
                             <img id="c5dk_blog_defaultthumbnail" class="c5dk_blog_defaultthumbnail" src="<?= $Cropper->getDefaultThumbnail()->getRelativePath(); ?>">
+<img class="c5dk_blog_defaultthumbnail" src="<?= $Cropper->getDefaultThumbnail()->getRelativePath(); ?>">
                         <?php endif ?>
                     </div>
                     <div class="c5dk_blog_thumbnail_preview_subtext"><?= t('Preview'); ?></div>
@@ -171,14 +172,14 @@
 
 <script type="text/javascript">
     if (!c5dk){ var c5dk = {}; }
-    if (!c5dk.blog)	{ c5dk.blog = {}; }
+    if (!c5dk.blog) { c5dk.blog = {}; }
     if (!c5dk.blog.service) { c5dk.blog.service = {}; }
     if (!c5dk.blog.service.data) { c5dk.blog.service.data = {}; }
 
     c5dk.blog.service.data.thumbnailCropper = {
 
         type: '<?= $Cropper->getType(); ?>',
-        onSelectCallback: '<?php //= $Cropper->getOnSelectCallback();?>',
+        onSelectCallback: '<?= $Cropper->getOnSelectCallback();?>',
         onSaveCallback: '<?= $Cropper->getOnSaveCallback(); ?>',
         file: null,
         crop_img: null,

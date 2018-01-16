@@ -253,7 +253,8 @@ class Controller extends Package
         // Get the AssetList
         $al = AssetList::getInstance();
 
-        // Modal (Waiting)
+        // Main script and Modal (Waiting)
+        $al->register('javascript', 'c5dkBlog/main', 'js/c5dk_blog_post.js', [], 'c5dk_blog');
         $al->register('javascript', 'c5dkBlog/modal', 'js/c5dk_modal.js', [], 'c5dk_blog');
 
         // CKEditor

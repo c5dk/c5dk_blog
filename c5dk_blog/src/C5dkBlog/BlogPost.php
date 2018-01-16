@@ -63,28 +63,28 @@ class BlogPost extends Controller
         $this->C5dkBlog   = C5dkBlog::getByID($blogID);
 
         // Check if user is owner of blog?
-        if ($this->C5dkBlog->authorID != $this->C5dkUser->getUserID()) {
-            $this->redirect('/');
+        if ($this->C5dkBlog->authorID && $this->C5dkBlog->authorID == $this->C5dkUser->getUserID() ) {
+            // Setup Blog object properties
+            $this->mode       = C5DK_BLOG_MODE_EDIT;
+            $this->blogID     = $blogID;
+            $this->redirectID = $blogID;
+            $this->rootList   = $this->getUserRootList();
+            
+            // Set the topic attribute id from the blogs root
+            $this->topicAttributeID = C5dkRoot::getByID($this->C5dkBlog->rootID)->topicAttributeID;
+            if ($this->C5dkBlog->topics && !$this->topicAttributeID) {
+                $this->C5dkBlog->topics = 0;
+            }
+            
+            // Should tags and thumbnails be shown
+            $C5dkRoot                = C5dkRoot::getByID($this->C5dkBlog->rootID);
+            $this->tagsEnabled       = $C5dkRoot->tags;
+            $this->thumbnailsEnabled = $C5dkRoot->thumbnails;
+            
+            return $this;
         }
-
-        // Setup Blog object properties
-        $this->mode       = C5DK_BLOG_MODE_EDIT;
-        $this->blogID     = $blogID;
-        $this->redirectID = $blogID;
-        $this->rootList   = $this->getUserRootList();
-
-        // Set the topic attribute id from the blogs root
-        $this->topicAttributeID = C5dkRoot::getByID($this->C5dkBlog->rootID)->topicAttributeID;
-        if ($this->C5dkBlog->topics && !$this->topicAttributeID) {
-            $this->C5dkBlog->topics = 0;
-        }
-
-        // Should tags and thumbnails be shown
-        $C5dkRoot                = C5dkRoot::getByID($this->C5dkBlog->rootID);
-        $this->tagsEnabled       = $C5dkRoot->tags;
-        $this->thumbnailsEnabled = $C5dkRoot->thumbnails;
-
-        return $this;
+        
+        $this->redirect('/');
     }
 
     private function getUserRootList()

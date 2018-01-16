@@ -63,6 +63,7 @@ class BlogPost extends PageController
     {
         // Require Assets
         $this->requireAsset('css', 'c5dk_blog_css');
+        $this->requireAsset('javascript', 'c5dkBlog/main');
         $this->requireAsset('javascript', 'c5dkBlog/modal');
         $this->requireAsset('javascript', 'c5dkckeditor');
         $this->requireAsset('core/topics');
@@ -83,7 +84,7 @@ class BlogPost extends PageController
         $defaultThumbnailID = $C5dkBlogPost->C5dkConfig->blog_default_thumbnail_id;
         $defThumbnail   = $defaultThumbnailID ? File::getByID($defaultThumbnailID) : null;
         $Cropper        = new ThumbnailCropper($C5dkBlogPost->C5dkBlog->thumbnail, $defThumbnail);
-        $Cropper->setOnSelectCallback('c5dk.blog.post.image.showManager');
+        $Cropper->setOnSelectCallback("c5dk.blog.post.image.showManager('thumbnail')");
         $Cropper->setOnSaveCallback('c5dk.blog.post.blog.save');
         $this->set('ThumbnailCropper', $Cropper);
     }

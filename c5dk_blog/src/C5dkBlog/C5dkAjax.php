@@ -14,8 +14,9 @@ use File;
 use FileList;
 use FileImporter;
 use FileSet;
-use Concrete\Core\Tree\Node\Type\FileFolder	as FileFolder;
-use C5dk\Blog\BlogPost	as C5dkBlogPost;
+use Concrete\Core\Tree\Node\Type\FileFolder as FileFolder;
+use C5dk\Blog\BlogPost as C5dkBlogPost;
+use C5dk\Blog\Service\ThumbnailCropper as ThumbnailCropper;
 
 defined('C5_EXECUTE') or die('Access Denied.');
 
@@ -33,12 +34,19 @@ class C5dkAjax extends Controller
             $C5dkBlogPost->edit($request['blogID']);
         }
 
+        $defaultThumbnailID = $C5dkBlogPost->C5dkConfig->blog_default_thumbnail_id;
+        $defThumbnail = $defaultThumbnailID ? File::getByID($defaultThumbnailID) : null;
+        $Cropper = new ThumbnailCropper($C5dkBlogPost->C5dkBlog->thumbnail, $defThumbnail);
+        $Cropper->setOnSelectCallback('c5dk.blog.post.image.showManager');
+        $Cropper->setOnSaveCallback('c5dk.blog.post.blog.save');
+
         ob_start();
         print View::element('blog_post', [
             'BlogPost' => $C5dkBlogPost,
             'C5dkConfig' => $C5dkBlogPost->C5dkConfig,
             'C5dkUser' => $C5dkBlogPost->C5dkUser,
             'C5dkBlog' => $C5dkBlogPost->C5dkBlog,
+            'ThumbnailCropper' => $Cropper,
             'token' => $this->app->make('token'),
             'jh' => $this->app->make('helper/json'),
             'form' => $this->app->make('helper/form')

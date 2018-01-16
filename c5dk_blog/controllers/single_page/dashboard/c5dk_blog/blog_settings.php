@@ -186,6 +186,8 @@ class BlogSettings extends DashboardPageController
             if ($oldThumbnail) {
                 $fv = $oldThumbnail->getVersionToModify(true);
                 $fv->updateContents($image->get('jpg'));
+                // $fv->refreshAttributes(); // Bug??? Do not work
+
             } else {
 
                 // Import thumbnail into the File Manager

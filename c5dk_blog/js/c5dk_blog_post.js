@@ -34,7 +34,7 @@ c5dk.blog.post = {
                 c5dk.blog.post.blog.formData.set('c5dk_blog_content', CKEDITOR.instances.c5dk_blog_content.getData());
 
                 if (c5dk.blog.post.thumbnail.crop_img) {
-                    c5dk.blog.post.thumbnail.crop_img.cropper('getCroppedCanvas', {fillColor: '<?= $C5dkConfig->blog_cropper_def_bgcolor; ?>'}).toBlob(function (blob) {
+                    c5dk.blog.post.thumbnail.crop_img.cropper('getCroppedCanvas', { fillColor: c5dk.blog.service.data.thumbnailCropper.fillColor}).toBlob(function (blob) {
 
                         c5dk.blog.post.blog.formData.append('croppedImage', blob);
                         c5dk.blog.post.blog.save();
@@ -80,15 +80,15 @@ c5dk.blog.post = {
         // Image upload
         $('#c5dk_file_upload').fileupload({
             dropZone: $("#c5dk_filemanager_slidein"),
-            url: '<?= \URL::to('/c5dk/blog/image/upload'); ?>',
+            url: c5dk.blog.data.post.url.upload,
             dataType: 'json',
             // Enable image resizing, except for Android and Opera,
             // which actually support image resizing, but fail to
             // send Blob objects via XHR requests:
             disableImageResize: /Android(?!.*Chrome)|Opera/.test(window.navigator && navigator.userAgent),
             imageOrientation: true,
-            imageMaxWidth: <?= $C5dkConfig->blog_picture_width; ?>,
-            imageMaxHeight: <?= $C5dkConfig->blog_picture_height; ?>,
+            imageMaxWidth: c5dk.blog.data.post.image.maxWidth,
+            imageMaxHeight: c5dk.blog.data.post.image.maxHeight,
             // imageCrop: true // Force cropped images,
         }).on('fileuploadsubmit', function (e, data) {
 
@@ -113,15 +113,15 @@ c5dk.blog.post = {
     ping: function(){
         $.ajax({
             type: 'POST',
-            url: '<?= \URL::to('/blog_post/ping'); ?>',
+            url: c5dk.blog.data.post.url.ping,
             dataType: 'json'
         });
     },
 
     blog: {
 
-        mode: <?= $BlogPost->mode == C5DK_BLOG_MODE_CREATE ? C5DK_BLOG_MODE_CREATE : C5DK_BLOG_MODE_EDIT; ?>,
-        slidein: <?= (int) $C5dkConfig->blog_form_slidein; ?>,
+        // mode: <?= $BlogPost->mode == C5DK_BLOG_MODE_CREATE ? C5DK_BLOG_MODE_CREATE : C5DK_BLOG_MODE_EDIT; ?>,
+        // slidein: <?= (int) $C5dkConfig->blog_form_slidein; ?>,
         formData: null,
 
         save: function () {
@@ -130,14 +130,14 @@ c5dk.blog.post = {
 
             c5dk.blog.modal.waiting("<?= t('Saving your blog'); ?>");
 
-            $.ajax('<?= \URL::to('/c5dk/blog/save'); ?>/' + blogID, {
+            $.ajax(c5dk.blog.data.post.url.save + '/' + blogID, {
                 method: "POST",
                 data: c5dk.blog.post.blog.formData,
                 processData: false,
                 contentType: false,
                 success: function (result) {
                     if (result.status) {
-                        window.location = '<?= \URL::to('/'); ?>' + result.redirectLink;
+                        window.location = c5dk.blog.data.post.url.root + result.redirectLink;
                     }
                 },
                 error: function () {
@@ -179,7 +179,7 @@ c5dk.blog.post = {
                     $.fn.dialog.closeTop();
                     $.ajax({
                         type: 'POST',
-                        url: '<?= \URL::to('/c5dk/blog/image/delete'); ?>/' + c5dk.blog.post.image.currentFID,
+                        url: c5dk.blog.data.post.url.delete + '/' + c5dk.blog.post.image.currentFID,
                         dataType: 'json',
                         success: function(r) {
                             if (r.status == "success") {
@@ -217,9 +217,9 @@ c5dk.blog.post = {
         hideManager: function () {
 
             c5dk.blog.post.image.filemanager.slideReveal("hide");
-        },
+        }
 
-    },
+    }
 
     // thumbnail: {
     //     preview:{

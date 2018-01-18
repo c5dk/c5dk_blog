@@ -37,7 +37,7 @@ class C5dkAjax extends Controller
         $defaultThumbnailID = $C5dkBlogPost->C5dkConfig->blog_default_thumbnail_id;
         $defThumbnail = $defaultThumbnailID ? File::getByID($defaultThumbnailID) : null;
         $Cropper = new ThumbnailCropper($C5dkBlogPost->C5dkBlog->thumbnail, $defThumbnail);
-        $Cropper->setOnSelectCallback('c5dk.blog.post.image.showManager');
+        $Cropper->setOnSelectCallback("c5dk.blog.post.image.showManager('thumbnail')");
         $Cropper->setOnSaveCallback('c5dk.blog.post.blog.save');
 
         ob_start();

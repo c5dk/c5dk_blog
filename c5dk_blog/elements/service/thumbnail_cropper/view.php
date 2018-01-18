@@ -180,7 +180,7 @@
     c5dk.blog.service.data.thumbnailCropper = {
 
         type: '<?= $Cropper->getType(); ?>',
-        onSelectCallback: '<?= $Cropper->getOnSelectCallback();?>',
+        onSelectCallback: "<?= $Cropper->getOnSelectCallback();?>",
         onSaveCallback: '<?= $Cropper->getOnSaveCallback(); ?>',
         file: null,
         crop_img: null,

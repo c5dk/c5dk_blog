@@ -218,10 +218,12 @@ if (!c5dk.blog) { c5dk.blog = {}; }
 if (!c5dk.blog.data) { c5dk.blog.data = {}; }
 
 c5dk.blog.data.post = {
+    modeCreate: '<?= C5DK_BLOG_MODE_CREATE; ?>',
     mode: <?= $BlogPost->mode == C5DK_BLOG_MODE_CREATE ? C5DK_BLOG_MODE_CREATE : C5DK_BLOG_MODE_EDIT; ?>,
     slidein: <?= (int) $C5dkConfig->blog_form_slidein; ?>,
 
     url: {
+        currentPage: '<?= \URL::to('blog_post', 'create', $BlogPost->redirectID); ?>',
         root: '<?= \URL::to("/"); ?>',
         save: '<?= \URL::to("/c5dk/blog/save"); ?>',
         delete: '<?= \URL::to("/c5dk/blog/image/delete"); ?>',

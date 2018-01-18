@@ -20,9 +20,10 @@
                 <div class="c5dk_blog_thumbnail_preview_frame">
                     <div id="cropper_preview" class="c5dk_blog_thumbnail_preview">
                         <img id="c5dk_blog_thumbnail" class="c5dk_blog_thumbnail" src="<?= $Cropper->getThumbnailID() ? File::getRelativePathFromID($Cropper->getThumbnailID()) : ''; ?>"<?= $Cropper->getThumbnailID() ? '' : ' style="display:none;'; ?>>
-                        <?php if ($Cropper->hasDefaultThumbnail()) :?>
-                            <img id="c5dk_blog_defaultthumbnail" class="c5dk_blog_defaultthumbnail" src="<?= $Cropper->getDefaultThumbnail()->getRelativePath(); ?>">
-<img class="c5dk_blog_defaultthumbnail" src="<?= $Cropper->getDefaultThumbnail()->getRelativePath(); ?>">
+                        <?php if ($Cropper->hasDefaultThumbnail()) : ?>
+                        <!-- Default Thumbnail -->
+<img src="">
+<img id="c5dk_blog_defaultthumbnail" class="c5dk_blog_defaultthumbnail" src="<?= $Cropper->getDefaultThumbnail()->getRelativePath(); ?>">
                         <?php endif ?>
                     </div>
                     <div class="c5dk_blog_thumbnail_preview_subtext"><?= t('Preview'); ?></div>

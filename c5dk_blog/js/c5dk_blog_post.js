@@ -65,7 +65,7 @@ c5dk.blog.post = {
         // Root change event to change the topic tree
         $('#rootID').change(function(event) {
             if (c5dk.blog.post.blog.slidein) {
-                if (c5dk.blog.post.blog.mode == '<?= C5DK_BLOG_MODE_CREATE; ?>') {
+                if (c5dk.blog.post.blog.mode == c5dk.blog.data.post.modeCreate) {
                     c5dk.blog.buttons.form.create = null;
                     c5dk.blog.buttons.create($('#blogID').val(), $('#rootID').val());
                 } else {
@@ -73,7 +73,7 @@ c5dk.blog.post = {
                     c5dk.blog.buttons.edit($('#blogID').val(), $('#rootID').val());
                 }
             } else {
-                window.location = "<?= \URL::to('blog_post', 'create', $BlogPost->redirectID); ?>/" + $('#rootID').val();
+                window.location = c5dk.blog.data.post.url.currentPage + "/" + $('#rootID').val();
             }
         });
 
@@ -147,7 +147,7 @@ c5dk.blog.post = {
         },
 
         cancel: function() {
-            if (c5dk.blog.post.blog.slidein) {
+            if (c5dk.blog.data.post.slidein) {
                 c5dk.blog.buttons.cancel();
             } else {
                 window.history.back();

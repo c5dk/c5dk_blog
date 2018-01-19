@@ -166,11 +166,14 @@ class BlogSettings extends DashboardPageController
 
         // So now we only need to see if we have a new thumbnail or we keep the old one
         if (strlen($thumbnail['croppedImage'])) {
+            $fileservice = \Core::make('helper/file');
+
             // Get on with saving the new thumbnail
             $img     = str_replace('data:image/png;base64,', '', $thumbnail['croppedImage']);
             $img     = str_replace(' ', '+', $img);
             $data    = base64_decode($img);
-            $success = file_put_contents($tmpImagePath, $data);
+            $success = $fileservice->append($tmpImagePath, $data);
+            // $success = file_put_contents($tmpImagePath, $data);
 
             // Get image facade and open image
             // $imagine = $this->app->make(Image::getFacadeAccessor());

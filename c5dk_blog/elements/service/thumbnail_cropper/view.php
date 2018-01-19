@@ -1,3 +1,5 @@
+<?php defined('C5_EXECUTE') or die('Access Denied.'); ?>
+
 <div id="c5dk-blog-package">
     <div id="thumbnail" class="c5dk_blog_section">
 
@@ -21,7 +23,7 @@
                     <div id="cropper_preview" class="c5dk_blog_thumbnail_preview">
                         <img id="c5dk_blog_thumbnail" class="c5dk_blog_thumbnail" src="<?= $Cropper->getThumbnailID() ? File::getRelativePathFromID($Cropper->getThumbnailID()) : ''; ?>"<?= $Cropper->getThumbnailID() ? '' : ' style="display:none;'; ?>>
                         <?php if ($Cropper->hasDefaultThumbnail()) : ?>
-                        <!-- Default Thumbnail -->
+                        <!-- Default Thumbnail !!! HACK to make it work!!! -->
 <img src="">
 <img id="c5dk_blog_defaultthumbnail" class="c5dk_blog_defaultthumbnail" src="<?= $Cropper->getDefaultThumbnail()->getRelativePath(); ?>">
                         <?php endif ?>

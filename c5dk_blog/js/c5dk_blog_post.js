@@ -92,7 +92,7 @@ c5dk.blog.post = {
             // imageCrop: true // Force cropped images,
         }).on('fileuploadsubmit', function (e, data) {
 
-            c5dk.blog.modal.waiting("<?= t('Uploading File(s)'); ?>");
+            c5dk.blog.modal.waiting(c5dk.blog.data.post.text.fileupload);
         }).on('fileuploaddone', function (e, data) {
 
             $('#redactor-c5dkimagemanager-box').html(data.result.html);

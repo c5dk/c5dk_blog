@@ -231,6 +231,10 @@ c5dk.blog.data.post = {
         ping: '<?= \URL::to("/blog_post/ping"); ?>'
     },
 
+    text: {
+        fileupload: '<?= t('Uploading File(s)'); ?>'
+    },
+
     image: {
             MaxWidth: <?= $C5dkConfig->blog_picture_width; ?>,
             MaxHeight: <?= $C5dkConfig->blog_picture_height; ?>

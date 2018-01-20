@@ -14,7 +14,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
 
 class Controller extends BlockController
 {
-    protected $btTable = 'btC5dkUserAttributeDisplay';
+    protected $btTable = 'btC5dkBlogUserAttributeDisplay';
     protected $btDefaultSet = 'c5dk_blog';
     protected $btCacheBlockRecord = false;
 

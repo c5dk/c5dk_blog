@@ -24,7 +24,7 @@
                         <img id="c5dk_blog_thumbnail" class="c5dk_blog_thumbnail" src="<?= $Cropper->getThumbnailID() ? File::getRelativePathFromID($Cropper->getThumbnailID()) : ''; ?>"<?= $Cropper->getThumbnailID() ? '' : ' style="display:none;'; ?>>
                         <?php if ($Cropper->hasDefaultThumbnail()) : ?>
                         <!-- Default Thumbnail !!! HACK to make it work!!! -->
-<img src="">
+<img class="c5dk_pseudo_hide" src="">
 <img id="c5dk_blog_defaultthumbnail" class="c5dk_blog_defaultthumbnail" src="<?= $Cropper->getDefaultThumbnail()->getRelativePath(); ?>">
                         <?php endif ?>
                     </div>
@@ -216,6 +216,10 @@
 </script>
 
 <style type="text/css">
+
+    #c5dk-blog-package .c5dk_pseudo_hide {
+        display: none;
+    }
 
     #c5dk-blog-package .c5dk_blog_thumbnail_preview{
         float: left;

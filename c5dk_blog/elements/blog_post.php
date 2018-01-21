@@ -236,8 +236,8 @@ c5dk.blog.data.post = {
     },
 
     image: {
-            MaxWidth: <?= $C5dkConfig->blog_picture_width; ?>,
-            MaxHeight: <?= $C5dkConfig->blog_picture_height; ?>
+            maxWidth: <?= $C5dkConfig->blog_picture_width; ?>,
+            maxHeight: <?= $C5dkConfig->blog_picture_height; ?>
     }
 }
 

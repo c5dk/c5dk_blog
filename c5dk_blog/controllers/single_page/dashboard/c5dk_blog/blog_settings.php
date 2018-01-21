@@ -141,6 +141,7 @@ class BlogSettings extends DashboardPageController
 
         // Init Helpers
         $fh         = $this->app->make('helper/file');
+        $fs = new \Illuminate\Filesystem\Filesystem();
 
         // Init variables
         $uID          = (new User)->getUserID();
@@ -172,7 +173,8 @@ class BlogSettings extends DashboardPageController
             $img     = str_replace('data:image/png;base64,', '', $thumbnail['croppedImage']);
             $img     = str_replace(' ', '+', $img);
             $data    = base64_decode($img);
-            $success = $fileservice->append($tmpImagePath, $data);
+            // $success = $fileservice->append($tmpImagePath, $data);
+            $fs->put($tmpImagePath, $data);
             // $success = file_put_contents($tmpImagePath, $data);
 
             // Get image facade and open image
@@ -207,7 +209,6 @@ class BlogSettings extends DashboardPageController
             }
 
             // Delete tmp file
-            $fs = new \Illuminate\Filesystem\Filesystem();
             $fs->delete($tmpImagePath);
 
             return $fv->getFileID();

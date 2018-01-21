@@ -97,6 +97,7 @@ class BlogPost extends PageController
 
         // Get helper objects
         $fh = $this->app->make('helper/file');
+        $fs = new \Illuminate\Filesystem\Filesystem();
 
         // Get or create the C5dkBlog Object
         $blogID   = $this->post('blogID');
@@ -142,7 +143,8 @@ class BlogPost extends PageController
             $img     = str_replace('data:image/png;base64,', '', $thumbnail['croppedImage']);
             $img     = str_replace(' ', '+', $img);
             $data    = base64_decode($img);
-            $success = $fileservice->append($tmpImagePath, $data);
+            // $success = $fileservice->append($tmpImagePath, $data);
+            $fs->put($tmpImagePath, $data);
             // $success = file_put_contents($tmpImagePath, $data);
 
             // Get image facade and open image
@@ -174,7 +176,6 @@ class BlogPost extends PageController
             }
 
             // Delete tmp file
-            $fs = new \Illuminate\Filesystem\Filesystem();
             $fs->delete($tmpImagePath);
 
             $file = File::getByID($fv->getFileID());

@@ -91,7 +91,7 @@ class C5dkBlog extends Page
 		if (empty($this->content)) {
 			$this->content = ' ';
 		}
-		$instance = $this->getInstance();
+		$instance = $C5dkBlog->getInstance();
 		$instance->save(['content' => $this->content]);
 
 		// Save tags to the blog page
@@ -242,7 +242,7 @@ class C5dkBlog extends Page
 			}
 		}
 
-		return '';
+		return false;
 	}
 
 }

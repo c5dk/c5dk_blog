@@ -86,27 +86,13 @@ class C5dkBlog extends Page
 				return false;
 		}
 
-		// Update the composer content block
-		// $pt  = PageTemplate::getByID($C5dkBlog->getPageTemplateID());
-		// $ptt = PageType::getByID($C5dkBlog->getPageTypeID());
 
-		// // get all contrrols
-		// $controls = PageTypeComposerOutputControl::getList($ptt, $pt);
-		// foreach ($controls as $control) {
-		// 	$fls = PageTypeComposerFormLayoutSetControl::getByID($control->getPageTypeComposerFormLayoutSetControlID());
-
-		// 	$bc = $fls->getPageTypeComposerControlObject();
-		// 	$bc->setPageTypeComposerFormLayoutSetControlObject($fls);
-		// 	$blk = $bc->getPageTypeComposerControlBlockObject($C5dkBlog);
-
-			// Update the Content Block with the blog text
-			if (empty($this->content)) {
-				$this->content = ' ';
-			}
-            // $blk->update(['content' => $this->content]);
-            $instance = $this->getInstance();
-            $instance->save(['content' => $this->content]);
-		// }
+		// Update the Content Block with the blog text
+		if (empty($this->content)) {
+			$this->content = ' ';
+		}
+		$instance = $this->getInstance();
+		$instance->save(['content' => $this->content]);
 
 		// Save tags to the blog page
 		$cakTags    = CollectionAttributeKey::getByHandle('tags');
@@ -246,17 +232,17 @@ class C5dkBlog extends Page
 		$ret  = Events::fire('on_page_urlify', $name);
 
 		return (!$ret) ? $name : $ret;
-    }
+	}
 
-    private function getInstance()
-    {
-        foreach ($this->getBlocks('Main') as $block) {
-            if ($block->getBlockTypeHandle() == 'content') {
-                return $block->getInstance();
-            }
-        }
+	private function getInstance()
+	{
+		foreach ($this->getBlocks('Main') as $block) {
+			if ($block->getBlockTypeHandle() == 'content') {
+				return $block->getInstance();
+			}
+		}
 
-        return '';
-    }
+		return '';
+	}
 
 }

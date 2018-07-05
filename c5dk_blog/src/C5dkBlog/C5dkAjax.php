@@ -22,353 +22,361 @@ defined('C5_EXECUTE') or die('Access Denied.');
 
 class C5dkAjax extends Controller
 {
-    public function getForm()
-    {
-        $C5dkBlogPost = new C5dkBlogPost;
+	public function getForm()
+	{
+		$C5dkBlogPost = new C5dkBlogPost;
 
-        $request = $this->post();
+		$request = $this->post();
 
-        if ($request['mode'] == C5DK_BLOG_MODE_CREATE) {
-            $C5dkBlogPost->create($request['blogID'], $request['rootID']);
-        } else {
-            $C5dkBlogPost->edit($request['blogID']);
-        }
+		if ($request['mode'] == C5DK_BLOG_MODE_CREATE) {
+			$C5dkBlogPost->create($request['blogID'], $request['rootID']);
+		} else {
+			$C5dkBlogPost->edit($request['blogID']);
+		}
 
-        $defaultThumbnailID = $C5dkBlogPost->C5dkConfig->blog_default_thumbnail_id;
-        $defThumbnail = $defaultThumbnailID ? File::getByID($defaultThumbnailID) : null;
-        $Cropper = new ThumbnailCropper($C5dkBlogPost->C5dkBlog->thumbnail, $defThumbnail);
-        $Cropper->setOnSelectCallback("c5dk.blog.post.image.showManager('thumbnail')");
-        $Cropper->setOnSaveCallback('c5dk.blog.post.blog.save');
+		$defaultThumbnailID = $C5dkBlogPost->C5dkConfig->blog_default_thumbnail_id;
+		$defThumbnail       = $defaultThumbnailID ? File::getByID($defaultThumbnailID) : NULL;
+		$Cropper            = new ThumbnailCropper($C5dkBlogPost->C5dkBlog->thumbnail, $defThumbnail);
+		$Cropper->setOnSelectCallback("c5dk.blog.post.image.showManager('thumbnail')");
+		$Cropper->setOnSaveCallback('c5dk.blog.post.blog.save');
 
-        ob_start();
-        print View::element('blog_post', [
-            'BlogPost' => $C5dkBlogPost,
-            'C5dkConfig' => $C5dkBlogPost->C5dkConfig,
-            'C5dkUser' => $C5dkBlogPost->C5dkUser,
-            'C5dkBlog' => $C5dkBlogPost->C5dkBlog,
-            'ThumbnailCropper' => $Cropper,
-            'token' => $this->app->make('token'),
-            'jh' => $this->app->make('helper/json'),
-            'form' => $this->app->make('helper/form')
-        ], 'c5dk_blog');
-        $content = ob_get_contents();
-        ob_end_clean();
+		ob_start();
+		print View::element('blog_post', [
+			'BlogPost' => $C5dkBlogPost,
+			'C5dkConfig' => $C5dkBlogPost->C5dkConfig,
+			'C5dkUser' => $C5dkBlogPost->C5dkUser,
+			'C5dkBlog' => $C5dkBlogPost->C5dkBlog,
+			'ThumbnailCropper' => $Cropper,
+			'token' => $this->app->make('token'),
+			'jh' => $this->app->make('helper/json'),
+			'form' => $this->app->make('helper/form')
+		], 'c5dk_blog');
+		$content = ob_get_contents();
+		ob_end_clean();
 
-        $jh = $this->app->make('helper/json');
-        echo $jh->encode((object) [
-                'form' => $content
-            ]);
+		$jh = $this->app->make('helper/json');
+		echo $jh->encode((object) [
+			'form' => $content
+		]);
 
-        exit;
-    }
+		exit;
+	}
 
-    public function delete($blogID)
-    {
-        // Set C5DK Objects
-        $C5dkUser = new C5dkUser();
-        $C5dkBlog = C5dkBlog::getByID($blogID);
+	public function delete($blogID)
+	{
+		// Set C5DK Objects
+		$C5dkUser = new C5dkUser();
+		$C5dkBlog = C5dkBlog::getByID($blogID);
 
-        // Delete the blog if the current user is the owner
-        if ($C5dkBlog instanceof C5dkBlog && $C5dkBlog->getAttribute('c5dk_blog_author_id') == $C5dkUser->getUserID()) {
-            $jh = $this->app->make('helper/json');
-            echo $jh->encode([
-                'url' => Page::getByID($C5dkBlog->rootID)->getCollectionLink(),
-                'result' => $C5dkBlog->moveToTrash()
-            ]);
-        }
-    }
+		// Delete the blog if the current user is the owner
+		if ($C5dkBlog instanceof C5dkBlog && $C5dkBlog->getAttribute('c5dk_blog_author_id') == $C5dkUser->getUserID()) {
+			$jh = $this->app->make('helper/json');
+			echo $jh->encode([
+				'url' => Page::getByID($C5dkBlog->rootID)->getCollectionLink(),
+				'result' => $C5dkBlog->moveToTrash()
+			]);
+		}
+	}
 
-    public function imageUpload()
-    {
-        // Get helper objects
-        $jh = $this->app->make('helper/json');
-        $fh = $this->app->make('helper/file');
+	public function getFilesFromUserSet()
+	{
+		// Get helper objects
+		$im = $this->app->make('helper/image');
 
-        // Get C5dk Objects
-        $C5dkConfig = new C5dkConfig;
-        $C5dkUser   = new C5dkUser();
-        $uID        = $C5dkUser->getUserID();
+		$C5dkUser = new C5dkUser();
+		if (!$C5dkUser->isLoggedIn()) {
+			return '{}';
+		}
 
-        // Data to send back if something fails
-        $data = [
-            'html' => '<div class="error-message">' . t('An error has occurred!') . '</div>',
-            'status' => 0
-        ];
+		// Is $fs a FileSet object or a FileSet handle?
+		$fs = FileSet::getByName('C5DK_BLOG_uID-' . $C5dkUser->getUserID());
+		if (!is_object($fs)) {
+			return '{}';
+		}
 
-        $tmpFolder = $fh->getTemporaryDirectory();
+		// Get files from FileSet
+		$fl = new FileList();
+		$fl->filterBySet($fs);
+		foreach ($fl->get() as $key => $file) {
+			$f  = File::getByID($file->getFileID());
+			$fv = $f->getRecentVersion();
+			$fp = explode('_', $fv->getFileName());
+			if ($fp[3] != 'Thumb') {
+				$files[$key] = [
+					'obj' => $f,
+					'fID' => $f->getFIleID(),
+					'thumbnail' => $im->getThumbnail($f, 150, 150),
+					'picture' => [
+						'src' => File::getRelativePathFromID($file->getFileID()),
+						'width' => $fv->getAttribute('width'),
+						'height' => $fv->getAttribute('height')
+					],
+					'FileFolder' => \Concrete\Core\Tree\Node\Type\FileFolder::getNodeByName('C5DK Blog')
+				];
+			}
+		};
 
-        // Get image facade and open image
-        $imagine = $this->app->make(Image::getFacadeAccessor());
-        $image   = $imagine->open($_FILES['files']['tmp_name'][0]);
+		return $files;
+	}
 
-        // Autorotate image
-        // $transformation = new Transformation($imagine);
-        // $transformation->applyFilter($image, new Autorotate());
+	public function imageUpload()
+	{
+		// Get helper objects
+		$jh = $this->app->make('helper/json');
+		$fh = $this->app->make('helper/file');
 
-        // Resize image
-        // $width = $C5dkConfig->blog_picture_width;
-        // $height = $C5dkConfig->blog_picture_height;
-        // $image = $image->thumbnail(new Box($width, $height), ImageInterface::THUMBNAIL_INSET);
+		// Get C5dk Objects
+		$C5dkConfig = new C5dkConfig;
+		$C5dkUser   = new C5dkUser();
+		$uID        = $C5dkUser->getUserID();
 
-        $filename = (microtime(true) * 10000) . '.jpg';
+		// Data to send back if something fails
+		$data = [
+			'html' => '<div class="error-message">' . t('An error has occurred!') . '</div>',
+			'status' => 0
+		];
 
-        // Save image as .jpg
-        $image->save($tmpFolder . $filename, ['jpeg_quality' => 80]);
+		$tmpFolder = $fh->getTemporaryDirectory();
 
-        // Import file
-        $fi = new FileImporter();
-        $fv = $fi->import(
-            // $_FILES['file']['tmp_name'][0],
-            $tmpFolder . $filename,
-            'C5DK_BLOG_uID-' . $uID . '_Pic_' . $fh->unfilename($_FILES['file']['name'][0]) . '.jpg',
-            FileFolder::getNodeByName('Manager')
-        );
+		// Get image facade and open image
+		$imagine = $this->app->make(Image::getFacadeAccessor());
+		$image   = $imagine->open($_FILES['files']['tmp_name'][0]);
 
-        // Delete our imported file
-        $fs = new \Illuminate\Filesystem\Filesystem();
-        $fs->delete($tmpFolder . $filename);
+		// Autorotate image
+		// $transformation = new Transformation($imagine);
+		// $transformation->applyFilter($image, new Autorotate());
 
-        if (is_object($fv)) {
-            // Create and get FileSet if not exist and add file to the set
-            $fileSet = FileSet::createAndGetSet('C5DK_BLOG_uID-' . $uID, FileSet::TYPE_PUBLIC, $uID);
-            $fsf     = $fileSet->addFileToSet($fv);
+		// Resize image
+		// $width = $C5dkConfig->blog_picture_width;
+		// $height = $C5dkConfig->blog_picture_height;
+		// $image = $image->thumbnail(new Box($width, $height), ImageInterface::THUMBNAIL_INSET);
 
-            // Now let's update the image
-            $fv->updateContents($image->get($fv->getExtension()));
-            $fv->rescanThumbnails();
+		$filename = (microtime(TRUE) * 10000) . '.jpg';
 
-            // Get FileList
-            // $files = $this->getFileList($fileSet);
-            // rsort($files);
-            $data = [
-                'status' => 1,
-                'html' => $C5dkUser->getImageListHTML(),
-                'filename' => $filename
-            ];
-        }
+		// Save image as .jpg
+		$image->save($tmpFolder . $filename, ['jpeg_quality' => 80]);
 
-        header('Content-type: application/json');
-        echo $jh->encode($data);
+		// Import file
+		$fi = new FileImporter();
+		$fv = $fi->import(
+			// $_FILES['file']['tmp_name'][0],
+			$tmpFolder . $filename,
+			'C5DK_BLOG_uID-' . $uID . '_Pic_' . $fh->unfilename($_FILES['file']['name'][0]) . '.jpg',
+			FileFolder::getNodeByName('Manager')
+		);
 
-        exit;
-    }
+		// Delete our imported file
+		$fs = new \Illuminate\Filesystem\Filesystem();
+		$fs->delete($tmpFolder . $filename);
 
-    public function getFilesFromUserSet()
-    {
-        // Get helper objects
-        $im = $this->app->make('helper/image');
+		if (is_object($fv)) {
+			// Create and get FileSet if not exist and add file to the set
+			$fileSet = FileSet::createAndGetSet('C5DK_BLOG_uID-' . $uID, FileSet::TYPE_PUBLIC, $uID);
+			$fsf     = $fileSet->addFileToSet($fv);
 
-        $C5dkUser = new C5dkUser();
-        if (!$C5dkUser->isLoggedIn()) {
-            return '{}';
-        }
+			// Now let's update the image
+			$fv->updateContents($image->get($fv->getExtension()));
+			$fv->rescanThumbnails();
 
-        // Is $fs a FileSet object or a FileSet handle?
-        $fs = FileSet::getByName('C5DK_BLOG_uID-' . $C5dkUser->getUserID());
-        if (!is_object($fs)) {
-            return '{}';
-        }
+			// Get FileList
+			// $files = $this->getFileList($fileSet);
+			// rsort($files);
+			$data = [
+				'status' => 1,
+				'html' => $C5dkUser->getImageListHTML(),
+				'filename' => $filename
+			];
+		}
 
-        // Get files from FileSet
-        $fl = new FileList();
-        $fl->filterBySet($fs);
-        foreach ($fl->get() as $key => $file) {
-            $f  = File::getByID($file->getFileID());
-            $fv = $f->getRecentVersion();
-            $fp = explode('_', $fv->getFileName());
-            if ($fp[3] != 'Thumb') {
-                $files[$key] = [
-                    'obj' => $f,
-                    'fID' => $f->getFIleID(),
-                    'thumbnail' => $im->getThumbnail($f, 150, 150),
-                    'picture' => [
-                        'src' => File::getRelativePathFromID($file->getFileID()),
-                        'width' => $fv->getAttribute('width'),
-                        'height' => $fv->getAttribute('height')
-                    ],
-                    'FileFolder' => \Concrete\Core\Tree\Node\Type\FileFolder::getNodeByName('C5DK Blog')
-                ];
-            }
-        };
+		header('Content-type: application/json');
+		echo $jh->encode($data);
 
-        return $files;
-    }
+		exit;
+	}
 
-    public function imageDelete($fID)
-    {
-        $jh = $this->app->make('helper/json');
+	public function imageDelete($fID)
+	{
+		$jh = $this->app->make('helper/json');
 
-        $C5dkUser = new C5dkUser();
-        $fs       = FileSet::getByName('C5DK_BLOG_uID-' . $C5dkUser->getUserID());
-        $file     = File::getByID($fID);
-        if (is_object($file) && $file->inFileSet($fs)) {
-            $file->delete();
-            $data = [
-                'status' => 'success',
-                'imageListHtml' => $C5dkUser->getImageListHTML()
-            ];
-        }
-        echo $jh->encode($data);
-    }
+		$C5dkUser = new C5dkUser();
+		$fsUser   = FileSet::getByName('C5DK_BLOG_uID-' . $C5dkUser->getUserID());
+		$fsTrash  = FileSet::createAndGetSet('C5DK_BLOG_User-deleted-images', FileSet::TYPE_PUBLIC);
+		$file     = File::getByID($fID);
+		if (is_object($file) && $file->inFileSet($fsUser)) {
+			$fv = $file->getRecentVersion();
+			$fsUser->removeFileFromSet($fv);
+			$fsTrash->addFileToSet($fv);
 
-    public function link($link)
-    {
-        $this->redirect($link);
-    }
+			// Move file to trash folder
+			$trashFolder = FileFolder::getNodeByName("Trash");
+			$fv->getFile()->getFileNodeObject()->move($trashFolder);
 
-    // public function save($blogID)
-        // {
-        //     // Get helper objects
-        //     $jh = $this->app->make('helper/json');
+			$data = [
+				'status' => 'success',
+				'imageListHtml' => $C5dkUser->getImageListHTML()
+			];
+		}
+		echo $jh->encode($data);
+	}
 
-        //     // Set C5dk Objects
-        //     $C5dkUser = new C5dkUser;
+	public function link($link)
+	{
+		$this->redirect($link);
+	}
 
-        //     // Get or create the C5dkNews Object
-        //     $C5dkBlog = ($this->post('mode') == C5DK_BLOG_MODE_CREATE) ? new C5dkBlog : C5dkBlog::getByID($blogID);
+	// public function save($blogID)
+		// {
+		//     // Get helper objects
+		//     $jh = $this->app->make('helper/json');
 
-        //     // Setup blog and save it
-        //     $C5dkBlog->setPropertiesFromArray([
-        //         'rootID' => $this->post('rootID'),
-        //         'userID' => $C5dkUser->getUserID(),
-        //         'title' => $this->post('title'),
-        //         'description' => $this->post('description'),
-        //         'content' => $this->post('c5dk_blog_content'),
-        //         'topicAttributeID' => $this->post('topicAttributeID')
-        //     ]);
-        //     $C5dkBlog = $C5dkBlog->save($this->post('mode'));
-        //     $C5dkBlog = C5dkBlog::getByID($C5dkBlog->getCollectionID());
+		//     // Set C5dk Objects
+		//     $C5dkUser = new C5dkUser;
 
-        //     // Can first save the thumbnail now, because we needed to save the page first.
-        //     $this->saveThumbnail($C5dkBlog, $C5dkUser, $this->post('thumbnail'));
+		//     // Get or create the C5dkNews Object
+		//     $C5dkBlog = ($this->post('mode') == C5DK_BLOG_MODE_CREATE) ? new C5dkBlog : C5dkBlog::getByID($blogID);
 
-        //     header('Content-type: application/json');
-        //     echo $jh->encode([
-        //         'status' => true,
-        //         'redirectLink' => $C5dkBlog->getCollectionPath()
-        //     ]);
+		//     // Setup blog and save it
+		//     $C5dkBlog->setPropertiesFromArray([
+		//         'rootID' => $this->post('rootID'),
+		//         'userID' => $C5dkUser->getUserID(),
+		//         'title' => $this->post('title'),
+		//         'description' => $this->post('description'),
+		//         'content' => $this->post('c5dk_blog_content'),
+		//         'topicAttributeID' => $this->post('topicAttributeID')
+		//     ]);
+		//     $C5dkBlog = $C5dkBlog->save($this->post('mode'));
+		//     $C5dkBlog = C5dkBlog::getByID($C5dkBlog->getCollectionID());
 
-        //     exit;
-    // }
+		//     // Can first save the thumbnail now, because we needed to save the page first.
+		//     $this->saveThumbnail($C5dkBlog, $C5dkUser, $this->post('thumbnail'));
 
-    // public function saveThumbnail($C5dkBlog, $C5dkUser, $thumbnail)
-        // {
-        //     // Init objects
-        //     $C5dkConfig = new C5dkConfig;
+		//     header('Content-type: application/json');
+		//     echo $jh->encode([
+		//         'status' => true,
+		//         'redirectLink' => $C5dkBlog->getCollectionPath()
+		//     ]);
 
-        //     // Init Helpers
-        //     $fh         = $this->app->make('helper/file');
+		//     exit;
+	// }
 
-        //     // Init variables
-        //     $uID          = $C5dkUser->getUserID();
-        //     $fileName     = 'C5DK_BLOG_uID-' . $uID . '_Thumb_cID-' . $C5dkBlog->getCollectionID() . '.jpg';
-        //     $fileFolder   = FileFolder::getNodeByName('Thumbs');
-        //     $fileSet      = FileSet::createAndGetSet('C5DK_BLOG_uID-' . $uID, FileSet::TYPE_PUBLIC, $uID);
-        //     $tmpFolder    = $fh->getTemporaryDirectory() . '/';
-        //     $tmpImagePath = $tmpFolder . $uID . '_' . $fileName;
-        //     $imagePath    = $tmpFolder . $fileName;
+	// public function saveThumbnail($C5dkBlog, $C5dkUser, $thumbnail)
+		// {
+		//     // Init objects
+		//     $C5dkConfig = new C5dkConfig;
 
-        //     // Get old thumbnail
-        //     $oldThumbnail = $C5dkBlog->thumbnail ? $C5dkBlog->thumbnail : 0;
+		//     // Init Helpers
+		//     $fh         = $this->app->make('helper/file');
 
-        //     // User wants the thumbnail to be deleted
-        //     if ($thumbnail['id'] == -1) {
-        //         $C5dkBlog->deleteThumbnail();
-        //     }
+		//     // Init variables
+		//     $uID          = $C5dkUser->getUserID();
+		//     $fileName     = 'C5DK_BLOG_uID-' . $uID . '_Thumb_cID-' . $C5dkBlog->getCollectionID() . '.jpg';
+		//     $fileFolder   = FileFolder::getNodeByName('Thumbs');
+		//     $fileSet      = FileSet::createAndGetSet('C5DK_BLOG_uID-' . $uID, FileSet::TYPE_PUBLIC, $uID);
+		//     $tmpFolder    = $fh->getTemporaryDirectory() . '/';
+		//     $tmpImagePath = $tmpFolder . $uID . '_' . $fileName;
+		//     $imagePath    = $tmpFolder . $fileName;
 
-        //     // So now we only need to see if we have a new thumbnail or we keep the old one
-        //     if (strlen($thumbnail['croppedImage'])) {
-        //         // Get on with saving the new thumbnail
-        //         $img     = str_replace('data:image/png;base64,', '', $thumbnail['croppedImage']);
-        //         $img     = str_replace(' ', '+', $img);
-        //         $data    = base64_decode($img);
-        //         $success = file_put_contents($tmpImagePath, $data);
+		//     // Get old thumbnail
+		//     $oldThumbnail = $C5dkBlog->thumbnail ? $C5dkBlog->thumbnail : 0;
 
-        //         // Get image facade and open image
-        //         // $imagine = $this->app->make(Image::getFacadeAccessor());
-        //         // $image   = $imagine->open($tmpImagePath);
+		//     // User wants the thumbnail to be deleted
+		//     if ($thumbnail['id'] == -1) {
+		//         $C5dkBlog->deleteThumbnail();
+		//     }
 
-        //         // Convert to .jpg
-        //         $image = Image::open($tmpImagePath);
-        //         $image->save($tmpImagePath, ['jpeg_quality' => 80]);
+		//     // So now we only need to see if we have a new thumbnail or we keep the old one
+		//     if (strlen($thumbnail['croppedImage'])) {
+		//         // Get on with saving the new thumbnail
+		//         $img     = str_replace('data:image/png;base64,', '', $thumbnail['croppedImage']);
+		//         $img     = str_replace(' ', '+', $img);
+		//         $data    = base64_decode($img);
+		//         $success = file_put_contents($tmpImagePath, $data);
 
-        //         // Resize image (Chg: we now do it in the browser, but needs testing)
-        //         // $image = $image->resize(new Box($C5dkConfig->blog_thumbnail_width, $C5dkConfig->blog_thumbnail_height));
+		//         // Get image facade and open image
+		//         // $imagine = $this->app->make(Image::getFacadeAccessor());
+		//         // $image   = $imagine->open($tmpImagePath);
 
-        //         if ($oldThumbnail && $oldThumbnail->getFileID() != $C5dkConfig->blog_default_thumbnail_id) {
-        //             $fv = $oldThumbnail->getVersionToModify(true);
-        //             $fv->updateContents($image->get('jpg'));
-        //         } else {
-        //             // Import thumbnail into the File Manager
-        //             $fi = new FileImporter();
-        //             $fv = $fi->import(
-        //                 $tmpImagePath,
-        //                 $fileName,
-        //                 $fileFolder
-        //             );
+		//         // Convert to .jpg
+		//         $image = Image::open($tmpImagePath);
+		//         $image->save($tmpImagePath, ['jpeg_quality' => 80]);
 
-        //             if (is_object($fv) && $fileSet instanceof FileSet) {
-        //                 $fileSet->addFileToSet($fv);
-        //             }
-        //         }
+		//         // Resize image (Chg: we now do it in the browser, but needs testing)
+		//         // $image = $image->resize(new Box($C5dkConfig->blog_thumbnail_width, $C5dkConfig->blog_thumbnail_height));
 
-        //         // Delete tmp file
-        //         $fs = new \Illuminate\Filesystem\Filesystem();
-        //         $fs->delete($tmpImagePath);
+		//         if ($oldThumbnail && $oldThumbnail->getFileID() != $C5dkConfig->blog_default_thumbnail_id) {
+		//             $fv = $oldThumbnail->getVersionToModify(true);
+		//             $fv->updateContents($image->get('jpg'));
+		//         } else {
+		//             // Import thumbnail into the File Manager
+		//             $fi = new FileImporter();
+		//             $fv = $fi->import(
+		//                 $tmpImagePath,
+		//                 $fileName,
+		//                 $fileFolder
+		//             );
 
-        //         $file = File::getByID($fv->getFileID());
-        //     } else {
-        //         $file = File::getByID($C5dkConfig->blog_default_thumbnail_id);
-        //     }
+		//             if (is_object($fv) && $fileSet instanceof FileSet) {
+		//                 $fileSet->addFileToSet($fv);
+		//             }
+		//         }
 
-        //     if (is_object($file)) {
-        //         $cakThumbnail = CollectionAttributeKey::getByHandle('thumbnail');
-        //         $C5dkBlog     = $C5dkBlog->getVersionToModify();
-        //         $C5dkBlog->setAttribute($cakThumbnail, $file);
-        //         $C5dkBlog->refreshCache();
-        //         $C5dkBlog->getVersionObject()->approve();
-        //     }
+		//         // Delete tmp file
+		//         $fs = new \Illuminate\Filesystem\Filesystem();
+		//         $fs->delete($tmpImagePath);
 
-        //     // // Get helper objects
-        //     // $fh = $this->app->make('helper/file');
-        //     // $fi = new FileImporter();
+		//         $file = File::getByID($fv->getFileID());
+		//     } else {
+		//         $file = File::getByID($C5dkConfig->blog_default_thumbnail_id);
+		//     }
 
-        //     // // Get C5dk Objects
-        //     // $C5dkConfig = new C5dkConfig;
-        //     // $C5dkUser = new C5dkUser;
-        //     // $uID = $C5dkUser->getUserID();
+		//     if (is_object($file)) {
+		//         $cakThumbnail = CollectionAttributeKey::getByHandle('thumbnail');
+		//         $C5dkBlog     = $C5dkBlog->getVersionToModify();
+		//         $C5dkBlog->setAttribute($cakThumbnail, $file);
+		//         $C5dkBlog->refreshCache();
+		//         $C5dkBlog->getVersionObject()->approve();
+		//     }
 
-        //     // $tmpFolder = $fh->getTemporaryDirectory();
-        //     // $filename = (microtime(true) * 10000) . '.jpg';
+		//     // // Get helper objects
+		//     // $fh = $this->app->make('helper/file');
+		//     // $fi = new FileImporter();
 
-        //     // // Get image facade and open image
-        //     // $imagine = $this->app->make(Image::getFacadeAccessor());
-        //     // $image = $imagine->open($_FILES['croppedImage']['tmp_name']);
+		//     // // Get C5dk Objects
+		//     // $C5dkConfig = new C5dkConfig;
+		//     // $C5dkUser = new C5dkUser;
+		//     // $uID = $C5dkUser->getUserID();
 
-        //     // // Resize image
-        //     // $image = $image->resize(new Box($C5dkConfig->blog_thumbnail_width, $C5dkConfig->blog_thumbnail_height));
+		//     // $tmpFolder = $fh->getTemporaryDirectory();
+		//     // $filename = (microtime(true) * 10000) . '.jpg';
 
-        //     // // Save image as .jpg
-        //     // $image->save($tmpFolder . $filename, ['jpeg_quality' => 80]);
+		//     // // Get image facade and open image
+		//     // $imagine = $this->app->make(Image::getFacadeAccessor());
+		//     // $image = $imagine->open($_FILES['croppedImage']['tmp_name']);
 
-        //     // // Import thumbnail into the File Manager
-        //     // $fv = $fi->import(
-        //     //     $tmpFolder . $filename,
-        //     //     'C5DK_BLOG_uID-' . $C5dkUser->getUserID() . '_Thumb_cID-' . $C5dkBlog->getCollectionID() . '.jpg',
-        //     //     FileFolder::getNodeByName('Thumbs')
-        //     // );
+		//     // // Resize image
+		//     // $image = $image->resize(new Box($C5dkConfig->blog_thumbnail_width, $C5dkConfig->blog_thumbnail_height));
 
-        //     // if (is_object($fv)) {
-        //     //     // Create and get FileSet if not exist and add file to the set
-        //     //     $fs = FileSet::createAndGetSet('C5DK_BLOG_uID-' . $C5dkUser->getUserID(), FileSet::TYPE_PUBLIC, $C5dkUser->getUserID());
-        //     //     $fsf = $fs->addFileToSet($fv);
+		//     // // Save image as .jpg
+		//     // $image->save($tmpFolder . $filename, ['jpeg_quality' => 80]);
 
-        //     //     // Delete tmp file
-        //     //     $fs = new \Illuminate\Filesystem\Filesystem();
-        //     //     $fs->delete($tmpFolder . $filename);
+		//     // // Import thumbnail into the File Manager
+		//     // $fv = $fi->import(
+		//     //     $tmpFolder . $filename,
+		//     //     'C5DK_BLOG_uID-' . $C5dkUser->getUserID() . '_Thumb_cID-' . $C5dkBlog->getCollectionID() . '.jpg',
+		//     //     FileFolder::getNodeByName('Thumbs')
+		//     // );
 
-        //     //     // Return the File Object
-        //     //     return $fv->getFile();
-        //     // }
-    // }
+		//     // if (is_object($fv)) {
+		//     //     // Create and get FileSet if not exist and add file to the set
+		//     //     $fs = FileSet::createAndGetSet('C5DK_BLOG_uID-' . $C5dkUser->getUserID(), FileSet::TYPE_PUBLIC, $C5dkUser->getUserID());
+		//     //     $fsf = $fs->addFileToSet($fv);
+
+		//     //     // Delete tmp file
+		//     //     $fs = new \Illuminate\Filesystem\Filesystem();
+		//     //     $fs->delete($tmpFolder . $filename);
+
+		//     //     // Return the File Object
+		//     //     return $fv->getFile();
+		//     // }
+	// }
 }

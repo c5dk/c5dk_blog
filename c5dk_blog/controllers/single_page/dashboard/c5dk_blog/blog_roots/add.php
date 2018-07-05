@@ -18,7 +18,7 @@ class Add extends DashboardPageController {
 		$this->set('pageSelector', $this->app->make('helper/form/page_selector'));
 
 		// Set cookies
-		Cookie::set('includeSystemPages', false);
+		Cookie::set('includeSystemPages', FALSE);
 	}
 
 	public function save() {

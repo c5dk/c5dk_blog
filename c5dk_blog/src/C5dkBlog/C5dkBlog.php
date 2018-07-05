@@ -17,16 +17,16 @@ defined('C5_EXECUTE') or die('Access Denied.');
 class C5dkBlog extends Page
 {
 	// Data
-	public $blogID      = null;
-	public $root        = null;
-	public $rootID      = null;
-	public $authorID    = null;
-	public $thumbnail   = null;
+	public $blogID      = NULL;
+	public $root        = NULL;
+	public $rootID      = NULL;
+	public $authorID    = NULL;
+	public $thumbnail   = NULL;
 	public $title       = '';
 	public $description = '';
 	public $content     = '';
-	public $tags        = null;
-	public $topics      = null;
+	public $tags        = NULL;
+	public $topics      = NULL;
 
 	public static function getByID($blogID, $version = 'RECENT', $class = 'C5dk\Blog\C5dkBlog')
 	{
@@ -55,7 +55,7 @@ class C5dkBlog extends Page
 					'cName' => $this->title,
 					'cHandle' => $this->getUrlSlug($this->title),
 					'cDescription' => $this->description,
-					'cAcquireComposerOutputControls' => true
+					'cAcquireComposerOutputControls' => TRUE
 				]);
 
 				// TODO: Hack until solution have been found for the following bug. https://github.com/concrete5/concrete5/issues/2991
@@ -83,7 +83,7 @@ class C5dkBlog extends Page
 				break;
 
 			default:
-				return false;
+				return FALSE;
 		}
 
 
@@ -171,7 +171,7 @@ class C5dkBlog extends Page
 		$page = $this;
 
 		$root = $this->findRoot($page);
-		return is_object($root) ? $root->getCollectionID() : null;
+		return is_object($root) ? $root->getCollectionID() : NULL;
 	}
 
 	private function getRoot()
@@ -194,7 +194,7 @@ class C5dkBlog extends Page
 		}
 
 		// Didn't find the root
-		return null;
+		return NULL;
 	}
 
 	// Get blog content from the first content block in the main area or return empty "" string
@@ -242,7 +242,7 @@ class C5dkBlog extends Page
 			}
 		}
 
-		return false;
+		return FALSE;
 	}
 
 }

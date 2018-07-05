@@ -49,7 +49,7 @@ class BlogRoots extends DashboardPageController {
 	public function save(){
 
 		$app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
-		$db = $app->make('database')->connection();
+		$db  = $app->make('database')->connection();
 
 		// Delete old values in db
 		$db->Execute('DELETE FROM C5dkBlogRootPermissions');
@@ -78,7 +78,7 @@ class BlogRoots extends DashboardPageController {
 
 	public function delete($rootID) {
 		$root = Page::getByID($rootID);
-		$ak = CollectionAttributeKey::getByHandle('c5dk_blog_root');
+		$ak   = CollectionAttributeKey::getByHandle('c5dk_blog_root');
 		$root->clearAttribute($ak);
 		$this->set('message', t("Blog Root has been removed"));
 		$this->view();
@@ -120,13 +120,13 @@ class BlogRoots extends DashboardPageController {
 			$trees[$tree->getRootTreeNodeID()] = $tree->getTreeName();
 		}
 
-        $keys = CollectionKey::getList();
-        $attributeKeys[] = t('None');
-        foreach ($keys as $ak) {
-            if ($ak->getAttributeTypeHandle() == 'topics') {
-                $attributeKeys[$ak->getAttributeKeyHandle()] = $ak->getAttributeKeyName();
-            }
-        }
+		$keys            = CollectionKey::getList();
+		$attributeKeys[] = t('None');
+		foreach ($keys as $ak) {
+			if ($ak->getAttributeTypeHandle() == 'topics') {
+				$attributeKeys[$ak->getAttributeKeyHandle()] = $ak->getAttributeKeyName();
+			}
+		}
 
 		return $attributeKeys;
 	}

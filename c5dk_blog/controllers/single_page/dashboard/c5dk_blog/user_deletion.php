@@ -32,7 +32,7 @@ class UserDeletion extends DashboardPageController {
 		}
 
 		$app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
-		$ui = $app->make(\Concrete\Core\User\UserInfoFactory::class)->getByID($uID);
+		$ui  = $app->make(\Concrete\Core\User\UserInfoFactory::class)->getByID($uID);
 		$ui->delete();
 
 		$this->redirect('/dashboard/users');
@@ -49,7 +49,7 @@ class UserDeletion extends DashboardPageController {
 		}
 
 		$app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
-		$ui = $app->make(\Concrete\Core\User\UserInfoFactory::class)->getByID($uID);
+		$ui  = $app->make(\Concrete\Core\User\UserInfoFactory::class)->getByID($uID);
 		$ui->delete();
 
 		$this->redirect('/dashboard/users');

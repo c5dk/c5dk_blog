@@ -43,9 +43,9 @@ class C5dkRootList extends DatabaseItemList implements PermissionableListItemInt
 
 		// Get results from PageList
 		$roots = array();
-		$pl = new PageList;
+		$pl    = new PageList;
 		$pl->setSiteTreeToAll();
-		$pl->filterByC5dkBlogRoot(true);
+		$pl->filterByC5dkBlogRoot(TRUE);
 		foreach($pl->get($itemsToGet, intval($offset)) as $row) {
 			$roots[$row->cID] = C5dkRoot::getByID($row->cID);
 		}
@@ -111,29 +111,29 @@ class C5dkRootList extends DatabaseItemList implements PermissionableListItemInt
 
 	}
 
-		public function setPermissionsChecker(\Closure $checker)
-		{
-				$this->permissionsChecker = $checker;
+	public function setPermissionsChecker(\Closure $checker)
+	{
+			$this->permissionsChecker = $checker;
+	}
+
+	public function ignorePermissions()
+	{
+			$this->permissionsChecker = -1;
+	}
+
+	public function checkPermissions($mixed)
+	{
+		if (isset($this->permissionsChecker)) {
+			if ($this->permissionsChecker === -1) {
+					return TRUE;
+			} else {
+					return call_user_func_array($this->permissionsChecker, array($mixed));
+			}
 		}
 
-		public function ignorePermissions()
-		{
-				$this->permissionsChecker = -1;
-		}
+			$cp = new \Permissions($mixed);
 
-		public function checkPermissions($mixed)
-		{
-				if (isset($this->permissionsChecker)) {
-						if ($this->permissionsChecker === -1) {
-								return true;
-						} else {
-								return call_user_func_array($this->permissionsChecker, array($mixed));
-						}
-				}
-
-				$cp = new \Permissions($mixed);
-
-				return $cp->canViewPage();
-		}
+			return $cp->canViewPage();
+	}
 
 }

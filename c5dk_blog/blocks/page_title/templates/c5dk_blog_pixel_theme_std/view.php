@@ -11,19 +11,19 @@ use C5dk\Blog\C5dkConfig as C5dkConfig;
 //C5DK Blog Package - End
 
 defined('C5_EXECUTE') or die("Access Denied.");
-$dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service\Date */
+$dh   = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service\Date */
 $page = Page::getCurrentPage();
-$date = $dh->formatDate($page->getCollectionDatePublic(), true);
+$date = $dh->formatDate($page->getCollectionDatePublic(), TRUE);
 //C5DK Blog Package - Getting author name example for C5DK Blog
-        $C5dkBlog = C5dkBlog::getByID($page->getCollectionID());
-        $C5dkUser = C5dkUser::getByUserID($C5dkBlog->authorID);
+		$C5dkBlog = C5dkBlog::getByID($page->getCollectionID());
+		$C5dkUser = C5dkUser::getByUserID($C5dkBlog->authorID);
 ?>
 <div class="ccm-block-page-title clearfix">
 	<div class="entry-title">
-    	<h2 class="page-title"><?php echo h($title)?></h2>
-    </div>
+		<h2 class="page-title"><?php echo h($title)?></h2>
+	</div>
 	<ul class="entry-meta clearfix">
-		
+
 		<?php if ($date): ?>
 		<li><i class="fa fa-calendar"></i><?php echo $date; ?></li>
 		<?php endif; ?>
@@ -32,7 +32,7 @@ $date = $dh->formatDate($page->getCollectionDatePublic(), true);
 		<li><i class="fa fa-user"></i><?php echo ($C5dkUser->fullName? $C5dkUser->fullName : t('(Not set)')); ?></li>
 		<?php endif; ?>
 	</ul>
-	
+
 
 
 </div>

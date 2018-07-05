@@ -10,11 +10,11 @@ $this->requireAsset('javascript', 'tagcanvas');
 
 <div class="ccm-block-tags-wrapper">
 
-    <?php if ($title): ?>
-        <div class="ccm-block-tags-header">
-            <h3><?php echo $title?></h3>
-        </div>
-    <?php endif; ?>
+	<?php if ($title): ?>
+		<div class="ccm-block-tags-header">
+			<h3><?php echo $title?></h3>
+		</div>
+	<?php endif; ?>
 	<div id="c5dkCanvasContainerHtml5">
 		<canvas id="c5dkCanvasImageBackground" width="270" height="270" style="width: 100%">
 			<p>Anything in here will be replaced on browsers that support the canvas element</p>

@@ -9,12 +9,12 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 class C5dkRoot extends Page {
 
-	public $rootID				= null;
-	public $groups				= array();
-	public $pageTypeID			= null;
-	public $tags				= 1;
-	public $thumbnails			= 1;
-	public $topicAttributeID	= null;
+	public $rootID           = NULL;
+	public $groups           = array();
+	public $pageTypeID       = NULL;
+	public $tags             = 1;
+	public $thumbnails       = 1;
+	public $topicAttributeID = NULL;
 
 	public static function getByID($rootID, $version = 'RECENT', $class = 'C5dk\Blog\C5dkRoot') {
 
@@ -22,7 +22,7 @@ class C5dkRoot extends Page {
 		$C5dkRoot = parent::getByID($rootID, $version, $class);
 
 		$app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
-		$db = $app->make('database')->connection();
+		$db  = $app->make('database')->connection();
 
 		// Get this roots values
 		$rs = $db->fetchAll("SELECT rootID, groupID, pageTypeID, tags, thumbnails, topicAttributeID FROM C5dkBlogRootPermissions WHERE rootID = ?", array($rootID));
@@ -45,8 +45,8 @@ class C5dkRoot extends Page {
 		if (!$topicAttributeID) {
 				// Delete the topic from this root
 				$app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
-				$db = $app->make('database')->connection();
-				$rs = $db->Execute("UPDATE C5dkBlogRootPermissions set topicAttributeID = ? WHERE rootID = ?", array(0, $rootID));
+				$db  = $app->make('database')->connection();
+				$rs  = $db->Execute("UPDATE C5dkBlogRootPermissions set topicAttributeID = ? WHERE rootID = ?", array(0, $rootID));
 
 				return 0;
 		}

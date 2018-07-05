@@ -13,8 +13,8 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 class Controller extends BlockController {
 
-	protected $btDefaultSet = 'c5dk_blog';
-	protected $btCacheBlockRecord = false;
+	protected $btDefaultSet       = 'c5dk_blog';
+	protected $btCacheBlockRecord = FALSE;
 
 	public function getBlockTypeName() { return t("Blog Header"); }
 	public function getBlockTypeDescription() { return t("Display blog header information."); }

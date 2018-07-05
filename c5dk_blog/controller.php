@@ -18,7 +18,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
 class Controller extends Package
 {
 	protected $appVersionRequired      = '8.2';
-	protected $pkgVersion              = '8.3.2';
+	protected $pkgVersion              = '8.4.0.b1';
 	protected $pkgHandle               = 'c5dk_blog';
 	protected $pkgAutoloaderRegistries = [
 		'src/C5dkBlog' => '\C5dk\Blog',
@@ -100,15 +100,15 @@ class Controller extends Package
 	private function setupConfig($pkg)
 	{
 		// Settings
-		C5dkInstaller::installConfigKey('blog_title_editable', false, $pkg);
-		C5dkInstaller::installConfigKey('blog_form_slidein', false, $pkg);
+		C5dkInstaller::installConfigKey('blog_title_editable', FALSE, $pkg);
+		C5dkInstaller::installConfigKey('blog_form_slidein', FALSE, $pkg);
 
 		// Images & Thumbnails
 		C5dkInstaller::installConfigKey('blog_picture_width', 1200, $pkg);
 		C5dkInstaller::installConfigKey('blog_picture_height', 800, $pkg);
 		C5dkInstaller::installConfigKey('blog_thumbnail_width', 360, $pkg);
 		C5dkInstaller::installConfigKey('blog_thumbnail_height', 360, $pkg);
-		C5dkInstaller::installConfigKey('blog_default_thumbnail_id', null, $pkg);
+		C5dkInstaller::installConfigKey('blog_default_thumbnail_id', NULL, $pkg);
 		C5dkInstaller::installConfigKey('blog_cropper_def_bgcolor', '#FFF', $pkg);
 
 		// Styling
@@ -118,14 +118,14 @@ class Controller extends Package
 		C5dkInstaller::installConfigKey('blog_headline_icon_color', '#1685D4', $pkg);
 
 		// Editor
-		C5dkInstaller::installConfigKey('blog_plugin_youtube', true, $pkg);
-		C5dkInstaller::installConfigKey('blog_plugin_sitemap', false, $pkg);
+		C5dkInstaller::installConfigKey('blog_plugin_youtube', TRUE, $pkg);
+		C5dkInstaller::installConfigKey('blog_plugin_sitemap', FALSE, $pkg);
 
-		C5dkInstaller::installConfigKey('blog_format_h1', false, $pkg);
-		C5dkInstaller::installConfigKey('blog_format_h2', true, $pkg);
-		C5dkInstaller::installConfigKey('blog_format_h3', true, $pkg);
-		C5dkInstaller::installConfigKey('blog_format_h4', false, $pkg);
-		C5dkInstaller::installConfigKey('blog_format_pre', true, $pkg);
+		C5dkInstaller::installConfigKey('blog_format_h1', FALSE, $pkg);
+		C5dkInstaller::installConfigKey('blog_format_h2', TRUE, $pkg);
+		C5dkInstaller::installConfigKey('blog_format_h3', TRUE, $pkg);
+		C5dkInstaller::installConfigKey('blog_format_h4', FALSE, $pkg);
+		C5dkInstaller::installConfigKey('blog_format_pre', TRUE, $pkg);
 	}
 
 	private function setupBlocks($pkg)
@@ -152,6 +152,7 @@ class Controller extends Package
 		// Create Thumbs and Manager folders in the C5DK Blog folder
 		$thumbs  = C5dkInstaller::installFileFolder($fldC5dkBlog, 'Thumbs');
 		$manager = C5dkInstaller::installFileFolder($fldC5dkBlog, 'Manager');
+		$trash   = C5dkInstaller::installFileFolder($fldC5dkBlog, 'Trash');
 
 		// C5dkInstaller::installThumbnailType('c5dk_blog_thumbnail', t('C5DK Blog Thumbnail'), 360, 360);
 	}
@@ -176,15 +177,15 @@ class Controller extends Package
 		C5dkInstaller::installCollectionAttributeKey('boolean', [
 			'akHandle' => 'c5dk_blog_root',
 			'akName' => t('Blog Root'),
-			'akIsSearchable' => true,
-			'akIsSearchableIndexed' => true
-		], false, $bas);
+			'akIsSearchable' => TRUE,
+			'akIsSearchableIndexed' => TRUE
+		], FALSE, $bas);
 		C5dkInstaller::installCollectionAttributeKey('number', [
 			'akHandle' => 'c5dk_blog_author_id',
 			'akName' => t('Blog Author ID'),
-			'akIsSearchable' => true,
-			'akIsSearchableIndexed' => true
-		], false, $bas);
+			'akIsSearchable' => TRUE,
+			'akIsSearchableIndexed' => TRUE
+		], FALSE, $bas);
 	}
 
 	private function setupUserAttributes($pkg)
@@ -192,14 +193,14 @@ class Controller extends Package
 		C5dkInstaller::installUserAttributeKey('text', [
 			'akHandle' => 'full_name',
 			'akName' => t('Full Name'),
-			'uakProfileDisplay' => true,
-			'uakMemberListDisplay' => true,
-			'uakProfileEdit' => true,
-			'uakProfileEditRequired' => false,
-			'uakRegisterEdit' => true,
-			'uakRegisterEditRequired' => false,
-			'akIsSearchable' => true,
-			'akIsSearchableIndexed' => true
+			'uakProfileDisplay' => TRUE,
+			'uakMemberListDisplay' => TRUE,
+			'uakProfileEdit' => TRUE,
+			'uakProfileEditRequired' => FALSE,
+			'uakRegisterEdit' => TRUE,
+			'uakRegisterEditRequired' => FALSE,
+			'akIsSearchable' => TRUE,
+			'akIsSearchableIndexed' => TRUE
 		]);
 	}
 
@@ -258,7 +259,7 @@ class Controller extends Package
 		$al->register('javascript', 'c5dkBlog/modal', 'js/c5dk_modal.js', [], 'c5dk_blog');
 
 		// CKEditor
-		$al->register('javascript', 'c5dkckeditor', 'js/ckeditor/ckeditor.js', ['minify' => false, 'combine' => false], 'c5dk_blog');
+		$al->register('javascript', 'c5dkckeditor', 'js/ckeditor/ckeditor.js', ['minify' => FALSE, 'combine' => FALSE], 'c5dk_blog');
 
 		// Register C5DK Blog CSS
 		$al->register('css', 'c5dk_blog_css', 'css/c5dk_blog.min.css', [], 'c5dk_blog');

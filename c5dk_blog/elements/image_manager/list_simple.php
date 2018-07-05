@@ -2,7 +2,7 @@
 
 <?php foreach ($fileList as $file) : ?>
 
-	<?php $deleteSpan = ($canDeleteImages) ? '<span class="fa fa-trash delete-image" style="position: absolute; left:0px; width:16px; height:16px; background-color:#fff; cursor: pointer"></span>' : ''; ?>
+	<?php $deleteSpan = ($canDeleteImages) ? '<span class="fa fa-window-close-o c5dk-delete-image"></span>' : ''; ?>
 	<div data-fid="<?= $file['fID']; ?>" class="c5dk-thumb-frame">
 		<?= $deleteSpan; ?>
 		<img
@@ -17,6 +17,22 @@
 
 <?php endforeach ?>
 
+<style>
+	.c5dk-delete-image {
+		position: absolute;
+		font-size: 18px;
+		right:0px;
+		padding: 1px 2px 2px 3px;
+		width:22px;
+		height:22px;
+		background-color:#fff;
+		color: #F00;
+		cursor: pointer
+	}
+	.c5dk-delete-image:hover {
+		color: #b20000;
+	}
+</style>
 
 <script type="text/javascript">
 
@@ -38,7 +54,7 @@
 		}
 	});
 
-	$(".delete-image").on('click', function (event) {
+	$(".c5dk-delete-image").on('click', function (event) {
 		c5dk.blog.post.image.delete('confirm', $(event.target).closest('div').data('fid'));
 	});
 

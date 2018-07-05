@@ -1,6 +1,6 @@
 <?php defined('C5_EXECUTE') or die("Access Denied."); ?>
 
-<?php //$deleteSpan = ($canDeleteImages)? '<span class="fa fa-trash delete-image" style="position: absolute; left:0px; width:16px; height:16px; background-color:#fff; cursor: pointer"></span>' : ''; ?>
+<?php //$deleteSpan = ($canDeleteImages)? '<span class="fa fa-trash c5dk-delete-image" style="position: absolute; left:0px; width:16px; height:16px; background-color:#fff; cursor: pointer"></span>' : ''; ?>
 
 <table class="ccm-search-results-table">
 	<thead>
@@ -52,7 +52,7 @@
 		}
 	});
 
-	$(".delete-image").on('click', function (event) {
+	$(".c5dk-delete-image").on('click', function (event) {
 		c5dk.blog.post.image.delete('confirm', $(event.target).closest('div').data('fid'));
 	});
 

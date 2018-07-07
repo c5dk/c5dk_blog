@@ -129,6 +129,7 @@ class BlogSettings extends DashboardPageController
 
 			$groups[$value->gID] = t($value->gName);
 		}
+
 		asort($groups);
 
 		return $groups;
@@ -192,9 +193,7 @@ class BlogSettings extends DashboardPageController
 				$fv = $oldThumbnail->getVersionToModify(TRUE);
 				$fv->updateContents($image->get('jpg'));
 				// $fv->refreshAttributes(); // Bug??? Do not work
-
 			} else {
-
 				// Import thumbnail into the File Manager
 				$fi = new FileImporter();
 				$fv = $fi->import(

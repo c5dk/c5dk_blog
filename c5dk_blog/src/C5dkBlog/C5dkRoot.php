@@ -7,7 +7,8 @@ use CollectionAttributeKey;
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
-class C5dkRoot extends Page {
+class C5dkRoot extends Page
+{
 
 	public $rootID           = NULL;
 	public $groups           = array();
@@ -16,8 +17,8 @@ class C5dkRoot extends Page {
 	public $thumbnails       = 1;
 	public $topicAttributeID = NULL;
 
-	public static function getByID($rootID, $version = 'RECENT', $class = 'C5dk\Blog\C5dkRoot') {
-
+	public static function getByID($rootID, $version = 'RECENT', $class = 'C5dk\Blog\C5dkRoot')
+	{
 		// Get the C5dkRoot object and add the permissions fields
 		$C5dkRoot = parent::getByID($rootID, $version, $class);
 
@@ -39,8 +40,8 @@ class C5dkRoot extends Page {
 
 	}
 
-	public function getTopicAttributeID($topicAttributeID) {
-
+	public function getTopicAttributeID($topicAttributeID)
+	{
 		// Is topics used?
 		if (!$topicAttributeID) {
 				// Delete the topic from this root
@@ -54,13 +55,10 @@ class C5dkRoot extends Page {
 		// Do the topic tree still exist?
 		$topicAttribute = CollectionAttributeKey::getByHandle($topicAttributeID);
 		if (is_object($topicAttribute)) {
-
 			return $topicAttributeID;
-
 		}
 
 		return 0;
 
 	}
-
 }

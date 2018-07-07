@@ -11,17 +11,19 @@ use C5dk\Blog\C5dkConfig as C5dkConfig;
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
-class UserDeletion extends DashboardPageController {
+class UserDeletion extends DashboardPageController
+{
 
-	public function view($uID){
-
+	public function view($uID)
+	{
 		// Set helpers
 		$this->set('form', $this->app->make('helper/form'));
 
 		$this->set('uID', $uID);
 	}
 
-	public function transfer($uID) {
+	public function transfer($uID)
+	{
 		$tID = $this->post('tID');
 
 		$list = $this->getList($uID);
@@ -39,8 +41,8 @@ class UserDeletion extends DashboardPageController {
 
 	}
 
-	public function delete($uID) {
-
+	public function delete($uID)
+	{
 		$list = $this->getList($uID);
 		if (count($list)) {
 			foreach ($list as $page) {
@@ -56,18 +58,17 @@ class UserDeletion extends DashboardPageController {
 
 	}
 
-	public function cancel() {
-
+	public function cancel()
+	{
 		$this->redirect('/dashboard/users');
 
 	}
 
-	public function getList($uID) {
-
+	public function getList($uID)
+	{
 		$pl = new PageList;
 		$pl->filterByC5dkBlogAuthorId($uID);
 
 		return $pl->getResults();
 	}
-
 }

@@ -34,6 +34,7 @@ class C5dkInstaller
 		if (!is_object($uak)) {
 			$uak = UserAttributeKey::add($type, $options, $pkg);
 		}
+
 		return $uak;
 	}
 
@@ -47,6 +48,7 @@ class C5dkInstaller
 				$page->setAttribute($handle, $value);
 			}
 		}
+
 		return $page;
 	}
 
@@ -58,6 +60,7 @@ class C5dkInstaller
 			$cakc->setAllowAttributeSets(AttributeKeyCategory::ASET_ALLOW_MULTIPLE);
 			$bas = $cakc->addSet($handle, $name);
 		}
+
 		return $bas;
 	}
 
@@ -70,6 +73,7 @@ class C5dkInstaller
 				$cak->setAttributeSet($set);
 			}
 		}
+
 		return $cak;
 	}
 
@@ -116,6 +120,7 @@ class C5dkInstaller
 			if ($height) {
 				$type->setHeight($height);
 			}
+
 			$type->save();
 
 			return $type;

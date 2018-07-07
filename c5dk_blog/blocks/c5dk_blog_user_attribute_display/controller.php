@@ -30,16 +30,18 @@ class Controller extends BlockController
 		}
 	}
 
-	public function getBlockTypeName() {
+	public function getBlockTypeName()
+	{
 		return t("C5DK BLog User Attribute Display");
 	}
 
-	public function getBlockTypeDescription() {
+	public function getBlockTypeDescription()
+	{
 		return t("Displays the value of an user attribute.");
 	}
 
-	public function getContent() {
-
+	public function getContent()
+	{
 		$c       = Page::getCurrentPage();
 		$content = "";
 
@@ -51,7 +53,6 @@ class Controller extends BlockController
 		}
 
 		if (is_object($u) || $u->uID) {
-
 			$ui = UserInfo::getByID($u->getUserID());
 
 			if (is_object($ui)) {
@@ -94,7 +95,8 @@ class Controller extends BlockController
 		return $content;
 	}
 
-	public function getPlaceHolderText($handle) {
+	public function getPlaceHolderText($handle)
+	{
 		$userValues = $this->getAvailableUserValues();
 		if (in_array($handle, array_keys($userValues))) {
 			$placeHolder = $userValues[$handle];
@@ -108,11 +110,13 @@ class Controller extends BlockController
 		return "[" . $placeHolder . "]";
 	}
 
-	public function getTitle() {
+	public function getTitle()
+	{
 		return (strlen($this->attributeTitleText) ? $this->attributeTitleText . " " : "");
 	}
 
-	public function getAvailableUserValues() {
+	public function getAvailableUserValues()
+	{
 		return array(
 			'userName' => t('User Name'),
 			'userEmail' => t('User Email'),
@@ -120,11 +124,13 @@ class Controller extends BlockController
 		);
 	}
 
-	public function getAvailableAttributes() {
+	public function getAvailableAttributes()
+	{
 		return UserAttributeKey::getList();
 	}
 
-	protected function getTemplateHandle() {
+	protected function getTemplateHandle()
+	{
 		if (in_array($this->attributeHandle, array_keys($this->getAvailableUserValues()))) {
 			switch ($this->attributeHandle) {
 				case "rpv_pageDateCreated":
@@ -144,7 +150,8 @@ class Controller extends BlockController
 		return $templateHandle;
 	}
 
-	public function getOpenTag() {
+	public function getOpenTag()
+	{
 		$tag = "";
 		if (strlen($this->displayTag)) {
 			$tag = "<" . $this->displayTag . " class=\"ccm-block-page-attribute-display-wrapper\">";
@@ -153,7 +160,8 @@ class Controller extends BlockController
 		return $tag;
 	}
 
-	public function getCloseTag() {
+	public function getCloseTag()
+	{
 		$tag = "";
 		if (strlen($this->displayTag)) {
 			$tag = "</" . $this->displayTag . ">";

@@ -12,26 +12,31 @@ use C5dk\Blog\C5dkRoot as C5dkRoot;
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
-class C5dkRootList extends DatabaseItemList implements PermissionableListItemInterface {
+class C5dkRootList extends DatabaseItemList implements PermissionableListItemInterface
+{
 
-	public function getPermissionsChecker() {}
+	public function getPermissionsChecker()
+	{
+	}
 
-	public function enablePermissions() {}
+	public function enablePermissions()
+	{
+	}
 
-	protected function getAttributeKeyClassName() {
-
+	protected function getAttributeKeyClassName()
+	{
 		return '\\Concrete\\Core\\Attribute\\Key\\CollectionKey';
 
 	}
 
-	public function createQuery() {
-
+	public function createQuery()
+	{
 		$this->query->select('rootID, pagetypeID, topicTreeID, groupID');
 
 	}
 
-	public function finalizeQuery(\Doctrine\DBAL\Query\QueryBuilder $query) {
-
+	public function finalizeQuery(\Doctrine\DBAL\Query\QueryBuilder $query)
+	{
 		$query->from('C5dkBlogRootPermissions');
 
 		return $query;
@@ -39,14 +44,14 @@ class C5dkRootList extends DatabaseItemList implements PermissionableListItemInt
 	}
 
 	// Returns an array of root objects
-	public function getResults($itemsToGet = 0, $offset = 0) {
-
+	public function getResults($itemsToGet = 0, $offset = 0)
+	{
 		// Get results from PageList
 		$roots = array();
 		$pl    = new PageList;
 		$pl->setSiteTreeToAll();
 		$pl->filterByC5dkBlogRoot(TRUE);
-		foreach($pl->get($itemsToGet, intval($offset)) as $row) {
+		foreach ($pl->get($itemsToGet, intval($offset)) as $row) {
 			$roots[$row->cID] = C5dkRoot::getByID($row->cID);
 		}
 
@@ -54,24 +59,21 @@ class C5dkRootList extends DatabaseItemList implements PermissionableListItemInt
 
 	}
 
-	public function getTotalResults() {
-
+	public function getTotalResults()
+	{
 		$u = new \User();
 		if ($this->permissionsChecker == -1) {
 			$query = $this->deliverQueryObject();
 
 			return $query->select('count(distinct p.cID)')->setMaxResults(1)->execute()->fetchColumn();
-
 		} else {
-
 			return -1; // unknown
-
 		}
 
 	}
 
-	protected function createPaginationObject() {
-
+	protected function createPaginationObject()
+	{
 		$u = new \User();
 		if ($this->permissionsChecker == -1) {
 			$adapter = new DoctrineDbalAdapter($this->deliverQueryObject(), function ($query) {
@@ -91,8 +93,8 @@ class C5dkRootList extends DatabaseItemList implements PermissionableListItemInt
 	 * @return \Concrete\Core\File\File
 	 */
 
-	public function getResult($queryRow) {
-
+	public function getResult($queryRow)
+	{
 		$c = C5dkRoot::getByID($queryRow['cID'], 'ACTIVE');
 		if (is_object($c) && $this->checkPermissions($c)) {
 			if ($this->pageVersionToRetrieve == PageList::PAGE_VERSION_RECENT) {
@@ -101,12 +103,12 @@ class C5dkRootList extends DatabaseItemList implements PermissionableListItemInt
 					$c->loadVersionObject('RECENT');
 				}
 			}
+
 			if (isset($queryRow['cIndexScore'])) {
 				$c->setPageIndexScore($queryRow['cIndexScore']);
 			}
 
 			return $c;
-
 		}
 
 	}
@@ -135,5 +137,4 @@ class C5dkRootList extends DatabaseItemList implements PermissionableListItemInt
 
 			return $cp->canViewPage();
 	}
-
 }

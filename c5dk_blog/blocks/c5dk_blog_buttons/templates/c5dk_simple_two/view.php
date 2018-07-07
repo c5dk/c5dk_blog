@@ -1,6 +1,5 @@
 <?php defined('C5_EXECUTE') or die("Access Denied."); ?>
-<?php if($C5dkUser->isBlogger && !$C5dkBlog->isEditMode()){ ?>
-
+<?php if ($C5dkUser->isBlogger && !$C5dkBlog->isEditMode()) { ?>
 	<div id="c5dk-blog-package-simple-one">
 		<div class="c5dk_blog_section">
 			<!-- Blogging Buttons -->
@@ -17,7 +16,7 @@
 					</div>
 				<?php } ?>
 			</div>
-		
+
 			<!-- Dialog: Delete post -->
 			<div id="dialog_confirmDelete" class="c5dk-dialog">
 				<div class="ccm-ui">
@@ -42,7 +41,7 @@
 
 			delete:function(mode) {
 				switch (mode){
-				
+
 					case "confirm":
 						$.fn.dialog.open({
 							element:"#dialog_confirmDelete",
@@ -74,8 +73,7 @@
 		};
 	</script>
 
-<?php } else if ($C5dkBlog->isEditMode() || $C5dkUser->isAdmin) { ?>
-
+<?php } elseif ($C5dkBlog->isEditMode() || $C5dkUser->isAdmin) { ?>
 	<?php // SuperAdmin/Administrator view if they aren't allowed to block or if the page is in edit mode ?>
 	<div class="c5dk_admin_frame"><?php echo t('C5DK Blogging Buttons: Only visible for users with blogging permissions'); ?></div>
 

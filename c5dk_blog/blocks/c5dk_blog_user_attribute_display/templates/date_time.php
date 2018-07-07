@@ -9,4 +9,5 @@ try {
 } catch (\Exception $e) {
 	print $this->controller->getContent();
 }
+
 echo $this->controller->getCloseTag();

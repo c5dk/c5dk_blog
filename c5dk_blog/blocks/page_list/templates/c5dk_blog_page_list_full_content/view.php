@@ -8,6 +8,7 @@ use Config;
 use C5dk\Blog\C5dkUser as C5dkUser;
 use C5dk\Blog\C5dkBlog as C5dkBlog;
 use C5dk\Blog\C5dkConfig as C5dkConfig;
+
 //C5DK Blog Package - End
 
 defined('C5_EXECUTE') or die("Access Denied.");
@@ -19,12 +20,10 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
 $C5dkConfig = new C5dkConfig;
 ?>
 
-<?php if ( $c->isEditMode() && $controller->isBlockEmpty()) { ?>
-
+<?php if ($c->isEditMode() && $controller->isBlockEmpty()) { ?>
 	<div class="ccm-edit-mode-disabled-item"><?php echo t('Empty Page List Block.')?></div>
 
 <?php } else { ?>
-
 	<div class="ccm-block-page-list-wrapper">
 
 		<?php if (isset($pageListTitle) && $pageListTitle) { ?>
@@ -46,7 +45,6 @@ $C5dkConfig = new C5dkConfig;
 			}
 
 			foreach ($pages as $page) {
-
 				// Prepare C5DK Blog Full Content so show
 				$C5dkBlog = C5dkBlog::getByID($page->getCollectionID());
 
@@ -65,6 +63,7 @@ $C5dkConfig = new C5dkConfig;
 				if ($displayThumbnail) {
 					$thumbnail = $page->getAttribute('thumbnail');
 				}
+
 				if (is_object($thumbnail) && $includeEntryText) {
 					$entryClasses = 'ccm-block-page-list-page-entry-horizontal';
 				}
@@ -137,7 +136,8 @@ $C5dkConfig = new C5dkConfig;
 							<?php } ?>
 
 							<?php if ($includeDate) { ?>
-								<div class="c5dk_postedby_full"><?php echo t('Posted by'); echo ' <i class="fa fa-user"></i> ' . ($C5dkUser->fullName? $C5dkUser->fullName : BASE_URL) . ' - <i class="fa fa-clock-o"></i> ' . $date; ?></div>
+								<div class="c5dk_postedby_full"><?php echo t('Posted by');
+								echo ' <i class="fa fa-user"></i> ' . ($C5dkUser->fullName ? $C5dkUser->fullName : BASE_URL) . ' - <i class="fa fa-clock-o"></i> ' . $date; ?></div>
 							<?php } ?>
 
 							<?php if ($includeDescription) { ?>

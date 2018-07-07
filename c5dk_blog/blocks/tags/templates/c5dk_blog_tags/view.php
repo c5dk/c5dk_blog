@@ -7,7 +7,6 @@ $this->requireAsset('javascript', 'tagcanvas');
 ?>
 
 <?php if (count($options) > 0): ?>
-
 <div class="ccm-block-tags-wrapper">
 
 	<?php if ($title): ?>
@@ -19,7 +18,7 @@ $this->requireAsset('javascript', 'tagcanvas');
 		<canvas id="c5dkCanvasImageBackground" width="270" height="270" style="width: 100%">
 			<p>Anything in here will be replaced on browsers that support the canvas element</p>
 			<ul class="ccm-tag-list">
-				<?php foreach($options as $option) { ?>
+				<?php foreach ($options as $option) { ?>
 					<li>
 					<?php if ($target) { ?>
 						<a href="<?php echo $controller->getTagLink($option) ?>">

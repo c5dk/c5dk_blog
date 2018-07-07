@@ -1,7 +1,6 @@
 <?php defined('C5_EXECUTE') or die('Access Denied.'); ?>
 
 <?php foreach ($fileList as $file) : ?>
-
 	<?php $deleteSpan = ($canDeleteImages) ? '<span class="fa fa-window-close-o c5dk-delete-image"></span>' : ''; ?>
 	<div data-fid="<?= $file['fID']; ?>" class="c5dk-thumb-frame">
 		<?= $deleteSpan; ?>

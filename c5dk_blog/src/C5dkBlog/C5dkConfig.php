@@ -63,15 +63,19 @@ class C5dkConfig
 		if ($this->blog_format_h1) {
 			$tags[] = 'h1';
 		}
+
 		if ($this->blog_format_h2) {
 			$tags[] = 'h2';
 		}
+
 		if ($this->blog_format_h3) {
 			$tags[] = 'h3';
 		}
+
 		if ($this->blog_format_h4) {
 			$tags[] = 'h4';
 		}
+
 		if ($this->blog_format_pre) {
 			$tags[] = 'pre';
 		}
@@ -85,6 +89,7 @@ class C5dkConfig
 		if ($this->blog_plugin_youtube) {
 			$plugins[] = 'youtube';
 		}
+
 		if ($this->blog_plugin_sitemap) {
 			$plugins[] = 'concrete5link';
 		}

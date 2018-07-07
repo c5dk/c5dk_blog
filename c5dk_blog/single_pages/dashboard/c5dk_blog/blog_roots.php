@@ -1,7 +1,11 @@
 <?php defined('C5_EXECUTE') or die("Access Denied.");?>
 
 <?php
-Core::make('help')->display(t('On the "Blog Roots" settings page, is where you control where your blog pages will be placed on your site. It is also here you will set up blog writer permissions, which page type you will use as blog pages and you can also define which topics list to use for your blog root.'));
+Core::make('help')->display(t(
+	'On the "Blog Roots" settings page, is where you control where your blog pages will be placed on your site. '
+	. 'It is also here you will set up blog writer permissions, '
+	. 'which page type you will use as blog pages and you can also define which topics list to use for your blog root.'
+));
 ?>
 
 <div class="ccm-dashboard-header-buttons btn-group">
@@ -9,7 +13,6 @@ Core::make('help')->display(t('On the "Blog Roots" settings page, is where you c
 </div>
 
 <?php if (count($rootList)) { ?>
-
 	<?php if (empty($topicAttributeList)) { ?>
 		<!-- Show warning about topics haven't been configured in the system yet, if no topics has been found. -->
 	<div class="ccm-pane-body">
@@ -87,7 +90,6 @@ Core::make('help')->display(t('On the "Blog Roots" settings page, is where you c
 	</style>
 
 <?php } else { ?>
-
 	<!-- No roots found -->
 	<div class="ccm-pane-body">
 		<div class="ccm-ui alert alert-warning"><?= t('No Blog Roots found.'); ?></div>

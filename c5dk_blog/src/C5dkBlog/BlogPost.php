@@ -63,7 +63,7 @@ class BlogPost extends Controller
 		$this->C5dkBlog   = C5dkBlog::getByID($blogID);
 
 		// Check if user is owner of blog?
-		if ($this->C5dkBlog->authorID && $this->C5dkBlog->authorID == $this->C5dkUser->getUserID() ) {
+		if ($this->C5dkBlog->authorID && $this->C5dkBlog->authorID == $this->C5dkUser->getUserID()) {
 			// Setup Blog object properties
 			$this->mode       = C5DK_BLOG_MODE_EDIT;
 			$this->blogID     = $blogID;

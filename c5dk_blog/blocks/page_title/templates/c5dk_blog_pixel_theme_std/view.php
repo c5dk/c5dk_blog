@@ -8,6 +8,7 @@ use Config;
 use C5dk\Blog\C5dkUser as C5dkUser;
 use C5dk\Blog\C5dkBlog as C5dkBlog;
 use C5dk\Blog\C5dkConfig as C5dkConfig;
+
 //C5DK Blog Package - End
 
 defined('C5_EXECUTE') or die("Access Denied.");
@@ -29,7 +30,7 @@ $date = $dh->formatDate($page->getCollectionDatePublic(), TRUE);
 		<?php endif; ?>
 
 		<?php if (is_object($C5dkUser)): ?>
-		<li><i class="fa fa-user"></i><?php echo ($C5dkUser->fullName? $C5dkUser->fullName : t('(Not set)')); ?></li>
+		<li><i class="fa fa-user"></i><?php echo ($C5dkUser->fullName ? $C5dkUser->fullName : t('(Not set)')); ?></li>
 		<?php endif; ?>
 	</ul>
 

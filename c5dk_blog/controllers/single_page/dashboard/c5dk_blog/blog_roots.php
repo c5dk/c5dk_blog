@@ -19,10 +19,11 @@ use C5dk\Blog\C5dkRootList as C5dkRootList;
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
-class BlogRoots extends DashboardPageController {
+class BlogRoots extends DashboardPageController
+{
 
-	public function view() {
-
+	public function view()
+	{
 		// Set all our view variables
 		$C5dkRootList = new C5dkRootList;
 		$this->set('user',					new C5dkUser);
@@ -46,8 +47,8 @@ class BlogRoots extends DashboardPageController {
 		}
 	}
 
-	public function save(){
-
+	public function save()
+	{
 		$app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
 		$db  = $app->make('database')->connection();
 
@@ -57,15 +58,15 @@ class BlogRoots extends DashboardPageController {
 		// Save new permission values in db
 		$postData = $this->post();
 		foreach ($postData as $postKey => $postVal) {
-			if(substr($postKey, 0, 12) == "root_groups_" && is_array($postVal)) {
+			if (substr($postKey, 0, 12) == "root_groups_" && is_array($postVal)) {
 				foreach ($postVal as $groupID) {
 					$rootID = substr($postKey, 12);
 					$db->Execute('INSERT INTO C5dkBlogRootPermissions (rootID, groupID, pageTypeID, tags, thumbnails, topicAttributeID) VALUES (?, ?, ?, ?, ?, ?)', array(
 						$rootID,
 						$groupID,
 						$postData["pageTypeID_" . $rootID],
-						($postData["tags_" . $rootID]? 1 : 0),
-						($postData["thumbnails_" . $rootID]? 1 : 0),
+						($postData["tags_" . $rootID] ? 1 : 0),
+						($postData["thumbnails_" . $rootID] ? 1 : 0),
 						$postData["topicAttributeID_" . $rootID]
 					));
 				}
@@ -76,7 +77,8 @@ class BlogRoots extends DashboardPageController {
 		$this->redirect('/dashboard/c5dk_blog/blog_roots');
 	}
 
-	public function delete($rootID) {
+	public function delete($rootID)
+	{
 		$root = Page::getByID($rootID);
 		$ak   = CollectionAttributeKey::getByHandle('c5dk_blog_root');
 		$root->clearAttribute($ak);
@@ -84,8 +86,8 @@ class BlogRoots extends DashboardPageController {
 		$this->view();
 	}
 
-	public function getAllGroups(){
-
+	public function getAllGroups()
+	{
 		// Get all groups registered in Concrete5
 		$gl = new GroupList();
 		$gl->sortBy('gID', 'asc');
@@ -94,19 +96,22 @@ class BlogRoots extends DashboardPageController {
 		// Use GroupID as the array key
 		foreach ($gl->getResults() as $key => $value) {
 			// Remove the Guest group
-			if($value->gID == 1){ continue; }
+			if ($value->gID == 1) {
+				continue;
+			}
 
 			$groups[$value->gID] = t($value->gName);
 		}
+
 		asort($groups);
 
 		return $groups;
 
 	}
 
-	public function getAllPageTypes() {
-
-		foreach(PageType::getList() as $index => $pageType) {
+	public function getAllPageTypes()
+	{
+		foreach (PageType::getList() as $index => $pageType) {
 			$pageTypeList[$pageType->ptID] = $pageType->ptName;
 		}
 
@@ -114,7 +119,8 @@ class BlogRoots extends DashboardPageController {
 
 	}
 
-	public function getTopicsAttributeList() {
+	public function getTopicsAttributeList()
+	{
 		// $tt = new TopicTree;
 		foreach (TopicTree::getList() as $tree) {
 			$trees[$tree->getRootTreeNodeID()] = $tree->getTreeName();
@@ -130,5 +136,4 @@ class BlogRoots extends DashboardPageController {
 
 		return $attributeKeys;
 	}
-
 }

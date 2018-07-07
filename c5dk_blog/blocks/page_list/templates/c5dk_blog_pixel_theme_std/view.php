@@ -8,6 +8,7 @@ use Config;
 use C5dk\Blog\C5dkUser as C5dkUser;
 use C5dk\Blog\C5dkBlog as C5dkBlog;
 use C5dk\Blog\C5dkConfig as C5dkConfig;
+
 //C5DK Blog Package - End
 
 defined('C5_EXECUTE') or die("Access Denied.");
@@ -19,10 +20,9 @@ $C5dkConfig = new C5dkConfig;
 $ih         = Core::make('helper/image');
 ?>
 
-<?php if ( $c->isEditMode() && $controller->isBlockEmpty()) { ?>
+<?php if ($c->isEditMode() && $controller->isBlockEmpty()) { ?>
 	<div class="ccm-edit-mode-disabled-item"><?php echo t('Empty Page List Block.')?></div>
 <?php } else { ?>
-
 	<?php if (isset($pageListTitle) && $pageListTitle): ?>
 			<h4><?php echo h($pageListTitle)?></h4>
 	<?php endif; ?>
@@ -38,8 +38,7 @@ $ih         = Core::make('helper/image');
 	<?php
 
 	$includeEntryText = FALSE;
-	if (
-		(isset($includeName) && $includeName)
+	if ((isset($includeName) && $includeName)
 		||
 		(isset($includeDescription) && $includeDescription)
 		||
@@ -49,7 +48,6 @@ $ih         = Core::make('helper/image');
 	}
 
 	foreach ($pages as $page):
-
 		// Prepare data for each page being listed...
 		$buttonClasses = 'ccm-block-page-list-read-more';
 		$entryClasses  = 'ccm-block-page-list-page-entry';
@@ -64,6 +62,7 @@ $ih         = Core::make('helper/image');
 		if ($displayThumbnail) {
 			$thumbnail = $page->getAttribute('thumbnail');
 		}
+
 		if (is_object($thumbnail) && $includeEntryText) {
 			$entryClasses = '';
 		}
@@ -137,7 +136,8 @@ $ih         = Core::make('helper/image');
 				<?php endif; ?>
 
 				<?php if (isset($includeDate) && $includeDate): ?>
-					<ul class="ccm-block-page-list-date entry-meta clearfix"><li><?php echo t('Posted by'); echo ' <i class="fa fa-user"></i> ' . ($C5dkUser->fullName? $C5dkUser->fullName : BASE_URL) . ' - <i class="fa fa-calendar"></i> ' . $date; ?></li></ul>
+					<ul class="ccm-block-page-list-date entry-meta clearfix"><li><?php echo t('Posted by');
+					echo ' <i class="fa fa-user"></i> ' . ($C5dkUser->fullName ? $C5dkUser->fullName : BASE_URL) . ' - <i class="fa fa-calendar"></i> ' . $date; ?></li></ul>
 				<?php endif; ?>
 
 				<?php if (isset($includeDescription) && $includeDescription): ?>

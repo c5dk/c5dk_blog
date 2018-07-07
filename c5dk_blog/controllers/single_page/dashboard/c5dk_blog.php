@@ -5,10 +5,11 @@ use Concrete\Core\Page\Controller\DashboardPageController;
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
-class C5dkBlog extends DashboardPageController {
+class C5dkBlog extends DashboardPageController
+{
 
-	public function view(){
+	public function view()
+	{
 		$this->redirect('/dashboard/c5dk_blog/blog_roots');
 	}
-
 }

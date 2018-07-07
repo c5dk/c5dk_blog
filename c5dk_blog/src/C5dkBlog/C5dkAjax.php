@@ -216,6 +216,7 @@ class C5dkAjax extends Controller
 				'imageListHtml' => $C5dkUser->getImageListHTML()
 			];
 		}
+
 		echo $jh->encode($data);
 	}
 

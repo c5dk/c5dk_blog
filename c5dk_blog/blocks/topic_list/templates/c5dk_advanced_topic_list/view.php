@@ -16,8 +16,8 @@
 			$walk = function($node) use (&$walk, &$view, $selectedTopicID) {
 				print '<ul class="c5dk-topic-list-list">';
 
-				foreach($node->getChildNodes() as $topic) {
-					if (is_object($topic) && $topic->getTreeNodeTypeID() === "2" ) { ?>
+				foreach ($node->getChildNodes() as $topic) {
+					if (is_object($topic) && $topic->getTreeNodeTypeID() === "2") { ?>
 						<li class="c5dk_folder"><i class="fa fa-plus-circle"></i> <?php echo $topic->getTreeNodeDisplayName()?></li>
 					<?php } else { ?>
 						<li><i class="fa fa-file-o"></i> <a href="<?php echo $view->controller->getTopicLink($topic)?>"
@@ -27,19 +27,18 @@
 					<?php } ?>
 					<?php $walk($topic); ?>
 				<?php }
+
 				print '</ul>';
 			};
 			$walk($node);
 			print '</ul>';
 		}
-
 	endif;
 
 	if ($mode == 'P'): ?>
-
 		<?php if (count($topics)) { ?>
 			<ul class="c5dk-topic-list-page-topics">
-			<?php foreach($topics as $topic) { ?>
+			<?php foreach ($topics as $topic) { ?>
 				<li><a href="<?php echo $view->controller->getTopicLink($topic)?>"><?php echo $topic->getTreeNodeDisplayName()?></a></li>
 			<?php } ?>
 			</ul>

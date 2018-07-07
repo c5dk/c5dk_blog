@@ -1,6 +1,5 @@
 <?php defined('C5_EXECUTE') or die("Access Denied."); ?>
-<?php if($C5dkUser->isBlogger && !$C5dkBlog->isEditMode()){ ?>
-
+<?php if ($C5dkUser->isBlogger && !$C5dkBlog->isEditMode()) { ?>
 	<div id="c5dk-blog-package">
 		<div class="c5dk_blog_section">
 
@@ -48,7 +47,11 @@
 	<div id="c5dk_form_slidein" class="slider"></div>
 
 	<!-- If Blog post slide-in is active. Get the slide-in element -->
-	<?php if ($C5dkConfig->blog_form_slidein) { print View::element('image_manager/main', array('C5dkUser' => new \C5dk\Blog\C5dkUser), 'c5dk_blog'); } ?>
+	<?php
+	if ($C5dkConfig->blog_form_slidein) {
+		print View::element('image_manager/main', array('C5dkUser' => new \C5dk\Blog\C5dkUser), 'c5dk_blog');
+	}
+	?>
 
 
 	<div style="clear: both;"></div>
@@ -195,8 +198,7 @@
 
 		};
 	</script>
-<?php } else if ($C5dkBlog->isEditMode() || $C5dkUser->isAdmin) { ?>
-
+<?php } elseif ($C5dkBlog->isEditMode() || $C5dkUser->isAdmin) { ?>
 	<?php // SuperAdmin/Administrator view if they aren't allowed to block or if the page is in edit mode ?>
 	<div class="c5dk_admin_frame"><?= t('C5DK Blogging Buttons: Only visible for users with blogging permissions'); ?></div>
 

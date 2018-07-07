@@ -6,7 +6,8 @@ use Concrete\Core\Database\Connection\Connection;
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
-class Test {
+class Test
+{
 
 	protected $db;
 
@@ -17,5 +18,4 @@ class Test {
 
 		$this->form = $this->app->make('helper/form');
 	}
-
 }

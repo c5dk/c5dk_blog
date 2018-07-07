@@ -41,7 +41,6 @@ class Controller extends BlockController
 		$this->requireAsset('core/app');
 
 		if ($C5dkConfig->blog_form_slidein && !Page::getCurrentPage()->isEditMode()) {
-
 			// Core Assets
 			$this->requireAsset('selectize');
 			$this->requireAsset('core/topics');

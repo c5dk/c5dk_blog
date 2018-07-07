@@ -10,7 +10,7 @@
 		<ul class="c5dk-date-navigation-dates">
 			<li><i class="fa fa-calendar-o"></i> <a href="<?php echo $view->controller->getDateLink()?>"><?php echo t('All')?></a></li>
 
-			<?php foreach($dates as $date) { ?>
+			<?php foreach ($dates as $date) { ?>
 				<li><i class="fa fa-calendar"></i> <a href="<?php echo $view->controller->getDateLink($date)?>"
 						<?php if ($view->controller->isSelectedDate($date)) { ?>
 							class="c5dk-date-navigation-date-selected"

@@ -10,10 +10,11 @@ use C5dk\Blog\C5dkRoot as C5dkRoot;
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
-class Add extends DashboardPageController {
+class Add extends DashboardPageController
+{
 
-	public function view() {
-
+	public function view()
+	{
 		// Set helper object
 		$this->set('pageSelector', $this->app->make('helper/form/page_selector'));
 
@@ -21,10 +22,10 @@ class Add extends DashboardPageController {
 		Cookie::set('includeSystemPages', FALSE);
 	}
 
-	public function save() {
+	public function save()
+	{
 		$C5dkRoot = C5dkRoot::getByID($this->post('root'));
 		$C5dkRoot->setAttribute('c5dk_blog_root', 1);
 		$this->redirect('/dashboard/c5dk_blog/blog_roots');
 	}
-
 }

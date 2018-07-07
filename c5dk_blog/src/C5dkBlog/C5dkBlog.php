@@ -86,11 +86,11 @@ class C5dkBlog extends Page
 				return FALSE;
 		}
 
-
 		// Update the Content Block with the blog text
 		if (empty($this->content)) {
 			$this->content = ' ';
 		}
+
 		$instance = $C5dkBlog->getInstance();
 		$instance->save(['content' => $this->content]);
 
@@ -244,5 +244,4 @@ class C5dkBlog extends Page
 
 		return FALSE;
 	}
-
 }

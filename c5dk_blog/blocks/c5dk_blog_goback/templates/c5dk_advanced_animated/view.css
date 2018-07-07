@@ -1,11 +1,9 @@
-
-
 #c5dk-go-back-anim a {
 	text-decoration: none;
 }
 #c5dk-go-back-anim {
 	font-family: 'Raleway', sans-serif;
-    
+
 }
 #c5dk-go-back-anim nav a {
 	position: relative;
@@ -26,7 +24,7 @@
 }
 
 #c5dk-go-back-anim .cl-effect-2 {
-    text-align: center;
+	text-align: center;
 }
 
 /* 3D rolling links */
@@ -82,5 +80,5 @@
 #c5dk-go-back-anim .cl-effect-2 a:hover span::before,
 #c5dk-go-back-anim .cl-effect-2 a:focus span::before {
 	background: #2195de; /* side 2 color */
-    text-align: center;
+	text-align: center;
 }

@@ -13,6 +13,7 @@ use File;
 use FileList;
 use FileImporter;
 use FileSet;
+use Illuminate\Filesystem\Filesystem;
 use Concrete\Core\Tree\Node\Type\FileFolder as FileFolder;
 use C5dk\Blog\BlogPost as C5dkBlogPost;
 use C5dk\Blog\Service\ThumbnailCropper as ThumbnailCropper;
@@ -281,16 +282,20 @@ class C5dkAjax extends Controller
 
 		    // User wants the thumbnail to be deleted
 		    if ($thumbnail['id'] == -1) {
-		        $C5dkBlog->deleteThumbnail();
+				$C5dkBlog->deleteThumbnail();
 		    }
 
 		    // So now we only need to see if we have a new thumbnail or we keep the old one
 		    if (strlen($thumbnail['croppedImage'])) {
-		        // Get on with saving the new thumbnail
+				$fs = new \Illuminate\Filesystem\Filesystem();
+
+				// Get on with saving the new thumbnail
 		        $img     = str_replace('data:image/png;base64,', '', $thumbnail['croppedImage']);
 		        $img     = str_replace(' ', '+', $img);
 		        $data    = base64_decode($img);
-		        $success = file_put_contents($tmpImagePath, $data);
+				// $success = file_put_contents($tmpImagePath, $data);
+				$success = $fs->put($tmpImagePath, $data);
+
 
 		        // Get image facade and open image
 		        // $imagine = $this->app->make(Image::getFacadeAccessor());
@@ -321,7 +326,6 @@ class C5dkAjax extends Controller
 		        }
 
 		        // Delete tmp file
-		        $fs = new \Illuminate\Filesystem\Filesystem();
 		        $fs->delete($tmpImagePath);
 
 		        $file = File::getByID($fv->getFileID());

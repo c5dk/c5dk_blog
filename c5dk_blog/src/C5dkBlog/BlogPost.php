@@ -1,5 +1,4 @@
 <?php
-
 namespace C5dk\Blog;
 
 use Controller;

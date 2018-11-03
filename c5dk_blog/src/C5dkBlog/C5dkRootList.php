@@ -133,8 +133,8 @@ class C5dkRootList extends DatabaseItemList implements PermissionableListItemInt
 			}
 		}
 
-			$cp = new \Permissions($mixed);
+		$cp = new \Permissions($mixed);
 
-			return $cp->canViewPage();
+		return $cp->canViewPage();
 	}
 }

@@ -102,8 +102,8 @@ class C5dkUser extends User
 				// Get files from FileSet
 				$fl = new FileList();
 				$fl->filterBySet($fs);
-
-				foreach ($fl->get() as $key => $file) {
+				$fileList = array_reverse($fl->get());
+				foreach ($fileList as $key => $file) {
 					$f  = File::getByID($file->getFileID());
 					$fv = $f->getRecentVersion();
 					$fp = explode('_', $fv->getFileName());

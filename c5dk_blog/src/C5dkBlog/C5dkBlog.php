@@ -94,8 +94,8 @@ class C5dkBlog extends Page
 		$instance->save(['content' => $this->content]);
 
 		// Save tags to the blog page
-		$cakTags    = CollectionAttributeKey::getByHandle('tags');
 		$C5dkBlog   = $C5dkBlog->getVersionToModify();
+		$cakTags    = CollectionAttributeKey::getByHandle('tags');
 		$controller = $cakTags->getController();
 		$value      = $controller->createAttributeValueFromRequest();
 		$C5dkBlog->setAttribute($cakTags, $value);
@@ -103,11 +103,11 @@ class C5dkBlog extends Page
 
 		// Add topics to the blog page if topics are in use
 		if ($this->topicAttributeID) {
-			$cakTopics  = CollectionAttributeKey::getByHandle($this->topicAttributeID);
-			$controller = $cakTopics->getController();
-			$value      = $controller->createAttributeValueFromRequest();
-			$C5dkBlog->setAttribute($cakTopics, $value);
-			$C5dkBlog->refreshCache();
+			$value = $controller->createAttributeValueFromRequest();
+			if (is_object($value)) {
+				$C5dkBlog->setAttribute($cakTopics, $value);
+				$C5dkBlog->refreshCache();
+			}
 		}
 
 		// Set meta attributes

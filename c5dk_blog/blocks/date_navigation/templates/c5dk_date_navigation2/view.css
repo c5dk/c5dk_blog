@@ -1,0 +1,15 @@
+#c5dk-blog-package .list-unstyled {
+	padding-left: 0;
+	list-style: none;
+}
+
+#c5dk-blog-package .ccm-block-date-navigation-date-selected {
+	font-weight: bold;
+}
+
+#c5dk-blog-package ul.c5dk-date-navigation-dates {
+	list-style-type: none;
+	margin-left: 8px;
+	margin-bottom: 0;
+	padding-left: 8px;
+}

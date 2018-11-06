@@ -18,7 +18,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
 class Controller extends Package
 {
 	protected $appVersionRequired      = '8.2';
-	protected $pkgVersion              = '8.4.3.1';
+	protected $pkgVersion              = '8.4.3.2.b1';
 	protected $pkgHandle               = 'c5dk_blog';
 	protected $pkgAutoloaderRegistries = [
 		'src/C5dkBlog' => '\C5dk\Blog',
@@ -276,6 +276,9 @@ class Controller extends Package
 
 		// Register JQuery Slide-in-panel
 		$al->register('javascript', 'slide-in-panel/main', 'js/slide-in-panel/jquery.slidereveal.min.js', [], 'c5dk_blog');
+
+		// Register JQuery Character Counter
+		$al->register('javascript', 'character-counter/main', 'js/flexible-Character-Counter/jquery.character-counter.min.js', [], 'c5dk_blog');
 
 		// Register extra js files from fileupload
 		$al->register('javascript', 'c5dkFileupload/loadImage', 'js/fileUpload/load-image.all.min.js', [], 'c5dk_blog');

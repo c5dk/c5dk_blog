@@ -47,8 +47,6 @@
 					<span style="display: block; float: left;">
 						<h4><?= t('Blog Title'); ?> <sup><i style="color: #E50000; font-size: 12px;" class="fa fa-asterisk"></i></sup></h4>
 					</span>
-					<span class="c5dk-title-char-counter"><?= t('Characters Left ('); ?><span style="font-size: 12px;" id="charNumTitle"></span>)</span>
-
 				</label>
 				<?php $style = ['class' => 'c5dk_bp_title c5dk-blog-full-width']; ?>
 				<?php if ($BlogPost->mode == C5DK_BLOG_MODE_EDIT && $C5dkConfig->blog_title_editable == 0) : ?>
@@ -63,34 +61,29 @@
 					<span style="display: block; float: left;">
 						<h4><?= t('Blog Description'); ?><sup><i style="color: #E50000; font-size: 12px;" class="fa fa-asterisk"></i></sup></h4>
 					</span>
-					<span class="c5dk-description-char-counter"><?= t('Characters Left ('); ?><span style="font-size: 12px;" id="charNumDescription"></span>)</span>
 				</label>
 				<?= $form->textarea('description', Core::make('helper/text')->entities($C5dkBlog->description), ['class' => 'c5dk-blog-full-width', 'rows' => 4]); ?>
 
 				<!-- Title and Description char counter script-->
 				<script type="text/javascript">
 					$(document).ready(function() {
-						// Title and description char counter
-						$('#title, #description').keyup(function(event) {
-							switch(this.id){
-								case "title":
-									var charLength = 70;
-									var divCounter = "#charNumTitle";
-									break;
-								case "description":
-									var charLength = 156;
-									var divCounter = "#charNumDescription";
-									break;
-							}
-							var len = this.value.length;
-							if (len > charLength) {
-								$(divCounter).text(charLength - len);
-								$(divCounter).addClass('c5dk_blog_cnt_red');
-							} else {
-								$(divCounter).text(charLength - len);
-								$(divCounter).removeClass('c5dk_blog_cnt_red');
-							}
-						}).trigger('keyup');
+						$('#title').characterCounter({
+							maxlength: 70,
+							blockextra: false,
+							position: 'top',
+							counterclass: 'c5dk-title-char-counter',
+							alertclass: 'c5dk_blog_cnt_red',
+							textformat: '[used]/[max]'
+						});
+
+						$('#description').characterCounter({
+							maxlength: 156,
+							blockextra: false,
+							position: 'top',
+							counterclass: 'c5dk-description-char-counter',
+							alertclass: 'c5dk_blog_cnt_red',
+							textformat: '[used]/[max]'
+						});
 
 						$( ".c5dk_bp_title" ).focus(function() {
 							$('.c5dk-title-char-counter').addClass('c5dk-char-counter-highlite');
@@ -242,14 +235,10 @@ c5dk.blog.data.post = {
 	}
 }
 
-
 $(document).ready( function(){ c5dk.blog.post.init(); });
-
 </script>
 
 <style type="text/css">
-
-
 	#c5dk-blog-package .c5dk_blog_thumbnail_preview{
 		float: left;
 		overflow: hidden;

@@ -54,6 +54,7 @@ class Controller extends BlockController
 			$this->requireAsset('css', 'cropper');
 			$this->requireAsset('javascript', 'validation');
 			$this->requireAsset('javascript', 'slide-in-panel/main');
+			$this->requireAsset('javascript', 'character-counter/main');
 			$this->requireAsset('c5dkFileupload/all');
 		}
 	}

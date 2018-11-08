@@ -140,23 +140,6 @@
 
 								}
 							});
-
-
-							// Keyboard Arrow keys move the image
-							$(document.body).on('keydown', function (e) {
-
-								if (c5dk.blog.service.data.thumbnailCropper.crop_img && !c5dk.blog.service.data.thumbnailCropper.crop_img.data('cropper') || this.scrollTop > 300 || e.which < 37 || e.which > 40) { return; }
-
-								e.preventDefault();
-
-								switch (e.which) {
-									case 37: c5dk.blog.service.data.thumbnailCropper.crop_img.cropper('move', -1, 0); break;
-									case 38: c5dk.blog.service.data.thumbnailCropper.crop_img.cropper('move', 0, -1); break;
-									case 39: c5dk.blog.service.data.thumbnailCropper.crop_img.cropper('move', 1, 0); break;
-									case 40: c5dk.blog.service.data.thumbnailCropper.crop_img.cropper('move', 0, 1); break;
-								}
-
-							});
 						});
 					</script>
 

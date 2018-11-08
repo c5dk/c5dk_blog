@@ -74,6 +74,7 @@
 	font-size: 20px;
 	font-weight: 500;
 	color: #222222;
+	margin-bottom: 0;
 }
 #c5dk-blog-package .c5dk-blog-btn-danger {
 	color: rgb(231, 230, 230);
@@ -89,14 +90,14 @@
 #c5dk-blog-package .c5dk-title-char-counter {
 	display: block;
 	float: right;
-	margin-top: 18px;
+	margin-top: 0;
 	font-size: 12px;
 	color: #bbb;
 }
 #c5dk-blog-package .c5dk-description-char-counter {
 	display: block;
 	float: right;
-	margin-top: 18px;
+	margin-top: 0;
 	font-size: 12px;
 	color: #bbb;
 }

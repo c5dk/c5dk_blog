@@ -8,6 +8,11 @@ use BlockType;
 use AttributeSet;
 use UserAttributeKey;
 use CollectionAttributeKey;
+use Concrete\Core\Entity\Attribute\Key\PageKey;
+use Concrete\Core\Entity\Attribute\Key\Settings\TopicsSettings;
+use Concrete\Core\Tree\Type\Topic as TopicTree;
+use Concrete\Core\Tree\Node\Node as TreeNode;
+use Concrete\Core\Tree\Node\Type\Topic as TopicTreeNode;
 use Concrete\Core\Attribute\Key\Category as AttributeKeyCategory;
 use Concrete\Core\File\Image\Thumbnail\Type\Type;
 
@@ -76,6 +81,35 @@ class C5dkInstaller
 		return $cak;
 	}
 
+	public static function installCollectionAttributeKeyTopic($handle, $name, $topicTree, $set = null) {
+		// Add
+		$app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
+		$service        = $app->make('Concrete\Core\Attribute\Category\CategoryService');
+		$categoryEntity = $service->getByHandle('collection');
+		$category       = $categoryEntity->getController();
+
+		$pageKey = $category->getByHandle($handle);
+		if (!is_object($pageKey)) {
+			$pageKey = new PageKey();
+			$pageKey->setAttributeKeyHandle($handle);
+			$pageKey->setAttributeKeyName($name);
+            if ($set) {
+                $pageKey->setAttributeSet($set);
+            }
+			// $pageKey->setIsAttributeKeySearchable(FALSE); // Default: True
+			// $pageKey->setIsAttributeKeyContentIndexed(TRUE); // Default: False
+
+			$settings = new TopicsSettings();
+			$settings->setTopicTreeID($topicTree->getRootTreeNodeObject()->getTreeID());
+			$settings->setParentNodeID($topicTree->getRootTreeNodeObject()->getTreeNodeID());
+			$settings->setAllowMultipleValues(false);
+
+			$pageKey = $category->add('topics', $pageKey, $settings);
+		}
+
+		return $pageKey;
+	}
+
 	public static function installBlockTypeSet($handle, $name, $pkg = FALSE)
 	{
 		$bts = BlockTypeSet::getByHandle($handle);
@@ -124,5 +158,22 @@ class C5dkInstaller
 
 			return $type;
 		}
+	}
+
+	public static function installTopicTree($name, $topics = [])
+	{
+		// Make Topic Tree if not exist
+		$topicTree = TopicTree::getByName($name);
+		if (!is_object($topicTree)) {
+			$topicTree     = TopicTree::add($name);
+			$topicCategory = TreeNode::getByID($topicTree->getRootTreeNodeObject()->getTreeNodeID());
+            if (count($topics)) {
+				foreach ($topics as $topicName) {
+					TopicTreeNode::add($topicName, $topicCategory);
+				}
+            }
+		}
+
+		return $topicTree;
 	}
 }

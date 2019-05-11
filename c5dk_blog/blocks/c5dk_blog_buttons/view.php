@@ -1,57 +1,105 @@
 <?php defined('C5_EXECUTE') or die("Access Denied."); ?>
-<?php if ($C5dkUser->isBlogger && !$C5dkBlog->isEditMode()) { ?>
-	<div id="c5dk-blog-package">
-		<div class="c5dk_blog_section">
 
-			<div class="c5dk_blog_btn_title"><h4><?= t('Blog Editor'); ?></h4></div>
 
-			<!-- Blogging Buttons -->
-			<div class="c5dk_blog_btn">
-				<div class="c5dk-blog-btn-wrap">
-				<a class="c5dk_blog_ButtonGreen"
-					<?php if ($C5dkConfig->blog_form_slidein) { ?>
-						onclick="return c5dk.blog.buttons.create('<?= $C5dkBlog->getCollectionID(); ?>', '<?= $C5dkBlog->rootID; ?>');"
+<?php if (!$C5dkBlog->isEditMode()) { ?>
+
+	<?php if ($C5dkUser->isEditor) { ?>
+
+		<div id="c5dk-blog-package">
+			<div class="c5dk_blog_section">
+
+				<!-- Header -->
+				<div class="c5dk_blog_btn_title"><h4><?= t('Blog Editor Control'); ?></h4></div>
+
+				<!-- News Buttons -->
+				<div class="c5dk_blog_buttons">
+
+					<!-- Go to Editor Manager -->
+					<div class="c5dk-blog-btn-wrap">
+						<a class="c5dk_blog_ButtonGrey" href="<?= $this->url('/c5dk/blog/editor/manager'); ?>"><?= t("Manager List"); ?></a>
+					</div>
+
+					<?php //if ($C5dkBlog->isEditor($C5dkUser->getUserID()) && $C5dkBlog->getAttribute('c5dk_blog_author_id')) { ?>
+					<?php if ($C5dkUser->isEditor && $C5dkBlog->getAttribute('c5dk_blog_author_id')) { ?>
+
+						<!-- Approve News Entry -->
+						<div class="c5dk-blog-btn-wrap">
+							<button id="c5dk_approve" class="<?= ($C5dkBlog->approved? "c5dk_blog_ButtonOrange" : "c5dk_blog_ButtonGreen"); ?>" onclick="c5dk.blog.buttons.approve(<?= $C5dkBlog->blogID; ?>)" data-id="<?= $C5dkBlog->blogID; ?>" data-approved="<?= $C5dkBlog->approved; ?>"><?= (!$C5dkBlog->approved)? t("Approve") : t("Unapprove"); ?></button>
+						</div>
+
+						<?php //if (!$C5dkUser->isOwner) { ?>
+
+							<!-- Edit Post -->
+							<div class="c5dk-blog-btn-wrap">
+								<a class="c5dk_blog_ButtonBlue" href="<?= $this->url('blog_post', 'edit', $C5dkBlog->getCollectionID()); ?>"><?= t("Edit Post"); ?></a>
+							</div>
+
+							<!-- Delete Post -->
+							<div class="c5dk-blog-btn-wrap">
+								<a class="c5dk_blog_ButtonRed" href="javascript:c5dk.blog.buttons.delete('confirm');"><?= t("Delete Post"); ?></a>
+							</div>
+
+						<?php //} ?>
+
 					<?php } ?>
-					href="<?= $this->url('blog_post', 'create', $C5dkBlog->getCollectionID(), $C5dkBlog->rootID); ?>"><?= t("New Post"); ?></a>
-				</div>
-				<?php if ($C5dkUser->isOwner) { ?>
-					<div class="c5dk-blog-btn-wrap">
-					<a class="c5dk_blog_ButtonBlue"
-						<?php if ($C5dkConfig->blog_form_slidein) { ?>
-							onclick="return c5dk.blog.buttons.edit('<?= $C5dkBlog->getCollectionID(); ?>');"
-						<?php } ?>
-						href="<?= $this->url('blog_post', 'edit', $C5dkBlog->getCollectionID()); ?>"><?= t("Edit Post"); ?></a>
-					</div>
-					<div class="c5dk-blog-btn-wrap">
-					<a class="c5dk_blog_ButtonRed" onclick="c5dk.blog.buttons.delete('confirm');"><?= t("Delete Post"); ?></a>
-					</div>
-				<?php } ?>
-			</div>
 
-			<!-- Dialog: Delete post -->
-			<div id="dialog_confirmDelete" class="c5dk-dialog">
-				<div class="ccm-ui">
-					<div style="padding: 20px;">
-						<p><?= t("Are you sure you want to Delete this post?"); ?></p>
-					</div>
-					<div>
-						<input class="btn btn-default btn-hover-danger" onclick="c5dk.blog.buttons.delete('close');" type="button" value="<?= t('Cancel'); ?>">
-						<input class="btn pull-right btn-danger" onclick="c5dk.blog.buttons.delete('delete');" type="button" value="<?= t('Delete'); ?>">
-					</div>
 				</div>
 			</div>
-
 		</div>
-	</div>
+
+	<?php } ?>
+
+
+	<?php if ($C5dkUser->isBlogger) { ?>
+		<div id="c5dk-blog-package">
+			<div class="c5dk_blog_section">
+
+				<div class="c5dk_blog_btn_title"><h4><?= t('Blog Editor'); ?></h4></div>
+
+				<!-- Blogging Buttons -->
+				<div class="c5dk_blog_btn">
+					<div class="c5dk-blog-btn-wrap">
+					<a class="c5dk_blog_ButtonGreen"
+						<?php if ($C5dkConfig->blog_form_slidein) { ?>
+							onclick="return c5dk.blog.buttons.create('<?= $C5dkBlog->getCollectionID(); ?>', '<?= $C5dkBlog->rootID; ?>');"
+						<?php } ?>
+						href="<?= $this->url('blog_post', 'create', $C5dkBlog->getCollectionID(), $C5dkBlog->rootID); ?>"><?= t("New Post"); ?></a>
+					</div>
+					<?php if ($C5dkUser->isOwner) { ?>
+						<div class="c5dk-blog-btn-wrap">
+						<a class="c5dk_blog_ButtonBlue"
+							<?php if ($C5dkConfig->blog_form_slidein) { ?>
+								onclick="return c5dk.blog.buttons.edit('<?= $C5dkBlog->getCollectionID(); ?>');"
+							<?php } ?>
+							href="<?= $this->url('blog_post', 'edit', $C5dkBlog->getCollectionID()); ?>"><?= t("Edit Post"); ?></a>
+						</div>
+						<div class="c5dk-blog-btn-wrap">
+						<a class="c5dk_blog_ButtonRed" onclick="c5dk.blog.buttons.delete('confirm');"><?= t("Delete Post"); ?></a>
+						</div>
+					<?php } ?>
+				</div>
+
+				<!-- Dialog: Delete post -->
+				<div id="dialog_confirmDelete" class="c5dk-dialog">
+					<div class="ccm-ui">
+						<div style="padding: 20px;">
+							<p><?= t("Are you sure you want to Delete this post?"); ?></p>
+						</div>
+						<div>
+							<input class="btn btn-default btn-hover-danger" onclick="c5dk.blog.buttons.delete('close');" type="button" value="<?= t('Cancel'); ?>">
+							<input class="btn pull-right btn-danger" onclick="c5dk.blog.buttons.delete('delete');" type="button" value="<?= t('Delete'); ?>">
+						</div>
+					</div>
+				</div>
+
+			</div>
+		</div>
+	<?php } ?>
 
 	<div id="c5dk_form_slidein" class="slider"></div>
 
 	<!-- If Blog post slide-in is active. Get the slide-in element -->
-	<?php
-	if ($C5dkConfig->blog_form_slidein) {
-		print View::element('image_manager/main', array('C5dkUser' => new \C5dk\Blog\C5dkUser), 'c5dk_blog');
-	}
-	?>
+	<?php if ($C5dkConfig->blog_form_slidein) { print View::element('image_manager/main', ['C5dkUser' => new \C5dk\Blog\C5dkUser], 'c5dk_blog'); } ?>
 
 
 	<div style="clear: both;"></div>

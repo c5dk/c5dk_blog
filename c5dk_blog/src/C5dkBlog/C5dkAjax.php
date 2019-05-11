@@ -1,6 +1,7 @@
 <?php
 namespace C5dk\Blog;
 
+use Core;
 use User;
 use Page;
 use View;
@@ -22,7 +23,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
 
 class C5dkAjax extends Controller
 {
-	public function getForm()
+	public function getForm($blogID)
 	{
 		$C5dkBlogPost = new C5dkBlogPost;
 
@@ -234,7 +235,7 @@ class C5dkAjax extends Controller
 			// Set C5dk Objects
 			$C5dkUser = new C5dkUser;
 
-			// Get or create the C5dkNews Object
+			// Get or create the C5dkBlog Object
 			$C5dkBlog = ($this->post('mode') == C5DK_BLOG_MODE_CREATE) ? new C5dkBlog : C5dkBlog::getByID($blogID);
 
 			// Setup blog and save it
@@ -244,7 +245,9 @@ class C5dkAjax extends Controller
 				'title' => $this->post('title'),
 				'description' => $this->post('description'),
 				'content' => $this->post('c5dk_blog_content'),
-				'topicAttributeID' => $this->post('topicAttributeID')
+				'topicAttributeHandle' => $this->post('topicAttributeHandle'),
+				'publishTime' => Core::make('helper/form/date_time')->translate('publishTime'),
+				'unpublishTime' => Core::make('helper/form/date_time')->translate('unpublishTime')
 			]);
 			$C5dkBlog = $C5dkBlog->save($this->post('mode'));
 			$C5dkBlog = C5dkBlog::getByID($C5dkBlog->getCollectionID());

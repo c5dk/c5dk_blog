@@ -16,6 +16,7 @@ use Concrete\Core\Page\Controller\DashboardPageController;
 
 use C5dk\Blog\C5dkUser as C5dkUser;
 use C5dk\Blog\C5dkRootList as C5dkRootList;
+use C5dk\Blog\Entity\C5dkRoot as C5dkRootEntity;
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
@@ -30,6 +31,7 @@ class BlogRoots extends DashboardPageController
 		$this->set('rootList',				$C5dkRootList->getResults());
 
 		$this->set('groupList',				$this->getAllGroups());
+		// $this->set('editorGroupList', $this->getAllEditorGroups());
 		$this->set('pageTypeList',			$this->getAllPageTypes());
 		$this->set('topicAttributeList',	$this->getTopicsAttributeList());
 
@@ -43,34 +45,15 @@ class BlogRoots extends DashboardPageController
 		$message = Session::get('c5dk_blog_message');
 		if ($message) {
 			Session::set('c5dk_blog_message', '');
-			$this->set('message', $message);
+			$this->set('success', $message);
 		}
 	}
 
 	public function save()
 	{
-		$app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
-		$db  = $app->make('database')->connection();
-
-		// Delete old values in db
-		$db->Execute('DELETE FROM C5dkBlogRootPermissions');
-
-		// Save new permission values in db
-		$postData = $this->post();
-		foreach ($postData as $postKey => $postVal) {
-			if (substr($postKey, 0, 12) == "root_groups_" && is_array($postVal)) {
-				foreach ($postVal as $groupID) {
-					$rootID = substr($postKey, 12);
-					$db->Execute('INSERT INTO C5dkBlogRootPermissions (rootID, groupID, pageTypeID, tags, thumbnails, topicAttributeID) VALUES (?, ?, ?, ?, ?, ?)', array(
-						$rootID,
-						$groupID,
-						$postData["pageTypeID_" . $rootID],
-						($postData["tags_" . $rootID] ? 1 : 0),
-						($postData["thumbnails_" . $rootID] ? 1 : 0),
-						$postData["topicAttributeID_" . $rootID]
-					));
-				}
-			}
+		foreach ($this->post('root') as $rootID => $data) {
+			$data['rootID'] = $rootID;
+			C5dkRootEntity::saveForm($data);
 		}
 
 		Session::set('c5dk_blog_message', t('Root values saved.'));
@@ -82,7 +65,7 @@ class BlogRoots extends DashboardPageController
 		$root = Page::getByID($rootID);
 		$ak   = CollectionAttributeKey::getByHandle('c5dk_blog_root');
 		$root->clearAttribute($ak);
-		$this->set('message', t("Blog Root has been removed"));
+		$this->set('success', t("Blog Root has been removed"));
 		$this->view();
 	}
 
@@ -136,4 +119,27 @@ class BlogRoots extends DashboardPageController
 
 		return $attributeKeys;
 	}
+
+    public function topicTreeList()
+    {
+
+        // Get the Topics Attribute Type object
+        $atTopics = AttributeType::getByHandle('topics');
+
+        // Set our default value
+        $topicTreeList = array(0 => t("None"));
+
+        if ($atTopics instanceof AttributeType) {
+
+            $atTopicsID = $atTopics->getAttributeTypeID();
+            foreach (CollectionAttributeKey::getList() as $attribute) {
+                if ($attribute->atID == $atTopicsID) {
+                    $topicTreeList[$attribute->getAttributeKeyID()] = $attribute->getAttributeKeyName();
+                }
+            }
+        }
+
+        return $topicTreeList;
+    }
+
 }

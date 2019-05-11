@@ -31,16 +31,16 @@ class C5dkRootList extends DatabaseItemList implements PermissionableListItemInt
 
 	public function createQuery()
 	{
-		$this->query->select('rootID, pagetypeID, topicTreeID, groupID');
-
+		// $this->query->select('rootID, pagetypeID, topicAttributeHandle, writerGroups');
+		$this->query->select('p.cID');
 	}
 
 	public function finalizeQuery(\Doctrine\DBAL\Query\QueryBuilder $query)
 	{
-		$query->from('C5dkBlogRootPermissions');
+		// $query->from('C5dkRoot');
 
-		return $query;
-
+		// return $query;
+		return parent::finalizeQuery($query);
 	}
 
 	// Returns an array of root objects

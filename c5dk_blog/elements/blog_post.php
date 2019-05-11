@@ -1,5 +1,7 @@
 <?php defined('C5_EXECUTE') or die('Access Denied.'); ?>
-
+<?php
+$dh = Core::make('helper/form/date_time');
+?>
 <div id="c5dk-blog-package" class="container main-wrap">
 
 	<form id="c5dk_blog_form" method="post" action="<?= \URL::to('/blog_post/save'); ?>">
@@ -27,16 +29,38 @@
 		<?= $form->hidden('blogID', $C5dkBlog->blogID); ?>
 
 		<!-- Blog root -->
-		<?php if (count($BlogPost->rootList) < 2 || $BlogPost->mode == C5DK_BLOG_MODE_EDIT) : ?>
-			<?php // Make blogRootID a hidden field if user only can block in one root or is in edit mode?>
+		<?php if (count($BlogPost->rootList) < 2 || $BlogPost->mode == C5DK_BLOG_MODE_EDIT) { ?>
 			<?= $form->hidden('rootID', $C5dkBlog->rootID); ?>
-		<?php else : ?>
+		<?php } else { ?>
 			<div class="c5dk_blog_section">
-				<?php // Show select input with all the roots the user have access to?>
+				<?php  ?>
 				<?= $form->label('rootID', '<h4>' . t('Post your blog under') . '</h4>'); ?>
 				<?= $form->select('rootID', $BlogPost->rootList, $C5dkBlog->rootID); ?>
 			</div>
-		<?php endif ?>
+		<?php } ?>
+
+
+		<?php if ($BlogPost->publishTimeEnabled || $BlogPost->unpublishTimeEnabled) { ?>
+			<div class="c5dk_blog_section">
+
+				<?php if ($BlogPost->publishTimeEnabled) { ?>
+                    <div>
+                        <!-- Post Public Date Time -->
+                        <?= $form->label('publishTime', '<h4>' . t('Public Date Time') . '</h4>'); ?>
+                        <?= $dh->datetime('publishTime', new datetime($C5dkBlog->publishTime)); ?>
+                    </div>
+                <?php } ?>
+
+				<?php if ($BlogPost->unpublishTimeEnabled) { ?>
+					<div>
+						<!-- Post Offline Date Time -->
+						<?= $form->label('unpublishTime', '<h4>' . t('Offline Date Time') . '</h4>'); ?>
+						<?= $dh->datetime('unpublishTime', new datetime($C5dkBlog->unpublishTime)); ?>
+					</div>
+				<?php } ?>
+			</div>
+		<?php } ?>
+
 
 		<!-- Title and Description -->
 		<div class="c5dk_blog_section">
@@ -50,7 +74,7 @@
 				</label>
 				<?php $style = ['class' => 'c5dk_bp_title c5dk-blog-full-width']; ?>
 				<?php if ($BlogPost->mode == C5DK_BLOG_MODE_EDIT && $C5dkConfig->blog_title_editable == 0) : ?>
-					<?php $style['disabled'] = 'disabled'; ?>
+				<?php $style['disabled'] = 'disabled'; ?>
 				<?php endif ?>
 				<?= $form->text('title', $C5dkBlog->title, $style); ?>
 			</div>
@@ -73,7 +97,7 @@
 							position: 'bottom',
 							counterclass: 'c5dk-title-char-counter',
 							alertclass: 'c5dk_blog_cnt_red',
-							textformat: '<?= t('Characters Left ('); ?> [used]/[max] )'
+							textformat: '<?= t('Characters Left ( [used]/[max] )'); ?>'
 						});
 
 						$('#description').characterCounter({
@@ -82,22 +106,22 @@
 							position: 'bottom',
 							counterclass: 'c5dk-description-char-counter',
 							alertclass: 'c5dk_blog_cnt_red',
-							textformat: '<?= t('Characters Left ('); ?> [used]/[max] )'
+							textformat: '<?= t('Characters Left ( [used]/[max] )'); ?>'
 						});
 
-						$( ".c5dk_bp_title" ).focus(function() {
+						$(".c5dk_bp_title").focus(function() {
 							$('.c5dk-title-char-counter').addClass('c5dk-char-counter-highlite');
 						});
 
-						$( ".c5dk_bp_title" ).focusout(function() {
+						$(".c5dk_bp_title").focusout(function() {
 							$('.c5dk-title-char-counter').removeClass('c5dk-char-counter-highlite');
 						});
 
-						$( "#description" ).focus(function() {
+						$("#description").focus(function() {
 							$('.c5dk-description-char-counter').addClass('c5dk-char-counter-highlite');
 						});
 
-						$( "#description" ).focusout(function() {
+						$("#description").focusout(function() {
 							$('.c5dk-description-char-counter').removeClass('c5dk-char-counter-highlite');
 						});
 					});
@@ -110,7 +134,6 @@
 		<div class="c5dk_blog_section">
 			<label for="c5dk_blog_content">
 				<h4><?= t('Blog Content'); ?><sup><i style="color: #E50000; font-size: 12px;" class="fa fa-asterisk"></i></sup></h4>
-
 			</label>
 			<?= $form->textarea('c5dk_blog_content', $C5dkBlog->content); ?>
 			<script type="text/javascript">
@@ -125,20 +148,58 @@
 						allowedContent: true,
 						//disallowedContent: 'img{border*,margin*,width,height,float}',
 						extraPlugins: 'c5dkimagemanager,autogrow,lineutils,widget<?= $C5dkConfig->getPlugins(); ?>',
-						toolbarGroups: [
-							{ name: 'tools',        groups: [ 'tools' ] },
-							{ name: 'document',     groups: [ 'mode', 'document', 'doctools' ] },
-							{ name: 'clipboard',    groups: [ 'clipboard', 'undo' ] },
-							{ name: 'editing',      groups: [ 'find', 'selection', 'spellchecker', 'editing' ] },
-							{ name: 'links',        groups: [ 'links' ] },
-							{ name: 'insert',       groups: [ 'insert' ] },
-							{ name: 'forms',        groups: [ 'forms' ] },
-							{ name: 'others',       groups: [ 'others' ] },
-							{ name: 'basicstyles',  groups: [ 'basicstyles', 'cleanup' ] },
-							{ name: 'paragraph',    groups: [ 'list', 'indent', 'blocks', 'align', 'bidi', 'paragraph' ] },
-							{ name: 'styles',       groups: [ 'styles' ] },
-							{ name: 'colors',       groups: [ 'colors' ] },
-							{ name: 'about',        groups: [ 'about' ] }
+						toolbarGroups: [{
+								name: 'tools',
+								groups: ['tools']
+							},
+							{
+								name: 'document',
+								groups: ['mode', 'document', 'doctools']
+							},
+							{
+								name: 'clipboard',
+								groups: ['clipboard', 'undo']
+							},
+							{
+								name: 'editing',
+								groups: ['find', 'selection', 'spellchecker', 'editing']
+							},
+							{
+								name: 'links',
+								groups: ['links']
+							},
+							{
+								name: 'insert',
+								groups: ['insert']
+							},
+							{
+								name: 'forms',
+								groups: ['forms']
+							},
+							{
+								name: 'others',
+								groups: ['others']
+							},
+							{
+								name: 'basicstyles',
+								groups: ['basicstyles', 'cleanup']
+							},
+							{
+								name: 'paragraph',
+								groups: ['list', 'indent', 'blocks', 'align', 'bidi', 'paragraph']
+							},
+							{
+								name: 'styles',
+								groups: ['styles']
+							},
+							{
+								name: 'colors',
+								groups: ['colors']
+							},
+							{
+								name: 'about',
+								groups: ['about']
+							}
 						],
 						removeButtons: 'Image,Table,Styles,About,Blockquote'
 					});
@@ -151,24 +212,24 @@
 
 			<!-- Blog Tags -->
 			<?php if ($BlogPost->tagsEnabled) : ?>
-				<?php $casTags = CollectionAttributeKey::getByHandle('tags'); ?>
-				<h4><?= t('Tags'); ?></h4>
-				<?= $casTags->render('form', $C5dkBlog->tags, TRUE); ?>
+			<?php $casTags = CollectionAttributeKey::getByHandle('tags'); ?>
+			<h4><?= t('Tags'); ?></h4>
+			<?= $casTags->render('form', $C5dkBlog->tags, true); ?>
 			<?php endif ?>
 
 			<!-- Blog Topics -->
-			<?php if ($BlogPost->topicAttributeID) : ?>
-				<?= $form->label('', '<h4 style="margin-top: 25px;">' . t('Topics') . '</h4>'); ?>
-				<?= $form->hidden('topicAttributeID', $BlogPost->topicAttributeID); ?>
-				<?php $casTopics = CollectionAttributeKey::getByHandle($BlogPost->topicAttributeID); ?>
-				<?= $casTopics->render('form', $C5dkBlog->topics, TRUE); ?>
+			<?php if ($BlogPost->topicAttributeHandle) : ?>
+			<?= $form->label('', '<h4 style="margin-top: 25px;">' . t('Topics') . '</h4>'); ?>
+			<?= $form->hidden('topicAttributeHandle', $BlogPost->topicAttributeHandle); ?>
+			<?php $casTopics = CollectionAttributeKey::getByHandle($BlogPost->topicAttributeHandle); ?>
+			<?= $casTopics->render('form', $C5dkBlog->topics, true); ?>
 			<?php endif ?>
 		</div>
 
 		<!-- Blog Thumbnail -->
 		<?php if ($BlogPost->thumbnailsEnabled && $ThumbnailCropper) : ?>
-			<!-- Cropper Service -->
-			<?= $ThumbnailCropper->output(); ?>
+		<!-- Cropper Service -->
+		<?= $ThumbnailCropper->output(); ?>
 
 		<?php endif ?>
 
@@ -204,56 +265,74 @@
 </div> <!-- c5dk-blog-package wrapper -->
 
 <script type="text/javascript">
-var CCM_EDITOR_SECURITY_TOKEN = "<?= Core::make('token')->generate('editor'); ?>";
+	var CCM_EDITOR_SECURITY_TOKEN = "<?= Core::make('token')->generate('editor'); ?>";
 
-if (!c5dk) { var c5dk = {}; }
-if (!c5dk.blog) { c5dk.blog = {}; }
-if (!c5dk.blog.data) { c5dk.blog.data = {}; }
+	if (!c5dk) {
+		var c5dk = {};
+	}
+	if (!c5dk.blog) {
+		c5dk.blog = {};
+	}
+	if (!c5dk.blog.data) {
+		c5dk.blog.data = {};
+	}
 
-c5dk.blog.data.post = {
-	modeCreate: '<?= C5DK_BLOG_MODE_CREATE; ?>',
-	mode: <?= $BlogPost->mode == C5DK_BLOG_MODE_CREATE ? C5DK_BLOG_MODE_CREATE : C5DK_BLOG_MODE_EDIT; ?>,
-	slidein: <?= (int) $C5dkConfig->blog_form_slidein; ?>,
+	c5dk.blog.data.post = {
+		modeCreate: '<?= C5DK_BLOG_MODE_CREATE; ?>',
+		mode: <?= $BlogPost->mode == C5DK_BLOG_MODE_CREATE ? C5DK_BLOG_MODE_CREATE : C5DK_BLOG_MODE_EDIT; ?>,
+		slidein: <?= (int)$C5dkConfig->blog_form_slidein; ?>,
 
-	url: {
-		currentPage: '<?= \URL::to('blog_post', 'create', $BlogPost->redirectID); ?>',
-		root: '<?= \URL::to("/"); ?>',
-		save: '<?= \URL::to("/c5dk/blog/save"); ?>',
-		delete: '<?= \URL::to("/c5dk/blog/image/delete"); ?>',
-		upload: '<?= \URL::to("/c5dk/blog/image/upload"); ?>',
-		ping: '<?= \URL::to("/blog_post/ping"); ?>'
-	},
+		url: {
+			currentPage: '<?= \URL::to('blog_post', 'create', $BlogPost->redirectID); ?>',
+			root: '<?= \URL::to("/"); ?>',
+			save: '<?= \URL::to("/c5dk/blog/save"); ?>',
+			delete: '<?= \URL::to("/c5dk/blog/image/delete"); ?>',
+			upload: '<?= \URL::to("/c5dk/blog/image/upload"); ?>',
+			ping: '<?= \URL::to("/blog_post/ping"); ?>'
+		},
 
-	text: {
-		fileupload: '<?= t('Uploading File(s)'); ?>',
-		imageDelete: '<?= t('Confirm Delete'); ?>'
-	},
+		text: {
+			fileupload: '<?= t('Uploading File(s)'); ?>',
+			imageDelete: '<?= t('Confirm Delete'); ?>'
+		},
 
-	image: {
+		image: {
 			maxWidth: <?= $C5dkConfig->blog_picture_width; ?>,
 			maxHeight: <?= $C5dkConfig->blog_picture_height; ?>
+		}
 	}
-}
 
-$(document).ready( function(){ c5dk.blog.post.init(); });
+	$(document).ready(function() {
+		c5dk.blog.post.init();
+	});
 </script>
 
 <style type="text/css">
-	#c5dk-blog-package .c5dk_blog_thumbnail_preview{
+	#c5dk-blog-package .c5dk_blog_thumbnail_preview {
 		float: left;
 		overflow: hidden;
 		border: 1px solid #ccc;
-		background-color: <?= $C5dkConfig->blog_cropper_def_bgcolor; ?>;
+		background-color: < ?=$C5dkConfig->blog_cropper_def_bgcolor;
+		?>;
 		width: 150px;
-		height: <?= intval((150 / ($C5dkConfig->blog_thumbnail_width / 100)) * ($C5dkConfig->blog_thumbnail_height / 100)); ?>px;
+		height: < ?=intval((150 / ($C5dkConfig->blog_thumbnail_width / 100)) * ($C5dkConfig->blog_thumbnail_height / 100));
+		?>px;
 		/*cursor: pointer;*/
 	}
-	#c5dk-blog-package .c5dk_blog_thumbnail_preview img{
+
+	#c5dk-blog-package .c5dk_blog_thumbnail_preview img {
 		width: 150px;
-		height: <?= intval((150 / ($C5dkConfig->blog_thumbnail_width / 100)) * ($C5dkConfig->blog_thumbnail_height / 100)); ?>px;
+		height: < ?=intval((150 / ($C5dkConfig->blog_thumbnail_width / 100)) * ($C5dkConfig->blog_thumbnail_height / 100));
+		?>px;
 		max-width: none;
 	}
 
-	.ui-dialog { z-index: 10020!important; }
-	#ccm-sitemap-search-selector ul.nav-tabs li:nth-child(1n+2) { display: none; }
-</style>
+	.ui-dialog {
+		z-index: 10020 !important;
+	}
+
+	#ccm-sitemap-search-selector ul.nav-tabs li:nth-child(1n+2) {
+		display: none;
+	}
+
+	</sty l e >

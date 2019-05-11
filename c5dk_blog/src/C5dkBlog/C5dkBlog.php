@@ -1,6 +1,7 @@
 <?php
 namespace C5dk\Blog;
 
+use Database;
 use Events;
 use User;
 use Page;
@@ -10,22 +11,34 @@ use Concrete\Core\Page\Type\Composer\OutputControl as PageTypeComposerOutputCont
 use Concrete\Core\Page\Type\Composer\FormLayoutSetControl as PageTypeComposerFormLayoutSetControl;
 use Block;
 use PageTemplate;
+use Concrete\Core\Tree\Type\Topic as TopicTree;
+use Concrete\Core\Tree\Node\Type\Topic as Topic;
+
+use C5dk\Blog\C5dkRoot;
 
 defined('C5_EXECUTE') or die('Access Denied.');
 
 class C5dkBlog extends Page
 {
 	// Data
-	public $blogID      = NULL;
-	public $root        = NULL;
-	public $rootID      = NULL;
-	public $authorID    = NULL;
-	public $thumbnail   = NULL;
+	public $blogID      = null;
+	public $root        = null;
+	public $rootID      = null;
+	public $authorID    = null;
+	public $thumbnail   = null;
 	public $title       = '';
 	public $description = '';
 	public $content     = '';
-	public $tags        = NULL;
-	public $topics      = NULL;
+	public $tags        = null;
+	public $topics      = null;
+	public $publishTime = null;
+	public $unpublishTime = null;
+
+	public function __construct()
+	{
+		$this->root = $this->getRoot();
+		$this->rootID = $this->getRootID();
+	}
 
 	public static function getByID($blogID, $version = 'RECENT', $class = 'C5dk\Blog\C5dkBlog')
 	{
@@ -40,6 +53,10 @@ class C5dkBlog extends Page
 		$blog->thumbnail   = $blog->getAttribute('thumbnail');
 		$blog->tags        = $blog->getAttributeValueObject(CollectionAttributeKey::getByHandle('tags'));
 		$blog->topics      = $blog->getTopics();
+		$publishTime = $blog->getAttribute('c5dk_blog_publish_time');
+		$blog->publishTime = $publishTime ? $publishTime->format('Y/m/d H:i:s') : (new \DateTime("now"))->format('Y/m/d H:i:s');
+		$unpublishTime = $blog->getAttribute('c5dk_blog_unpublish_time');
+		$blog->unpublishTime = $unpublishTime ? $unpublishTime->format('Y/m/d H:i:s') : (new \DateTime)->format('Y/m/d H:i:s');
 
 		return $blog;
 	}
@@ -48,13 +65,13 @@ class C5dkBlog extends Page
 	{
 		switch ($mode) {
 			case C5DK_BLOG_MODE_CREATE:
-				$C5dkRoot = C5dkRoot::getByID($this->rootID);
-				$pt       = PageType::getByID($C5dkRoot->pageTypeID);
-				$blog     = $C5dkRoot->add($pt, [
+				$this->root = C5dkRoot::getByID($this->rootID);
+				$pt       = PageType::getByID($this->root->getBlogPageTypeID());
+				$blog     = $this->root->add($pt, [
 					'cName' => $this->title,
 					'cHandle' => $this->getUrlSlug($this->title),
 					'cDescription' => $this->description,
-					'cAcquireComposerOutputControls' => TRUE
+					'cAcquireComposerOutputControls' => true
 				]);
 
 				// TODO: Hack until solution have been found for the following bug. https://github.com/concrete5/concrete5/issues/2991
@@ -82,14 +99,13 @@ class C5dkBlog extends Page
 				break;
 
 			default:
-				return FALSE;
+				return false;
 		}
 
 		// Update the Content Block with the blog text
 		if (empty($this->content)) {
 			$this->content = ' ';
 		}
-
 		$instance = $C5dkBlog->getInstance();
 		$instance->save(['content' => $this->content]);
 
@@ -99,22 +115,32 @@ class C5dkBlog extends Page
 		$controller = $cakTags->getController();
 		$value      = $controller->createAttributeValueFromRequest();
 		$C5dkBlog->setAttribute($cakTags, $value);
-		$C5dkBlog->refreshCache();
 
 		// Add topics to the blog page if topics are in use
-		if ($this->topicAttributeID) {
-			$cakTopics  = CollectionAttributeKey::getByHandle($this->topicAttributeID);
+		if ($this->root->getTopicAttributeHandle()) {
+			$cakTopics  = CollectionAttributeKey::getByHandle($this->root->getTopicAttributeHandle());
 			$controller = $cakTopics->getController();
 			$value = $controller->createAttributeValueFromRequest();
 			if (is_object($value)) {
 				$C5dkBlog->setAttribute($cakTopics, $value);
-				$C5dkBlog->refreshCache();
+				// $C5dkBlog->refreshCache();
 			}
 		}
+
+		// Set Publish/Unpublish Time
+		$C5dkBlog->setAttribute('c5dk_blog_publish_time', $this->publishTime);
+		$C5dkBlog->setAttribute('c5dk_blog_unpublish_time', $this->unpublishTime);
 
 		// Set meta attributes
 		$C5dkBlog->setAttribute('meta_title', $this->title);
 		$C5dkBlog->setAttribute('meta_description', $this->description);
+
+		// Set the Approve page attribute if the root don't require approval
+		if (!$C5dkBlog->root->needsApproval) {
+			$C5dkBlog->setAttribute('c5dk_blog_approved', true);
+		}
+
+		$C5dkBlog->refreshCache();
 
 		$C5dkBlog->getVersionObject()->approve();
 
@@ -172,7 +198,7 @@ class C5dkBlog extends Page
 		$page = $this;
 
 		$root = $this->findRoot($page);
-		return is_object($root) ? $root->getCollectionID() : NULL;
+		return is_object($root) ? $root->getCollectionID() : null;
 	}
 
 	private function getRoot()
@@ -184,6 +210,7 @@ class C5dkBlog extends Page
 
 	private function findRoot($page)
 	{
+		$pageID = $page->getCollectionID();
 		while ($page->getCollectionID() > 1) {
 			if (!$page->getAttribute('c5dk_blog_root')) {
 				$page = Page::getByID($page->getCollectionParentID());
@@ -191,11 +218,11 @@ class C5dkBlog extends Page
 			}
 
 			// Found the root
-			return $page;
+			return C5dkRoot::getByID($page->getCollectionID());
 		}
 
 		// Didn't find the root
-		return NULL;
+		return null;
 	}
 
 	// Get blog content from the first content block in the main area or return empty "" string
@@ -219,8 +246,8 @@ class C5dkBlog extends Page
 		}
 
 		$C5dkRoot = C5dkRoot::getByID($this->rootID);
-		if ($C5dkRoot->topicAttributeID) {
-			return $this->getAttributeValueObject(CollectionAttributeKey::getByHandle($C5dkRoot->topicAttributeID));
+		if ($C5dkRoot->getTopicAttributeHandle()) {
+			return $this->getAttributeValueObject(CollectionAttributeKey::getByHandle($C5dkRoot->getTopicAttributeHandle()));
 		} else {
 			return 0;
 		}
@@ -243,6 +270,161 @@ class C5dkBlog extends Page
 			}
 		}
 
-		return FALSE;
+		return
+		false;
+	}
+
+	public function getPriorityList()
+	{
+		$tree = TopicTree::getByName('News Priorities');
+		$node = $tree->getRootTreeNodeObject();
+		$node->populateChildren();
+
+		$nodes = array(t('None'));
+		foreach ($node->getChildNodes() as $node) {
+			// if ($node instanceof \Concrete\Core\Tree\Node\Type\Topic) {
+			$nodes[$node->getTreeNodeID()] = $node->getTreeNodeDisplayName();
+			// }
+		}
+
+		return $nodes;
+	}
+
+
+	// public function getPriorityList()
+	// {
+	// 	$db = Database::connection();
+
+	// 	// Get Topic Tree name
+	// 	$C5dkRoot      = C5dkRoot::getByID($this->rootID);
+	// 	$akTopicTreeID = $db->GetOne("SELECT akTopicTreeID FROM atTopicSettings WHERE akID = ?", array($C5dkRoot->priorityAttributeID));
+	// 	$topicTreeName = $db->GetOne("SELECT topicTreeName FROM TopicTrees WHERE treeID = ?", array($akTopicTreeID));
+
+	// 	$tt = new TopicTree();
+	// 	/** @var Topic $tree */
+	// 	$tree = $tt->getByName($topicTreeName);
+	// 	/** @var TopicCategory $node */
+	// 	$node = $tree->getRootTreeNodeObject();
+	// 	$node->populateChildren();
+	// 	$topics = array();
+
+	// 	/** @var Concrete/Core/Tree/Node/Type/Topic $topic */
+	// 	foreach ($node->getChildNodes() as $topic) {
+	// 		if ($topic instanceof Topic) {
+	// 			$topics[$topic->getTreeNodeID()] = $topic->getTreeNodeDisplayName();
+	// 		}
+	// 	}
+
+	// 	return $topics;
+	// }
+
+	public function isEditor($userID)
+	{
+		// Is this a valid request?
+		if (!$userID || !$this->rootID) {
+			return false;
+		}
+
+		// Set C5dk Objects
+		$user     = User::getByUserID($userID);
+		$C5dkRoot = C5dkRoot::getByID($this->rootID);
+
+		// Is the user a member of one of the editor groups for this root.
+		return (count(array_intersect($user->getUserGroups(), $C5dkRoot->editorGroups))) ? true : false;
+	}
+
+	public function setPermissions($readGID, $editGID)
+	{
+		$this->setPermissionsToManualOverride();
+
+		$pk = PermissionKey::getByHandle('view_page');
+		$pk->setPermissionObject($this);
+		$pt = $pk->getPermissionAssignmentObject();
+		$pt->clearPermissionAssignment();
+		$pa = PermissionAccess::create($pk);
+
+		if (is_array($readGID)) {
+			foreach($readGID as $gID) {
+				$pa->addListItem(GroupPermissionAccessEntity::getOrCreate(Group::getByID($gID)));
+			}
+		}
+
+		$pt->assignPermissionAccess($pa);
+
+		$editAccessEntities = array();
+		if (is_array($editGID)) {
+			foreach($editGID as $gID) {
+				$editAccessEntities[] = GroupPermissionAccessEntity::getOrCreate(Group::getByID($gID));
+			}
+		}
+
+		$editPermissions = array(
+			'view_page_versions',
+			'edit_page_properties',
+			'edit_page_contents',
+			'edit_page_speed_settings',
+			'edit_page_theme',
+			'edit_page_page_type',
+			'edit_page_template',
+			'edit_page_permissions',
+			'preview_page_as_user',
+			'schedule_page_contents_guest_access',
+			'delete_page',
+			'delete_page_versions',
+			'approve_page_versions',
+			'add_subpage',
+			'move_or_copy_page',
+		);
+		foreach($editPermissions as $pkHandle) {
+			$pk = PermissionKey::getByHandle($pkHandle);
+			$pk->setPermissionObject($this);
+			$pt = $pk->getPermissionAssignmentObject();
+			$pt->clearPermissionAssignment();
+			$pa = PermissionAccess::create($pk);
+			foreach($editAccessEntities as $editObj) {
+				$pa->addListItem($editObj);
+			}
+
+			$pt->assignPermissionAccess($pa);
+
+
+			$c = $this->getCollectionObj();
+			$pxml->guests['canRead'] = false;
+			$pxml->registered['canRead'] = false;
+			$pxml->group[0]['gID'] = ADMIN_GROUP_ID;
+			$pxml->group[0]['canRead'] = true;
+			$pxml->group[0]['canWrite'] = true;
+			$pxml->group[0]['canApproveVersions'] = true;
+			$pxml->group[0]['canDelete'] = true;
+			$pxml->group[0]['canAdmin'] = true;
+			$pxml->user[0]['uID']=$this->getUID();
+			$pxml->user[0]['canRead'] = true;
+			$pxml->user[0]['canWrite'] = false;
+			$pxml->user[0]['canAdmin'] = false;
+			$c->assignPermissionSet($pxml);
+
+
+		}
+
+		// $this->assignPermissions(Group::getByID(REGISTERED_GROUP_ID), array(
+		// 	'view_page',
+		// 	'view_page_in_sitemap'
+		// ));
+
+		// $this->assignPermissions(Group::getByID(ADMIN_GROUP_ID), array(
+		// 	'view_page_versions',
+		// 	'edit_page_properties',
+		// 	'edit_page_contents',
+		// 	'approve_page_versions',
+		// 	'move_or_copy_page',
+		// 	'preview_page_as_user',
+		// 	'add_subpage'
+		// ));
+
+		// $this->removePermissions(Group::getByID(GUEST_GROUP_ID), array(
+		// 	'view_page',
+		// 	'view_page_in_sitemap'
+		// ));
+
 	}
 }

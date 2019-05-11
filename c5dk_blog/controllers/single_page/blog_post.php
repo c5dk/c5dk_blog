@@ -30,8 +30,8 @@ class BlogPost extends PageController
 	// Variables
 	public $blogID = NULL;
 	public $rootList;
-	public $topicAttributeID;
-	public $topicAttributeIDList;
+	public $topicAttributeHandle;
+	// public $topicAttributeIDList;
 
 	// Flags
 	public $mode       = NULL;
@@ -111,7 +111,7 @@ class BlogPost extends PageController
 			'title' => $this->post('title'),
 			'description' => $this->post('description'),
 			'content' => $this->post('c5dk_blog_content'),
-			'topicAttributeID' => $this->post('topicAttributeID')
+			'topicAttributeHandle' => $this->post('topicAttributeHandle')
 		]);
 		$C5dkBlog = $C5dkBlog->save($this->post('mode'));
 		$C5dkBlog = C5dkBlog::getByID($C5dkBlog->getCollectionID());

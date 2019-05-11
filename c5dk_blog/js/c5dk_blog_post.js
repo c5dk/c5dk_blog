@@ -51,6 +51,9 @@ c5dk.blog.post = {
 		// Hide Cropper buttons
 		// $("#c5dk_cropper_buttons").hide();
 
+		// Init Datetimepicker
+		// $('#c5dk-blog-package .datetimepicker').datetimepicker({ step: 15 });
+
 		// Move focus to the title field
 		$('.c5dk_blog_title input').focus();
 

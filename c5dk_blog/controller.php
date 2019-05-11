@@ -8,20 +8,25 @@ use PageList;
 use Events;
 use Route;
 use AssetList;
+use Concrete\Core\User\Group\Group;
+use Concrete\Core\Permission\Access\Entity\GroupEntity;
 use Concrete\Core\Editor\Plugin;
 use Concrete\Core\Tree\Type\FileManager;
+use Concrete\Core\Permission\Key\Key as PermissionKey;
 use C5dk\Blog\C5dkInstaller as C5dkInstaller;
 use C5dk\Blog\C5dkAjax as C5dkAjax;
+use C5dk\Blog\Entity\C5dkRoot as C5dkRootEntity;
 
 defined('C5_EXECUTE') or die('Access Denied.');
 
 class Controller extends Package
 {
 	protected $appVersionRequired      = '8.2';
-	protected $pkgVersion              = '8.4.3.2.b2';
+	protected $pkgVersion              = '8.4.3.2.b3';
 	protected $pkgHandle               = 'c5dk_blog';
 	protected $pkgAutoloaderRegistries = [
 		'src/C5dkBlog' => '\C5dk\Blog',
+		'src/Entity' => '\C5dk\Blog\Entity',
 		'src/Service' => '\C5dk\Blog\Service'
 	];
 
@@ -44,6 +49,8 @@ class Controller extends Package
 		$this->registerEvents();
 		$this->registerRoutes();
 		$this->registerAssets();
+
+		$this->checkPagesPublicTime();
 	}
 
 	private function registerEvents()
@@ -67,6 +74,7 @@ class Controller extends Package
 		$pkg = parent::install();
 
 		$this->c5dkInstall($pkg);
+		$this->convertOldDB();
 	}
 
 	public function upgrade()
@@ -74,16 +82,12 @@ class Controller extends Package
 		parent::upgrade();
 
 		$this->c5dkInstall($this);
+		$this->convertOldDB();
 	}
 
 	public function uninstall()
 	{
 		parent::uninstall();
-
-		// Remove database tables
-		// $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
-		// $db = $app->make('database')->connection();
-		// $db->Execute("DROP TABLE IF EXISTS C5dkBlogRootPermissions");
 	}
 
 	private function c5dkInstall($pkg)
@@ -100,15 +104,15 @@ class Controller extends Package
 	private function setupConfig($pkg)
 	{
 		// Settings
-		C5dkInstaller::installConfigKey('blog_title_editable', FALSE, $pkg);
-		C5dkInstaller::installConfigKey('blog_form_slidein', FALSE, $pkg);
+		C5dkInstaller::installConfigKey('blog_title_editable', false, $pkg);
+		C5dkInstaller::installConfigKey('blog_form_slidein', false, $pkg);
 
 		// Images & Thumbnails
 		C5dkInstaller::installConfigKey('blog_picture_width', 1200, $pkg);
 		C5dkInstaller::installConfigKey('blog_picture_height', 800, $pkg);
 		C5dkInstaller::installConfigKey('blog_thumbnail_width', 360, $pkg);
 		C5dkInstaller::installConfigKey('blog_thumbnail_height', 360, $pkg);
-		C5dkInstaller::installConfigKey('blog_default_thumbnail_id', NULL, $pkg);
+		C5dkInstaller::installConfigKey('blog_default_thumbnail_id', null, $pkg);
 		C5dkInstaller::installConfigKey('blog_cropper_def_bgcolor', '#FFF', $pkg);
 
 		// Styling
@@ -118,14 +122,14 @@ class Controller extends Package
 		C5dkInstaller::installConfigKey('blog_headline_icon_color', '#1685D4', $pkg);
 
 		// Editor
-		C5dkInstaller::installConfigKey('blog_plugin_youtube', TRUE, $pkg);
-		C5dkInstaller::installConfigKey('blog_plugin_sitemap', FALSE, $pkg);
+		C5dkInstaller::installConfigKey('blog_plugin_youtube', true, $pkg);
+		C5dkInstaller::installConfigKey('blog_plugin_sitemap', false, $pkg);
 
-		C5dkInstaller::installConfigKey('blog_format_h1', FALSE, $pkg);
-		C5dkInstaller::installConfigKey('blog_format_h2', TRUE, $pkg);
-		C5dkInstaller::installConfigKey('blog_format_h3', TRUE, $pkg);
-		C5dkInstaller::installConfigKey('blog_format_h4', FALSE, $pkg);
-		C5dkInstaller::installConfigKey('blog_format_pre', TRUE, $pkg);
+		C5dkInstaller::installConfigKey('blog_format_h1', false, $pkg);
+		C5dkInstaller::installConfigKey('blog_format_h2', true, $pkg);
+		C5dkInstaller::installConfigKey('blog_format_h3', true, $pkg);
+		C5dkInstaller::installConfigKey('blog_format_h4', false, $pkg);
+		C5dkInstaller::installConfigKey('blog_format_pre', true, $pkg);
 	}
 
 	private function setupBlocks($pkg)
@@ -168,24 +172,54 @@ class Controller extends Package
 
 		// Normal
 		$singlePage = C5dkInstaller::installSinglePage('/blog_post', t('Blog Post'), t('Add/Edit a blog post'), $pkg, ['exclude_nav' => 1]);
+
+		$singlePage = C5dkInstaller::installSinglePage('/c5dk', t('C5DK'), t("Shared folder for C5DK Packages"), $pkg, ['exclude_nav' => 1, 'exclude_page_list' => 1, 'exclude_search_index' => 1, 'exclude_subpages_from_nav' => 1]);
+		// $singlePage = C5dkInstaller::installSinglePage('/c5dk/blog', t('Blog'), t("Main folder for the C5DK Blog package"), $pkg, ['exclude_nav' => 1, 'exclude_page_list' => 1]);
+		// $singlePage = C5dkInstaller::installSinglePage('/c5dk/blog/editor', t('Editor'), t("Blog Editor"), $pkg, ['exclude_nav' => 1, 'exclude_page_list' => 1]);
+		$singlePage = C5dkInstaller::installSinglePage('/c5dk/blog/editor/manager', t('Manager'), t("Blog Editor Manager"), $pkg, ['exclude_nav' => 1, 'exclude_page_list' => 1]);
 	}
 
 	private function setupPageAttributes($pkg)
 	{
-		$bas = C5dkInstaller::installCollectionAttributeSet('c5dk_blog', t('C5DK Blog'));
+		$cas = C5dkInstaller::installCollectionAttributeSet('c5dk_blog', t('C5DK Blog'));
 
 		C5dkInstaller::installCollectionAttributeKey('boolean', [
 			'akHandle' => 'c5dk_blog_root',
 			'akName' => t('Blog Root'),
-			'akIsSearchable' => TRUE,
-			'akIsSearchableIndexed' => TRUE
-		], FALSE, $bas);
+			'akIsSearchable' => true,
+			'akIsSearchableIndexed' => true
+		], false, $cas);
 		C5dkInstaller::installCollectionAttributeKey('number', [
 			'akHandle' => 'c5dk_blog_author_id',
 			'akName' => t('Blog Author ID'),
-			'akIsSearchable' => TRUE,
-			'akIsSearchableIndexed' => TRUE
-		], FALSE, $bas);
+			'akIsSearchable' => true,
+			'akIsSearchableIndexed' => true
+		], false, $cas);
+		C5dkInstaller::installCollectionAttributeKey('date_time', [
+			'akHandle' => 'c5dk_blog_publish_time',
+			'akName' => t('Blog Publish Time'),
+			'akIsSearchable' => true,
+			'akIsSearchableIndexed' => true,
+			'akUseNowIfEmpty' => true
+		], false, $cas);
+		C5dkInstaller::installCollectionAttributeKey('date_time', [
+			'akHandle' => 'c5dk_blog_unpublish_time',
+			'akName' => t('Blog Unpublish Time'),
+			'akIsSearchable' => true,
+			'akIsSearchableIndexed' => true,
+			'akUseNowIfEmpty' => true
+		], false, $cas);
+		C5dkInstaller::installCollectionAttributeKey('boolean', [
+			'akHandle' => 'c5dk_blog_approved',
+			'akName' => t('Blog Approved'),
+			'akIsSearchable' => true,
+			'akIsSearchableIndexed' => true
+		], false, $cas);
+
+		// Add Blog Priorities Topic Tree
+		$topicTree = C5dkInstaller::installTopicTree('Blog Priorities', ['Standard', 'Breaking', 'Top Story']);
+		$pageKey = C5dkInstaller::installCollectionAttributeKeyTopic('c5dk_blog_priority', 'Blog Priorities', $topicTree, $cas);
+
 	}
 
 	private function setupUserAttributes($pkg)
@@ -193,14 +227,14 @@ class Controller extends Package
 		C5dkInstaller::installUserAttributeKey('text', [
 			'akHandle' => 'full_name',
 			'akName' => t('Full Name'),
-			'uakProfileDisplay' => TRUE,
-			'uakMemberListDisplay' => TRUE,
-			'uakProfileEdit' => TRUE,
-			'uakProfileEditRequired' => FALSE,
-			'uakRegisterEdit' => TRUE,
-			'uakRegisterEditRequired' => FALSE,
-			'akIsSearchable' => TRUE,
-			'akIsSearchableIndexed' => TRUE
+			'uakProfileDisplay' => true,
+			'uakMemberListDisplay' => true,
+			'uakProfileEdit' => true,
+			'uakProfileEditRequired' => false,
+			'uakRegisterEdit' => true,
+			'uakRegisterEditRequired' => false,
+			'akIsSearchable' => true,
+			'akIsSearchableIndexed' => true
 		]);
 	}
 
@@ -249,6 +283,37 @@ class Controller extends Package
 		}
 	}
 
+	public function checkPagesPublicTime()
+	{
+		$pl = new PageList();
+		$pl->ignorePermissions();
+		$pl->filterByAttribute('c5dk_blog_approved', 1);
+
+		foreach ($pl->get() as $page) {
+			$publishTime = strtotime($page->getAttribute('c5dk_blog_publish_time')->format('Y/m/d H:i:s'));
+			$unpublishTime = strtotime($page->getAttribute('c5dk_blog_unpublish_time')->format('Y/m/d H:i:s'));
+			$time = time();
+			if ($publishTime < $time && $unpublishTime > $time) {
+
+				$key = PermissionKey::getByHandle('view_page');
+				$key->setPermissionObject($page);
+
+				$access = $key->getPermissionAccessObject();
+				if (!$access) {
+					continue;
+				}
+				$guestGroup = Group::getByID(GUEST_GROUP_ID);
+				$entity = GroupEntity::getOrCreate($guestGroup);
+
+                if (!$access->validateAccessEntities(array($entity))) {
+					// $C5dkBlog = C5dkBlog::getByID($page->getCollectionID());
+					// $C5dkBlog->setPermissions(array(GUEST_GROUP_ID), array(ADMIN_GROUP_ID));
+					\Log::addEntry("Set Page Permissions");
+				}
+			}
+		}
+	}
+
 	public function registerAssets()
 	{
 		// Get the AssetList
@@ -259,7 +324,7 @@ class Controller extends Package
 		$al->register('javascript', 'c5dkBlog/modal', 'js/c5dk_modal.js', [], 'c5dk_blog');
 
 		// CKEditor
-		$al->register('javascript', 'c5dkckeditor', 'js/ckeditor/ckeditor.js', ['minify' => FALSE, 'combine' => FALSE], 'c5dk_blog');
+		$al->register('javascript', 'c5dkckeditor', 'js/ckeditor/ckeditor.js', ['minify' => false, 'combine' => false], 'c5dk_blog');
 
 		// Register C5DK Blog CSS
 		$al->register('css', 'c5dk_blog_css', 'css/c5dk_blog.min.css', [], 'c5dk_blog');
@@ -295,5 +360,36 @@ class Controller extends Package
 			['javascript', 'c5dkFileupload/fileuploadProcess'],
 			['javascript', 'c5dkFileupload/fileuploadImage'],
 		]);
+	}
+
+	private function convertOldDB()
+	{
+		// Convert old db table to a doctrine database table
+		$db = $this->app->make('database')->connection();
+		$rt = $db->Execute("SHOW TABLES LIKE 'C5dkBlogRootPermissions'");
+		if ($rt->numRows()) {
+			// Convert old permissions table to Doctrine entity
+			$rs = $db->fetchAll("SELECT rootID, groupID, pageTypeID, tags, thumbnails, topicAttributeID FROM C5dkBlogRootPermissions");
+			foreach ($rs as $row) {
+				$root[$row['rootID']]['rootID'] = $row['rootID'];
+				$root[$row['rootID']]['pageTypeID'] = $row['pageTypeID'];
+				$root[$row['rootID']]['tags'] = $row['tags'];
+				$root[$row['rootID']]['thumbnails'] = $row['thumbnails'];
+				$root[$row['rootID']]['writerGroups'][] = $row['groupID'];
+				$root[$row['rootID']]['editorGroups'] = [];
+				$root[$row['rootID']]['topicAttributeHandle'] = $row['topicAttributeID'] ? $row['topicAttributeID'] : '';
+				$root[$row['rootID']]['priorityAttributeHandle'] = 0;
+			}
+
+			foreach ($root as $rootID => $data) {
+				$rootSetting = C5dkRootEntity::getByID($row['rootID']);
+				$rootSetting = $rootSetting ? $rootSetting : new C5dkRootEntity();
+				$rootSetting->saveForm($data);
+			}
+
+			// Remove database tables
+			$db = $this->app->make('database')->connection();
+			$db->Execute("DROP TABLE IF EXISTS C5dkBlogRootPermissions");
+		}
 	}
 }

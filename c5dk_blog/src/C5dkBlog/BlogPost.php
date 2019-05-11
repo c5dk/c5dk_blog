@@ -4,6 +4,12 @@ namespace C5dk\Blog;
 use Controller;
 use Concrete\Core\Multilingual\Page\Section\Section;
 
+use C5dk\Blog\C5dkConfig as C5dkConfig;
+use C5dk\Blog\C5dkUser as C5dkUser;
+use C5dk\Blog\C5dkBlog as C5dkBlog;
+use C5dk\Blog\C5dkRoot as C5dkRoot;
+
+
 defined('C5_EXECUTE') or die('Access Denied.');
 
 class BlogPost extends Controller
@@ -16,8 +22,9 @@ class BlogPost extends Controller
 	// Variables
 	public $blogID = NULL;
 	public $rootList;
-	public $topicAttributeID;
-	public $topicAttributeIDList;
+	public $topicAttributeHandle;
+	public $publishTimeEnabled;
+	public $unpublishTimeEnabled;
 
 	// Flags
 	public $mode       = NULL;
@@ -44,12 +51,16 @@ class BlogPost extends Controller
 		$this->C5dkBlog->rootID = (isset($this->rootList[$rootID])) ? $rootID : key($this->rootList);
 
 		// Set the topic attribute id from the blogs root
-		$C5dkRoot               = C5dkRoot::getByID($this->C5dkBlog->rootID);
-		$this->topicAttributeID = $C5dkRoot->topicAttributeID;
+		$C5dkRoot                   = C5dkRoot::getByID($this->C5dkBlog->rootID);
+		$this->topicAttributeHandle = $C5dkRoot->getTopicAttributeHandle();
 
 		// Should tags and thumbnails be shown
-		$this->tagsEnabled       = $C5dkRoot->tags;
-		$this->thumbnailsEnabled = $C5dkRoot->thumbnails;
+		$this->tagsEnabled       = $C5dkRoot->getTags();
+		$this->thumbnailsEnabled = $C5dkRoot->getThumbnails();
+
+		// Should Publish/Unpublish Time be enabled
+		$this->publishTimeEnabled = $C5dkRoot->getPublishTimeEnabled() ? 1 : 0;
+		$this->unpublishTimeEnabled = $C5dkRoot->getUnpublishTimeEnabled() ? 1 : 0;
 
 		return $this;
 	}
@@ -70,15 +81,19 @@ class BlogPost extends Controller
 			$this->rootList   = $this->getUserRootList();
 
 			// Set the topic attribute id from the blogs root
-			$this->topicAttributeID = C5dkRoot::getByID($this->C5dkBlog->rootID)->topicAttributeID;
-			if ($this->C5dkBlog->topics && !$this->topicAttributeID) {
+			$this->topicAttributeHandle = C5dkRoot::getByID($this->C5dkBlog->rootID)->getTopicAttributeHandle();
+			if ($this->C5dkBlog->topics && !$this->topicAttributeHandle) {
 				$this->C5dkBlog->topics = 0;
 			}
 
 			// Should tags and thumbnails be shown
 			$C5dkRoot                = C5dkRoot::getByID($this->C5dkBlog->rootID);
-			$this->tagsEnabled       = $C5dkRoot->tags;
-			$this->thumbnailsEnabled = $C5dkRoot->thumbnails;
+			$this->tagsEnabled       = $C5dkRoot->getTags();
+			$this->thumbnailsEnabled = $C5dkRoot->getThumbnails();
+
+			// Should Publish/Unpublish Time be enabled
+			$this->publishTimeEnabled = $C5dkRoot->entity->getPublishTimeEnabled() ? 1 : 0;
+			$this->unpublishTimeEnabled = $C5dkRoot->entity->getUnpublishTimeEnabled() ? 1 : 0;
 
 			return $this;
 		}
@@ -90,9 +105,9 @@ class BlogPost extends Controller
 	{
 		$sectionList = Section::getList();
 
-		foreach ($this->C5dkUser->getRootList() as $index => $C5dkRoot) {
-			$languageText                = count($sectionList) ? ' (' . $C5dkRoot->getSiteTreeObject()->getLocale()->getLanguageText() . ')' : '';
-			$rootList[$C5dkRoot->rootID] = $C5dkRoot->getCollectionName() . $languageText;
+		foreach ($this->C5dkUser->getRootList('writers') as $rootID => $C5dkRoot) {
+			$languageText = count($sectionList) ? ' (' . $C5dkRoot->getSiteTreeObject()->getLocale()->getLanguageText() . ')' : '';
+			$rootList[$rootID] = $C5dkRoot->getCollectionName() . $languageText;
 		}
 
 		return $rootList;

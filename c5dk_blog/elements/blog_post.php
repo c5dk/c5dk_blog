@@ -211,27 +211,26 @@ $dh = Core::make('helper/form/date_time');
 		<div class="c5dk_blog_section">
 
 			<!-- Blog Tags -->
-			<?php if ($BlogPost->tagsEnabled) : ?>
-			<?php $casTags = CollectionAttributeKey::getByHandle('tags'); ?>
-			<h4><?= t('Tags'); ?></h4>
-			<?= $casTags->render('form', $C5dkBlog->tags, true); ?>
-			<?php endif ?>
+			<?php if ($BlogPost->tagsEnabled) { ?>
+				<?php $casTags = CollectionAttributeKey::getByHandle('tags'); ?>
+				<h4><?= t('Tags'); ?></h4>
+				<?= $casTags->render('form', $C5dkBlog->tags, true); ?>
+			<?php } ?>
 
 			<!-- Blog Topics -->
-			<?php if ($BlogPost->topicAttributeHandle) : ?>
-			<?= $form->label('', '<h4 style="margin-top: 25px;">' . t('Topics') . '</h4>'); ?>
-			<?= $form->hidden('topicAttributeHandle', $BlogPost->topicAttributeHandle); ?>
-			<?php $casTopics = CollectionAttributeKey::getByHandle($BlogPost->topicAttributeHandle); ?>
-			<?= $casTopics->render('form', $C5dkBlog->topics, true); ?>
-			<?php endif ?>
+			<?php if ($BlogPost->topicAttributeHandle) { ?>
+				<?= $form->label('', '<h4 style="margin-top: 25px;">' . t('Topics') . '</h4>'); ?>
+				<?= $form->hidden('topicAttributeHandle', $BlogPost->topicAttributeHandle); ?>
+				<?php $casTopics = CollectionAttributeKey::getByHandle($BlogPost->topicAttributeHandle); ?>
+				<?= $casTopics->render('form', $C5dkBlog->topics, true); ?>
+			<?php } ?>
 		</div>
 
 		<!-- Blog Thumbnail -->
-		<?php if ($BlogPost->thumbnailsEnabled && $ThumbnailCropper) : ?>
-		<!-- Cropper Service -->
-		<?= $ThumbnailCropper->output(); ?>
-
-		<?php endif ?>
+		<?php if ($BlogPost->thumbnailsEnabled && $ThumbnailCropper) { ?>
+			<!-- Cropper Service -->
+			<?= $ThumbnailCropper->output(); ?>
+		<?php } ?>
 
 		<!-- Footer Button Section -->
 		<div class="c5dk_blog_button_section c5dk_top_border_line">

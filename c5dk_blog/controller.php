@@ -8,13 +8,16 @@ use PageList;
 use Events;
 use Route;
 use AssetList;
-use Concrete\Core\User\Group\Group;
-use Concrete\Core\Permission\Access\Entity\GroupEntity;
+use Redirect;
 use Concrete\Core\Editor\Plugin;
 use Concrete\Core\Tree\Type\FileManager;
+use Concrete\Core\User\Group\Group;
 use Concrete\Core\Permission\Key\Key as PermissionKey;
+use Concrete\Core\Permission\Access\Entity\GroupEntity as GroupPermissionAccessEntity;
+
 use C5dk\Blog\C5dkInstaller as C5dkInstaller;
 use C5dk\Blog\C5dkAjax as C5dkAjax;
+use C5dk\Blog\C5dkBlog as C5dkBlog;
 use C5dk\Blog\Entity\C5dkRoot as C5dkRootEntity;
 
 defined('C5_EXECUTE') or die('Access Denied.');
@@ -22,7 +25,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
 class Controller extends Package
 {
 	protected $appVersionRequired      = '8.2';
-	protected $pkgVersion              = '8.4.3.2.b3';
+	protected $pkgVersion              = '8.5.b1';
 	protected $pkgHandle               = 'c5dk_blog';
 	protected $pkgAutoloaderRegistries = [
 		'src/C5dkBlog' => '\C5dk\Blog',
@@ -50,7 +53,10 @@ class Controller extends Package
 		$this->registerRoutes();
 		$this->registerAssets();
 
-		$this->checkPagesPublicTime();
+		Events::addListener('on_before_render', function () {
+			$c = Page::getCurrentPage();
+			$this->checkPagesPublicTime();
+		});
 	}
 
 	private function registerEvents()
@@ -67,6 +73,7 @@ class Controller extends Package
 		Route::register('/c5dk/blog/image/upload', '\C5dk\Blog\C5dkAjax::imageUpload');
 		Route::register('/c5dk/blog/image/delete/{fID}', '\C5dk\Blog\C5dkAjax::imageDelete');
 		Route::register('/c5dk/blog/thumbnail/upload', '\C5dk\Blog\C5dkAjax::thumbnailUpload');
+		Route::register('/c5dk/blog/ajax/editor/manager/{method}/{field}/{blogID}', '\C5dk\Blog\C5dkAjax::editor');
 	}
 
 	public function install()
@@ -218,7 +225,7 @@ class Controller extends Package
 
 		// Add Blog Priorities Topic Tree
 		$topicTree = C5dkInstaller::installTopicTree('Blog Priorities', ['Standard', 'Breaking', 'Top Story']);
-		$pageKey = C5dkInstaller::installCollectionAttributeKeyTopic('c5dk_blog_priority', 'Blog Priorities', $topicTree, $cas);
+		$pageKey = C5dkInstaller::installCollectionAttributeKeyTopic('c5dk_blog_priority', 'Blog Priorities', $topicTree, true, $cas);
 
 	}
 
@@ -289,29 +296,44 @@ class Controller extends Package
 		$pl->ignorePermissions();
 		$pl->filterByAttribute('c5dk_blog_approved', 1);
 
+		$redirect = false;
+
 		foreach ($pl->get() as $page) {
 			$publishTime = strtotime($page->getAttribute('c5dk_blog_publish_time')->format('Y/m/d H:i:s'));
 			$unpublishTime = strtotime($page->getAttribute('c5dk_blog_unpublish_time')->format('Y/m/d H:i:s'));
 			$time = time();
-			if ($publishTime < $time && $unpublishTime > $time) {
+			$access = $this->checkGroupViewPermission($page, 'view_page', GUEST_GROUP_ID);
+			if ($publishTime < $time && $unpublishTime > $time && !$access) {
+				$C5dkBlog = C5dkBlog::getByID($page->getCollectionID());
+				$C5dkBlog->grantPagePermissionByGroup('view_page', $page, GUEST_GROUP_ID);
+			}
+			if ($publishTime > $time || $unpublishTime < $time && $access) {
+				$C5dkBlog = C5dkBlog::getByID($page->getCollectionID());
+				$C5dkBlog->denyPagePermissionByGroup('view_page', $page, GUEST_GROUP_ID);
+				$redirect = true;
+			}
+		}
 
-				$key = PermissionKey::getByHandle('view_page');
+		// We removed Guest access to a page, so we redirect to make sure that the user isn't accessing that page
+		if ($redirect) {
+			$r = Redirect::to(Page::getCurrentPage()->getCollectionLink());
+			$r->send();
+		}
+	}
+
+	public function checkGroupViewPermission($page, $permissionHandle, $groupID)
+	{
+				$key = PermissionKey::getByHandle($permissionHandle);
 				$key->setPermissionObject($page);
 
 				$access = $key->getPermissionAccessObject();
 				if (!$access) {
-					continue;
+					return false;
 				}
-				$guestGroup = Group::getByID(GUEST_GROUP_ID);
-				$entity = GroupEntity::getOrCreate($guestGroup);
+				$guestGroup = Group::getByID($groupID);
+				$entity = GroupPermissionAccessEntity::getOrCreate($guestGroup);
 
-                if (!$access->validateAccessEntities(array($entity))) {
-					// $C5dkBlog = C5dkBlog::getByID($page->getCollectionID());
-					// $C5dkBlog->setPermissions(array(GUEST_GROUP_ID), array(ADMIN_GROUP_ID));
-					\Log::addEntry("Set Page Permissions");
-				}
-			}
-		}
+                return $access->validateAccessEntities(array($entity));
 	}
 
 	public function registerAssets()

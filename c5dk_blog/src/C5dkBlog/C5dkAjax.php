@@ -15,6 +15,7 @@ use FileList;
 use FileImporter;
 use FileSet;
 use Illuminate\Filesystem\Filesystem;
+use Concrete\Core\Tree\Node\Type\Topic as TopicTreeNode;
 use Concrete\Core\Tree\Node\Type\FileFolder as FileFolder;
 use C5dk\Blog\BlogPost as C5dkBlogPost;
 use C5dk\Blog\Service\ThumbnailCropper as ThumbnailCropper;
@@ -385,5 +386,49 @@ class C5dkAjax extends Controller
 			//     // Return the File Object
 			//     return $fv->getFile();
 			// }
+	}
+
+	public function editor($method, $field, $blogID = null) {
+
+		switch ($method) {
+			case 'save':
+				// Load Core helper classes
+				$jh = Core::make('helper/json');
+
+				// Get C5dk News object
+				$C5dkBlog = C5dkBlog::getByID($blogID);
+
+				// Run through values to update
+				foreach ($this->post() as $key => $value) {
+					switch ($field) {
+						case "priority":
+							$C5dkBlog->setPriority($value);
+							break;
+
+						case 'publishTime':
+							$datetime = Core::make('helper/form/date_time')->translate('publishTime');
+							$C5dkBlog->setAttribute('c5dk_blog_publish_time', $datetime);
+							break;
+
+						case 'unpublishTime':
+							$datetime = Core::make('helper/form/date_time')->translate('unpublishTime');
+							$C5dkBlog->setAttribute('c5dk_blog_unpublish_time', $datetime);
+							break;
+					}
+
+					$data[] = array($field => $value);
+				}
+
+				echo $jh->encode(array(
+					'method'	=> 'save',
+					'id'		=> $blogID,
+					'data'		=> $data,
+					'state'		=> 0,
+					'status'	=> true,
+					'post'		=> $_POST
+				));
+				break;
+		}
+
 	}
 }

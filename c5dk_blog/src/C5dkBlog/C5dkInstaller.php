@@ -81,7 +81,7 @@ class C5dkInstaller
 		return $cak;
 	}
 
-	public static function installCollectionAttributeKeyTopic($handle, $name, $topicTree, $set = null) {
+	public static function installCollectionAttributeKeyTopic($handle, $name, $topicTree, $allowMultiple = false, $set = null) {
 		// Add
 		$app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
 		$service        = $app->make('Concrete\Core\Attribute\Category\CategoryService');
@@ -102,7 +102,7 @@ class C5dkInstaller
 			$settings = new TopicsSettings();
 			$settings->setTopicTreeID($topicTree->getRootTreeNodeObject()->getTreeID());
 			$settings->setParentNodeID($topicTree->getRootTreeNodeObject()->getTreeNodeID());
-			$settings->setAllowMultipleValues(false);
+			$settings->setAllowMultipleValues($allowMultiple);
 
 			$pageKey = $category->add('topics', $pageKey, $settings);
 		}

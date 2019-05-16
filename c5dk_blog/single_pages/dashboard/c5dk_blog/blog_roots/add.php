@@ -2,7 +2,7 @@
 
 <form id="c5dk_blog_root_add" method="post" action="<?php echo $this->action('save'); ?>">
 
-	<?= $pageSelector->selectFromSitemap('root', 1); ?>
+	<?= $pageSelector->selectFromSitemap('rootID', 1); ?>
 
 	<div class="ccm-dashboard-form-actions-wrapper">
 		<div class="ccm-dashboard-form-actions">

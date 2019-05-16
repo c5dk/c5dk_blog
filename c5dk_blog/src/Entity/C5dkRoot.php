@@ -23,21 +23,21 @@ class C5dkRoot
 	/** @ORM\Column(type="integer") */
 	protected $rootID;
 	/** @ORM\Column(type="integer") */
-	protected $pageTypeID;
+	protected $pageTypeID = 0;
 	/** @ORM\Column(type="text") */
-	protected $priorityAttributeHandle;
+	protected $priorityAttributeHandle = "";
 	/** @ORM\Column(type="boolean") */
-	protected $needsApproval;
+	protected $needsApproval = 0;
 	/** @ORM\Column(type="boolean") */
-	protected $tags;
+	protected $tags = 0;
 	/** @ORM\Column(type="boolean") */
-	protected $thumbnails;
+	protected $thumbnails = 0;
 	/** @ORM\Column(type="text") */
-	protected $topicAttributeHandle;
+	protected $topicAttributeHandle = "";
 	/** @ORM\Column(type="boolean") */
-	protected $publishTimeEnabled;
+	protected $publishTimeEnabled = 0;
 	/** @ORM\Column(type="boolean") */
-	protected $unpublishTimeEnabled;
+	protected $unpublishTimeEnabled = 0;
 
 	/**
 	 * @ORM\OneToMany(targetEntity="C5dk\Blog\Entity\C5dkRootWriterGroup", mappedBy="root", cascade={"persist"})

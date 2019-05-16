@@ -24,8 +24,7 @@ class Add extends DashboardPageController
 
 	public function save()
 	{
-		$C5dkRoot = C5dkRoot::getByID($this->post('root'));
-		$C5dkRoot->setAttribute('c5dk_blog_root', 1);
+		$C5dkRoot = C5dkRoot::addRoot($this->post('rootID'));
 		$this->redirect('/dashboard/c5dk_blog/blog_roots');
 	}
 }

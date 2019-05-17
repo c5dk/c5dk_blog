@@ -25,7 +25,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
 class Controller extends Package
 {
 	protected $appVersionRequired      = '8.2';
-	protected $pkgVersion              = '8.5.b4';
+	protected $pkgVersion              = '8.5.b5';
 	protected $pkgHandle               = 'c5dk_blog';
 	protected $pkgAutoloaderRegistries = [
 		'src/C5dkBlog' => '\C5dk\Blog',
@@ -53,16 +53,13 @@ class Controller extends Package
 		$this->registerRoutes();
 		$this->registerAssets();
 
-		Events::addListener('on_before_render', function () {
-			$c = Page::getCurrentPage();
-			$this->checkPagesPublicTime();
-		});
 	}
 
 	private function registerEvents()
 	{
 		Events::addListener('on_user_delete', [$this, 'eventOnUserDelete']);
 		Events::addListener('on_before_render', [$this, 'eventAddOpenGraphMeta']);
+		Events::addListener('on_before_render', [$this, 'eventCheckPagesPublishTime']);
 	}
 
 	private function registerRoutes()
@@ -289,7 +286,7 @@ class Controller extends Package
 		}
 	}
 
-	public function checkPagesPublicTime()
+	public function eventCheckPagesPublishTime()
 	{
 		$pl = new PageList();
 		$pl->ignorePermissions();

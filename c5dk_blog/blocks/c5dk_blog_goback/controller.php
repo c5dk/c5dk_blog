@@ -28,11 +28,12 @@ class Controller extends BlockController
 	public function view()
 	{
 		// Init Objects
-		$C5dkBlog = C5dkBlog::getByID(Page::getCurrentPage()->getCollectionID());
+		$c = Page::getCurrentPage();
+		$C5dkBlog = C5dkBlog::getByID($c->getCollectionID());
 		if ($C5dkBlog->getAttribute('c5dk_blog_author_id')) {
 			$C5dkRoot = C5dkRoot::getByID($C5dkBlog->rootID);
 		} else {
-			$C5dkRoot = C5dkRoot::getByID($C5dkBlog->getCollectionParentID());
+			$C5dkRoot = Page::getByID($c->getCollectionParentID());
 		}
 
 		$this->set('backlink', $C5dkRoot->getCollectionLink());

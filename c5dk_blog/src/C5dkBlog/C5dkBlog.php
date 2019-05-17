@@ -66,9 +66,9 @@ class C5dkBlog extends Page
 		$blog->topics        = $blog->getTopics();
 		$blog->priority      = $blog->getAttribute('c5dk_blog_priority');
 		$publishTime         = $blog->getAttribute('c5dk_blog_publish_time');
-		$blog->publishTime   = $publishTime ? $publishTime->format('Y/m/d H:i:s') : (new \DateTime("now"))->format('Y/m/d H:i:s');
+		$blog->publishTime   = $publishTime ? $publishTime->format('Y-m-d H:i:s') : (new \DateTime)->format('Y-m-d H:i:s');
 		$unpublishTime       = $blog->getAttribute('c5dk_blog_unpublish_time');
-		$blog->unpublishTime = $unpublishTime ? $unpublishTime->format('Y/m/d H:i:s') : (new \DateTime)->format('Y/m/d H:i:s');
+		$blog->unpublishTime = $unpublishTime ? $unpublishTime->format('Y-m-d H:i:s') : (new \DateTime)->format('Y-m-d H:i:s');
 		$blog->approved      = $blog->getAttribute('c5dk_blog_approved');
 
 		return $blog;
@@ -352,6 +352,7 @@ class C5dkBlog extends Page
 	public function denyPagePermissionByGroup($permission, $page, $groupID)
 	{
 		// remove Guest access
+		// $page->resetPermissions(1);
 		$pk = PermissionKey::getByHandle($permission);
 		$pk->setPermissionObject($page);
 		$pa = $pk->getPermissionAccessObject();
@@ -361,6 +362,7 @@ class C5dkBlog extends Page
 
 	public function grantPagePermissionByUser($permission, $page, $userID)
 	{
+		// $page->resetPermissions(1);
 		$ui = UserInfo::getByID($userID);
 		if (is_object($ui)) {
 			$pk = PermissionKey::getByHandle($permission);
@@ -374,6 +376,7 @@ class C5dkBlog extends Page
 	public function denyPagePermissionByUser($permission, $page, $userID)
 	{
 		// remove Guest access
+		// $page->resetPermissions(1);
 		$pk = PermissionKey::getByHandle($permission);
 		$pk->setPermissionObject($page);
 		$pa = $pk->getPermissionAccessObject();

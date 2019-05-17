@@ -22,7 +22,6 @@
 		<tr class="c5dk_blog_package_root_content">
 			<td></td>
 			<td colspan="2">
-
 				<!-- <form> -->
 					<!-- News table -->
 					<table class="table table-striped c5dk_blog_table">
@@ -41,33 +40,33 @@
 
 						<?php if (count($entries)) { ?>
 						<?php foreach ($entries[$rootID] as $blogID => $C5dkBlog) { ?>
-						<tr id="entry_<?= $C5dkBlog->blogID; ?>" data-id="<?= $C5dkBlog->blogID; ?>" data-approved="<?= $C5dkBlog->getAttribute('c5dk_blog_approved'); ?>">
+						<tr id="entry_<?= $C5dkBlog->blogID; ?>" data-id="<?= $C5dkBlog->blogID; ?>" data-approved="<?= $C5dkBlog->getAttribute('c5dk_blog_approved') ? "1" : "0"; ?>">
 							<td><a href="<?= $C5dkBlog->getCollectionLink(); ?>"><?= $C5dkBlog->title; ?></a></td>
 							<td class="c5dk_blog_priority">
-								<?php //$values = $this->controller->convertValueObject($C5dkBlog->priority); ?>
 								<?php $values = $C5dkBlog->getTopicsArray($C5dkBlog->priority); ?>
-								<?php //= $form->selectMultiple('topics_' . $C5dkRoot->priorityAttributeID, $C5dkBlog->getPriorityList(), $values, array('class' => 'c5dk_blog_select2', 'style' => 'width:300px;')); ?>
-								<?= $form->selectMultiple('topics_' . $C5dkRoot->priorityAttributeID, $C5dkBlog->getPriorityList(), $values, ['class' => 'c5dk_blog_select2', 'style' => 'width:300px;']); ?>
+								<?= $form->selectMultiple('topics', $C5dkBlog->getPriorityList(), $values, ['class' => 'c5dk_blog_select2', 'style' => 'width:300px;']); ?>
 								<button class="c5dk-blog-btn-default c5dk-hide c5dk_save_priority" type="button" onclick="c5dk.blog.editor.manager.entry.save('priority', <?= $blogID; ?>, 'topics_<?= $C5dkRoot->priorityAttributeID; ?>', this)"><i class="fa fa-floppy-o"></i></button>
 							</td>
+
 							<?php if ($C5dkRoot->publishTimeEnabled) { ?>
 								<td class="publishTime">
-									<!-- <input id="publishTime" value="<?= date('Y/m/d H:i', strtotime($C5dkBlog->publishTime)); ?>" type="text" class="datetimepicker c5dk_blog_table_public_field" /> -->
 									<form id="publishTime_<?= $blogID; ?>">
-										<?= \Core::make('helper/form/date_time')->datetime('publishTime', $C5dkBlog->publishTime, false, true, ['c5dk_blog_table_public_field']); ?>
+										<?php $publishTime = $C5dkBlog->publishTime; ?>
+										<?= $dtt->datetime('publishTime_' . $blogID, $publishTime, false, true, ['c5dk_blog_table_public_field']); ?>
 									</form>
 									<button class="c5dk-blog-btn-default c5dk-hide c5dk_save" type="button" onclick="c5dk.blog.editor.manager.entry.save('publishTime', <?= $blogID; ?>, null, this)"><i class="fa fa-floppy-o"></i></button>
 								</td>
 							<?php } ?>
+
 							<?php if ($C5dkRoot->unpublishTimeEnabled) { ?>
 								<td class="unpublishTime">
-									<!-- <input id="unpublishTime" value="<?= date('Y/m/d H:i', strtotime($C5dkBlog->unpublishTime)); ?>" type="datetime" class="datetimepicker c5dk_blog_table_public_field" /> -->
 									<form id="unpublishTime_<?= $blogID; ?>">
-										<?= \Core::make('helper/form/date_time')->datetime('unpublishTime', $C5dkBlog->unpublishTime, false, true, ['c5dk_blog_table_public_field']); ?>
+										<?= $dtt->datetime('unpublishTime_' . $blogID, $C5dkBlog->unpublishTime, false, true, ['c5dk_blog_table_public_field']); ?>
 									</form>
 									<button class="c5dk-blog-btn-default c5dk-hide c5dk_save" type="button" onclick="c5dk.blog.editor.manager.entry.save('unpublishTime', <?= $blogID; ?>, null, this)"><i class="fa fa-floppy-o"></i></button>
 								</td>
 							<?php } ?>
+
 							<td>
 								<a title="<?= t('View Page'); ?>" class="c5dk-blog-btn-info" href="<?= $C5dkBlog->getCollectionLink(); ?>"><i class="fa fa-hand-o-left"></i></a>
 								<button title="<?= t('Approve/Unapprove'); ?>" class="<?= (!$C5dkBlog->approved) ? "c5dk-blog-btn-warning" : "c5dk-blog-btn-success"; ?> c5dk_approve" type="button" onclick="c5dk.blog.editor.manager.entry.approve(<?= $blogID; ?>)"><?= (!$C5dkBlog->approved) ? '<i class="fa fa-check-circle"></i>' : '<i class="fa fa-minus-circle"></i>'; ?></button>
@@ -140,8 +139,8 @@
 			deleteID: null,
 
 			url: {
-				approve: '<?php echo URL::route(array('/c5dk/blog/ajax', 'c5dk_blog'), array('blog', 'approve')); ?>/',
-				unapprove: '<?php echo URL::route(array('/c5dk/blog/ajax', 'c5dk_blog'), array('blog', 'unapprove')); ?>/'
+				approve: '<?php echo URL::to('/c5dk/blog/ajax/editor/manager/save/approve'); ?>/',
+				unapprove: '<?php echo URL::to('/c5dk/blog/ajax/editor/manager/save/unapprove'); ?>/'
 			},
 
 			save: function(field, id, atID, el) {
@@ -150,24 +149,24 @@
 
 					case "priority":
 						var data = {
-							atID: $("#entry_" + id).find("select").val()
+							priorities: $("#entry_" + id).find("select").val()
 						}
 						break;
 
 					case "publishTime":
 						var data = $('#publishTime_' + id).serialize();
-						console.dir($('#publishTime_' + id));
+						// console.dir($('#publishTime_' + id));
 						// var data = {
 						// 	publishTime: $("#entry_" + id).find("#publishTime").val()
 						// };
 						break;
 
 					case "unpublishTime":
-						var data = {
-							unpublishTime: $("#entry_" + id).find("#publishTime").val()
-						};
+						var data = $('#unpublishTime_' + id).serialize();
+						// var data = {
+						// 	unpublishTime: $("#entry_" + id).find("#publishTime").val()
+						// };
 						break;
-
 				}
 
 				// Hide the save button

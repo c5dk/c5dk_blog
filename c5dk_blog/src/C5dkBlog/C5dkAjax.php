@@ -390,43 +390,52 @@ class C5dkAjax extends Controller
 
 	public function editor($method, $field, $blogID = null) {
 
+		// TODO: Needs to check the user is a editor for the page
+
 		switch ($method) {
 			case 'save':
 				// Load Core helper classes
 				$jh = Core::make('helper/json');
 
-				// Get C5dk News object
+				// Get C5dk Blog object
 				$C5dkBlog = C5dkBlog::getByID($blogID);
 
-				// Run through values to update
-				foreach ($this->post() as $key => $value) {
-					switch ($field) {
-						case "priority":
-							$C5dkBlog->setPriority($value);
-							break;
+				switch ($field) {
+					case "priority":
+						// $C5dkBlog->setPriority($value);
+						$C5dkBlog->setPriority($this->post("priorities"));
+						$state = 1;
+						break;
 
-						case 'publishTime':
-							$datetime = Core::make('helper/form/date_time')->translate('publishTime');
-							$C5dkBlog->setAttribute('c5dk_blog_publish_time', $datetime);
-							break;
+					case 'publishTime':
+						$datetime = Core::make('helper/form/date_time')->translate('publishTime_' . $C5dkBlog->getCollectionID());
+						$C5dkBlog->setAttribute('c5dk_blog_publish_time', $datetime);
+						$state = 1;
+						break;
 
-						case 'unpublishTime':
-							$datetime = Core::make('helper/form/date_time')->translate('unpublishTime');
-							$C5dkBlog->setAttribute('c5dk_blog_unpublish_time', $datetime);
-							break;
-					}
+					case 'unpublishTime':
+						$datetime = Core::make('helper/form/date_time')->translate('unpublishTime_' . $C5dkBlog->getCollectionID());
+						$C5dkBlog->setAttribute('c5dk_blog_unpublish_time', $datetime);
+						$state = 1;
+						break;
 
-					$data[] = array($field => $value);
+					case 'approve':
+						$C5dkBlog->setAttribute('c5dk_blog_approved', true);
+						$state = 1;
+						break;
+
+					case 'unapprove':
+						$C5dkBlog->setAttribute('c5dk_blog_approved', false);
+						$state = 0;
+						break;
 				}
 
-				echo $jh->encode(array(
+				echo $jh->encode([
 					'method'	=> 'save',
 					'id'		=> $blogID,
-					'data'		=> $data,
-					'state'		=> 0,
-					'status'	=> true,
-					'post'		=> $_POST
-				));
+					'state'		=> $state,
+					'status'	=> true
+				]);
 				break;
 		}
 

@@ -25,7 +25,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
 class Controller extends Package
 {
 	protected $appVersionRequired      = '8.2';
-	protected $pkgVersion              = '8.5.b2';
+	protected $pkgVersion              = '8.5.b3';
 	protected $pkgHandle               = 'c5dk_blog';
 	protected $pkgAutoloaderRegistries = [
 		'src/C5dkBlog' => '\C5dk\Blog',
@@ -299,15 +299,27 @@ class Controller extends Package
 		$redirect = false;
 
 		foreach ($pl->get() as $page) {
-			$publishTime = strtotime($page->getAttribute('c5dk_blog_publish_time')->format('Y/m/d H:i:s'));
-			$unpublishTime = strtotime($page->getAttribute('c5dk_blog_unpublish_time')->format('Y/m/d H:i:s'));
+			$publishTime = $page->getAttribute('c5dk_blog_publish_time');
+			if ($publishTime) {
+				$publishTime = strtotime($page->getAttribute('c5dk_blog_publish_time')->format('Y/m/d H:i:s'));
+			} else {
+				// If publish time isn't used we set the date back to a past date
+				$publishTime = strtotime((new \datetime)->sub(new \DateInterval('P1D'))->format('Y/m/d H:i:s'));
+			}
+			$unpublishTime = $page->getAttribute('c5dk_blog_unpublish_time');
+			if ($unpublishTime) {
+				$unpublishTime = strtotime($page->getAttribute('c5dk_blog_unpublish_time')->format('Y/m/d H:i:s'));
+			} else {
+				// If unpublish time isn't used we set the date into the future
+				$unpublishTime = strtotime((new \datetime)->add(new \DateInterval('P1D'))->format('Y/m/d H:i:s'));
+			}
 			$time = time();
 			$access = $this->checkGroupViewPermission($page, 'view_page', GUEST_GROUP_ID);
 			if ($publishTime < $time && $unpublishTime > $time && !$access) {
 				$C5dkBlog = C5dkBlog::getByID($page->getCollectionID());
 				$C5dkBlog->grantPagePermissionByGroup('view_page', $page, GUEST_GROUP_ID);
 			}
-			if ($publishTime > $time || $unpublishTime < $time && $access) {
+			if ($publishTime > $time && $unpublishTime < $time && $access) {
 				$C5dkBlog = C5dkBlog::getByID($page->getCollectionID());
 				$C5dkBlog->denyPagePermissionByGroup('view_page', $page, GUEST_GROUP_ID);
 				$redirect = true;
@@ -333,7 +345,7 @@ class Controller extends Package
 				$guestGroup = Group::getByID($groupID);
 				$entity = GroupPermissionAccessEntity::getOrCreate($guestGroup);
 
-                return $access->validateAccessEntities(array($entity));
+                return $access->validateAccessEntities([$entity]);
 	}
 
 	public function registerAssets()

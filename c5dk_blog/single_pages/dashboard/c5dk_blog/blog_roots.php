@@ -34,22 +34,9 @@ Core::make('help')->display(t(
 				<thead>
 					<tr>
 						<th></th>
-						<th>
-							<?= t("Title"); ?>
-						</th>
-						<th>
-							<?= t("Path"); ?>
-						</th>
-						<th style="min-width:25px;">
-							<?= t("Action"); ?>
-						</th>
-
-						<!-- <th><?= t("Writer Group(s)"); ?></th>
-							<th><?= t("Editor Group(s)"); ?></th>
-							<th><?= t("Page Type"); ?></th>
-							<th><?= t("Tags"); ?></th>
-							<th><?= t("Thumbnails"); ?></th>
-							<th><?= t("Topic Attribute"); ?></th> -->
+						<th><?= t("Title"); ?></th>
+						<th><?= t("Path"); ?></th>
+						<th style="min-width:25px;"><?= t("Action"); ?></th>
 					</tr>
 				</thead>
 				<tbody>
@@ -70,49 +57,76 @@ Core::make('help')->display(t(
 					</tr>
 					<tr style="display:none;">
 						<td colspan="4">
-							<div>
-								<?= t("Writer Group(s)"); ?>
-								<?= $form->selectMultiple("root[" . $rootID . "][writerGroups]", $groupList, $C5dkRoot->getWriterGroupsArray(), ['class' => 'c5dk_blog_select2', 'style' => 'min-width:360px;']); ?>
-							</div>
-							<div>
-								<?= t("Editor Group(s)"); ?>
-								<?= $form->selectMultiple("root[" . $rootID . "][editorGroups]", $groupList, $C5dkRoot->getEditorGroupsArray(), ['class' => 'c5dk_blog_select2', 'style' => 'min-width:360px;']); ?>
-							</div>
-							<div>
-								<?= t("Page Type"); ?>
-								<?= $form->select("root[" . $rootID . "][pageTypeID]", $pageTypeList, $C5dkRoot->getPageTypeID(), ['style' => 'width:360px;']); ?>
-							</div>
-							<div>
-								<?= t("Default Priority"); ?>
-								<?= $form->select("root[" . $rootID . "][priorityAttributeHandle]", $topicAttributeList, $C5dkRoot->priorityAttributeHandle, ['style' => 'width:360px;']); ?>
-							</div>
-							<div>
-								<?= t("Topic Attribute"); ?>
-								<?= $form->select("root[" . $rootID . "][topicAttributeHandle]", $topicAttributeList, $C5dkRoot->getTopicAttributeHandle(), ['style' => 'width:360px;']); ?>
-							</div>
-							<div>
-								<?= $form->checkbox("root[" . $rootID . "][needsApproval]", 1, $C5dkRoot->needsApproval); ?>
-								<?= t("Posts needs approval"); ?>
-							</div>
-							<div>
-								<?= $form->checkbox("root[" . $rootID . "][tags]", 1, $C5dkRoot->getTags()); ?>
-								<?= t("Tags"); ?>
-							</div>
-							<div>
-								<?= $form->checkbox("root[" . $rootID . "][thumbnails]", 1, $C5dkRoot->getThumbnails()); ?>
-								<?= t("Thumbnails"); ?>
-							</div>
-							<div>
-								<?= $form->checkbox("root[" . $rootID . "][publishTimeEnabled]", 1, $C5dkRoot->entity->getPublishTimeEnabled()); ?>
-								<?= t("Publish Time Enabled"); ?>
-								<br />
-								<?= $form->checkbox("root[" . $rootID . "][unpublishTimeEnabled]", 1, $C5dkRoot->entity->getUnpublishTimeEnabled()); ?>
-								<?= t("Unpublish Time Enabled"); ?>
+							<div class="ccm-tab-content" id="ccm-tab-content-header" style="display: block;">
+								<div class="well navigation">
+									<h3><?= t("Blog Root:"); ?> <?= $C5dkRoot->getCollectionName(); ?></h3>
+									<hr>
+									<div class="row">
+										<div class="col-xs-4">
+											<?= t("Writer Group(s)"); ?>
+											<?= $form->selectMultiple("root[" . $rootID . "][writerGroups]", $groupList, $C5dkRoot->getWriterGroupsArray(), ['class' => 'c5dk_blog_select2', 'style' => 'min-width:360px; width:100%;']); ?>
+											<div style="margin: 2px 0 15px 0; min-height: 65px;">
+												<small><?= t('Please add one or multiply user groups to this "Writer Group(s)". Members of this/these group(s) will be able to write blogs on this Blog Root.'); ?></small>
+											</div>
+										</div>
+										<div class="col-xs-4">
+											<?= t("Editor Group(s)"); ?>
+											<?= $form->selectMultiple("root[" . $rootID . "][editorGroups]", $groupList, $C5dkRoot->getEditorGroupsArray(), ['class' => 'c5dk_blog_select2', 'style' => 'min-width:360px; width:100%;']); ?>
+											<div style="margin: 2px 0 15px 0; min-height: 65px;">
+												<small><?= t('Please add one or multiply user groups to this "Editor Group(s)". Members of this/these group(s) will be able to Manage and Edit blogs on this Blog Root. [This is not mandatory].'); ?></small>
+											</div>
+										</div>
+										<div class="col-xs-4">
+											<?= t("Page Type"); ?>
+											<?= $form->select("root[" . $rootID . "][pageTypeID]", $pageTypeList, $C5dkRoot->getPageTypeID(), ['style' => 'width:360px; width:100%;']); ?>
+											<div style="margin: 2px 0 15px 0; min-height: 65px;">
+												<small><?= t('Please choose a default page type for the blog pages on this blog root.'); ?></small>
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-xs-4">
+											<?= t("Default Priority List Attribute"); ?>
+											<?= $form->select("root[" . $rootID . "][priorityAttributeHandle]", $topicAttributeList, $C5dkRoot->priorityAttributeHandle, ['style' => 'width:360px; width:100%;']); ?>
+											<div style="margin: 2px 0 15px 0; min-height: 65px;">
+												<small><?= t('Please add a Default Priority List here in this field (C5DK Blog already supply a basis Topic List "Blog Priorities" for you to use. [This is not mandatory].'); ?></small>
+											</div>
+										</div>
+										<div class="col-xs-4">
+											<?= t("Topic Attribute"); ?>
+											<?= $form->select("root[" . $rootID . "][topicAttributeHandle]", $topicAttributeList, $C5dkRoot->getTopicAttributeHandle(), ['style' => 'width:360px; width:100%;']); ?>
+											<div style="margin: 2px 0 15px 0; min-height: 65px;">
+												<small><?= t('Please add a Blog Topic Filter Attribute to be able to filter blogs in page lists. [This is not mandatory].'); ?></small>
+											</div>
+										</div>
+										<div class="col-xs-4">
+											<div>
+												<?= $form->checkbox("root[" . $rootID . "][needsApproval]", 1, $C5dkRoot->needsApproval); ?>
+												<?= t("Posts needs approval"); ?>
+											</div>
+											<div>
+												<?= $form->checkbox("root[" . $rootID . "][tags]", 1, $C5dkRoot->getTags()); ?>
+												<?= t("Tags Enabled"); ?>
+											</div>
+											<div>
+												<?= $form->checkbox("root[" . $rootID . "][thumbnails]", 1, $C5dkRoot->getThumbnails()); ?>
+												<?= t("Thumbnails Enabled"); ?>
+											</div>
+											<div>
+												<?= $form->checkbox("root[" . $rootID . "][publishTimeEnabled]", 1, $C5dkRoot->entity->getPublishTimeEnabled()); ?>
+												<?= t("Publish Time Enabled"); ?>
+												<br />
+												<?= $form->checkbox("root[" . $rootID . "][unpublishTimeEnabled]", 1, $C5dkRoot->entity->getUnpublishTimeEnabled()); ?>
+												<?= t("Unpublish Time Enabled"); ?>
+											</div>
+										</div>
+									</div>
+								</div>
 							</div>
 						</td>
 					</tr>
 					<?php
-                } ?>
+				} ?>
 				</tbody>
 			</table>
 		</div>
@@ -129,14 +143,6 @@ Core::make('help')->display(t(
 
 <script type="text/javascript">
 	$(document).ready(function() {
-		// $(".delete_root").on('click', function(event) {
-		//     if (window.confirm("<?= t('Are you sure you want to delete this root?'); ?>")) {
-		//         return true;
-		//     } else {
-		//         return false;
-		//     }
-		// });
-
 		$('.c5dk_blog_select2').removeClass('form-control').select2();
 	});
 </script>

@@ -338,50 +338,76 @@ class C5dkBlog extends Page
 	public function grantPagePermissionByGroup($permission, $page, $groupID)
 	{
 		// enable access by a group
-		// $page->resetPermissions(1);
 		$g = Group::getByID($groupID);
-		if (is_object($g)) {
-			$pk = PermissionKey::getByHandle($permission);
-			$pk->setPermissionObject($page);
-			$pa = $pk->getPermissionAccessObject();
-			$pae = GroupPermissionAccessEntity::getOrCreate($g);
-			$pa->addListItem($pae, false, PermissionKey::ACCESS_TYPE_INCLUDE);
-		}
+        if (is_object($g)) {
+            // $page->setPermissionsToOverride();
+            $page-> assignPermissions($g, [$permission], PermissionKey::ACCESS_TYPE_INCLUDE, false);
+        }
+			// $pk = PermissionKey::getByHandle($permission);
+			// $pk->setPermissionObject($page);
+			// $pa = $pk->getPermissionAccessObject();
+			// $pae = GroupPermissionAccessEntity::getOrCreate($g);
+			// $pa->addListItem($pae, false, PermissionKey::ACCESS_TYPE_INCLUDE);
+
+			// apply the the permissions changes
+			// $pa->markAsInUse();
+		// }
 	}
 
 	public function denyPagePermissionByGroup($permission, $page, $groupID)
 	{
 		// remove Guest access
-		// $page->resetPermissions(1);
-		$pk = PermissionKey::getByHandle($permission);
-		$pk->setPermissionObject($page);
-		$pa = $pk->getPermissionAccessObject();
-		$pe = GroupPermissionAccessEntity::getOrCreate(Group::getByID($groupID));
-		$pa->removeListItem($pe);
+		$g = Group::getByID($groupID);
+		if (is_object($g)) {
+			$page->setPermissionsToOverride();
+			$page->removePermissions($g, [$permission]);
+		}
+		// $pk = PermissionKey::getByHandle($permission);
+		// $pk->setPermissionObject($page);
+		// $pa = $pk->getPermissionAccessObject();
+		// $pe = GroupPermissionAccessEntity::getOrCreate(Group::getByID($groupID));
+		// $pa->removeListItem($pe);
+
+		// // apply the the permissions changes
+		// $pa->markAsInUse();
 	}
 
 	public function grantPagePermissionByUser($permission, $page, $userID)
 	{
-		// $page->resetPermissions(1);
+		// enable access by user
 		$ui = UserInfo::getByID($userID);
-		if (is_object($ui)) {
-			$pk = PermissionKey::getByHandle($permission);
-			$pk->setPermissionObject($page);
-			$pa = $pk->getPermissionAccessObject();
-			$pae = UserPermissionAccessEntity::getOrCreate($ui);
-			$pa->addListItem($pae, false, PermissionKey::ACCESS_TYPE_INCLUDE);
-		}
+        if (is_object($ui)) {
+            // $page->setPermissionsToOverride();
+            $page-> assignPermissions($ui, [$permission], PermissionKey::ACCESS_TYPE_INCLUDE, false);
+        }
+		// if (is_object($ui)) {
+		// 	$pk = PermissionKey::getByHandle($permission);
+		// 	$pk->setPermissionObject($page);
+		// 	$pa = $pk->getPermissionAccessObject();
+		// 	$pae = UserPermissionAccessEntity::getOrCreate($ui);
+		// 	$pa->addListItem($pae, false, PermissionKey::ACCESS_TYPE_INCLUDE);
+		// }
+
+		// // apply the the permissions changes
+		// $pa->markAsInUse();
 	}
 
 	public function denyPagePermissionByUser($permission, $page, $userID)
 	{
-		// remove Guest access
-		// $page->resetPermissions(1);
-		$pk = PermissionKey::getByHandle($permission);
-		$pk->setPermissionObject($page);
-		$pa = $pk->getPermissionAccessObject();
-		$pe = UserPermissionAccessEntity::getOrCreate(UserInfo::getByID($userID));
-		$pa->removeListItem($pe);
+		// remove user access
+		$ui = UserInfo::getByID($userID);
+		if (is_object($ui)) {
+			$page->setPermissionsToOverride();
+			$page->removePermissions($ui, [$permission]);
+		}
+		// $pk = PermissionKey::getByHandle($permission);
+		// $pk->setPermissionObject($page);
+		// $pa = $pk->getPermissionAccessObject();
+		// $pe = UserPermissionAccessEntity::getOrCreate(UserInfo::getByID($userID));
+		// $pa->removeListItem($pe);
+
+		// // apply the the permissions changes
+		// $pa->markAsInUse();
 	}
 
 	public function setPriority($values)

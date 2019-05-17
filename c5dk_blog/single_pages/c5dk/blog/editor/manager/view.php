@@ -130,7 +130,7 @@
 
 			// onChange event for the date and time fields to show the save button
 			$(".datetimepicker").on('change', function(event) {
-				c5dk.blog.editor.manager.entry.showSave($(this).closest('tr').data('id'), "publicDateTime");
+				c5dk.blog.editor.manager.entry.showSave($(this).closest('tr').data('id'), "publishDateTime");
 			});
 		},
 

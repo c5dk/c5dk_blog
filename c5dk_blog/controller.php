@@ -25,7 +25,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
 class Controller extends Package
 {
 	protected $appVersionRequired      = '8.2';
-	protected $pkgVersion              = '8.5.b3';
+	protected $pkgVersion              = '8.5.b4';
 	protected $pkgHandle               = 'c5dk_blog';
 	protected $pkgAutoloaderRegistries = [
 		'src/C5dkBlog' => '\C5dk\Blog',
@@ -226,7 +226,6 @@ class Controller extends Package
 		// Add Blog Priorities Topic Tree
 		$topicTree = C5dkInstaller::installTopicTree('Blog Priorities', ['Standard', 'Breaking', 'Top Story']);
 		$pageKey = C5dkInstaller::installCollectionAttributeKeyTopic('c5dk_blog_priority', 'Blog Priorities', $topicTree, true, $cas);
-
 	}
 
 	private function setupUserAttributes($pkg)
@@ -301,25 +300,25 @@ class Controller extends Package
 		foreach ($pl->get() as $page) {
 			$publishTime = $page->getAttribute('c5dk_blog_publish_time');
 			if ($publishTime) {
-				$publishTime = strtotime($page->getAttribute('c5dk_blog_publish_time')->format('Y/m/d H:i:s'));
+				$publishTime = $page->getAttribute('c5dk_blog_publish_time')->getTimestamp();
 			} else {
-				// If publish time isn't used we set the date back to a past date
-				$publishTime = strtotime((new \datetime)->sub(new \DateInterval('P1D'))->format('Y/m/d H:i:s'));
+				// If publish time isn't used we subtract 1 day from the current date
+				$publishTime = (new \datetime)->sub(new \DateInterval('P1D'))->getTimestamp();
 			}
 			$unpublishTime = $page->getAttribute('c5dk_blog_unpublish_time');
 			if ($unpublishTime) {
-				$unpublishTime = strtotime($page->getAttribute('c5dk_blog_unpublish_time')->format('Y/m/d H:i:s'));
+				$unpublishTime = $page->getAttribute('c5dk_blog_unpublish_time')->getTimestamp();
 			} else {
-				// If unpublish time isn't used we set the date into the future
-				$unpublishTime = strtotime((new \datetime)->add(new \DateInterval('P1D'))->format('Y/m/d H:i:s'));
+				// If unpublish time isn't used we add 1 day to the current date
+				$unpublishTime = (new \datetime)->add(new \DateInterval('P1D'))->getTimestamp();
 			}
 			$time = time();
-			$access = $this->checkGroupViewPermission($page, 'view_page', GUEST_GROUP_ID);
-			if ($publishTime < $time && $unpublishTime > $time && !$access) {
+			$access = $this->checkGroupViewPermission('view_page', $page, GUEST_GROUP_ID);
+			if ($publishTime < $time && $time < $unpublishTime && !$access) {
 				$C5dkBlog = C5dkBlog::getByID($page->getCollectionID());
 				$C5dkBlog->grantPagePermissionByGroup('view_page', $page, GUEST_GROUP_ID);
 			}
-			if ($publishTime > $time && $unpublishTime < $time && $access) {
+			if ($publishTime > $time && $time < $unpublishTime && $access) {
 				$C5dkBlog = C5dkBlog::getByID($page->getCollectionID());
 				$C5dkBlog->denyPagePermissionByGroup('view_page', $page, GUEST_GROUP_ID);
 				$redirect = true;
@@ -327,25 +326,25 @@ class Controller extends Package
 		}
 
 		// We removed Guest access to a page, so we redirect to make sure that the user isn't accessing that page
-		if ($redirect) {
-			$r = Redirect::to(Page::getCurrentPage()->getCollectionLink());
-			$r->send();
-		}
+		// if ($redirect) {
+		// 	$r = Redirect::to(Page::getCurrentPage()->getCollectionLink());
+		// 	$r->send();
+		// }
 	}
 
-	public function checkGroupViewPermission($page, $permissionHandle, $groupID)
+	public function checkGroupViewPermission($permissionHandle, $page, $groupID)
 	{
 				$key = PermissionKey::getByHandle($permissionHandle);
 				$key->setPermissionObject($page);
 
 				$access = $key->getPermissionAccessObject();
-				if (!$access) {
-					return false;
-				}
+		if (!$access) {
+			return false;
+		}
 				$guestGroup = Group::getByID($groupID);
 				$entity = GroupPermissionAccessEntity::getOrCreate($guestGroup);
 
-                return $access->validateAccessEntities([$entity]);
+				return $access->validateAccessEntities([$entity]);
 	}
 
 	public function registerAssets()

@@ -11,7 +11,7 @@ $this->requireAsset('javascript', 'tagcanvas');
 
 	<?php if ($title): ?>
 		<div class="ccm-block-tags-header">
-			<h3><?php echo $title?></h3>
+			<h3><?= $title?></h3>
 		</div>
 	<?php endif; ?>
 	<div id="c5dkCanvasContainerHtml5">
@@ -21,11 +21,11 @@ $this->requireAsset('javascript', 'tagcanvas');
 				<?php foreach ($options as $option) { ?>
 					<li>
 					<?php if ($target) { ?>
-						<a href="<?php echo $controller->getTagLink($option) ?>">
-							<span class="ccm-block-tags-tag label"><?php echo $option->getSelectAttributeOptionValue()?></span>
+						<a href="<?= $controller->getTagLink($option) ?>">
+							<span class="ccm-block-tags-tag label"><?= $option->getSelectAttributeOptionValue()?></span>
 						</a>
 					<?php } else { ?>
-						<span class="ccm-block-tags-tag label"><?php echo $option->getSelectAttributeOptionValue()?></span>
+						<span class="ccm-block-tags-tag label"><?= $option->getSelectAttributeOptionValue()?></span>
 					<?php } ?>
 					</li>
 				<?php } ?>
@@ -46,7 +46,7 @@ $this->requireAsset('javascript', 'tagcanvas');
 				outlineThickness : 5,
 				outlineOffset : 1,
 				outlineMethod : "colour",
-				centreImage : '<?php echo REL_DIR_PACKAGES; ?>/c5dk_blog/blocks/tags/templates/c5dk_blog_tags/images/blogtagsicon.png',
+				centreImage : '<?= REL_DIR_PACKAGES; ?>/c5dk_blog/blocks/tags/templates/c5dk_blog_tags/images/blogtagsicon.png',
 				padding : 0,
 				stretchX : 0.9,
 				maxSpeed : 0.05,

@@ -47,7 +47,7 @@ class C5dkRootList extends DatabaseItemList implements PermissionableListItemInt
 	public function getResults($itemsToGet = 0, $offset = 0)
 	{
 		// Get results from PageList
-		$roots = array();
+		$roots = [];
 		$pl    = new PageList;
 		$pl->setSiteTreeToAll();
 		$pl->filterByC5dkBlogRoot(TRUE);
@@ -129,7 +129,7 @@ class C5dkRootList extends DatabaseItemList implements PermissionableListItemInt
 			if ($this->permissionsChecker === -1) {
 					return TRUE;
 			} else {
-					return call_user_func_array($this->permissionsChecker, array($mixed));
+					return call_user_func_array($this->permissionsChecker, [$mixed]);
 			}
 		}
 

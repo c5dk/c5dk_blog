@@ -21,16 +21,16 @@ $ih         = Core::make('helper/image');
 ?>
 
 <?php if ($c->isEditMode() && $controller->isBlockEmpty()) { ?>
-	<div class="ccm-edit-mode-disabled-item"><?php echo t('Empty Page List Block.')?></div>
+	<div class="ccm-edit-mode-disabled-item"><?= t('Empty Page List Block.')?></div>
 <?php } else { ?>
 	<?php if (isset($pageListTitle) && $pageListTitle): ?>
-			<h4><?php echo h($pageListTitle)?></h4>
+			<h4><?= h($pageListTitle)?></h4>
 	<?php endif; ?>
 
 <div class="ccm-block-page-list-wrapper">
 
 	<?php if (isset($rssUrl) && $rssUrl): ?>
-		<a href="<?php echo $rssUrl ?>" target="_blank" class="ccm-block-page-list-rss-feed"><i class="fa fa-rss"></i></a>
+		<a href="<?= $rssUrl ?>" target="_blank" class="ccm-block-page-list-rss-feed"><i class="fa fa-rss"></i></a>
 	<?php endif; ?>
 
 	<div id="posts" class="small-thumbs">
@@ -92,7 +92,7 @@ $ih         = Core::make('helper/image');
 		 *    (Replace "64" with max width, "9999" with max height. The "9999" effectively means "no maximum size" for that particular dimension.)
 		 *    (Change the last argument from false to true if you want thumbnails cropped.)
 		 * 3) Output the image tag below like this:
-		 *		<img src="<?php echo $thumb->src ?>" width="<?php echo $thumb->width ?>" height="<?php echo $thumb->height ?>" alt="" />
+		 *		<img src="<?= $thumb->src ?>" width="<?= $thumb->width ?>" height="<?= $thumb->height ?>" alt="" />
 		 *
 		 * ~OR~ IF YOU DO NOT WANT IMAGES TO BE RESIZED:
 		 * 1) Put in some code here like the following 2 lines:
@@ -100,14 +100,14 @@ $ih         = Core::make('helper/image');
 		 *      $img_width = $img->getAttribute('width');
 		 *      $img_height = $img->getAttribute('height');
 		 * 2) Output the image tag below like this:
-		 * 	    <img src="<?php echo $img_src ?>" width="<?php echo $img_width ?>" height="<?php echo $img_height ?>" alt="" />
+		 * 	    <img src="<?= $img_src ?>" width="<?= $img_width ?>" height="<?= $img_height ?>" alt="" />
 		 */
 
 		/* End data preparation. */
 
 		/* The HTML from here through "endforeach" is repeated for every item in the list... */ ?>
 
-		<div class="<?php echo $entryClasses?> entry clearfix">
+		<div class="<?= $entryClasses?> entry clearfix">
 
 		<?php if (is_object($thumbnail)): ?>
 			<?php
@@ -116,8 +116,8 @@ $ih         = Core::make('helper/image');
 			$thumb_src = $thumb->src;
 			?>
 			<div class="entry-image">
-			<a href="<?php echo $url ?>">
-				<img class="image_fade" src="<?php echo $thumb_src ?>" alt="<?php echo $title ?>">
+			<a href="<?= $url ?>">
+				<img class="image_fade" src="<?= $thumb_src ?>" alt="<?= $title ?>">
 			</a>
 			</div>
 		<?php endif; ?>
@@ -128,27 +128,27 @@ $ih         = Core::make('helper/image');
 				<?php if (isset($includeName) && $includeName): ?>
 				<div class="ccm-block-page-list-title entry-title">
 					<?php if (isset($useButtonForLink) && $useButtonForLink) { ?>
-						<h2><?php echo $title; ?></h2>
+						<h2><?= $title; ?></h2>
 					<?php } else { ?>
-						<h2><a href="<?php echo $url ?>" target="<?php echo $target ?>"><?php echo $title ?></a></h2>
+						<h2><a href="<?= $url ?>" target="<?= $target ?>"><?= $title ?></a></h2>
 					<?php } ?>
 				</div>
 				<?php endif; ?>
 
 				<?php if (isset($includeDate) && $includeDate): ?>
-					<ul class="ccm-block-page-list-date entry-meta clearfix"><li><?php echo t('Posted by');
+					<ul class="ccm-block-page-list-date entry-meta clearfix"><li><?= t('Posted by');
 					echo ' <i class="fa fa-user"></i> ' . ($C5dkUser->fullName ? $C5dkUser->fullName : BASE_URL) . ' - <i class="fa fa-calendar"></i> ' . $date; ?></li></ul>
 				<?php endif; ?>
 
 				<?php if (isset($includeDescription) && $includeDescription): ?>
 					<div class="ccm-block-page-list-description entry-content">
-						<?php echo $description ?>
+						<?= $description ?>
 					</div>
 				<?php endif; ?>
 
 				<?php if (isset($useButtonForLink) && $useButtonForLink): ?>
 				<div class="ccm-block-page-list-page-entry-read-more topmargin-sm">
-					<a href="<?php echo $url?>" target="<?php echo $target?>" class="<?php echo $buttonClasses?>"><?php echo $buttonLinkText?></a>
+					<a href="<?= $url?>" target="<?= $target?>" class="<?= $buttonClasses?>"><?= $buttonLinkText?></a>
 				</div>
 				<?php endif; ?>
 
@@ -161,7 +161,7 @@ $ih         = Core::make('helper/image');
 	</div>
 
 	<?php if (count($pages) == 0): ?>
-		<div class="ccm-block-page-list-no-pages"><?php echo h($noResultsMessage)?></div>
+		<div class="ccm-block-page-list-no-pages"><?= h($noResultsMessage)?></div>
 	<?php endif;?>
 
 </div><!-- end .ccm-block-page-list -->
@@ -171,10 +171,10 @@ $ih         = Core::make('helper/image');
 	<?php
 	$pagination = $list->getPagination();
 	if ($pagination->getTotalPages() > 1) {
-		$options = array(
+		$options = [
 			'prev_message'        => '«',
-			'next_message'        => '»',
-		);
+			'next_message'        => '»'
+		];
 		echo $pagination->renderDefaultView($options);
 	}
 	?>

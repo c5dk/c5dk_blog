@@ -3,7 +3,7 @@
 <div id="c5dk-blog-package" class="c5dk_topic_list_wrapper">
 
 	<div class="c5dk-topic-list-header">
-		<h3><?php echo h($title)?></h3>
+		<h3><?= h($title)?></h3>
 	</div>
 
 	<?php
@@ -18,12 +18,12 @@
 
 				foreach ($node->getChildNodes() as $topic) {
 					if (is_object($topic) && $topic->getTreeNodeTypeID() === "2") { ?>
-						<li><i class="fa fa-chevron-circle-right"></i> <?php echo $topic->getTreeNodeDisplayName()?></li>
+						<li><i class="fa fa-chevron-circle-right"></i> <?= $topic->getTreeNodeDisplayName()?></li>
 					<?php } else { ?>
-						<li><i class="fa fa-file-o"></i> <a href="<?php echo $view->controller->getTopicLink($topic)?>"
+						<li><i class="fa fa-file-o"></i> <a href="<?= $view->controller->getTopicLink($topic)?>"
 								<?php if (isset($selectedTopicID) && $selectedTopicID == $topic->getTreeNodeID()) { ?>
 									class="c5dk-topic-list-topic-selected"
-								<?php } ?> ><?php echo $topic->getTreeNodeDisplayName()?></a></li>
+								<?php } ?> ><?= $topic->getTreeNodeDisplayName()?></a></li>
 					<?php } ?>
 					<?php $walk($topic); ?>
 				<?php }
@@ -39,11 +39,11 @@
 		<?php if (count($topics)) { ?>
 			<ul class="c5dk-topic-list-page-topics">
 			<?php foreach ($topics as $topic) { ?>
-				<li><a href="<?php echo $view->controller->getTopicLink($topic)?>"><?php echo $topic->getTreeNodeDisplayName()?></a></li>
+				<li><a href="<?= $view->controller->getTopicLink($topic)?>"><?= $topic->getTreeNodeDisplayName()?></a></li>
 			<?php } ?>
 			</ul>
 		<?php } else { ?>
-			<?php echo t('No topics.')?>
+			<?= t('No topics.')?>
 		<?php } ?>
 
 	<?php endif; ?>

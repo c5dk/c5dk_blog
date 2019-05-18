@@ -21,16 +21,16 @@ $date = $dh->formatDate($page->getCollectionDatePublic(), TRUE);
 ?>
 <div class="ccm-block-page-title clearfix">
 	<div class="entry-title">
-		<h2 class="page-title"><?php echo h($title)?></h2>
+		<h2 class="page-title"><?= h($title)?></h2>
 	</div>
 	<ul class="entry-meta clearfix">
 
 		<?php if ($date): ?>
-		<li><i class="fa fa-calendar"></i><?php echo $date; ?></li>
+		<li><i class="fa fa-calendar"></i><?= $date; ?></li>
 		<?php endif; ?>
 
 		<?php if (is_object($C5dkUser)): ?>
-		<li><i class="fa fa-user"></i><?php echo ($C5dkUser->fullName ? $C5dkUser->fullName : t('(Not set)')); ?></li>
+		<li><i class="fa fa-user"></i><?= ($C5dkUser->fullName ? $C5dkUser->fullName : t('(Not set)')); ?></li>
 		<?php endif; ?>
 	</ul>
 

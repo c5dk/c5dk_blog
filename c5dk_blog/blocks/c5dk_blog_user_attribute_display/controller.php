@@ -25,7 +25,7 @@ class Controller extends BlockController
 	public function view()
 	{
 		$templateHandle = $this->getTemplateHandle();
-		if (in_array($templateHandle, array('date_time', 'boolean'))) {
+		if (in_array($templateHandle, ['date_time', 'boolean'])) {
 			$this->render('templates/' . $templateHandle);
 		}
 	}
@@ -117,11 +117,11 @@ class Controller extends BlockController
 
 	public function getAvailableUserValues()
 	{
-		return array(
+		return [
 			'userName' => t('User Name'),
 			'userEmail' => t('User Email'),
 			'userAvatar' => t('User Avatar')
-		);
+		];
 	}
 
 	public function getAvailableAttributes()

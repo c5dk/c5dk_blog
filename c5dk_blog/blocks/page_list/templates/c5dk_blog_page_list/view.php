@@ -21,19 +21,19 @@ $C5dkConfig = new C5dkConfig;
 ?>
 
 <?php if ($c->isEditMode() && $controller->isBlockEmpty()) { ?>
-  <div class="ccm-edit-mode-disabled-item"><?php echo t('Empty Page List Block.')?></div>
+  <div class="ccm-edit-mode-disabled-item"><?= t('Empty Page List Block.')?></div>
 
 <?php } else { ?>
   <div class="ccm-block-page-list-wrapper">
 
 	<?php if (isset($pageListTitle) && $pageListTitle) { ?>
 	  <div class="ccm-block-page-list-header">
-		<h5><?php echo h($pageListTitle)?></h5>
+		<h5><?= h($pageListTitle)?></h5>
 	  </div>
 	<?php } ?>
 
 	<?php if (isset($rssUrl) && $rssUrl) { ?>
-	  <a href="<?php echo $rssUrl ?>" target="_blank" class="ccm-block-page-list-rss-feed"><i class="fa fa-rss"></i></a>
+	  <a href="<?= $rssUrl ?>" target="_blank" class="ccm-block-page-list-rss-feed"><i class="fa fa-rss"></i></a>
 	<?php } ?>
 
 	<div class="ccm-block-page-list-pages">
@@ -88,7 +88,7 @@ $C5dkConfig = new C5dkConfig;
 			*    (Replace "64" with max width, "9999" with max height. The "9999" effectively means "no maximum size" for that particular dimension.)
 			*    (Change the last argument from false to true if you want thumbnails cropped.)
 			* 3) Output the image tag below like this:
-			*      <img src="<?php echo $thumb->src ?>" width="<?php echo $thumb->width ?>" height="<?php echo $thumb->height ?>" alt="" />
+			*      <img src="<?= $thumb->src ?>" width="<?= $thumb->width ?>" height="<?= $thumb->height ?>" alt="" />
 			*
 			* ~OR~ IF YOU DO NOT WANT IMAGES TO BE RESIZED:
 			* 1) Put in some code here like the following 2 lines:
@@ -96,25 +96,25 @@ $C5dkConfig = new C5dkConfig;
 			*      $img_width = $img->getAttribute('width');
 			*      $img_height = $img->getAttribute('height');
 			* 2) Output the image tag below like this:
-			*      <img src="<?php echo $img_src ?>" width="<?php echo $img_width ?>" height="<?php echo $img_height ?>" alt="" />
+			*      <img src="<?= $img_src ?>" width="<?= $img_width ?>" height="<?= $img_height ?>" alt="" />
 			*/
 
 			/* End data preparation. */
 
 			/* The HTML from here through "endforeach" is repeated for every item in the list... */ ?>
 
-		  <div class="<?php echo $entryClasses?>">
+		  <div class="<?= $entryClasses?>">
 
 			<?php if (is_object($thumbnail)) { ?>
 			<div class="ccm-block-page-list-page-entry-thumbnail">
 				<?php
-				$img = Core::make('html/image', array($thumbnail));
+				$img = Core::make('html/image', [$thumbnail]);
 				$tag = $img->getTag();
 				$tag->addClass('img-responsive');
 				$tag->alt(t('Thumbnail for') . " " . $title);
 				$tag->title(t('Thumbnail for') . " " . $title);
 				?>
-			  <a href="<?php echo $url ?>" target="<?php echo $target ?>"><?php print $tag; ?></a>
+			  <a href="<?= $url ?>" target="<?= $target ?>"><?php print $tag; ?></a>
 			</div>
 			<?php } ?>
 
@@ -124,27 +124,27 @@ $C5dkConfig = new C5dkConfig;
 				<?php if ($includeName) { ?>
 				<div class="ccm-block-page-list-title">
 					<?php if ($useButtonForLink) { ?>
-					<?php echo $title; ?>
+					<?= $title; ?>
 					<?php } else { ?>
-					<a href="<?php echo $url ?>" target="<?php echo $target ?>"><?php echo $title ?></a>
+					<a href="<?= $url ?>" target="<?= $target ?>"><?= $title ?></a>
 					<?php } ?>
 				</div>
 				<?php } ?>
 
 				<?php if ($includeDate) { ?>
-				<div class="c5dk_postedby"><?php echo t('Posted by');
+				<div class="c5dk_postedby"><?= t('Posted by');
 				echo ' <i class="fa fa-user"></i> ' . ($C5dkUser->fullName ? $C5dkUser->fullName : BASE_URL) . ' - <i class="fa fa-clock-o"></i> ' . $date; ?></div>
 				<?php } ?>
 
 				<?php if ($includeDescription) { ?>
 				<div class="ccm-block-page-list-description">
-					<?php echo $description ?>
+					<?= $description ?>
 				</div>
 				<?php } ?>
 
 				<?php if ($useButtonForLink) { ?>
 				<div class="ccm-block-page-list-page-entry-read-more">
-				  <a href="<?php echo $url?>" class="<?php echo $buttonClasses?>"><?php echo $buttonLinkText?></a>
+				  <a href="<?= $url?>" class="<?= $buttonClasses?>"><?= $buttonLinkText?></a>
 				</div>
 				<?php } ?>
 
@@ -157,14 +157,14 @@ $C5dkConfig = new C5dkConfig;
 	</div>
 
 	<?php if (count($pages) == 0) { ?>
-	  <div class="ccm-block-page-list-no-pages"><?php echo h($noResultsMessage)?></div>
+	  <div class="ccm-block-page-list-no-pages"><?= h($noResultsMessage)?></div>
 	<?php } ?>
 
   </div><!-- end .ccm-block-page-list -->
 
 
 	<?php if ($showPagination) { ?>
-	<?php echo $pagination; ?>
+	<?= $pagination; ?>
 	<?php } ?>
 
 <?php } ?>

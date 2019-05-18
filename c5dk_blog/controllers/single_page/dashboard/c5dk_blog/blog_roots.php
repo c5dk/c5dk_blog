@@ -126,7 +126,7 @@ class BlogRoots extends DashboardPageController
         $atTopics = AttributeType::getByHandle('topics');
 
         // Set our default value
-        $topicTreeList = array(0 => t("None"));
+        $topicTreeList = [0 => t("None")];
 
         if ($atTopics instanceof AttributeType) {
 

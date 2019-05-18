@@ -48,31 +48,31 @@ print Core::make('helper/concrete/ui')->tabs([
 		<label class="control-label"><?php  echo t('Display property with formatting')?></label>
 		<select name="displayTag" class="form-control">
 			<option value="">- none -</option>
-			<option value="h1" <?php echo($this->controller->displayTag == "h1" ? "selected" : "")?>>H1 (Heading 1)</option>
-			<option value="h2" <?php echo($this->controller->displayTag == "h2" ? "selected" : "")?>>H2 (Heading 2)</option>
-			<option value="h3" <?php echo($this->controller->displayTag == "h3" ? "selected" : "")?>>H3 (Heading 3)</option>
-			<option value="p" <?php echo($this->controller->displayTag == "p" ? "selected" : "")?>>p (paragraph)</option>
-			<option value="b" <?php echo($this->controller->displayTag == "b" ? "selected" : "")?>>b (bold)</option>
-			<option value="address" <?php echo($this->controller->displayTag == "address" ? "selected" : "")?>>address</option>
-			<option value="pre" <?php echo($this->controller->displayTag == "pre" ? "selected" : "")?>>pre (preformatted)</option>
-			<option value="blockquote" <?php echo($this->controller->displayTag == "blockquote" ? "selected" : "")?>>blockquote</option>
-			<option value="div" <?php echo($this->controller->displayTag == "div" ? "selected" : "")?>>div</option>
+			<option value="h1" <?=($this->controller->displayTag == "h1" ? "selected" : "")?>>H1 (Heading 1)</option>
+			<option value="h2" <?=($this->controller->displayTag == "h2" ? "selected" : "")?>>H2 (Heading 2)</option>
+			<option value="h3" <?=($this->controller->displayTag == "h3" ? "selected" : "")?>>H3 (Heading 3)</option>
+			<option value="p" <?=($this->controller->displayTag == "p" ? "selected" : "")?>>p (paragraph)</option>
+			<option value="b" <?=($this->controller->displayTag == "b" ? "selected" : "")?>>b (bold)</option>
+			<option value="address" <?=($this->controller->displayTag == "address" ? "selected" : "")?>>address</option>
+			<option value="pre" <?=($this->controller->displayTag == "pre" ? "selected" : "")?>>pre (preformatted)</option>
+			<option value="blockquote" <?=($this->controller->displayTag == "blockquote" ? "selected" : "")?>>blockquote</option>
+			<option value="div" <?=($this->controller->displayTag == "div" ? "selected" : "")?>>div</option>
 		</select>
 	</div>
 	<div class="form-group">
 		<label class="control-label"><?php  echo t('Format of Date Properties')?></label>
 		<input type="text" class="form-control" name="dateFormat" value="<?php  echo $this->controller->dateFormat ?>"/>
-		<div class="text-muted"><?php echo sprintf(t('See the formatting options at %s.'), '<a href="http://www.php.net/date" target="_blank">php.net/date</a>'); ?></div>
+		<div class="text-muted"><?= sprintf(t('See the formatting options at %s.'), '<a href="http://www.php.net/date" target="_blank">php.net/date</a>'); ?></div>
 	</div>
 	<fieldset>
-		<legend><?php echo t('Avatar')?></legend>
+		<legend><?= t('Avatar')?></legend>
 		<div class="form-group">
-			<label class="control-label" for="avatar_width"><?php echo t('Width'); ?></label>
-			<input id="avatar_width" class="form-control" type="text" name="avatarWidth" value="<?php echo $this->controller->avatarWidth; ?>"/>
+			<label class="control-label" for="avatar_width"><?= t('Width'); ?></label>
+			<input id="avatar_width" class="form-control" type="text" name="avatarWidth" value="<?= $this->controller->avatarWidth; ?>"/>
 		</div>
 		<div class="form-group">
-			<label class="control-label" for="avatar_height"><?php echo t('Height'); ?></label>
-			<input id="avatar_height" class="form-control" type="text" name="avatarHeight" value="<?php echo $this->controller->avatarHeight; ?>"/>
+			<label class="control-label" for="avatar_height"><?= t('Height'); ?></label>
+			<input id="avatar_height" class="form-control" type="text" name="avatarHeight" value="<?= $this->controller->avatarHeight; ?>"/>
 		</div>
 	</fieldset>
 </div>

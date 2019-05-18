@@ -51,7 +51,7 @@ class C5dkRootEditorGroup
         return $this->root;
     }
 
-    public static function findBy($criteria = array(), $orderBy = array('id' => 'DESC'), $limit = null, $offset = null)
+    public static function findBy($criteria = [], $orderBy = ['id' => 'DESC'], $limit = null, $offset = null)
     {
         $db = Database::connection();
         $em = $db->getEntityManager();
@@ -72,7 +72,7 @@ class C5dkRootEditorGroup
         $db = \Database::connection();
         $em = $db->getEntityManager();
 
-        return $em->getRepository(get_class())->findBy(array('root' => $root));
+        return $em->getRepository(get_class())->findBy(['root' => $root]);
     }
 
     public static function getAll()

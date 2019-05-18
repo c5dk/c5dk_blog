@@ -6,7 +6,7 @@
 		<div class="c5dk-slider-button-container">
 			<form>
 				<input id="c5dk_file_upload" multiple class="c5dk-inputfile" accept="image/jpeg" type="file" name="files[]" />
-				<label id="c5dk-upload-photo-label" for="c5dk_file_upload"><?php echo t('Upload Files...'); ?> </label>
+				<label id="c5dk-upload-photo-label" for="c5dk_file_upload"><?= t('Upload Files...'); ?> </label>
 			</form>
 		</div>
 		<div class="c5dk-slider-button-container">

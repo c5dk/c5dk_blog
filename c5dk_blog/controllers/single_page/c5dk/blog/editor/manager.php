@@ -16,7 +16,7 @@ class Manager extends PageController
 {
 
 	public $rootList = null;
-	public $entries = array();
+	public $entries = [];
 
 	public function view()
 	{
@@ -65,7 +65,7 @@ class Manager extends PageController
 
 		$avID = $valueObject->avID;
 
-		$rs = $db->GetAll("SELECT * FROM atSelectedTopics WHERE avID = ?", array($avID));
+		$rs = $db->GetAll("SELECT * FROM atSelectedTopics WHERE avID = ?", [$avID]);
 		foreach ($rs as $row) {
 			$priorityList[] = $row["TopicNodeID"];
 		}

@@ -131,8 +131,8 @@
 			deleteID: null,
 
 			url: {
-				approve: '<?php echo URL::to('/c5dk/blog/ajax/editor/manager/save/approve'); ?>/',
-				unapprove: '<?php echo URL::to('/c5dk/blog/ajax/editor/manager/save/unapprove'); ?>/'
+				approve: '<?= URL::to('/c5dk/blog/ajax/editor/manager/save/approve'); ?>/',
+				unapprove: '<?= URL::to('/c5dk/blog/ajax/editor/manager/save/unapprove'); ?>/'
 			},
 
 			save: function(field, id, atID, el) {
@@ -167,7 +167,7 @@
 				// Save the datetime
 				$.ajax({
 					method: 'POST',
-					url: '<?php echo URL::to('/c5dk/blog/ajax/editor/manager/save'); ?>/' + field + '/' + id,
+					url: '<?= URL::to('/c5dk/blog/ajax/editor/manager/save'); ?>/' + field + '/' + id,
 					data: data,
 					dataType: 'json',
 					success: function(r) {

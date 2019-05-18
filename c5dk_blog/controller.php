@@ -353,12 +353,12 @@ class Controller extends Package
 		$al->register('javascript', 'c5dkBlog/main', 'js/c5dk_blog_post.js', [], 'c5dk_blog');
 		$al->register('javascript', 'c5dkBlog/modal', 'js/c5dk_modal.js', [], 'c5dk_blog');
 
-		// CKEditor
-		$al->register('javascript', 'c5dkckeditor', 'js/ckeditor/ckeditor.js', ['minify' => false, 'combine' => false], 'c5dk_blog');
-
 		// Register C5DK Blog CSS
 		$al->register('css', 'c5dk_blog_css', 'css/c5dk_blog.min.css', [], 'c5dk_blog');
-		//$al->register('css', 'c5dk_blog_css', 'css/c5dk_blog.css', array(), 'c5dk_blog');
+		//$al->register('css', 'c5dk_blog_css', 'css/c5dk_blog.css', [], 'c5dk_blog');
+
+		// CKEditor
+		$al->register('javascript', 'c5dkckeditor', 'js/ckeditor/ckeditor.js', ['minify' => false, 'combine' => false], 'c5dk_blog');
 
 		// Register jQuery cropper plugin
 		$al->register('javascript', 'cropper', 'js/cropper/cropper.min.js', [], 'c5dk_blog');

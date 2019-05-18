@@ -112,57 +112,6 @@ class C5dkUser extends User
 		}
 
 		return $this->rootList[$mode];
-
-		// // Add the roots the user is an editor or writer in
-		// $db = Database::get();
-		// $rs = $db->GetAll('SELECT * FROM C5dkNewsRootPermissions');
-		// foreach ($rs as $row) {
-
-		// 	// Get the writer groups for this root and check if the user is in that group and add it to the result if so.
-		// 	$rsWriters = $db->GetAll("SELECT * FROM C5dkNewsRootPermissionsWriters WHERE rootID = ?", array($row['rootID']));
-		// 	foreach ($rsWriters as $rowWriters) {
-		// 		if ($this->inGroup(Group::getByID($rowWriters["groupID"]))) {
-		// 			// Add the root information
-		// 			$C5dkRoot = C5dkRoot::getByID($rowWriters["rootID"]);
-		// 			if ($C5dkRoot instanceof C5dkRoot && $C5dkRoot->isRoot) {
-		// 				$this->rootList["all"][$row["rootID"]] = $C5dkRoot;
-		// 				$this->rootList["writers"][$row["rootID"]] = $C5dkRoot;
-		// 			} else {
-		// 				// TODO: Root do not exist anymore, so we should clean up the db
-		// 			}
-		// 		}
-		// 	}
-
-		// 	// Get the editor groups for this root and check if the user is in that group and add it to the result if so.
-		// 	$rsEditors = $db->GetAll("SELECT * FROM C5dkNewsRootPermissionsEditors WHERE rootID = ?", array($row['rootID']));
-		// 	foreach ($rsEditors as $rowEditors) {
-		// 		if ($this->inGroup(Group::getByID($rowEditors["groupID"]))) {
-		// 			// Add the root information
-		// 			$C5dkRoot = C5dkRoot::getByID($rowEditors["rootID"]);
-		// 			if ($C5dkRoot instanceof C5dkRoot && $C5dkRoot->isRoot) {
-		// 				$this->rootList["all"][$row["rootID"]] = $C5dkRoot;
-		// 				$this->rootList["editors"][$rowEditors["rootID"]] = $C5dkRoot;
-		// 			} else {
-		// 				// TODO: Root do not exist anymore, so we should clean up the db
-		// 			}
-		// 		}
-		// 	}
-		// }
-
-		// // Return the result depending on the mode
-		// switch ($mode) {
-		// 	case 'writers':
-		// 		return $this->rootList["writers"];
-		// 		break;
-		// 	case "editors":
-		// 		return $this->rootList["editors"];
-		// 		break;
-		// 	default:
-		// 		return $this->rootList;
-		// 		break;
-		// }
-
-		// return false;
 	}
 
 	public function getFilesFromUserSet()

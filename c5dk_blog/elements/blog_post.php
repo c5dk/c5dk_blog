@@ -4,9 +4,9 @@ $dh = Core::make('helper/form/date_time');
 ?>
 
 <div id="c5dk-blog-package" class="container main-wrap">
-	<?php print View::element('image_manager/main', ['C5dkUser' => new \C5dk\Blog\C5dkUser], 'c5dk_blog'); ?>
 
 	<form id="c5dk_blog_form" method="post" action="<?= \URL::to('/blog_post/save'); ?>">
+	<?php //print View::element('image_manager/main', ['C5dkUser' => new \C5dk\Blog\C5dkUser], 'c5dk_blog'); ?>
 
 		<!-- Show errors if any -->
 		<?php if (isset($error) && $error instanceof Error && $error->has()) : ?>

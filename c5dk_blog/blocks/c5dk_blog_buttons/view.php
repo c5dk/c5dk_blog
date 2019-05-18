@@ -99,7 +99,7 @@
 	<div id="c5dk_form_slidein" class="slider"></div>
 
 	<!-- If Blog post slide-in is active. Get the slide-in element -->
-	<?php //if ($C5dkConfig->blog_form_slidein) { print View::element('image_manager/main', ['C5dkUser' => new \C5dk\Blog\C5dkUser], 'c5dk_blog'); } ?>
+	<?php if ($C5dkConfig->blog_form_slidein) { print View::element('image_manager/main', ['C5dkUser' => new \C5dk\Blog\C5dkUser], 'c5dk_blog'); } ?>
 
 
 	<div style="clear: both;"></div>

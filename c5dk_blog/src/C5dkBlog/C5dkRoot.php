@@ -3,6 +3,7 @@ namespace C5dk\Blog;
 
 use Page;
 use Request;
+use CollectionAttributeKey;
 use C5dk\Blog\Entity\C5dkRoot as C5dkRootEntity;
 
 defined('C5_EXECUTE') or die("Access Denied.");
@@ -81,7 +82,7 @@ class C5dkRoot extends Page
 		return $editorGroupsArray;
 	}
 
-	public function getBlogPageTypeID()
+	public function getPageTypeID()
 	{
 		return $this->entity->getPageTypeID();
 	}
@@ -120,5 +121,15 @@ class C5dkRoot extends Page
 		$C5dkRoot->setAttribute('c5dk_blog_root', 1);
 
 		return $C5dkRoot;
+	}
+
+	public static function removeRoot($rootID)
+	{
+		$C5dkRoot = self::getByID($rootID);
+		$C5dkRoot->entity->delete();
+		$ak   = CollectionAttributeKey::getByHandle('c5dk_blog_root');
+		$C5dkRoot->clearAttribute($ak);
+
+		return true;
 	}
 }

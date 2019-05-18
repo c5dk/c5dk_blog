@@ -34,15 +34,15 @@ Core::make('help')->display(t(
 				<thead>
 					<tr>
 						<th></th>
-						<th><?= t("Title"); ?></th>
-						<th><?= t("Path"); ?></th>
+						<th><?= t("Blog Root Page"); ?></th>
+						<th><?= t("Path to Blog Root"); ?></th>
 						<th style="min-width:25px;"><?= t("Action"); ?></th>
 					</tr>
 				</thead>
 				<tbody>
 					<?php foreach ($rootList as $rootID => $C5dkRoot) { ?>
-					<tr>
-						<td><i class="fa fa-arrow-down" onclick="$(this).parent().parent().next().toggle();" aria-hidden="true"></i></td>
+					<tr data-root_id="<?= $rootID; ?>">
+						<td onclick="c5dk.blog.root.toogle(this);"><i class="fa <?= count($rootList) > 1 ? 'fa-chevron-down' : 'fa-chevron-up'; ?>" aria-hidden="true"></i></td>
 						<td class="noWrap">
 							<?= $C5dkRoot->getCollectionName(); ?>
 						</td>
@@ -55,7 +55,7 @@ Core::make('help')->display(t(
 							</a>
 						</td>
 					</tr>
-					<tr style="display:none;">
+					<tr id="root_<?= $rootID; ?>" <?= count($rootList) > 1 ? 'style="display:none;"' : ''; ?>>
 						<td colspan="4">
 							<div class="ccm-tab-content" id="ccm-tab-content-header" style="display: block;">
 								<div class="well navigation">
@@ -142,9 +142,22 @@ Core::make('help')->display(t(
 </form>
 
 <script type="text/javascript">
-	$(document).ready(function() {
-		$('.c5dk_blog_select2').removeClass('form-control').select2();
-	});
+	if (!c5dk) { var c5dk = {} };
+	if (!c5dk.blog) { c5dk.blog = {} };
+	if (!c5dk.blog.root) { c5dk.blog.root = {} };
+
+	c5dk.blog.root = {
+		init: function() {
+			$('.c5dk_blog_select2').removeClass('form-control').select2();
+		},
+		toogle: function(el) {
+			var rootID = $(el).closest('tr').data('root_id');
+			$(el).find('i').toggleClass('fa-chevron-down').toggleClass('fa-chevron-up');
+			$('#root_' + rootID).toggle();
+		}
+	}
+
+	$(document).ready(function() { c5dk.blog.root.init(); });
 </script>
 
 <style type="text/css">
@@ -173,13 +186,11 @@ Core::make('help')->display(t(
 	}
 </style>
 
-<?php
-} else { ?>
-<!-- No roots found -->
-<div class="ccm-pane-body">
-	<div class="ccm-ui alert alert-warning">
-		<?= t('No Blog Roots found.'); ?>
+<?php } else { ?>
+	<!-- No roots found -->
+	<div class="ccm-pane-body">
+		<div class="ccm-ui alert alert-warning">
+			<?= t('No Blog Roots found.'); ?>
+		</div>
 	</div>
-</div>
-<?php
-}
+<?php }

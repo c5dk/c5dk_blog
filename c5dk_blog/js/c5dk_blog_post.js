@@ -202,7 +202,7 @@ c5dk.blog.post = {
 
 			$("#c5dk_filemanager_slidein").show();
 
-			c5dk.blog.post.image.managerMode = (mode == "thumbnail")? mode : "editor";
+			c5dk.blog.post.image.managerMode = (mode == "editor")? mode : "thumbnail";
 			$('#file').val('').show();
 			c5dk.blog.post.image.filemanager = $('#c5dk_filemanager_slidein').slideReveal({
 				width: ($(window).width() < 700)? '100%' : '700px',

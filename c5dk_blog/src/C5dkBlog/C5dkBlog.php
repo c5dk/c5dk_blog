@@ -80,7 +80,7 @@ class C5dkBlog extends Page
 		switch ($mode) {
 			case C5DK_BLOG_MODE_CREATE:
 				$this->root = C5dkRoot::getByID($this->rootID);
-				$pt       = PageType::getByID($this->root->getBlogPageTypeID());
+				$pt       = PageType::getByID($this->root->getPageTypeID());
 				$blog     = $this->root->add($pt, [
 					'cName' => $this->title,
 					'cHandle' => $this->getUrlSlug($this->title),

@@ -15,6 +15,7 @@ use Concrete\Core\Tree\Type\Topic as TopicTree;
 use Concrete\Core\Page\Controller\DashboardPageController;
 
 use C5dk\Blog\C5dkUser as C5dkUser;
+use C5dk\Blog\C5dkRoot as C5dkRoot;
 use C5dk\Blog\C5dkRootList as C5dkRootList;
 use C5dk\Blog\Entity\C5dkRoot as C5dkRootEntity;
 
@@ -62,9 +63,7 @@ class BlogRoots extends DashboardPageController
 
 	public function delete($rootID)
 	{
-		$root = Page::getByID($rootID);
-		$ak   = CollectionAttributeKey::getByHandle('c5dk_blog_root');
-		$root->clearAttribute($ak);
+		C5dkRoot::removeRoot($rootID);
 		$this->set('success', t("Blog Root has been removed"));
 		$this->view();
 	}

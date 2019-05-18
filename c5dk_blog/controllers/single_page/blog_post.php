@@ -85,7 +85,7 @@ class BlogPost extends PageController
 		$defaultThumbnailID = $C5dkBlogPost->C5dkConfig->blog_default_thumbnail_id;
 		$defThumbnail       = $defaultThumbnailID ? File::getByID($defaultThumbnailID) : NULL;
 		$Cropper            = new ThumbnailCropper($C5dkBlogPost->C5dkBlog->thumbnail, $defThumbnail);
-		$Cropper->setOnSelectCallback("c5dk.blog.post.image.showManagerThumbnail");
+		$Cropper->setOnSelectCallback("c5dk.blog.post.image.showManager('thumbnail')");
 		$Cropper->setOnSaveCallback('c5dk.blog.post.blog.save');
 		$this->set('ThumbnailCropper', $Cropper);
 	}

@@ -2,7 +2,9 @@
 <?php
 $dh = Core::make('helper/form/date_time');
 ?>
+
 <div id="c5dk-blog-package" class="container main-wrap">
+	<?php print View::element('image_manager/main', ['C5dkUser' => new \C5dk\Blog\C5dkUser], 'c5dk_blog'); ?>
 
 	<form id="c5dk_blog_form" method="post" action="<?= \URL::to('/blog_post/save'); ?>">
 
@@ -260,7 +262,6 @@ $dh = Core::make('helper/form/date_time');
 		</div>
 	</div>
 
-
 </div> <!-- c5dk-blog-package wrapper -->
 
 <script type="text/javascript">
@@ -334,4 +335,4 @@ $dh = Core::make('helper/form/date_time');
 		display: none;
 	}
 
-	</sty l e >
+	</style>

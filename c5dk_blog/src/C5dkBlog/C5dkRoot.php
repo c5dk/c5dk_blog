@@ -2,8 +2,7 @@
 namespace C5dk\Blog;
 
 use Page;
-use Database;
-use CollectionAttributeKey;
+use Request;
 use C5dk\Blog\Entity\C5dkRoot as C5dkRootEntity;
 
 defined('C5_EXECUTE') or die("Access Denied.");
@@ -21,6 +20,12 @@ class C5dkRoot extends Page
 	public $topicAttributeHandle = null;
 	public $publishTimeEnabled = 0;
 	public $unpublishTimeEnabled = 0;
+
+	public function __construct()
+	{
+		$this->entity = new C5dkRootEntity;
+		parent::__construct();
+	}
 
 	public static function getByID($rootID, $version = 'RECENT', $class = 'C5dk\Blog\C5dkRoot')
 	{
@@ -94,6 +99,16 @@ class C5dkRoot extends Page
 	public function getTopicAttributeHandle()
 	{
 		return $this->entity->getTopicAttributeHandle();
+	}
+
+	public function getPublishTimeEnabled()
+	{
+		return $this->entity->getPublishTimeEnabled();
+	}
+
+	public function getUnpublishTimeEnabled()
+	{
+		return $this->entity->getUnpublishTimeEnabled();
 	}
 
 	public static function addRoot($rootID)

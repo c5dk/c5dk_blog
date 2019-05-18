@@ -92,8 +92,8 @@ class BlogPost extends Controller
 			$this->thumbnailsEnabled = $C5dkRoot->getThumbnails();
 
 			// Should Publish/Unpublish Time be enabled
-			$this->publishTimeEnabled = $C5dkRoot->entity->getPublishTimeEnabled() ? 1 : 0;
-			$this->unpublishTimeEnabled = $C5dkRoot->entity->getUnpublishTimeEnabled() ? 1 : 0;
+			$this->publishTimeEnabled = $C5dkRoot->getPublishTimeEnabled() ? 1 : 0;
+			$this->unpublishTimeEnabled = $C5dkRoot->getUnpublishTimeEnabled() ? 1 : 0;
 
 			return $this;
 		}

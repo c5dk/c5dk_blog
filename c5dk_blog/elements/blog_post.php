@@ -6,7 +6,6 @@ $dh = Core::make('helper/form/date_time');
 <div id="c5dk-blog-package" class="container main-wrap">
 
 	<form id="c5dk_blog_form" method="post" action="<?= \URL::to('/blog_post/save'); ?>">
-	<?php //print View::element('image_manager/main', ['C5dkUser' => new \C5dk\Blog\C5dkUser], 'c5dk_blog'); ?>
 
 		<!-- Show errors if any -->
 		<?php if (isset($error) && $error instanceof Error && $error->has()) : ?>
@@ -46,17 +45,17 @@ $dh = Core::make('helper/form/date_time');
 			<div class="c5dk_blog_section">
 
 				<?php if ($BlogPost->publishTimeEnabled) { ?>
-                    <div>
-                        <!-- Post Public Date Time -->
-                        <?= $form->label('publishTime', '<h4>' . t('Public Date Time') . '</h4>'); ?>
-                        <?= $dh->datetime('publishTime', new datetime($C5dkBlog->publishTime)); ?>
-                    </div>
-                <?php } ?>
+					<div>
+						<!-- Post Publish Date Time -->
+						<?= $form->label('publishTime', '<h4>' . t('Publish Date Time') . '</h4>'); ?>
+						<?= $dh->datetime('publishTime', new datetime($C5dkBlog->publishTime)); ?>
+					</div>
+				<?php } ?>
 
 				<?php if ($BlogPost->unpublishTimeEnabled) { ?>
 					<div>
-						<!-- Post Offline Date Time -->
-						<?= $form->label('unpublishTime', '<h4>' . t('Offline Date Time') . '</h4>'); ?>
+						<!-- Post Unpublish Date Time -->
+						<?= $form->label('unpublishTime', '<h4>' . t('Unpublish Date Time') . '</h4>'); ?>
 						<?= $dh->datetime('unpublishTime', new datetime($C5dkBlog->unpublishTime)); ?>
 					</div>
 				<?php } ?>

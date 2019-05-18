@@ -150,13 +150,16 @@ class C5dkBlog extends Page
 
 		// Set Permissions
 		foreach ($this->root->getEditorGroupsArray() as $groupID) {
-			$this->grantPagePermissionByGroup('view_page', $this, $groupID);
+			$this->grantPagePermissionByGroup('view_page', $C5dkBlog, $groupID);
 		}
-		$this->grantPagePermissionByUser('view_page', $this, $u->getUserInfoObject()->getUserID());
+		$this->grantPagePermissionByUser('view_page', $C5dkBlog, $u->getUserInfoObject()->getUserID());
 
 		// Set the Approve page attribute if the root don't require approval
 		if (!$C5dkBlog->root->needsApproval) {
 			$C5dkBlog->setAttribute('c5dk_blog_approved', true);
+		} else {
+			// If the Blog needs approval we need to remove the guest access
+			$this->denyPagePermissionByGroup("view_page", $C5dkBlog, GUEST_GROUP_ID);
 		}
 
 		$C5dkBlog->refreshCache();

@@ -118,15 +118,7 @@
 			$('.c5dk_blog_select2')
 				.removeClass('form-control')
 				.select2()
-				.on('change', c5dk.blog.editor.manager.entry.showSave //function(event) {
-					//c5dk.blog.editor.manager.entry.showSave($(this).closest('tr').data('id'), "priority");
-					//}
-				);
-
-			// Init Datetimepicker
-			// $('#c5dk-blog-package .datetimepicker').datetimepicker({
-			//     step: 15
-			// });
+				.on('change', c5dk.blog.editor.manager.entry.showSave);
 
 			// onChange event for the date and time fields to show the save button
 			$(".datetimepicker").on('change', function(event) {

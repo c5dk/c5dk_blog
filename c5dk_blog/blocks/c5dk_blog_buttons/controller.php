@@ -56,6 +56,7 @@ class Controller extends BlockController
 			$this->requireAsset('javascript', 'slide-in-panel/main');
 			$this->requireAsset('javascript', 'character-counter/main');
 			$this->requireAsset('c5dkFileupload/all');
+			$this->requireAsset('xdan/datetimepicker');
 		}
 	}
 }

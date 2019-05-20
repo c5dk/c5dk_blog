@@ -2,6 +2,7 @@
 namespace C5dk\Blog;
 
 use Core;
+use Request;
 use User;
 use Page;
 use View;
@@ -14,6 +15,7 @@ use File;
 use FileList;
 use FileImporter;
 use FileSet;
+use Concrete\Core\Support\Facade\Application;
 use Illuminate\Filesystem\Filesystem;
 use Concrete\Core\Tree\Node\Type\Topic as TopicTreeNode;
 use Concrete\Core\Tree\Node\Type\FileFolder as FileFolder;
@@ -228,50 +230,53 @@ class C5dkAjax extends Controller
 		$this->redirect($link);
 	}
 
-	public function save($blogID)
-	{
-			// Get helper objects
-			$jh = $this->app->make('helper/json');
+	// public function save($blogID)
+	// {
+	// 		$app = Application::getFacadeApplication();
+	// 		// Get helper objects
+	// 		$jh = $app->make('helper/json');
 
-			// Set C5dk Objects
-			$C5dkUser = new C5dkUser;
+	// 		// Set C5dk Objects
+	// 		$C5dkUser = new C5dkUser;
 
-			// Get or create the C5dkBlog Object
-			$C5dkBlog = ($this->post('mode') == C5DK_BLOG_MODE_CREATE) ? new C5dkBlog : C5dkBlog::getByID($blogID);
+	// 		// Get or create the C5dkBlog Object
+	// 		$C5dkBlog = ($this->post('mode') == C5DK_BLOG_MODE_CREATE) ? new C5dkBlog : C5dkBlog::getByID($blogID);
 
-			// Setup blog and save it
-			$C5dkBlog->setPropertiesFromArray([
-				'rootID' => $this->post('rootID'),
-				'userID' => $C5dkUser->getUserID(),
-				'title' => $this->post('title'),
-				'description' => $this->post('description'),
-				'content' => $this->post('c5dk_blog_content'),
-				'topicAttributeHandle' => $this->post('topicAttributeHandle'),
-				'publishTime' => Core::make('helper/form/date_time')->translate('publishTime'),
-				'unpublishTime' => Core::make('helper/form/date_time')->translate('unpublishTime')
-			]);
-			$C5dkBlog = $C5dkBlog->save($this->post('mode'));
-			$C5dkBlog = C5dkBlog::getByID($C5dkBlog->getCollectionID());
+	// 		$data = [
+	// 			'rootID' => $this->post('rootID'),
+	// 			'userID' => $C5dkUser->getUserID(),
+	// 			'title' => $this->post('title'),
+	// 			'description' => $this->post('description'),
+	// 			'content' => $this->post('c5dk_blog_content'),
+	// 			'topicAttributeHandle' => $this->post('topicAttributeHandle'),
+	// 			'publishTime' => Core::make('helper/form/date_time')->translate('publishTime'),
+	// 			'unpublishTime' => Core::make('helper/form/date_time')->translate('unpublishTime')
+	// 		];
+	// 		// Setup blog and save it
+	// 		$C5dkBlog->setPropertiesFromArray($data);
+	// 		$C5dkBlog = $C5dkBlog->save($this->post('mode'));
+	// 		$C5dkBlog = C5dkBlog::getByID($C5dkBlog->getCollectionID());
 
-			// Can first save the thumbnail now, because we needed to save the page first.
-			$this->saveThumbnail($C5dkBlog, $C5dkUser, $this->post('thumbnail'));
+	// 		// Can first save the thumbnail now, because we needed to save the page first.
+	// 		$this->saveThumbnail($C5dkBlog, $C5dkUser, $this->post('thumbnail'));
 
-			header('Content-type: application/json');
-			echo $jh->encode([
-				'status' => TRUE,
-				'redirectLink' => $C5dkBlog->getCollectionPath()
-			]);
+	// 		header('Content-type: application/json');
+	// 		echo $jh->encode([
+	// 			'status' => TRUE,
+	// 			'redirectLink' => $C5dkBlog->getCollectionPath()
+	// 		]);
 
-			exit;
-	}
+	// 		exit;
+	// }
 
 	public function saveThumbnail($C5dkBlog, $C5dkUser, $thumbnail)
 	{
+			$app = Application::getFacadeApplication();
 			// Init objects
 			$C5dkConfig = new C5dkConfig;
 
 			// Init Helpers
-			$fh = $this->app->make('helper/file');
+			$fh = $app->make('helper/file');
 
 			// Init variables
 			$uID          = $C5dkUser->getUserID();
@@ -291,7 +296,7 @@ class C5dkAjax extends Controller
 		}
 
 			// So now we only need to see if we have a new thumbnail or we keep the old one
-		if (strlen($thumbnail['croppedImage'])) {
+		if ($thumbnail['croppedImage']) {
 			$fs = new \Illuminate\Filesystem\Filesystem();
 
 			// Get on with saving the new thumbnail
@@ -401,23 +406,23 @@ class C5dkAjax extends Controller
 				$C5dkBlog = C5dkBlog::getByID($blogID);
 
 				switch ($field) {
-					case "priority":
-						// $C5dkBlog->setPriority($value);
-						$C5dkBlog->setPriority($this->post("priorities"));
-						$state = 1;
-						break;
+					// case "priority":
+					// 	// $C5dkBlog->setPriority($value);
+					// 	$C5dkBlog->setPriority($this->post("priorities"));
+					// 	$state = 1;
+					// 	break;
 
-					case 'publishTime':
-						$datetime = Core::make('helper/form/date_time')->translate('publishTime_' . $C5dkBlog->getCollectionID());
-						$C5dkBlog->setAttribute('c5dk_blog_publish_time', $datetime);
-						$state = 1;
-						break;
+					// case 'publishTime':
+					// 	$datetime = Core::make('helper/form/date_time')->translate('publishTime_' . $C5dkBlog->getCollectionID());
+					// 	$C5dkBlog->setAttribute('c5dk_blog_publish_time', $datetime);
+					// 	$state = 1;
+					// 	break;
 
-					case 'unpublishTime':
-						$datetime = Core::make('helper/form/date_time')->translate('unpublishTime_' . $C5dkBlog->getCollectionID());
-						$C5dkBlog->setAttribute('c5dk_blog_unpublish_time', $datetime);
-						$state = 1;
-						break;
+					// case 'unpublishTime':
+					// 	$datetime = Core::make('helper/form/date_time')->translate('unpublishTime_' . $C5dkBlog->getCollectionID());
+					// 	$C5dkBlog->setAttribute('c5dk_blog_unpublish_time', $datetime);
+					// 	$state = 1;
+					// 	break;
 
 					case 'approve':
 						$C5dkBlog->setAttribute('c5dk_blog_approved', true);
@@ -427,6 +432,13 @@ class C5dkAjax extends Controller
 					case 'unapprove':
 						$C5dkBlog->setAttribute('c5dk_blog_approved', false);
 						$state = 0;
+						break;
+
+					case 'all':
+						$C5dkBlog->setPriority($this->post("priorities"));
+						$C5dkBlog->setAttribute('c5dk_blog_publish_time', new \datetime($this->post('publishTime')));
+						$C5dkBlog->setAttribute('c5dk_blog_unpublish_time', new \datetime($this->post('unpublishTime')));
+						$state = 1;
 						break;
 				}
 

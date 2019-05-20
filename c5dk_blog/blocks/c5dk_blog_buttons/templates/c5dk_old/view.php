@@ -1,8 +1,10 @@
 <?php defined('C5_EXECUTE') or die("Access Denied."); ?>
+
 <?php if ($C5dkUser->isBlogger && !$C5dkBlog->isEditMode()) { ?>
 	<div id="c5dk-blog-package">
 		<div class="c5dk_blog_section">
 			<div class="c5dk_blog_btn_title"><h4><?= t('Blog Editor Control'); ?></h4></div>
+
 			<!-- Blogging Buttons -->
 			<div class="c5dk_blog_buttons">
 				<div class="c5dk-blog-btn-wrap">

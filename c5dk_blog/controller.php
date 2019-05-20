@@ -25,7 +25,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
 class Controller extends Package
 {
 	protected $appVersionRequired      = '8.2';
-	protected $pkgVersion              = '8.5.b10';
+	protected $pkgVersion              = '8.5.b11';
 	protected $pkgHandle               = 'c5dk_blog';
 	protected $pkgAutoloaderRegistries = [
 		'src/C5dkBlog' => '\C5dk\Blog',
@@ -52,7 +52,6 @@ class Controller extends Package
 		$this->registerEvents();
 		$this->registerRoutes();
 		$this->registerAssets();
-
 	}
 
 	private function registerEvents()
@@ -297,20 +296,21 @@ class Controller extends Package
 		foreach ($pl->get() as $page) {
 			$publishTime = $page->getAttribute('c5dk_blog_publish_time');
 			if ($publishTime) {
-				$publishTime = $page->getAttribute('c5dk_blog_publish_time')->getTimestamp();
+				$publishTime = $publishTime->getTimestamp();
 			} else {
 				// If publish time isn't used we subtract 1 day from the current date
 				$publishTime = (new \datetime)->sub(new \DateInterval('P1D'))->getTimestamp();
 			}
 			$unpublishTime = $page->getAttribute('c5dk_blog_unpublish_time');
 			if ($unpublishTime) {
-				$unpublishTime = $page->getAttribute('c5dk_blog_unpublish_time')->getTimestamp();
+				$unpublishTime = $unpublishTime->getTimestamp();
 			} else {
 				// If unpublish time isn't used we add 1 day to the current date
 				$unpublishTime = (new \datetime)->add(new \DateInterval('P1D'))->getTimestamp();
 			}
 			$time = time();
 			$access = $this->checkGroupViewPermission('view_page', $page, GUEST_GROUP_ID);
+			// Should we grant permission because of the time
 			if ($publishTime < $time && $time < $unpublishTime && !$access) {
 				$C5dkBlog = C5dkBlog::getByID($page->getCollectionID());
 				$C5dkBlog->grantPagePermissionByGroup('view_page', $page, GUEST_GROUP_ID);
@@ -353,6 +353,9 @@ class Controller extends Package
 		$al->register('javascript', 'c5dkBlog/main', 'js/c5dk_blog_post.js', [], 'c5dk_blog');
 		$al->register('javascript', 'c5dkBlog/modal', 'js/c5dk_modal.js', [], 'c5dk_blog');
 
+		// Register Thumbnail Cropper Service
+		$al->register('javascript', 'thumbnail_cropper/main', 'js/service/thumbnail_cropper/main.js', [], 'c5dk_blog');
+
 		// Register C5DK Blog CSS
 		$al->register('css', 'c5dk_blog_css', 'css/c5dk_blog.min.css', [], 'c5dk_blog');
 		//$al->register('css', 'c5dk_blog_css', 'css/c5dk_blog.css', [], 'c5dk_blog');
@@ -363,9 +366,6 @@ class Controller extends Package
 		// Register jQuery cropper plugin
 		$al->register('javascript', 'cropper', 'js/cropper/cropper.min.js', [], 'c5dk_blog');
 
-		// Register Thumbnail Cropper Service
-		$al->register('javascript', 'thumbnail_cropper/main', 'js/service/thumbnail_cropper/main.js', [], 'c5dk_blog');
-
 		// Register jQuery Validation plugin
 		$al->register('javascript', 'validation', 'js/validation/jquery.validate.js', [], 'c5dk_blog');
 
@@ -374,6 +374,14 @@ class Controller extends Package
 
 		// Register JQuery Character Counter
 		$al->register('javascript', 'character-counter/main', 'js/Flexible-Character-Counter/jquery.character-counter.min.js', [], 'c5dk_blog');
+
+		// Register jQuery datetimepicker (MIT License) plugin
+		$al->register('javascript', 'datetimepicker/plugin', 'js/datetimepicker/jquery.datetimepicker.full.min.js', [], 'c5dk_blog');
+		$al->register('css', 'datetimepicker/css', 'css/jquery.datetimepicker/jquery.datetimepicker.min.css', [], 'c5dk_blog');
+		$al->registerGroup('xdan/datetimepicker', [
+			['css', 'datetimepicker/css'],
+			['javascript', 'datetimepicker/plugin']
+		]);
 
 		// Register extra js files from fileupload
 		$al->register('javascript', 'c5dkFileupload/loadImage', 'js/fileUpload/load-image.all.min.js', [], 'c5dk_blog');

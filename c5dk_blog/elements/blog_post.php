@@ -5,7 +5,7 @@ $dh = Core::make('helper/form/date_time');
 
 <div id="c5dk-blog-package" class="container main-wrap">
 
-	<form id="c5dk_blog_form" method="post" action="<?= \URL::to('/blog_post/save'); ?>">
+	<form id="c5dk_blog_form" method="post" action="<?= \URL::to('/blog_post/save', $C5dkBlog->blogID ? $C5dkBlog->blogID : 0); ?>">
 
 		<!-- Show errors if any -->
 		<?php if (isset($error) && $error instanceof Error && $error->has()) : ?>
@@ -27,7 +27,7 @@ $dh = Core::make('helper/form/date_time');
 		<?= $form->hidden('mode', $BlogPost->mode); ?>
 
 		<!-- Blog ID -->
-		<?= $form->hidden('blogID', $C5dkBlog->blogID); ?>
+		<?= $form->hidden('blogID', $C5dkBlog->blogID ? $C5dkBlog->blogID : 0); ?>
 
 		<!-- Blog root -->
 		<?php if (count($BlogPost->rootList) < 2 || $BlogPost->mode == C5DK_BLOG_MODE_EDIT) { ?>
@@ -44,11 +44,23 @@ $dh = Core::make('helper/form/date_time');
 		<?php if ($BlogPost->publishTimeEnabled || $BlogPost->unpublishTimeEnabled) { ?>
 			<div class="c5dk_blog_section">
 
+
+
+				<?php if ($BlogPost->publishTimeEnabled) { ?>
+					<div class="c5dk-blog-datetime-columns">
+					</div>
+				<?php } ?>
+
+
+				<input id="time" name="time" class="" type="text" value="<?= $C5dkBlog->publishTime; ?>" />
+
+
 				<?php if ($BlogPost->publishTimeEnabled) { ?>
 					<div>
 						<!-- Post Publish Date Time -->
 						<?= $form->label('publishTime', '<h4>' . t('Publish Date Time') . '</h4>'); ?>
-						<?= $dh->datetime('publishTime', new datetime($C5dkBlog->publishTime)); ?>
+						<input id="publishTime" name="publishTime" class="c5dk_datetimepicker" type="text" value="<?= $C5dkBlog->publishTime; ?>" />
+						<?php //= $dh->datetime('publishTime', new datetime($C5dkBlog->publishTime)); ?>
 					</div>
 				<?php } ?>
 
@@ -56,7 +68,8 @@ $dh = Core::make('helper/form/date_time');
 					<div>
 						<!-- Post Unpublish Date Time -->
 						<?= $form->label('unpublishTime', '<h4>' . t('Unpublish Date Time') . '</h4>'); ?>
-						<?= $dh->datetime('unpublishTime', new datetime($C5dkBlog->unpublishTime)); ?>
+						<input id="unpublishTime" name="unpublishTime" class="c5dk_datetimepicker" type="text" value="<?= $C5dkBlog->unpublishTime; ?>" />
+						<?php //= $dh->datetime('unpublishTime', new datetime($C5dkBlog->unpublishTime)); ?>
 					</div>
 				<?php } ?>
 			</div>
@@ -302,6 +315,12 @@ $dh = Core::make('helper/form/date_time');
 	}
 
 	$(document).ready(function() {
+		// Init xdan/datetimepicker
+		$(".c5dk_datetimepicker").datetimepicker({
+			format: "Y-m-d H:i",
+			step: 15
+		});
+
 		c5dk.blog.post.init();
 	});
 </script>

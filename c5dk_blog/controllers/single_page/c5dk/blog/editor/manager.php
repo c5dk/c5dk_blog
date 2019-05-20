@@ -14,10 +14,6 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 class Manager extends PageController
 {
-
-	public $rootList = null;
-	public $entries = [];
-
 	public function view()
 	{
 		// Set C5DK Objects
@@ -29,24 +25,25 @@ class Manager extends PageController
 		}
 
 		// Get Editors Root List
-		$this->rootList = $C5dkUser->getRootList("editors");
+		$rootList = $C5dkUser->getRootList("editors");
 
 		// Get all the Blog entries from every root
-		foreach ($this->rootList as $rootID => $C5dkRoot) {
+		foreach ($rootList as $rootID => $C5dkRoot) {
 			$pl = new PageList;
 			$pl->ignorePermissions();
 			$pl->filterByParentID($rootID);
 			$pl->filterByAttribute('c5dk_blog_author_id', 0, '>');
 			foreach (array_reverse($pl->get()) as $page) {
-				$this->entries[$rootID][$page->getCollectionID()] = C5dkBlog::getByID($page->getCollectionID());
+				$entries[$rootID][$page->getCollectionID()] = C5dkBlog::getByID($page->getCollectionID());
 			}
 		}
 
 		// Require Assets
 		$this->requireAsset('css', 'c5dk_blog_css');
+		$this->requireAsset('javascript', 'c5dkBlog/modal');
 		$this->requireAsset('jquery/ui');
 		$this->requireAsset('select2');
-		// $this->requireAsset('datetimepicker');
+		$this->requireAsset('xdan/datetimepicker');
 
 		// Set Core helper objects
 		$this->set('form', Core::make('helper/form'));
@@ -54,8 +51,8 @@ class Manager extends PageController
 		$this->set('jh', Core::make('helper/json'));
 
 		// Set our variables/objects
-		$this->set('rootList', $this->rootList);
-		$this->set('entries', $this->entries);
+		$this->set('rootList', $rootList);
+		$this->set('entries', $entries);
 	}
 
 	public function convertValueObject($valueObject)
@@ -70,5 +67,18 @@ class Manager extends PageController
 			$priorityList[] = $row["TopicNodeID"];
 		}
 		return $priorityList;
+	}
+
+	public function getPrioritiesJSON($priorities) {
+		$jh = Core::make('helper/json');
+		return h($jh->encode($priorities), ENT_QUOTES, 'UTF-8');
+		// $first = 0;
+		// $str = '{';
+		// foreach ($priorities as $text) {
+		// 	if ($first++) { $str .= ', '; }
+		// 	$str .= $text;
+		// }
+		// $str .= '}';
+		// return $str;
 	}
 }

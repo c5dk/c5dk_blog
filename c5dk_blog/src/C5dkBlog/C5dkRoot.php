@@ -33,7 +33,6 @@ class C5dkRoot extends Page
 		// Get the C5dkRoot object and add the permissions fields
 		$C5dkRoot = parent::getByID($rootID, $version, $class);
 		$C5dkRoot->entity = C5dkRootEntity::getByRootID($rootID);
-		// \Log::addEntry(is_null($C5dkRoot->entity)?'yes':'no');
 		if (is_object($C5dkRoot)) {
 			$C5dkRoot->rootID = $rootID;
 			$C5dkRoot->writerGroups = $C5dkRoot->entity->getWriterGroups();
@@ -82,7 +81,7 @@ class C5dkRoot extends Page
 		return $editorGroupsArray;
 	}
 
-	public function getPageTypeID()
+	public function getBlogPageTypeID()
 	{
 		return $this->entity->getPageTypeID();
 	}

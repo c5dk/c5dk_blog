@@ -78,7 +78,7 @@ Core::make('help')->display(t(
 										</div>
 										<div class="col-xs-4">
 											<?= t("Page Type"); ?>
-											<?= $form->select("root[" . $rootID . "][pageTypeID]", $pageTypeList, $C5dkRoot->getPageTypeID(), ['style' => 'width:360px; width:100%;']); ?>
+											<?= $form->select("root[" . $rootID . "][pageTypeID]", $pageTypeList, $C5dkRoot->getBlogPageTypeID(), ['style' => 'width:360px; width:100%;']); ?>
 											<div style="margin: 2px 0 15px 0; min-height: 65px;">
 												<small><?= t('Please choose a default page type for the blog pages on this blog root.'); ?></small>
 											</div>

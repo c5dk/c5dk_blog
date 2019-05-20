@@ -29,22 +29,33 @@ c5dk.blog.post = {
 				$('#title').removeAttr('disabled');
 				$('input[type="submit"]').addClass('c5dk_blogpage_ButtonDisabled').removeClass('c5dk_blogpage_ButtonGreen').attr('disabled','disabled');
 
-				// $('#c5dk_blog_content').val(CKEDITOR.instances.c5dk_blog_content.getData());
-				c5dk.blog.post.blog.formData = new FormData(document.forms["c5dk_blog_form"]);
-				c5dk.blog.post.blog.formData.set('c5dk_blog_content', CKEDITOR.instances.c5dk_blog_content.getData());
+				// // $('#c5dk_blog_content').val(CKEDITOR.instances.c5dk_blog_content.getData());
+				// var formData = new FormData(document.forms["c5dk_blog_form"]);
+				// formData.set('c5dk_blog_content', CKEDITOR.instances.c5dk_blog_content.getData());
+				// $('#c5dk_blog_content').show().val(CKEDITOR.instances.c5dk_blog_content.getData());
 
-				if (c5dk.blog.post.thumbnail && c5dk.blog.post.thumbnail.crop_img) {
-					c5dk.blog.post.thumbnail.crop_img.cropper('getCroppedCanvas', { fillColor: c5dk.blog.service.data.thumbnailCropper.fillColor}).toBlob(function (blob) {
+				// if (c5dk.blog.post.thumbnail && c5dk.blog.post.thumbnail.crop_img) {
+				// 	c5dk.blog.post.thumbnail.crop_img.cropper(
+				// 		'getCroppedCanvas',
+				// 		{
+				// 			fillColor: c5dk.blog.service.data.thumbnailCropper.fillColor
+				// 		}
+				// 	).toBlob(function (blob) {
 
-						c5dk.blog.post.blog.formData.append('croppedImage', blob);
-						c5dk.blog.post.blog.save();
+				// 		formData.append('croppedImage', blob);
+				// 		c5dk.blog.post.blog.formData = formData;
+				// 		c5dk.blog.post.blog.save(formData);
 
-					}, "image/jpeg", 80);
-				} else {
-					c5dk.blog.post.blog.save();
-				}
+				// 	},
+				// 	"image/jpeg", 80
+				// 	);
+				// } else {
+				// 	c5dk.blog.post.blog.formData = formData;
+				// 	c5dk.blog.post.blog.save(formData);
+				// }
+				// c5dk.blog.post.blog.save();
 
-				return false;
+				return true;
 			}
 		});
 
@@ -128,25 +139,46 @@ c5dk.blog.post = {
 		formData: null,
 
 		save: function () {
+			// var formData = new FormData();
+			// formData.append('rootID', $('#rootID').val());
 
-			var blogID = $('#blogID').val()? $('#blogID').val() : 0;
+			var formData = new FormData(document.forms["c5dk_blog_form"]);
+			// formData.set('c5dk_blog_content', CKEDITOR.instances.c5dk_blog_content.getData());
+			// $('#c5dk_blog_content').show().val(CKEDITOR.instances.c5dk_blog_content.getData());
 
-			c5dk.blog.modal.waiting("<?= t('Saving your blog'); ?>");
+			// if (c5dk.blog.post.thumbnail && c5dk.blog.post.thumbnail.crop_img) {
 
-			$.ajax(c5dk.blog.data.post.url.save + '/' + blogID, {
-				method: "POST",
-				data: c5dk.blog.post.blog.formData,
-				processData: false,
-				contentType: false,
-				success: function (result) {
-					if (result.status) {
-						window.location = c5dk.blog.data.post.url.root + result.redirectLink;
-					}
-				},
-				error: function () {
-					console.log('Upload error');
-				}
-			});
+			// 	c5dk.blog.post.thumbnail.crop_img.cropper('getCroppedCanvas', {
+			// 		fillColor: c5dk.blog.service.data.thumbnailCropper.fillColor
+			// 	}).toBlob(function (blob) {
+			// 		// formData.set('croppedImage', blob);
+			// 	}, "image/jpeg", 80);
+			// }
+			console.log([...formData]);
+return true;
+// 			// var formData = new FormData();
+// 			// formData.set('blogID', $('#blogID').val() ? $('#blogID').val() : 0);
+// 			var blogID = $('#blogID').val()? $('#blogID').val() : 0;
+
+			// c5dk.blog.modal.waiting("<?= t('Saving your blog'); ?>");
+			// $.ajax({
+			// 	type: "POST",
+			// 	url: c5dk.blog.data.post.url.save + '/' + blogID,
+			// 	data: formData,
+			// 	processData: false,
+			// 	// contentType: false,
+			// 	// contentType: 'multipart/form-data',
+			// 	dataType: 'json',
+			// 	success: function (result) {
+			// 		if (result.status) {
+			// 			window.location = c5dk.blog.data.post.url.root + result.redirectLink;
+			// 		}
+			// 		c5dk.blog.modal.exitModal();
+			// 	},
+			// 	error: function () {
+			// 		console.log('Upload error');
+			// 	}
+			// });
 		},
 
 		cancel: function() {

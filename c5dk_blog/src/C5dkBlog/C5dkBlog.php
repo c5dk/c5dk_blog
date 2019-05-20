@@ -25,6 +25,7 @@ use Concrete\Core\Permission\Access\Entity\GroupEntity as GroupPermissionAccessE
 use Concrete\Core\Permission\Access\Entity\UserEntity as UserPermissionAccessEntity;
 
 use C5dk\Blog\C5dkRoot;
+use Concrete\Core\Http\Request;
 
 defined('C5_EXECUTE') or die('Access Denied.');
 
@@ -66,9 +67,9 @@ class C5dkBlog extends Page
 		$blog->topics        = $blog->getTopics();
 		$blog->priority      = $blog->getAttribute('c5dk_blog_priority');
 		$publishTime         = $blog->getAttribute('c5dk_blog_publish_time');
-		$blog->publishTime   = $publishTime ? $publishTime->format('Y-m-d H:i:s') : (new \DateTime)->format('Y-m-d H:i:s');
+		$blog->publishTime   = $publishTime ? $publishTime->format('Y-m-d H:i') : (new \DateTime)->format('Y-m-d H:i');
 		$unpublishTime       = $blog->getAttribute('c5dk_blog_unpublish_time');
-		$blog->unpublishTime = $unpublishTime ? $unpublishTime->format('Y-m-d H:i:s') : (new \DateTime)->format('Y-m-d H:i:s');
+		$blog->unpublishTime = $unpublishTime ? $unpublishTime->format('Y-m-d H:i') : (new \DateTime)->format('Y-m-d H:i');
 		$blog->approved      = $blog->getAttribute('c5dk_blog_approved');
 
 		return $blog;
@@ -76,39 +77,44 @@ class C5dkBlog extends Page
 
 	public function save($mode)
 	{
+		$request = Request::getInstance();
+		$post = $request->post();
+
 		$u = new User;
-		switch ($mode) {
+		switch ($post['mode']) {
 			case C5DK_BLOG_MODE_CREATE:
-				$this->root = C5dkRoot::getByID($this->rootID);
-				$pt       = PageType::getByID($this->root->getPageTypeID());
-				$blog     = $this->root->add($pt, [
-					'cName' => $this->title,
-					'cHandle' => $this->getUrlSlug($this->title),
-					'cDescription' => $this->description,
+				$C5dkRoot = C5dkRoot::getByID($post['rootID']);
+				$pt       = PageType::getByID($C5dkRoot->getBlogPageTypeID());
+				$C5dkBlog     = $C5dkRoot->add($pt, [
+					'cName' => $post['title'],
+					'cHandle' => $this->getUrlSlug($post['title']),
+					'cDescription' => $post['description'],
 					'cAcquireComposerOutputControls' => true
 				]);
-
 				// TODO: Hack until solution have been found for the following bug. https://github.com/concrete5/concrete5/issues/2991
 				// make sure we can properly edit out embedded composer blocks
-				$pt->savePageTypeComposerForm($blog);
-				$pt->publish($blog);
+				$pt->savePageTypeComposerForm($C5dkBlog);
+				$pt->publish($C5dkBlog);
+
 				// set name and description again, saving from composer seems to clear them
-				$blog->update([
-					'cName' => $this->title,
-					'cDescription' => $this->description
+				$C5dkBlog->update([
+					'cName' => $post['title'],
+					'cDescription' => $post['description']
 				]);
 
+				$blogID = $C5dkBlog->getCollectionID();
 				// Set Blog Author ID
 				// $u = new User;
-				$blog->setAttribute('c5dk_blog_author_id', $u->getUserID());
-				$C5dkBlog = C5dkBlog::getByID($blog->cID);
+				$C5dkBlog->setAttribute('c5dk_blog_author_id', $u->getUserID());
+				$C5dkBlog = C5dkBlog::getByID($blogID);
 				break;
 
 			case C5DK_BLOG_MODE_EDIT:
-				$C5dkBlog = C5dkBlog::getByID($this->blogID);
+				$C5dkBlog = C5dkBlog::getByID($post['blogID']);
+				$C5dkRoot = $C5dkBlog->getRoot();
 				$C5dkBlog->update([
-					'cName' => $this->title,
-					'cDescription' => $this->description
+					'cName' => $post['title'],
+					'cDescription' => $post['description']
 				]);
 				break;
 
@@ -117,26 +123,29 @@ class C5dkBlog extends Page
 		}
 
 		// Set meta attributes
-		$C5dkBlog->setAttribute('meta_title', $this->title);
-		$C5dkBlog->setAttribute('meta_description', $this->description);
-
-		// Update the Content Block with the blog text
-		if (empty($this->content)) {
-			$this->content = ' ';
-		}
-		$instance = $C5dkBlog->getInstance();
-		$instance->save(['content' => $this->content]);
+		$C5dkBlog->setAttribute('meta_title', $post['title']);
+		$C5dkBlog->setAttribute('meta_description', $post['description']);
 
 		// Save tags to the blog page
-		$C5dkBlog   = $C5dkBlog->getVersionToModify();
 		$cakTags    = CollectionAttributeKey::getByHandle('tags');
 		$controller = $cakTags->getController();
 		$value      = $controller->createAttributeValueFromRequest();
 		$C5dkBlog->setAttribute($cakTags, $value);
 
+		// Update the Content Block with the blog text
+		if (empty($post['c5dk_blog_content'])) {
+			$content = ' ';
+		} else {
+			$content = $post['c5dk_blog_content'];
+		}
+		$instance = $C5dkBlog->getInstance();
+		$instance->save(['content' => $content]);
+
+		// $C5dkBlog   = $C5dkBlog->getVersionToModify();
+
 		// Add topics to the blog page if topics are in use
-		if ($this->root->getTopicAttributeHandle()) {
-			$cakTopics  = CollectionAttributeKey::getByHandle($this->root->getTopicAttributeHandle());
+		if ($C5dkRoot->getTopicAttributeHandle()) {
+			$cakTopics  = CollectionAttributeKey::getByHandle($C5dkRoot->getTopicAttributeHandle());
 			$controller = $cakTopics->getController();
 			$value = $controller->createAttributeValueFromRequest();
 			if (is_object($value)) {
@@ -145,21 +154,25 @@ class C5dkBlog extends Page
 		}
 
 		// Set Publish/Unpublish Time
-		$C5dkBlog->setAttribute('c5dk_blog_publish_time', $this->publishTime);
-		$C5dkBlog->setAttribute('c5dk_blog_unpublish_time', $this->unpublishTime);
+		if ($C5dkRoot->getPublishTimeEnabled() && $post['publishTime']) {
+			$C5dkBlog->setAttribute('c5dk_blog_publish_time', new \datetime($post['publishTime']));
+		}
+		if ($C5dkRoot->getUnpublishTimeEnabled() && $post['unpublishTime']) {
+			$C5dkBlog->setAttribute('c5dk_blog_unpublish_time', new \datetime($post['unpublishTime']));
+		}
 
 		// Set Permissions
-		foreach ($this->root->getEditorGroupsArray() as $groupID) {
-			$this->grantPagePermissionByGroup('view_page', $C5dkBlog, $groupID);
+		foreach ($C5dkRoot->getEditorGroupsArray() as $groupID) {
+			$C5dkBlog->grantPagePermissionByGroup('view_page', $C5dkBlog, $groupID);
 		}
-		$this->grantPagePermissionByUser('view_page', $C5dkBlog, $u->getUserInfoObject()->getUserID());
+		$C5dkBlog->grantPagePermissionByUser('view_page', $C5dkBlog, $u->getUserInfoObject()->getUserID());
 
 		// Set the Approve page attribute if the root don't require approval
 		if (!$C5dkBlog->root->needsApproval) {
 			$C5dkBlog->setAttribute('c5dk_blog_approved', true);
 		} else {
 			// If the Blog needs approval we need to remove the guest access
-			$this->denyPagePermissionByGroup("view_page", $C5dkBlog, GUEST_GROUP_ID);
+			$C5dkBlog->denyPagePermissionByGroup("view_page", $C5dkBlog, GUEST_GROUP_ID);
 		}
 
 		$C5dkBlog->refreshCache();
@@ -292,8 +305,7 @@ class C5dkBlog extends Page
 			}
 		}
 
-		return
-		false;
+		return false;
 	}
 
 	public function getPriorityList()

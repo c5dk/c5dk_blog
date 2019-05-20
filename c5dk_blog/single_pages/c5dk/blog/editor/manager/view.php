@@ -1,12 +1,10 @@
 <?php defined('C5_EXECUTE') or die("Access Denied."); ?>
-<?php  ?>
-<div id="c5dk-blog-package" class="c5dk_blog_package_wrapper">
 
+<div id="c5dk-blog-package" class="c5dk_blog_package_wrapper">
 	<h3><?= t('C5DK Blog Editor Manager'); ?></h3>
 
 	<!-- Root table -->
 	<table class="table">
-
 		<tr class="c5dk_blog_package_header">
 			<th class="left_round_corner"><?= t('Root'); ?></th>
 			<th><?= t('Path'); ?></th>
@@ -22,69 +20,58 @@
 		<tr class="c5dk_blog_package_root_content">
 			<td></td>
 			<td colspan="2">
-				<!-- <form> -->
-					<!-- News table -->
-					<table class="table table-striped c5dk_blog_table">
+				<!-- Blog table -->
+				<table class="table table-striped c5dk_blog_table">
 
-						<tr class="c5dk_blog_package_header_list">
-							<th class="left_round_corner"><?= t('Title'); ?></th>
-							<th class="c5dk_blog_table_priority"><?= t('Priority'); ?></th>
-							<?php if ($C5dkRoot->publishTimeEnabled) { ?>
-								<th class="c5dk_blog_table_public"><?= t('Publish'); ?></th>
-							<?php } ?>
-							<?php if ($C5dkRoot->unpublishTimeEnabled) { ?>
-								<th class="c5dk_blog_table_public"><?= t('Unpublish'); ?></th>
-							<?php } ?>
-							<th class="c5dk_blog_table_action right_round_corner"><?= t('Action'); ?></th>
-						</tr>
+					<tr class="c5dk_blog_package_header_list">
+						<th class="left_round_corner"><?= t('Title'); ?></th>
+						<th class="c5dk_blog_table_priority"><?= t('Priority'); ?></th>
+						<?php if ($C5dkRoot->publishTimeEnabled) { ?>
+							<th class="c5dk_blog_table_public"><?= t('Publish'); ?></th>
+						<?php } ?>
+						<?php if ($C5dkRoot->unpublishTimeEnabled) { ?>
+							<th class="c5dk_blog_table_public"><?= t('Unpublish'); ?></th>
+						<?php } ?>
+						<th></th>
+						<th class="c5dk_blog_table_action right_round_corner"><?= t('Action'); ?></th>
+					</tr>
 
-						<?php if (count($entries)) { ?>
+					<?php if (count($entries)) { ?>
 						<?php foreach ($entries[$rootID] as $blogID => $C5dkBlog) { ?>
-						<tr id="entry_<?= $C5dkBlog->blogID; ?>" data-id="<?= $C5dkBlog->blogID; ?>" data-approved="<?= $C5dkBlog->getAttribute('c5dk_blog_approved') ? "1" : "0"; ?>">
-							<td><a href="<?= $C5dkBlog->getCollectionLink(); ?>"><?= $C5dkBlog->title; ?></a></td>
-							<td class="c5dk_blog_priority">
-								<?php $values = $C5dkBlog->getTopicsArray($C5dkBlog->priority); ?>
-								<?= $form->selectMultiple('topics', $C5dkBlog->getPriorityList(), $values, ['class' => 'c5dk_blog_select2', 'style' => 'width:300px;']); ?>
-								<button class="c5dk-blog-btn-default c5dk-hide c5dk_save_priority" type="button" onclick="c5dk.blog.editor.manager.entry.save('priority', <?= $blogID; ?>, 'topics_<?= $C5dkRoot->priorityAttributeID; ?>', this)"><i class="fa fa-floppy-o"></i></button>
-							</td>
-
-							<?php if ($C5dkRoot->publishTimeEnabled) { ?>
-								<td class="publishTime">
-									<form id="publishTime_<?= $blogID; ?>">
-										<?php $publishTime = $C5dkBlog->publishTime; ?>
-										<?= $dtt->datetime('publishTime_' . $blogID, $publishTime, false, true, ['c5dk_blog_table_public_field']); ?>
-									</form>
-									<button class="c5dk-blog-btn-default c5dk-hide c5dk_save" type="button" onclick="c5dk.blog.editor.manager.entry.save('publishTime', <?= $blogID; ?>, null, this)"><i class="fa fa-floppy-o"></i></button>
+							<?php $approved = $C5dkBlog->getAttribute('c5dk_blog_approved') ? "1" : "0"; ?>
+							<tr class="c5dk_blog_entry" data-id="<?= $blogID; ?>" data-approved="<?= $approved; ?>">
+								<td>
+									<a href="<?= $C5dkBlog->getCollectionLink(); ?>"><?= $C5dkBlog->title; ?></a>
 								</td>
-							<?php } ?>
-
-							<?php if ($C5dkRoot->unpublishTimeEnabled) { ?>
-								<td class="unpublishTime">
-									<form id="unpublishTime_<?= $blogID; ?>">
-										<?= $dtt->datetime('unpublishTime_' . $blogID, $C5dkBlog->unpublishTime, false, true, ['c5dk_blog_table_public_field']); ?>
-									</form>
-									<button class="c5dk-blog-btn-default c5dk-hide c5dk_save" type="button" onclick="c5dk.blog.editor.manager.entry.save('unpublishTime', <?= $blogID; ?>, null, this)"><i class="fa fa-floppy-o"></i></button>
+								<td class="c5dk-blog-priority">
+									<?php $priorities = $C5dkBlog->getTopicsArray($C5dkBlog->priority); ?>
+									<?= $form->selectMultiple('entry['.$blogID.'][priorities]', $C5dkBlog->getPriorityList(), $priorities, ['class' => 'c5dk_blog_select2', 'style' => 'width: 210px;', 'data-default' => h($jh->encode($priorities), ENT_QUOTES, 'UTF-8')]); ?>
 								</td>
-							<?php } ?>
+								<?php if ($C5dkRoot->publishTimeEnabled) { ?>
+									<td class="c5dk-blog-datetime-columns">
+										<input id="entry[<?= $blogID; ?>][publishTime]" data-default="<?= $C5dkBlog->publishTime; ?>" class="c5dk_datetimepicker" type="text" value="<?= $C5dkBlog->publishTime; ?>" />
+									</td>
+								<?php } ?>
+								<?php if ($C5dkRoot->unpublishTimeEnabled) { ?>
+									<td class="c5dk-blog-datetime-columns">
+										<input id="entry[<?= $blogID; ?>][unpublishTime]" data-default="<?= $C5dkBlog->unpublishTime; ?>" class="c5dk_datetimepicker" type="text" value="<?= $C5dkBlog->unpublishTime; ?>" />
+									</td>
+								<?php } ?>
+								<td class="c5dk-blog-manager-save-column">
+									<button id="entrySaveBtn_<?= $blogID; ?>" class="c5dk-blog-btn-default c5dk_save" type="button" onclick="c5dk.blog.editor.manager.saveEntry(<?= $blogID; ?>)" style="display:none;"><i class="fa fa-floppy-o"></i></button>
+								</td>
+								<td class="c5dk-blog-manager-action-column">
+									<a title="<?= t('View Page'); ?>" class="c5dk-blog-btn-info" href="<?= $C5dkBlog->getCollectionLink(); ?>"><i class="fa fa-hand-o-left"></i></a>
+									<button title="<?= t('Approve/Unapprove'); ?>" class="c5dk_aprove_button <?= (!$approved) ? "c5dk-blog-btn-warning" : "c5dk-blog-btn-success"; ?> c5dk_approve" type="button" onclick="c5dk.blog.editor.manager.approve(<?= $blogID; ?>, this)"><?= (!$approved) ? '<i class="fa fa-check-circle"></i>' : '<i class="fa fa-minus-circle"></i>'; ?></button>
+									<button title="<?= t('Edit Post'); ?>" class="c5dk-blog-btn-primary" type="button" onclick="c5dk.blog.editor.manager.edit(<?= $blogID; ?>)"><i class="fa fa-pencil"></i></button>
+									<!-- <button title="<?= t('Delete Post'); ?>" class="c5dk-blog-btn-danger" type="button" onclick="c5dk.blog.editor.manager.delete('confirm', <?= $blogID; ?>)"><i class="fa fa-times"></i></button> -->
+									<a href="<?= URL::to('/c5dk/blog/delete', $blogID); ?>" title="<?= t('Delete Post'); ?>" class="c5dk-blog-btn-danger" type="button" onclick="return c5dk.blog.editor.manager.delete(<?= $blogID; ?>);"><i class="fa fa-times"></i></a>
+								</td>
+							</tr>
+						<?php } ?>
+					<?php } ?>
 
-							<td>
-								<a title="<?= t('View Page'); ?>" class="c5dk-blog-btn-info" href="<?= $C5dkBlog->getCollectionLink(); ?>"><i class="fa fa-hand-o-left"></i></a>
-								<button title="<?= t('Approve/Unapprove'); ?>" class="<?= (!$C5dkBlog->approved) ? "c5dk-blog-btn-warning" : "c5dk-blog-btn-success"; ?> c5dk_approve" type="button" onclick="c5dk.blog.editor.manager.entry.approve(<?= $blogID; ?>)"><?= (!$C5dkBlog->approved) ? '<i class="fa fa-check-circle"></i>' : '<i class="fa fa-minus-circle"></i>'; ?></button>
-								<button title="<?= t('Edit Post'); ?>" class="c5dk-blog-btn-primary" type="button" onclick="c5dk.blog.editor.manager.entry.edit(<?= $blogID; ?>)"><i class="fa fa-pencil"></i></button>
-								<!-- <button title="<?= t('Delete Post'); ?>" class="c5dk-blog-btn-danger" type="button" onclick="c5dk.blog.editor.manager.entry.delete('confirm', <?= $blogID; ?>)"><i class="fa fa-times"></i></button> -->
-								<a href="<?= URL::to('/c5dk/blog/delete', $blogID); ?>" title="<?= t('Delete Post'); ?>" class="c5dk-blog-btn-danger" type="button" onclick="return c5dk.blog.editor.manager.entry.delete(<?= $blogID; ?>);"><i class="fa fa-times"></i></a>
-							</td>
-						</tr>
-						<?php
-
-					} ?>
-						<?php
-
-					} ?>
-
-					</table>
-
-				<!-- </form> -->
+				</table>
 
 			</td>
 		</tr>
@@ -99,6 +86,18 @@
 
 <div style="clear: both;"></div>
 
+<style type="text/css">
+.c5dk-blog-priority {
+}
+/* Both the publish and unpublish datetime columns */
+.c5dk-blog-datetime-columns {
+}
+.c5dk-blog-manager-save-column {
+}
+.c5dk-blog-manager-action-column {
+}
+</style>
+
 <script type="text/javascript">
 	if (!c5dk) {
 		var c5dk = {}
@@ -112,124 +111,193 @@
 
 	c5dk.blog.editor.manager = {
 
-		init: function() {
+		deleteID: null,
 
-			// Init Select2
+		url: {
+			approve: '<?= URL::to('/c5dk/blog/ajax/editor/manager/save/approve'); ?>/',
+			unapprove: '<?= URL::to('/c5dk/blog/ajax/editor/manager/save/unapprove'); ?>/'
+		},
+
+		init: function() {
+			// Init xdan/datetimepicker
+			$(".c5dk_datetimepicker").datetimepicker({
+				format: "Y-m-d H:i",
+				step: 15,
+				onChangeDateTime: function(dp, el) {
+					c5dk.blog.editor.manager.checkSave();
+				}
+			});
+
+			// onChange event for the date and time fields to show the save button
 			$('.c5dk_blog_select2')
 				.removeClass('form-control')
 				.select2()
-				.on('change', c5dk.blog.editor.manager.entry.showSave);
+				.on('change', function(event) {
+					c5dk.blog.editor.manager.checkSave(this);
+				});
 
-			// onChange event for the date and time fields to show the save button
-			$(".datetimepicker").on('change', function(event) {
-				c5dk.blog.editor.manager.entry.showSave($(this).closest('tr').data('id'), "publishDateTime");
+			// Make sure our save button are checked on refresh page
+			c5dk.blog.editor.manager.checkSave();
+		},
+
+		deleteID: null,
+
+		url: {
+			approve: '<?= URL::to('/c5dk/blog/ajax/editor/manager/save/approve'); ?>/',
+			unapprove: '<?= URL::to('/c5dk/blog/ajax/editor/manager/save/unapprove'); ?>/'
+		},
+
+		saveEntry: function(id) {
+			var priorities = $("#entry\\[" + id + "\\]\\[priorities\\]");
+			var publishTime = $('#entry\\[' + id + '\\]\\[publishTime\\]');
+			var unpublishTime = $('#entry\\[' + id + '\\]\\[unpublishTime\\]');
+			var data = {
+				priorities: priorities.val(),
+				publishTime: publishTime.val(),
+				unpublishTime: unpublishTime.val()
+			};
+
+			// Save the Blog Entry
+			c5dk.blog.modal.waiting("<?= t('Saving...'); ?>");
+			$.ajax({
+				method: 'POST',
+				url: '<?= URL::to('/c5dk/blog/ajax/editor/manager/save/all'); ?>/' + id,
+				data: data,
+				dataType: 'json',
+				success: function(response) {
+					// console.dir({id: id, data: data});
+					$("#entry\\[" + id + "\\]\\[priorities\\]").data('default', data.priorities);
+					$('#entry\\[' + id + '\\]\\[publishTime\\]').data('default', data.publishTime);
+					$('#entry\\[' + id + '\\]\\[unpublishTime\\]').data('default', data.unpublishTime);
+					c5dk.blog.editor.manager.checkSave();
+					c5dk.blog.modal.exitModal();
+				}
 			});
 		},
 
-		entry: {
+		// showSave: function(el) {
+		// 	var id = $(el).closest('tr').data('id');
+		// 	if (c5dk.blog.editor.manager.checkSave(id)) {
+		// 		console.log('Hide save button');
+		// 		$('button#entrySaveBtn_' + id).hide();
+		// 	} else {
+		// 		console.log('Show save button');
+		// 		$('button#entrySaveBtn_' + id).show();
+		// 	}
+		// 	// console.dir(data);
+		// 	// data.save = true;
+		// 	// tr.data('entry', data);
+		// 	// if (data.id) {
+		// 	// }
+		// 	// console.dir(data);
+		// },
 
-			deleteID: null,
-
-			url: {
-				approve: '<?= URL::to('/c5dk/blog/ajax/editor/manager/save/approve'); ?>/',
-				unapprove: '<?= URL::to('/c5dk/blog/ajax/editor/manager/save/unapprove'); ?>/'
-			},
-
-			save: function(field, id, atID, el) {
-
-				switch (field) {
-
-					case "priority":
-						var data = {
-							priorities: $("#entry_" + id).find("select").val()
-						}
-						break;
-
-					case "publishTime":
-						var data = $('#publishTime_' + id).serialize();
-						// console.dir($('#publishTime_' + id));
-						// var data = {
-						// 	publishTime: $("#entry_" + id).find("#publishTime").val()
-						// };
-						break;
-
-					case "unpublishTime":
-						var data = $('#unpublishTime_' + id).serialize();
-						// var data = {
-						// 	unpublishTime: $("#entry_" + id).find("#publishTime").val()
-						// };
-						break;
+		checkSave: function () {
+			$(".c5dk_blog_entry").each(function (index, el) {
+				var id = $(el).data('id');
+				var priorities = $("#entry\\[" + id + "\\]\\[priorities\\]");
+				var publishTime = $('#entry\\[' + id + '\\]\\[publishTime\\]');
+				var unpublishTime = $('#entry\\[' + id + '\\]\\[unpublishTime\\]');
+				if (
+					($(priorities.val()).not(priorities.data('default')).length === 0 && $(priorities.data('default')).not(priorities.val()).length === 0) &&
+					(publishTime.val() == publishTime.data('default')) &&
+					(unpublishTime.val() == unpublishTime.data('default'))
+				) {
+					$('button#entrySaveBtn_' + id).hide();
+				} else {
+					$('button#entrySaveBtn_' + id).show();
 				}
+			});
+		},
 
-				// Hide the save button
-				$(el).hide();
+		// save: function(field, id, atID, el) {
+		// 	switch (field) {
+		// 		case "priority":
+		// 			var data = {
+		// 				priorities: $("#entry_" + id).find("select").val()
+		// 			}
+		// 			break;
+		// 		case "publishTime":
+		// 			var data = $('#publishTime_' + id).serialize();
+		// 			// console.dir($('#publishTime_' + id));
+		// 			// var data = {
+		// 			// 	publishTime: $("#entry_" + id).find("#publishTime").val()
+		// 			// };
+		// 			break;
+		// 		case "unpublishTime":
+		// 			var data = $('#unpublishTime_' + id).serialize();
+		// 			// var data = {
+		// 			// 	unpublishTime: $("#entry_" + id).find("#publishTime").val()
+		// 			// };
+		// 			break;
+		// 	}
 
-				// Save the datetime
-				$.ajax({
-					method: 'POST',
-					url: '<?= URL::to('/c5dk/blog/ajax/editor/manager/save'); ?>/' + field + '/' + id,
-					data: data,
-					dataType: 'json',
-					success: function(r) {
+		// 	// Hide the save button
+		// 	$(el).hide();
+
+		// 	// Save the datetime
+		// 	$.ajax({
+		// 		method: 'POST',
+		// 		url: '<?= URL::to('/c5dk/blog/ajax/editor/manager/save'); ?>/' + field + '/' + id,
+		// 		data: data,
+		// 		dataType: 'json',
+		// 		success: function(r) {
+		// 		}
+		// 	});
+		// },
+
+		approve: function(id, el) {
+			var tr = $(el).closest('.c5dk_blog_entry');
+			if (tr.data('approved') == 0) {
+				var url = c5dk.blog.editor.manager.url.approve;
+				var text = '<?= t('Approve Blog...'); ?>';
+			} else {
+				var url = c5dk.blog.editor.manager.url.unapprove;
+				var text = '<?= t('Unapprove Blog...'); ?>';
+			}
+
+			// Send the request
+			c5dk.blog.modal.waiting(text);
+			$.ajax({
+				method: 'GET',
+				url: url + id,
+				dataType: 'json',
+				success: function(r) {
+					if (r.status) {
+						tr.data('approved', r.state);
+						if (r.state) {
+							tr.find('button.c5dk_aprove_button')
+								.removeClass('c5dk-blog-btn-warning')
+								.addClass('c5dk-blog-btn-success')
+								.html('<?= '<i class="fa fa-minus-circle"></i>'; ?>');
+						} else {
+							tr.find('button.c5dk_aprove_button')
+								.removeClass('c5dk-blog-btn-success')
+								.addClass('c5dk-blog-btn-warning')
+								.html('<?= '<i class="fa fa-check-circle"></i>'; ?>');
+						}
 					}
-				});
+					c5dk.blog.modal.exitModal();
+				}
+			});
+		},
 
-			},
+		edit: function(id) {
+			window.location = '<?= URL::to("/blog_post/edit"); ?>/' + id;
+		},
 
-			showSave: function(id, type) {
-
-				$(this).next('button').show();
-				//$('#entry_' + id + ' .' + type + ' .c5dk_save').show();
-
-			},
-
-			approve: function(id) {
-
-				var url = ($('tr#entry_' + id).data('approved') == 0) ? c5dk.blog.editor.manager.entry.url.approve : c5dk.blog.editor.manager.entry.url.unapprove
+		delete: function(id) {
+			if (window.confirm('<?= t('Are you sure you want to delete this post?'); ?>')) {
 				$.ajax({
 					method: 'GET',
-					url: url + id,
+					url: '<?= URL::to('/c5dk/blog/delete'); ?>' + '/' + id,
 					dataType: 'json',
 					success: function(r) {
 						if (r.status) {
-							$('#entry_' + r.id).data('approved', r.state);
-							if (r.state) {
-								$('tr#entry_' + r.id + ' .c5dk_approve')
-									.removeClass('c5dk-blog-btn-warning')
-									.addClass('c5dk-blog-btn-success')
-									.html('<?= '<i class="fa fa-minus-circle"></i>'; ?>');
-							} else {
-								$('tr#entry_' + r.id + ' .c5dk_approve')
-									.removeClass('c5dk-blog-btn-success')
-									.addClass('c5dk-blog-btn-warning')
-									.html('<?= '<i class="fa fa-check-circle"></i>'; ?>');
-							}
+							$('#entry_' + id).remove();
 						}
 					}
 				});
-
-			},
-
-			edit: function(id) {
-
-				window.location = '<?= URL::to("/blog_post/edit"); ?>/' + id;
-
-			},
-
-			delete: function(id) {
-
-				if (window.confirm('<?= t('Are you sure you want to delete this post?'); ?>')) {
-					$.ajax({
-						method: 'GET',
-						url: '<?= URL::to('/c5dk/blog/delete'); ?>' + '/' + id,
-						dataType: 'json',
-						success: function(r) {
-							if (r.status) {
-								$('#entry_' + id).remove();
-							}
-						}
-					});
-				}
 			}
 		}
 	}

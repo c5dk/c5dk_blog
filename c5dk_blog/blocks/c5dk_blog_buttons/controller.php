@@ -6,9 +6,10 @@ use Page;
 use AssetList;
 use Concrete\Core\Block\BlockController;
 
-use C5dk\Blog\C5dkConfig as C5dkConfig;
-use C5dk\Blog\C5dkUser as C5dkUser;
-use C5dk\Blog\C5dkBlog as C5dkBlog;
+use C5dk\Blog\C5dkConfig;
+use C5dk\Blog\C5dkUser;
+use C5dk\Blog\C5dkBlog;
+use C5dk\Blog\C5dkRoot;
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
@@ -32,10 +33,15 @@ class Controller extends BlockController
 		// Init Objects
 		$C5dkConfig = new C5dkConfig;
 		$C5dkUser = new C5dkUser;
-		$C5dkBlog = C5dkBlog::getByID(Page::getCurrentPage()->getCollectionID());
-		if ($C5dkBlog->getAttribute('c5dk_blog_root')) {
-			$C5dkRoot = $C5dkBlog;
+		$c = Page::getCurrentPage();
+
+		if ($c->getAttribute('c5dk_blog_root')) {
+			$C5dkRoot = C5dkRoot::getByID($c->getCollectionID());
 			$C5dkBlog = new C5dkBlog;
+		}
+		if ($c->getAttribute('c5dk_blog_author_id')) {
+			$C5dkBlog = C5dkBlog::getByID($c->getCollectionID());
+			$C5dkRoot = $C5dkBlog->getRoot();
 		}
 		$this->set('C5dkConfig', $C5dkConfig);
 		$this->set('C5dkUser', $C5dkUser);

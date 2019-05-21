@@ -31,14 +31,22 @@ class Controller extends BlockController
 	{
 		// Init Objects
 		$C5dkConfig = new C5dkConfig;
+		$C5dkUser = new C5dkUser;
+		$C5dkBlog = C5dkBlog::getByID(Page::getCurrentPage()->getCollectionID());
+		if ($C5dkBlog->getAttribute('c5dk_blog_root')) {
+			$C5dkRoot = $C5dkBlog;
+			$C5dkBlog = new C5dkBlog;
+		}
 		$this->set('C5dkConfig', $C5dkConfig);
-		$this->set('C5dkUser', new C5dkUser);
-		$this->set('C5dkBlog', C5dkBlog::getByID(Page::getCurrentPage()->getCollectionID()));
+		$this->set('C5dkUser', $C5dkUser);
+		$this->set('C5dkBlog', $C5dkBlog);
+		$this->set('C5dkRoot', $C5dkRoot);
 		$this->set('form', $this->app->make('helper/form'));
 
 		// Require Asset
 		$this->requireAsset('css', 'c5dk_blog_css');
 		$this->requireAsset('core/app');
+		$this->requireAsset('javascript', 'c5dkBlog/modal');
 
 		if ($C5dkConfig->blog_form_slidein && !Page::getCurrentPage()->isEditMode()) {
 			// Core Assets
@@ -47,7 +55,6 @@ class Controller extends BlockController
 
 			// C5DK Assets
 			$this->requireAsset('javascript', 'c5dkBlog/main');
-			$this->requireAsset('javascript', 'c5dkBlog/modal');
 			$this->requireAsset('javascript', 'c5dkckeditor');
 			$this->requireAsset('javascript', 'thumbnail_cropper/main');
 			$this->requireAsset('javascript', 'cropper');

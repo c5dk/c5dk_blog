@@ -10,6 +10,7 @@ use View;
 use File;
 use FileList;
 use FileSet;
+use C5dk\Blog\C5dkBlog as C5dkBlog;
 use C5dk\Blog\C5dkRoot as C5dkRoot;
 use C5dk\Blog\Entity\C5dkRoot as C5dkRootEntity;
 
@@ -17,10 +18,10 @@ defined('C5_EXECUTE') or die('Access Denied.');
 
 class C5dkUser extends User
 {
-	public $isBlogger = FALSE;
-	public $isEditor  = FALSE;
-	public $isOwner   = FALSE;
-	public $isAdmin   = FALSE;
+	public $isBlogger = false;
+	public $isEditor  = false;
+	public $isOwner   = false;
+	public $isAdmin   = false;
 
 	public $fullName = NULL;
 
@@ -32,19 +33,19 @@ class C5dkUser extends User
 		parent::__construct();
 
 		// Can the current user blog?
-		$this->isBlogger = (count($this->getRootList('writers'))) ? TRUE : FALSE;
+		$this->isBlogger = (count($this->getRootList('writers'))) ? true : false;
 		$this->isEditor = (count($this->getRootList('editors'))) ? true : false;
 
 		// Is the current user the owner of the current page
 		if (($page = Page::getCurrentPage()) instanceof Page) {
 			$C5dkBlog = C5dkBlog::getByID(Page::getCurrentPage()->getCollectionID());
 			if ($C5dkBlog->authorID == $this->uID && is_numeric($this->uID)) {
-				$this->isOwner = TRUE;
+				$this->isOwner = true;
 			}
 		}
 
 		// Is current user an Administrator
-		$this->isAdmin = ($this->isSuperUser() || $this->inGroup(Group::getByName('Administrators'))) ? TRUE : FALSE;
+		$this->isAdmin = ($this->isSuperUser() || $this->inGroup(Group::getByName('Administrators'))) ? true : false;
 
 		// Get Full Name if exists
 		$ui = UserInfo::getByID($this->getUserID());
@@ -56,11 +57,11 @@ class C5dkUser extends User
 		}
 	}
 
-	public static function getByUserID($uID, $login = FALSE, $cacheItemsOnLogin = TRUE)
+	public static function getByUserID($uID, $login = false, $cacheItemsOnLogin = true)
 	{
 		// Return false if no user id is given
 		if (!$uID) {
-			return FALSE;
+			return false;
 		}
 
 		$u = parent::getByUserID($uID, $login, $cacheItemsOnLogin);
@@ -163,11 +164,34 @@ class C5dkUser extends User
 			'C5dkUser' => $this,
 			'fileList' => $this->getFilesFromUserSet(),
 			'image' => $app->make('helper/image'),
-			'canDeleteImages' => TRUE
+			'canDeleteImages' => true
 		], 'c5dk_blog');
 		$html = ob_get_contents();
 		ob_end_clean();
 
 		return $html;
+	}
+
+	/**
+	 * Is the user an editor of the passed C5dkBlog or C5dkRoot page
+	 *
+	 * Returns true/false depending on the groups the user is a member of
+	 *
+	 * @param Type C5dkBlog | C5dkRoot
+	 * @return Boolean
+	 **/
+	public function isEditorOfPage($C5dkBlog)
+	{
+		if ($C5dkBlog instanceof C5dkBlog || $C5dkBlog instanceof C5dkRoot) {
+			$C5dkRoot = $C5dkBlog instanceof C5dkRoot ? $C5dkBlog : $C5dkBlog->getRoot();
+
+			foreach ($C5dkRoot->getEditorGroups() as $entity) {
+				if ($this->inGroup($entity->getGroup())) {
+					return true;
+				}
+			}
+		}
+		
+		return false;
 	}
 }

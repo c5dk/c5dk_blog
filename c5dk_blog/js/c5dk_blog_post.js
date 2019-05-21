@@ -135,8 +135,7 @@ c5dk.blog.post = {
 	blog: {
 
 		// mode: <?= $BlogPost->mode == C5DK_BLOG_MODE_CREATE ? C5DK_BLOG_MODE_CREATE : C5DK_BLOG_MODE_EDIT; ?>,
-		// slidein: <?= (int) $C5dkConfig->blog_form_slidein; ?>,
-		formData: null,
+		// formData: null,
 
 		save: function () {
 			// var formData = new FormData();
@@ -154,8 +153,6 @@ c5dk.blog.post = {
 			// 		// formData.set('croppedImage', blob);
 			// 	}, "image/jpeg", 80);
 			// }
-			console.log([...formData]);
-return true;
 // 			// var formData = new FormData();
 // 			// formData.set('blogID', $('#blogID').val() ? $('#blogID').val() : 0);
 // 			var blogID = $('#blogID').val()? $('#blogID').val() : 0;

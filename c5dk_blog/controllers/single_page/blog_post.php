@@ -44,7 +44,7 @@ class BlogPost extends PageController
 		$this->redirect('/');
 	}
 
-	public function create($redirectID, $rootID = FALSE)
+	public function create($redirectID, $rootID)
 	{
 		$C5dkBlogPost = new C5dkBlogPost;
 		$C5dkBlogPost->create($redirectID, $rootID);

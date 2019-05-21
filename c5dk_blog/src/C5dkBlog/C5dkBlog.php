@@ -32,7 +32,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
 class C5dkBlog extends Page
 {
 	// Data
-	public $blogID      = null;
+	public $blogID      = 0;
 	public $root        = null;
 	public $rootID      = null;
 	public $authorID    = null;
@@ -236,7 +236,7 @@ class C5dkBlog extends Page
 		return is_object($root) ? $root->getCollectionID() : null;
 	}
 
-	private function getRoot()
+	public function getRoot()
 	{
 		$page = $this;
 
@@ -425,6 +425,16 @@ class C5dkBlog extends Page
 		// $pa->markAsInUse();
 	}
 
+	public function getPublishTime()
+	{
+		return $this->publishTime ? $this->publishTime : (new \DateTime)->format('Y-m-d H:i');
+	}
+
+	public function getUnpublishTime()
+	{
+		return $this->unpublishTime ? $this->unpublishTime : (new \DateTime)->format('Y-m-d H:i');
+	}
+
 	public function setPriority($values)
 	{
 		foreach ($values as $value) {
@@ -433,5 +443,40 @@ class C5dkBlog extends Page
 		if (count($topics)) {
 			$this->setAttribute('c5dk_blog_priority', $topics);
 		}
+	}
+
+	public function publish() {
+		$this->setAttribute('c5dk_blog_approved', true);
+		$this->setAttribute('c5dk_blog_publish_time', new \datetime());
+
+		// TODO: Do we need to look at the unpublish time too???
+
+		return true;
+	}
+
+	public function isUnpublished()
+	{
+		$access = $this->checkGroupViewPermission('view_page', $this, GUEST_GROUP_ID);
+		// Should we grant permission because of the time
+		if ($access) {
+			return false;
+		} else {
+			return true;
+		}
+	}
+
+	public function checkGroupViewPermission($permissionHandle, $page, $groupID)
+	{
+		$key = PermissionKey::getByHandle($permissionHandle);
+		$key->setPermissionObject($page);
+
+		$access = $key->getPermissionAccessObject();
+		if (!$access) {
+			return false;
+		}
+				$guestGroup = Group::getByID($groupID);
+				$entity = GroupPermissionAccessEntity::getOrCreate($guestGroup);
+
+				return $access->validateAccessEntities([$entity]);
 	}
 }

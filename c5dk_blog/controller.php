@@ -25,7 +25,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
 class Controller extends Package
 {
 	protected $appVersionRequired      = '8.2';
-	protected $pkgVersion              = '8.5.b11';
+	protected $pkgVersion              = '8.5.b12';
 	protected $pkgHandle               = 'c5dk_blog';
 	protected $pkgAutoloaderRegistries = [
 		'src/C5dkBlog' => '\C5dk\Blog',
@@ -63,12 +63,15 @@ class Controller extends Package
 
 	private function registerRoutes()
 	{
-		Route::register('/c5dk/blog/get/{blogID}', '\C5dk\Blog\C5dkAjax::getForm');
-		Route::register('/c5dk/blog/save/{blogID}', '\C5dk\Blog\C5dkAjax::save');
+		Route::register('/c5dk/blog/approve/{blogID}', '\C5dk\Blog\C5dkAjax::approve');
+		Route::register('/c5dk/blog/unapprove/{blogID}', '\C5dk\Blog\C5dkAjax::unapprove');
+		Route::register('/c5dk/blog/get/{blogID}/{rootID}', '\C5dk\Blog\C5dkAjax::getForm');
+		// Route::register('/c5dk/blog/save/{blogID}', '\C5dk\Blog\C5dkAjax::save');
 		Route::register('/c5dk/blog/delete/{blogID}', '\C5dk\Blog\C5dkAjax::delete');
+		Route::register('/c5dk/blog/publish/{blogID}', '\C5dk\Blog\C5dkAjax::publish');
 		Route::register('/c5dk/blog/image/upload', '\C5dk\Blog\C5dkAjax::imageUpload');
 		Route::register('/c5dk/blog/image/delete/{fID}', '\C5dk\Blog\C5dkAjax::imageDelete');
-		Route::register('/c5dk/blog/thumbnail/upload', '\C5dk\Blog\C5dkAjax::thumbnailUpload');
+		// Route::register('/c5dk/blog/thumbnail/upload', '\C5dk\Blog\C5dkAjax::thumbnailUpload');
 		Route::register('/c5dk/blog/ajax/editor/manager/{method}/{field}/{blogID}', '\C5dk\Blog\C5dkAjax::editor');
 	}
 
@@ -331,10 +334,10 @@ class Controller extends Package
 
 	public function checkGroupViewPermission($permissionHandle, $page, $groupID)
 	{
-				$key = PermissionKey::getByHandle($permissionHandle);
-				$key->setPermissionObject($page);
+		$key = PermissionKey::getByHandle($permissionHandle);
+		$key->setPermissionObject($page);
 
-				$access = $key->getPermissionAccessObject();
+		$access = $key->getPermissionAccessObject();
 		if (!$access) {
 			return false;
 		}

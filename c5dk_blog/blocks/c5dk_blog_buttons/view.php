@@ -11,7 +11,7 @@
 				<!-- Header -->
 				<div class="c5dk_blog_btn_title"><h4><?= t('Blog Editor Control'); ?></h4></div>
 
-				<!-- News Buttons -->
+				<!-- Blog Buttons -->
 				<div class="c5dk_blog_buttons">
 
 					<!-- Go to Editor Manager -->
@@ -19,19 +19,27 @@
 						<a class="c5dk_blog_ButtonGrey" href="<?= $this->url('/c5dk/blog/editor/manager'); ?>"><?= t("Manager List"); ?></a>
 					</div>
 
-					<?php //if ($C5dkBlog->isEditor($C5dkUser->getUserID()) && $C5dkBlog->getAttribute('c5dk_blog_author_id')) { ?>
 					<?php if ($C5dkUser->isEditor && $C5dkBlog->getAttribute('c5dk_blog_author_id')) { ?>
 
-						<!-- Approve News Entry -->
+						<!-- Approve Blog Entry -->
 						<div class="c5dk-blog-btn-wrap">
-							<button id="c5dk_approve" class="<?= ($C5dkBlog->approved? "c5dk_blog_ButtonOrange" : "c5dk_blog_ButtonGreen"); ?>" onclick="c5dk.blog.buttons.approve(<?= $C5dkBlog->blogID; ?>)" data-id="<?= $C5dkBlog->blogID; ?>" data-approved="<?= $C5dkBlog->approved; ?>"><?= (!$C5dkBlog->approved)? t("Approve") : t("Unapprove"); ?></button>
+							<button id="c5dk_approve"
+								class="<?= ($C5dkBlog->approved? "c5dk_blog_ButtonGreen" : "c5dk_blog_ButtonOrange"); ?>"
+								onclick="c5dk.blog.buttons.approve(<?= $C5dkBlog->blogID; ?>)"
+								data-id="<?= $C5dkBlog->blogID; ?>" data-approved="<?= $C5dkBlog->approved; ?>"
+								data-approved="<?= $C5dkBlog->approved; ?>"
+								data-approved-style="c5dk_blog_ButtonGreen"
+								data-unapproved-style="c5dk_blog_ButtonOrange"
+							>
+								<?= (!$C5dkBlog->approved)? t("Approve") : t("Unapprove"); ?>
+							</button>
 						</div>
 
-						<?php //if (!$C5dkUser->isOwner) { ?>
+						<?php if (!$C5dkUser->isOwner) { ?>
 
 							<!-- Edit Post -->
 							<div class="c5dk-blog-btn-wrap">
-								<a class="c5dk_blog_ButtonBlue" href="<?= $this->url('blog_post', 'edit', $C5dkBlog->getCollectionID()); ?>"><?= t("Edit Post"); ?></a>
+								<a class="c5dk_blog_ButtonBlue" href="<?= $this->url('blog_post', 'edit', $C5dkBlog->blogID); ?>"><?= t("Edit Post"); ?></a>
 							</div>
 
 							<!-- Delete Post -->
@@ -39,7 +47,13 @@
 								<a class="c5dk_blog_ButtonRed" href="javascript:c5dk.blog.buttons.delete('confirm');"><?= t("Delete Post"); ?></a>
 							</div>
 
-						<?php //} ?>
+							<!-- Publish Now -->
+							<div class="c5dk-blog-btn-wrap">
+								<?php $publishTimeText = $C5dkBlog->getAttribute('c5dk_blog_publish_time')->format('Y-m-d H:i'); ?>
+								<button class="c5dk_publish_now c5dk_blog_ButtonOrange" onclick="c5dk.blog.buttons.publishNow(<?= $C5dkBlog->blogID; ?>)"><?= t("Publish Now"); ?><br /><?= $publishTimeText; ?></button>
+							</div>
+
+						<?php } ?>
 
 					<?php } ?>
 
@@ -58,25 +72,41 @@
 
 				<!-- Blogging Buttons -->
 				<div class="c5dk_blog_btn">
+
+					<!-- New Blog -->
 					<div class="c5dk-blog-btn-wrap">
-					<a class="c5dk_blog_ButtonGreen"
-						<?php if ($C5dkConfig->blog_form_slidein) { ?>
-							onclick="return c5dk.blog.buttons.create('<?= $C5dkBlog->getCollectionID(); ?>', '<?= $C5dkBlog->rootID; ?>');"
-						<?php } ?>
-						href="<?= $this->url('blog_post', 'create', $C5dkBlog->getCollectionID(), $C5dkBlog->rootID); ?>"><?= t("New Post"); ?></a>
+						<a class="c5dk_blog_ButtonGreen"
+							<?php if ($C5dkConfig->blog_form_slidein) { ?>
+								onclick="return c5dk.blog.buttons.create('<?= $C5dkBlog->blogID; ?>', '<?= $C5dkRoot->getCollectionID(); ?>');"
+							<?php } ?>
+							href="<?= $this->url('blog_post', 'create', $C5dkBlog->blogID, $C5dkRoot->getCollectionID()); ?>"><?= t("New Post"); ?></a>
 					</div>
 					<?php if ($C5dkUser->isOwner) { ?>
+
+						<!-- Edit Blog -->
 						<div class="c5dk-blog-btn-wrap">
-						<a class="c5dk_blog_ButtonBlue"
-							<?php if ($C5dkConfig->blog_form_slidein) { ?>
-								onclick="return c5dk.blog.buttons.edit('<?= $C5dkBlog->getCollectionID(); ?>');"
-							<?php } ?>
-							href="<?= $this->url('blog_post', 'edit', $C5dkBlog->getCollectionID()); ?>"><?= t("Edit Post"); ?></a>
+							<a class="c5dk_blog_ButtonBlue"
+								<?php if ($C5dkConfig->blog_form_slidein) { ?>
+									onclick="return c5dk.blog.buttons.edit('<?= $C5dkBlog->blogID; ?>');"
+								<?php } ?>
+								href="<?= $this->url('blog_post', 'edit', $C5dkBlog->blogID); ?>"><?= t("Edit Post"); ?></a>
 						</div>
+
+						<!-- Delete blog -->
 						<div class="c5dk-blog-btn-wrap">
-						<a class="c5dk_blog_ButtonRed" onclick="c5dk.blog.buttons.delete('confirm');"><?= t("Delete Post"); ?></a>
+							<a class="c5dk_blog_ButtonRed" onclick="c5dk.blog.buttons.delete('confirm');"><?= t("Delete Post"); ?></a>
 						</div>
+
+						<!-- Publish Now -->
+						<?php if ($C5dkBlog->isUnpublished()) { ?>
+							<div class="c5dk-blog-btn-wrap">
+								<?php $publishTimeText = $C5dkBlog->getAttribute('c5dk_blog_publish_time')->format('Y-m-d H:i'); ?>
+								<button class="c5dk_publish_now c5dk_blog_ButtonOrange" onclick="c5dk.blog.buttons.publishNow(<?= $C5dkBlog->blogID; ?>)"><?= t("Publish Now"); ?><br /><?= $publishTimeText; ?></button>
+							</div>
+						<?php } ?>
+
 					<?php } ?>
+
 				</div>
 
 				<!-- Dialog: Delete post -->
@@ -109,6 +139,7 @@
 		if(!c5dk.blog){ c5dk.blog = {}; }
 		c5dk.blog.buttons = {
 
+			slidein: '<?= $C5dkConfig->blog_form_slidein; ?>',
 			form: {
 
 				state: {
@@ -135,7 +166,7 @@
 							blogID: blogID,
 							rootID: rootID
 						},
-						url: '<?= \URL::to("/c5dk/blog/get/form"); ?>',
+						url: '<?= \URL::to("/c5dk/blog/get"); ?>/' + blogID + '/' + rootID,
 						success: function(response){
 
 							if (response.form) {
@@ -179,9 +210,8 @@
 							blogID: blogID,
 							rootID: rootID
 						},
-						url: '<?= \URL::to("/c5dk/blog/get/form"); ?>',
+						url: '<?= \URL::to("/c5dk/blog/get"); ?>/' + blogID + '/' + rootID,
 						success: function(response){
-
 							if (response.form) {
 								$('#c5dk_form_slidein').html(response.form);
 							}
@@ -207,6 +237,11 @@
 				return false;
 			},
 
+			cancel: function() {
+				if (c5dk.blog.buttons.form.create) { c5dk.blog.buttons.form.create.slideReveal("hide"); }
+				if (c5dk.blog.buttons.form.edit) { c5dk.blog.buttons.form.edit.slideReveal("hide"); }
+			},
+
 			delete:function(mode) {
 				switch (mode){
 
@@ -220,13 +255,15 @@
 						break;
 
 					case "delete":
+						c5dk.blog.modal.waiting("<?= t('Getting blog form'); ?>");
 						$.ajax({
 							method: 'POST',
-							//url: '<?= URL::to("/blog_post/delete/page/" . $C5dkBlog->getCollectionID()); ?>',
-							url: '<?= URL::to("/c5dk/blog/delete", $C5dkBlog->getCollectionID()); ?>',
-							data: { blogID: '<?= $C5dkBlog->getCollectionID(); ?>' },
+							//url: '<?= URL::to("/blog_post/delete/page/" . $C5dkBlog->blogID); ?>',
+							url: '<?= URL::to("/c5dk/blog/delete", $C5dkBlog->blogID); ?>',
+							data: { blogID: '<?= $C5dkBlog->blogID; ?>' },
 							dataType: 'json',
 							success: function(r) {
+								c5dk.blog.modal.exitModal();
 								window.location = r.url;
 							}
 						});
@@ -239,13 +276,63 @@
 				}
 			},
 
-			cancel: function() {
-				if (c5dk.blog.buttons.form.create) { c5dk.blog.buttons.form.create.slideReveal("hide"); }
-				if (c5dk.blog.buttons.form.edit) { c5dk.blog.buttons.form.edit.slideReveal("hide"); }
-			}
+			publishNow: function(blogID) {
+				c5dk.blog.modal.waiting("<?= t('Getting blog form'); ?>");
+				$.ajax({
+					method: 'POST',
+					url: '<?= URL::to("/c5dk/blog/publish", $C5dkBlog->blogID); ?>',
+					data: { blogID: blogID },
+					dataType: 'json',
+					success: function(r) {
+						$('.c5dk_publish_now').hide();
+						var approveBtn = $('c5dk_approve');
+						approveBtn.text('<?= t('Unapprove'); ?>').addClass(approveBtn.data('approve-style')).removeClass(approveBtn.data('unapprove-style'));
+						c5dk.blog.modal.exitModal();
+					}
+				});
+			},
 
+			approve: function(blogID) {
+				var approveBtn = $('#c5dk_approve');
+				console.log(approveBtn.data('approved'));
+				if (approveBtn.data('approved')) {
+					var url = '<?= URL::to('/c5dk/blog/unapprove/', $C5dkBlog->blogID); ?>';
+				} else {
+					var url = '<?= URL::to('/c5dk/blog/approve/', $C5dkBlog->blogID); ?>';
+				}
+
+				c5dk.blog.modal.waiting("<?= t('Getting blog form'); ?>");
+				$.ajax({
+					method: 'POST',
+					url: url,
+					data: { blogID: blogID },
+					dataType: 'json',
+					success: function(r) {
+						// Change the text and classes
+						var approveBtn = $('#c5dk_approve');
+						if (approveBtn.data('approved')) {
+							approveBtn.data('approved', 0);
+							approveBtn.text('<?= t('Approve'); ?>').addClass(approveBtn.data('unapproved-style')).removeClass(approveBtn.data('approved-style'));
+						} else {
+							approveBtn.data('approved', 1);
+							approveBtn.text('<?= t('Unapprove'); ?>').addClass(approveBtn.data('approved-style')).removeClass(approveBtn.data('unapproved-style'));
+						}
+						c5dk.blog.modal.exitModal();
+					}//,
+					// error: function() {
+					// 	// Set it back to before we started
+					// 	var approveBtn = $('#c5dk_approve');
+					// 	if (approveBtn.data('approved')) {
+					// 		approveBtn.data('approved', 0);
+					// 	} else {
+					// 		approveBtn.data('approved', 1);
+					// 	}
+					// }
+				});
+			}
 		};
 	</script>
+
 <?php } elseif ($C5dkBlog->isEditMode() || $C5dkUser->isAdmin) { ?>
 	<?php // SuperAdmin/Administrator view if they aren't allowed to block or if the page is in edit mode ?>
 	<div class="c5dk_admin_frame"><?= t('C5DK Blogging Buttons: Only visible for users with blogging permissions'); ?></div>

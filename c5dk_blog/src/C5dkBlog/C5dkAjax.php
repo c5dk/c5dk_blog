@@ -26,42 +26,47 @@ defined('C5_EXECUTE') or die('Access Denied.');
 
 class C5dkAjax extends Controller
 {
-	public function getForm($blogID)
+	public function getForm($blogID, $rootID)
 	{
-		$C5dkBlogPost = new C5dkBlogPost;
+		$C5dkBlogPost = new C5dkBlogPost; // Would like to get ridge of this object
+		$C5dkConfig = new C5dkConfig;
+		$C5dkUser = New C5dkUser;
+		$C5dkBlog = $blogID ? C5dkBlog::getByID($blogID) : new C5dkBlog();
+		$C5dkRoot = C5dkRoot::getByID($rootID);
 
-		$request = $this->post();
+		if (($C5dkBlog instanceof C5dkBlog && $C5dkBlog->getAttribute('c5dk_blog_author_id') == $C5dkUser->getUserID()) || $C5dkUser->isEditorOfPage($blogID ? $C5dkBlog : $C5dkRoot)) {
 
-		if ($request['mode'] == C5DK_BLOG_MODE_CREATE) {
-			$C5dkBlogPost->create($request['blogID'], $request['rootID']);
-		} else {
-			$C5dkBlogPost->edit($request['blogID']);
+			if ($blogID) {
+				$C5dkBlogPost->edit($blogID);
+			} else {
+				$C5dkBlogPost->create($blogID, $rootID);
+			}
+
+			$defaultThumbnailID = $C5dkConfig->blog_default_thumbnail_id;
+			$defThumbnail       = $defaultThumbnailID ? File::getByID($defaultThumbnailID) : null;
+			$Cropper            = new ThumbnailCropper($C5dkBlog->thumbnail, $defThumbnail);
+			$Cropper->setOnSelectCallback("c5dk.blog.post.image.showManager('thumbnail')");
+			$Cropper->setOnSaveCallback('c5dk.blog.post.blog.save');
+
+			ob_start();
+			print View::element('blog_post', [
+				'BlogPost' => $C5dkBlogPost,
+				'C5dkConfig' => $C5dkConfig,
+				'C5dkUser' => $C5dkUser,
+				'C5dkBlog' => $C5dkBlog,
+				'ThumbnailCropper' => $Cropper,
+				'token' => $this->app->make('token'),
+				'jh' => $this->app->make('helper/json'),
+				'form' => $this->app->make('helper/form')
+			], 'c5dk_blog');
+			$content = ob_get_contents();
+			ob_end_clean();
+
+			$jh = $this->app->make('helper/json');
+			echo $jh->encode((object) [
+				'form' => $content
+			]);
 		}
-
-		$defaultThumbnailID = $C5dkBlogPost->C5dkConfig->blog_default_thumbnail_id;
-		$defThumbnail       = $defaultThumbnailID ? File::getByID($defaultThumbnailID) : NULL;
-		$Cropper            = new ThumbnailCropper($C5dkBlogPost->C5dkBlog->thumbnail, $defThumbnail);
-		$Cropper->setOnSelectCallback("c5dk.blog.post.image.showManager('thumbnail')");
-		$Cropper->setOnSaveCallback('c5dk.blog.post.blog.save');
-
-		ob_start();
-		print View::element('blog_post', [
-			'BlogPost' => $C5dkBlogPost,
-			'C5dkConfig' => $C5dkBlogPost->C5dkConfig,
-			'C5dkUser' => $C5dkBlogPost->C5dkUser,
-			'C5dkBlog' => $C5dkBlogPost->C5dkBlog,
-			'ThumbnailCropper' => $Cropper,
-			'token' => $this->app->make('token'),
-			'jh' => $this->app->make('helper/json'),
-			'form' => $this->app->make('helper/form')
-		], 'c5dk_blog');
-		$content = ob_get_contents();
-		ob_end_clean();
-
-		$jh = $this->app->make('helper/json');
-		echo $jh->encode((object) [
-			'form' => $content
-		]);
 
 		exit;
 	}
@@ -73,55 +78,13 @@ class C5dkAjax extends Controller
 		$C5dkBlog = C5dkBlog::getByID($blogID);
 
 		// Delete the blog if the current user is the owner
-		if ($C5dkBlog instanceof C5dkBlog && $C5dkBlog->getAttribute('c5dk_blog_author_id') == $C5dkUser->getUserID()) {
+		if (($C5dkBlog instanceof C5dkBlog && $C5dkBlog->getAttribute('c5dk_blog_author_id') == $C5dkUser->getUserID()) || $C5dkUser->isEditorOfPage($C5dkBlog)) {
 			$jh = $this->app->make('helper/json');
 			echo $jh->encode([
 				'url' => Page::getByID($C5dkBlog->rootID)->getCollectionLink(),
 				'result' => $C5dkBlog->moveToTrash()
 			]);
 		}
-	}
-
-	public function getFilesFromUserSet()
-	{
-		// Get helper objects
-		$im = $this->app->make('helper/image');
-
-		$C5dkUser = new C5dkUser();
-		if (!$C5dkUser->isLoggedIn()) {
-			return '{}';
-		}
-
-		// Is $fs a FileSet object or a FileSet handle?
-		$fs = FileSet::getByName('C5DK_BLOG_uID-' . $C5dkUser->getUserID());
-		if (!is_object($fs)) {
-			return '{}';
-		}
-
-		// Get files from FileSet
-		$fl = new FileList();
-		$fl->filterBySet($fs);
-		$fileList = array_reverse($fl->get());
-		foreach ($fileList as $key => $file) {
-			$f  = File::getByID($file->getFileID());
-			$fv = $f->getRecentVersion();
-			$fp = explode('_', $fv->getFileName());
-			if ($fp[3] != 'Thumb') {
-				$files[$key] = [
-					'obj' => $f,
-					'fID' => $f->getFIleID(),
-					'thumbnail' => $im->getThumbnail($f, 150, 150),
-					'picture' => [
-						'src' => File::getRelativePathFromID($file->getFileID()),
-						'width' => $fv->getAttribute('width'),
-						'height' => $fv->getAttribute('height')
-					],
-					'FileFolder' => \Concrete\Core\Tree\Node\Type\FileFolder::getNodeByName('C5DK Blog')
-				];
-			}
-		};
-
-		return $files;
 	}
 
 	public function imageUpload()
@@ -156,7 +119,7 @@ class C5dkAjax extends Controller
 		// $height = $C5dkConfig->blog_picture_height;
 		// $image = $image->thumbnail(new Box($width, $height), ImageInterface::THUMBNAIL_INSET);
 
-		$filename = (microtime(TRUE) * 10000) . '.jpg';
+		$filename = (microtime(true) * 10000) . '.jpg';
 
 		// Save image as .jpg
 		$image->save($tmpFolder . $filename, ['jpeg_quality' => 80]);
@@ -225,50 +188,147 @@ class C5dkAjax extends Controller
 		echo $jh->encode($data);
 	}
 
+	public function approve($blogID)
+	{
+		$result = false;
+		$C5dkBlog = C5dkBlog::getByID($blogID);
+		$C5dkUser = new C5dkUser;
+
+		if ($C5dkBlog instanceof C5dkBlog && ($C5dkBlog->getAttribute('c5dk_blog_author_id') == $C5dkUser->getUserID() || $C5dkUser->isEditorOfPage($C5dkBlog))) {
+			$C5dkBlog->setAttribute('c5dk_blog_approved', true);
+			$result = true;
+		}
+
+		$jh = $this->app->make('helper/json');
+		echo $jh->encode((object) [
+			'result' => $result
+		]);
+	}
+
+	public function unapprove($blogID)
+	{
+		$result = false;
+		$C5dkBlog = C5dkBlog::getByID($blogID);
+		$C5dkUser = new C5dkUser;
+
+		if ($C5dkBlog instanceof C5dkBlog && ($C5dkBlog->getAttribute('c5dk_blog_author_id') == $C5dkUser->getUserID() || $C5dkUser->isEditorOfPage($C5dkBlog))) {
+			$C5dkBlog->setAttribute('c5dk_blog_approved', false);
+			$result = true;
+		}
+
+		$jh = $this->app->make('helper/json');
+		echo $jh->encode((object) [
+			'result' => true
+		]);
+	}
+
+	public function publish($blogID)
+	{
+		// Set C5DK Objects
+		$C5dkUser = new C5dkUser();
+		$C5dkBlog = C5dkBlog::getByID($blogID);
+
+		// Delete the blog if the current user is the owner
+		if ($C5dkBlog instanceof C5dkBlog && ($C5dkBlog->getAttribute('c5dk_blog_author_id') == $C5dkUser->getUserID() || $C5dkUser->isEditorOfPage($C5dkBlog))) {
+			$jh = $this->app->make('helper/json');
+			echo $jh->encode([
+				'result' => $C5dkBlog->publish()
+			]);
+		}
+	}
+
+	public function editor($method, $field, $blogID = null)
+	{
+		// Get package objects
+		$C5dkUser = new C5dkUser;
+		$C5dkBlog = C5dkBlog::getByID($blogID);
+
+		if ($C5dkUser->isEditorOfPage($C5dkBlog)) {
+
+			switch ($method) {
+				case 'save':
+					// Load Core helper classes
+					$jh = Core::make('helper/json');
+
+
+					switch ($field) {
+						case 'approve':
+							$C5dkBlog->setAttribute('c5dk_blog_approved', true);
+							$state = 1;
+							break;
+
+						case 'unapprove':
+							$C5dkBlog->setAttribute('c5dk_blog_approved', false);
+							$state = 0;
+							break;
+
+						case 'all':
+							$C5dkBlog->setPriority($this->post("priorities"));
+							$C5dkBlog->setAttribute('c5dk_blog_publish_time', new \datetime($this->post('publishTime')));
+							$C5dkBlog->setAttribute('c5dk_blog_unpublish_time', new \datetime($this->post('unpublishTime')));
+							$state = 1;
+							break;
+					}
+
+					echo $jh->encode([
+						'method'	=> 'save',
+						'id'		=> $blogID,
+						'state'		=> $state,
+						'status'	=> true
+					]);
+					break;
+			}
+		}
+	}
+
+	public function getFilesFromUserSet()
+	{
+		// Get helper objects
+		$im = $this->app->make('helper/image');
+
+		$C5dkUser = new C5dkUser();
+		if (!$C5dkUser->isLoggedIn()) {
+			return '{}';
+		}
+
+		// Is $fs a FileSet object or a FileSet handle?
+		$fs = FileSet::getByName('C5DK_BLOG_uID-' . $C5dkUser->getUserID());
+		if (!is_object($fs)) {
+			return '{}';
+		}
+
+		// Get files from FileSet
+		$fl = new FileList();
+		$fl->filterBySet($fs);
+		$fileList = array_reverse($fl->get());
+		foreach ($fileList as $key => $file) {
+			$f  = File::getByID($file->getFileID());
+			$fv = $f->getRecentVersion();
+			$fp = explode('_', $fv->getFileName());
+			if ($fp[3] != 'Thumb') {
+				$files[$key] = [
+					'obj' => $f,
+					'fID' => $f->getFIleID(),
+					'thumbnail' => $im->getThumbnail($f, 150, 150),
+					'picture' => [
+						'src' => File::getRelativePathFromID($file->getFileID()),
+						'width' => $fv->getAttribute('width'),
+						'height' => $fv->getAttribute('height')
+					],
+					'FileFolder' => \Concrete\Core\Tree\Node\Type\FileFolder::getNodeByName('C5DK Blog')
+				];
+			}
+		};
+
+		return $files;
+	}
+
 	public function link($link)
 	{
 		$this->redirect($link);
 	}
 
-	// public function save($blogID)
-	// {
-	// 		$app = Application::getFacadeApplication();
-	// 		// Get helper objects
-	// 		$jh = $app->make('helper/json');
-
-	// 		// Set C5dk Objects
-	// 		$C5dkUser = new C5dkUser;
-
-	// 		// Get or create the C5dkBlog Object
-	// 		$C5dkBlog = ($this->post('mode') == C5DK_BLOG_MODE_CREATE) ? new C5dkBlog : C5dkBlog::getByID($blogID);
-
-	// 		$data = [
-	// 			'rootID' => $this->post('rootID'),
-	// 			'userID' => $C5dkUser->getUserID(),
-	// 			'title' => $this->post('title'),
-	// 			'description' => $this->post('description'),
-	// 			'content' => $this->post('c5dk_blog_content'),
-	// 			'topicAttributeHandle' => $this->post('topicAttributeHandle'),
-	// 			'publishTime' => Core::make('helper/form/date_time')->translate('publishTime'),
-	// 			'unpublishTime' => Core::make('helper/form/date_time')->translate('unpublishTime')
-	// 		];
-	// 		// Setup blog and save it
-	// 		$C5dkBlog->setPropertiesFromArray($data);
-	// 		$C5dkBlog = $C5dkBlog->save($this->post('mode'));
-	// 		$C5dkBlog = C5dkBlog::getByID($C5dkBlog->getCollectionID());
-
-	// 		// Can first save the thumbnail now, because we needed to save the page first.
-	// 		$this->saveThumbnail($C5dkBlog, $C5dkUser, $this->post('thumbnail'));
-
-	// 		header('Content-type: application/json');
-	// 		echo $jh->encode([
-	// 			'status' => TRUE,
-	// 			'redirectLink' => $C5dkBlog->getCollectionPath()
-	// 		]);
-
-	// 		exit;
-	// }
-
+	// TODO: This function should be moved
 	public function saveThumbnail($C5dkBlog, $C5dkUser, $thumbnail)
 	{
 			$app = Application::getFacadeApplication();
@@ -318,7 +378,7 @@ class C5dkAjax extends Controller
 			// $image = $image->resize(new Box($C5dkConfig->blog_thumbnail_width, $C5dkConfig->blog_thumbnail_height));
 
 			if ($oldThumbnail && $oldThumbnail->getFileID() != $C5dkConfig->blog_default_thumbnail_id) {
-				$fv = $oldThumbnail->getVersionToModify(TRUE);
+				$fv = $oldThumbnail->getVersionToModify(true);
 				$fv->updateContents($image->get('jpg'));
 			} else {
 				// Import thumbnail into the File Manager
@@ -391,65 +451,5 @@ class C5dkAjax extends Controller
 			//     // Return the File Object
 			//     return $fv->getFile();
 			// }
-	}
-
-	public function editor($method, $field, $blogID = null) {
-
-		// TODO: Needs to check the user is a editor for the page
-
-		switch ($method) {
-			case 'save':
-				// Load Core helper classes
-				$jh = Core::make('helper/json');
-
-				// Get C5dk Blog object
-				$C5dkBlog = C5dkBlog::getByID($blogID);
-
-				switch ($field) {
-					// case "priority":
-					// 	// $C5dkBlog->setPriority($value);
-					// 	$C5dkBlog->setPriority($this->post("priorities"));
-					// 	$state = 1;
-					// 	break;
-
-					// case 'publishTime':
-					// 	$datetime = Core::make('helper/form/date_time')->translate('publishTime_' . $C5dkBlog->getCollectionID());
-					// 	$C5dkBlog->setAttribute('c5dk_blog_publish_time', $datetime);
-					// 	$state = 1;
-					// 	break;
-
-					// case 'unpublishTime':
-					// 	$datetime = Core::make('helper/form/date_time')->translate('unpublishTime_' . $C5dkBlog->getCollectionID());
-					// 	$C5dkBlog->setAttribute('c5dk_blog_unpublish_time', $datetime);
-					// 	$state = 1;
-					// 	break;
-
-					case 'approve':
-						$C5dkBlog->setAttribute('c5dk_blog_approved', true);
-						$state = 1;
-						break;
-
-					case 'unapprove':
-						$C5dkBlog->setAttribute('c5dk_blog_approved', false);
-						$state = 0;
-						break;
-
-					case 'all':
-						$C5dkBlog->setPriority($this->post("priorities"));
-						$C5dkBlog->setAttribute('c5dk_blog_publish_time', new \datetime($this->post('publishTime')));
-						$C5dkBlog->setAttribute('c5dk_blog_unpublish_time', new \datetime($this->post('unpublishTime')));
-						$state = 1;
-						break;
-				}
-
-				echo $jh->encode([
-					'method'	=> 'save',
-					'id'		=> $blogID,
-					'state'		=> $state,
-					'status'	=> true
-				]);
-				break;
-		}
-
 	}
 }

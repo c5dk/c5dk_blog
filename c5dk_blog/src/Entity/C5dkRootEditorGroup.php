@@ -2,6 +2,7 @@
 namespace C5dk\Blog\Entity;
 
 use Database;
+use Group;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
@@ -39,6 +40,11 @@ class C5dkRootEditorGroup
     public function getGroupID()
     {
         return $this->groupID;
+    }
+
+    public function getGroup()
+    {
+        return Group::getByID($this->getGroupID());
     }
 
 	// RootSetting get/set functions

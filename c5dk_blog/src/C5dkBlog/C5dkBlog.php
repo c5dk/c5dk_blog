@@ -50,6 +50,8 @@ class C5dkBlog extends Page
 	{
 		$this->root = $this->getRoot();
 		$this->rootID = $this->getRootID();
+		$this->publishTime = new \datetime();
+		$this->unpublishTime = new \datetime("2100-01-01 00:00");
 	}
 
 	public static function getByID($blogID, $version = 'RECENT', $class = 'C5dk\Blog\C5dkBlog')
@@ -156,23 +158,27 @@ class C5dkBlog extends Page
 		// Set Publish/Unpublish Time
 		if ($C5dkRoot->getPublishTimeEnabled() && $post['publishTime']) {
 			$C5dkBlog->setAttribute('c5dk_blog_publish_time', new \datetime($post['publishTime']));
+		} else {
+			$C5dkBlog->setAttribute('c5dk_blog_publish_time', new \datetime());
 		}
 		if ($C5dkRoot->getUnpublishTimeEnabled() && $post['unpublishTime']) {
 			$C5dkBlog->setAttribute('c5dk_blog_unpublish_time', new \datetime($post['unpublishTime']));
+		} else {
+			$C5dkBlog->setAttribute('c5dk_blog_unpublish_time', new \datetime("2100-01-01 00:00:00"));
 		}
 
 		// Set Permissions
 		foreach ($C5dkRoot->getEditorGroupsArray() as $groupID) {
-			$C5dkBlog->grantPagePermissionByGroup('view_page', $C5dkBlog, $groupID);
+			$this::grantPagePermissionByGroup('view_page', $C5dkBlog, $groupID);
 		}
-		$C5dkBlog->grantPagePermissionByUser('view_page', $C5dkBlog, $u->getUserInfoObject()->getUserID());
+		$this::grantPagePermissionByUser('view_page', $C5dkBlog, $u->getUserInfoObject()->getUserID());
 
 		// Set the Approve page attribute if the root don't require approval
 		if (!$C5dkBlog->root->needsApproval) {
 			$C5dkBlog->setAttribute('c5dk_blog_approved', true);
 		} else {
 			// If the Blog needs approval we need to remove the guest access
-			$C5dkBlog->denyPagePermissionByGroup("view_page", $C5dkBlog, GUEST_GROUP_ID);
+			$this::denyPagePermissionByGroup("view_page", $C5dkBlog, GUEST_GROUP_ID);
 		}
 
 		$C5dkBlog->refreshCache();
@@ -350,7 +356,7 @@ class C5dkBlog extends Page
 		return (count(array_intersect($user->getUserGroups(), $C5dkRoot->editorGroups))) ? true : false;
 	}
 
-	public function grantPagePermissionByGroup($permission, $page, $groupID)
+	public static function grantPagePermissionByGroup($permission, $page, $groupID)
 	{
 		// enable access by a group
 		$g = Group::getByID($groupID);
@@ -369,7 +375,7 @@ class C5dkBlog extends Page
 		// }
 	}
 
-	public function denyPagePermissionByGroup($permission, $page, $groupID)
+	public static function denyPagePermissionByGroup($permission, $page, $groupID)
 	{
 		// remove Guest access
 		$g = Group::getByID($groupID);
@@ -387,7 +393,7 @@ class C5dkBlog extends Page
 		// $pa->markAsInUse();
 	}
 
-	public function grantPagePermissionByUser($permission, $page, $userID)
+	public static function grantPagePermissionByUser($permission, $page, $userID)
 	{
 		// enable access by user
 		$ui = UserInfo::getByID($userID);
@@ -407,7 +413,7 @@ class C5dkBlog extends Page
 		// $pa->markAsInUse();
 	}
 
-	public function denyPagePermissionByUser($permission, $page, $userID)
+	public static function denyPagePermissionByUser($permission, $page, $userID)
 	{
 		// remove user access
 		$ui = UserInfo::getByID($userID);
@@ -437,6 +443,7 @@ class C5dkBlog extends Page
 
 	public function setPriority($values)
 	{
+		$topics = [];
 		foreach ($values as $value) {
 			$topics[] = TopicTreeNode::getNodeByName($value)->getTreeNodeDisplayPath();
 		}

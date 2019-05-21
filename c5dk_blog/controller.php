@@ -25,7 +25,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
 class Controller extends Package
 {
 	protected $appVersionRequired      = '8.2';
-	protected $pkgVersion              = '8.5.b13';
+	protected $pkgVersion              = '8.5.b14';
 	protected $pkgHandle               = 'c5dk_blog';
 	protected $pkgAutoloaderRegistries = [
 		'src/C5dkBlog' => '\C5dk\Blog',
@@ -290,45 +290,92 @@ class Controller extends Package
 
 	public function eventCheckPagesPublishTime()
 	{
+		$startTime = microtime(true);
 		$pl = new PageList();
 		$pl->ignorePermissions();
+		$pl->filterByAttribute('c5dk_blog_author_id', 0, '>');
+		$pl->filterByAttribute('c5dk_blog_approved', 0);
+		$denyUnapproved = $pl->get();
+
+		$pl = new PageList();
+		$pl->ignorePermissions();
+		$pl->filterByAttribute('c5dk_blog_author_id', 0, '>');
+		$pl->filterByAttribute('c5dk_blog_publish_time', date('Y-m-d H:i:s'), '>');
+		$denyPublishTime = $pl->get();
+
+		$pl = new PageList();
+		$pl->ignorePermissions();
+		$pl->filterByAttribute('c5dk_blog_author_id', 0, '>');
+		$pl->filterByAttribute('c5dk_blog_unpublish_time', date('Y-m-d H:i:s'), '<');
+		$denyUnpublishTime = $pl->get();
+
+		$pl = new PageList();
+		$pl->ignorePermissions();
+		$pl->filterByAttribute('c5dk_blog_author_id', 0, '>');
 		$pl->filterByAttribute('c5dk_blog_approved', 1);
+		$pl->filterByAttribute('c5dk_blog_publish_time', date('Y-m-d H:i:s'), '<');
+		$pl->filterByAttribute('c5dk_blog_unpublish_time', date('Y-m-d H:i:s'), '>');
 
-		$redirect = false;
+		$grantPages = $pl->get();
+		$denyPages = array_merge($denyUnapproved, $denyPublishTime, $denyUnpublishTime);
 
-		foreach ($pl->get() as $page) {
-			$publishTime = $page->getAttribute('c5dk_blog_publish_time');
-			if ($publishTime) {
-				$publishTime = $publishTime->getTimestamp();
-			} else {
-				// If publish time isn't used we subtract 1 day from the current date
-				$publishTime = (new \datetime)->sub(new \DateInterval('P1D'))->getTimestamp();
-			}
-			$unpublishTime = $page->getAttribute('c5dk_blog_unpublish_time');
-			if ($unpublishTime) {
-				$unpublishTime = $unpublishTime->getTimestamp();
-			} else {
-				// If unpublish time isn't used we add 1 day to the current date
-				$unpublishTime = (new \datetime)->add(new \DateInterval('P1D'))->getTimestamp();
-			}
-			$time = time();
+		// Grant pages
+		foreach ($grantPages as $page) {
 			$access = $this->checkGroupViewPermission('view_page', $page, GUEST_GROUP_ID);
-			// Should we grant permission because of the time
-			if ($publishTime < $time && $time < $unpublishTime && !$access) {
-				$C5dkBlog = C5dkBlog::getByID($page->getCollectionID());
-				$C5dkBlog->grantPagePermissionByGroup('view_page', $page, GUEST_GROUP_ID);
-			}
-			if ($publishTime > $time && $time < $unpublishTime && $access) {
-				$C5dkBlog = C5dkBlog::getByID($page->getCollectionID());
-				$C5dkBlog->denyPagePermissionByGroup('view_page', $page, GUEST_GROUP_ID);
-				$redirect = true;
+			if (!$access) {
+				C5dkBlog::grantPagePermissionByGroup('view_page', $page, GUEST_GROUP_ID);
 			}
 		}
 
+		foreach ($denyPages as $page) {
+			$access = $this->checkGroupViewPermission('view_page', $page, GUEST_GROUP_ID);
+			if ($access) {
+				C5dkBlog::denyPagePermissionByGroup('view_page', $page, GUEST_GROUP_ID);
+			}
+		}
+
+		$endTime = microtime(true);
+		$diffTime = $endTime - $startTime;
+		if ($diffTime > 0.5) {
+			\Log::addWarning('C5DK Blog: Publish/Unpublish permission event took longer then 0.5 seconds to finish: '. $diffTime);
+		}
+
+		// $r = Redirect::to(Page::getCurrentPage()->getCollectionLink());
+		// $r->send();
+
+		// $redirect = false;
+
+		// foreach ($pl->get() as $page) {
+		// 	$publishTime = $page->getAttribute('c5dk_blog_publish_time');
+		// 	if ($publishTime) {
+		// 		$publishTime = $publishTime->getTimestamp();
+		// 	} else {
+		// 		// If publish time isn't used we subtract 1 day from the current date
+		// 		$publishTime = (new \datetime)->sub(new \DateInterval('P1D'))->getTimestamp();
+		// 	}
+		// 	$unpublishTime = $page->getAttribute('c5dk_blog_unpublish_time');
+		// 	if ($unpublishTime) {
+		// 		$unpublishTime = $unpublishTime->getTimestamp();
+		// 	} else {
+		// 		// If unpublish time isn't used we add 1 day to the current date
+		// 		$unpublishTime = (new \datetime)->add(new \DateInterval('P1D'))->getTimestamp();
+		// 	}
+		// 	$time = time();
+		// 	$access = $this->checkGroupViewPermission('view_page', $page, GUEST_GROUP_ID);
+		// 	// Should we grant permission because of the time
+		// 	if ($publishTime < $time && $time < $unpublishTime && !$access) {
+		// 		$C5dkBlog = C5dkBlog::getByID($page->getCollectionID());
+		// 		$C5dkBlog->grantPagePermissionByGroup('view_page', $page, GUEST_GROUP_ID);
+		// 	}
+		// 	if ($publishTime > $time && $time < $unpublishTime && $access) {
+		// 		$C5dkBlog = C5dkBlog::getByID($page->getCollectionID());
+		// 		$C5dkBlog->denyPagePermissionByGroup('view_page', $page, GUEST_GROUP_ID);
+		// 		$redirect = true;
+		// 	}
+		// }
+
 		// We removed Guest access to a page, so we redirect to make sure that the user isn't accessing that page
 		// if ($redirect) {
-		// 	$r = Redirect::to(Page::getCurrentPage()->getCollectionLink());
-		// 	$r->send();
 		// }
 	}
 

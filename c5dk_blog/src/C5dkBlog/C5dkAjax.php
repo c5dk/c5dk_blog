@@ -252,20 +252,22 @@ class C5dkAjax extends Controller
 
 
 					switch ($field) {
-						case 'approve':
-							$C5dkBlog->setAttribute('c5dk_blog_approved', true);
-							$state = 1;
-							break;
+						// case 'approve':
+						// 	$C5dkBlog->setAttribute('c5dk_blog_approved', true);
+						// 	$state = 1;
+						// 	break;
 
-						case 'unapprove':
-							$C5dkBlog->setAttribute('c5dk_blog_approved', false);
-							$state = 0;
-							break;
+						// case 'unapprove':
+						// 	$C5dkBlog->setAttribute('c5dk_blog_approved', false);
+						// 	$state = 0;
+						// 	break;
 
 						case 'all':
 							$C5dkBlog->setPriority($this->post("priorities"));
-							$C5dkBlog->setAttribute('c5dk_blog_publish_time', new \datetime($this->post('publishTime')));
-							$C5dkBlog->setAttribute('c5dk_blog_unpublish_time', new \datetime($this->post('unpublishTime')));
+							$publishTime = $this->post('publishTime');
+							$C5dkBlog->setAttribute('c5dk_blog_publish_time', $publishTime ? new \datetime($publishTime) : new \datetime());
+							$unpublishTime = $this->post('unpublishTime');
+							$C5dkBlog->setAttribute('c5dk_blog_unpublish_time', $unpublishTime ? new \datetime($unpublishTime) : new \datetime("2100-01-01"));
 							$state = 1;
 							break;
 					}

@@ -55,6 +55,11 @@ class C5dkRoot extends Page
 		return $this->entity->getRootID();
 	}
 
+	public function getNeedsApproval()
+	{
+		return $this->entity->getNeedsApproval();
+	}
+
 	public function getWriterGroups()
 	{
 		return $this->entity->getWriterGroups();

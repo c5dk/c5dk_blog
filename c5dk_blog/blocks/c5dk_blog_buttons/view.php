@@ -22,18 +22,20 @@
 					<?php if ($C5dkUser->isEditor && $C5dkBlog->getAttribute('c5dk_blog_author_id')) { ?>
 
 						<!-- Approve Blog Entry -->
-						<div class="c5dk-blog-btn-wrap">
-							<button id="c5dk_approve"
-								class="<?= ($C5dkBlog->approved? "c5dk_blog_ButtonGreen" : "c5dk_blog_ButtonOrange"); ?>"
-								onclick="c5dk.blog.buttons.approve(<?= $C5dkBlog->blogID; ?>)"
-								data-id="<?= $C5dkBlog->blogID; ?>" data-approved="<?= $C5dkBlog->approved; ?>"
-								data-approved="<?= $C5dkBlog->approved; ?>"
-								data-approved-style="c5dk_blog_ButtonGreen"
-								data-unapproved-style="c5dk_blog_ButtonOrange"
-							>
-								<?= (!$C5dkBlog->approved)? t("Approve") : t("Unapprove"); ?>
-							</button>
-						</div>
+						<?php if ($C5dkRoot->getNeedsApproval()) { ?>
+							<div class="c5dk-blog-btn-wrap">
+								<button id="c5dk_approve"
+									class="<?= ($C5dkBlog->approved? "c5dk_blog_ButtonGreen" : "c5dk_blog_ButtonOrange"); ?>"
+									onclick="c5dk.blog.buttons.approve(<?= $C5dkBlog->blogID; ?>)"
+									data-id="<?= $C5dkBlog->blogID; ?>" data-approved="<?= $C5dkBlog->approved; ?>"
+									data-approved="<?= $C5dkBlog->approved; ?>"
+									data-approved-style="c5dk_blog_ButtonGreen"
+									data-unapproved-style="c5dk_blog_ButtonOrange"
+								>
+									<?= (!$C5dkBlog->approved)? t("Approve") : t("Unapprove"); ?>
+								</button>
+							</div>
+						<?php } ?>
 
 						<?php if (!$C5dkUser->isOwner) { ?>
 

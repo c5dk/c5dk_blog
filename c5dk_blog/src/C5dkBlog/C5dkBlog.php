@@ -360,10 +360,10 @@ class C5dkBlog extends Page
 	{
 		// enable access by a group
 		$g = Group::getByID($groupID);
-        if (is_object($g)) {
-            // $page->setPermissionsToOverride();
-            $page-> assignPermissions($g, [$permission], PermissionKey::ACCESS_TYPE_INCLUDE, false);
-        }
+		if (is_object($g)) {
+			// $page->setPermissionsToOverride();
+			$page-> assignPermissions($g, [$permission], PermissionKey::ACCESS_TYPE_INCLUDE, false);
+		}
 			// $pk = PermissionKey::getByHandle($permission);
 			// $pk->setPermissionObject($page);
 			// $pa = $pk->getPermissionAccessObject();
@@ -397,10 +397,10 @@ class C5dkBlog extends Page
 	{
 		// enable access by user
 		$ui = UserInfo::getByID($userID);
-        if (is_object($ui)) {
-            // $page->setPermissionsToOverride();
-            $page-> assignPermissions($ui, [$permission], PermissionKey::ACCESS_TYPE_INCLUDE, false);
-        }
+		if (is_object($ui)) {
+			// $page->setPermissionsToOverride();
+			$page-> assignPermissions($ui, [$permission], PermissionKey::ACCESS_TYPE_INCLUDE, false);
+		}
 		// if (is_object($ui)) {
 		// 	$pk = PermissionKey::getByHandle($permission);
 		// 	$pk->setPermissionObject($page);
@@ -433,12 +433,12 @@ class C5dkBlog extends Page
 
 	public function getPublishTime()
 	{
-		return $this->publishTime ? $this->publishTime : (new \DateTime)->format('Y-m-d H:i');
+		return $this->publishTime ? $this->publishTime : (new \DateTime())->format('Y-m-d H:i');
 	}
 
 	public function getUnpublishTime()
 	{
-		return $this->unpublishTime ? $this->unpublishTime : (new \DateTime)->format('Y-m-d H:i');
+		return $this->unpublishTime ? $this->unpublishTime : (new \DateTime("2100-01-01 00:00:00"))->format('Y-m-d H:i');
 	}
 
 	public function setPriority($values)
@@ -452,7 +452,8 @@ class C5dkBlog extends Page
 		}
 	}
 
-	public function publish() {
+	public function publish()
+	{
 		$this->setAttribute('c5dk_blog_approved', true);
 		$this->setAttribute('c5dk_blog_publish_time', new \datetime());
 

@@ -1,7 +1,7 @@
 <?php defined('C5_EXECUTE') or die("Access Denied."); ?>
 
 
-<?php if (!$C5dkBlog->isEditMode()) { ?>
+<?php if ($C5dkBlog && !$C5dkBlog->isEditMode()) { ?>
 
 	<?php if ($C5dkUser->isEditor) { ?>
 
@@ -276,6 +276,8 @@
 						$.fn.dialog.closeTop();
 						break;
 				}
+
+				return false;
 			},
 
 			publishNow: function(blogID) {
@@ -335,7 +337,7 @@
 		};
 	</script>
 
-<?php } elseif ($C5dkBlog->isEditMode() || $C5dkUser->isAdmin) { ?>
+<?php } elseif ($C5dkBlog && $C5dkBlog->isEditMode() || $C5dkUser->isAdmin) { ?>
 	<?php // SuperAdmin/Administrator view if they aren't allowed to block or if the page is in edit mode ?>
 	<div class="c5dk_admin_frame"><?= t('C5DK Blogging Buttons: Only visible for users with blogging permissions'); ?></div>
 

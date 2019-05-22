@@ -39,7 +39,7 @@
 					<?php if (count($entries)) { ?>
 						<?php foreach ($entries[$rootID] as $blogID => $C5dkBlog) { ?>
 							<?php $approved = $C5dkBlog->getAttribute('c5dk_blog_approved') ? "1" : "0"; ?>
-							<tr class="c5dk_blog_entry" data-id="<?= $blogID; ?>" data-approved="<?= $approved; ?>">
+							<tr id="entry_<?= $blogID; ?>" class="c5dk_blog_entry" data-id="<?= $blogID; ?>" data-approved="<?= $approved; ?>">
 								<td>
 									<a href="<?= $C5dkBlog->getCollectionLink(); ?>"><?= $C5dkBlog->title; ?></a>
 								</td>
@@ -65,7 +65,7 @@
 									<button title="<?= t('Approve/Unapprove'); ?>" class="c5dk_aprove_button <?= (!$approved) ? "c5dk-blog-btn-warning" : "c5dk-blog-btn-success"; ?> c5dk_approve" type="button" onclick="c5dk.blog.editor.manager.approve(<?= $blogID; ?>, this)"><?= (!$approved) ? '<i class="fa fa-check-circle"></i>' : '<i class="fa fa-minus-circle"></i>'; ?></button>
 									<button title="<?= t('Edit Post'); ?>" class="c5dk-blog-btn-primary" type="button" onclick="c5dk.blog.editor.manager.edit(<?= $blogID; ?>)"><i class="fa fa-pencil"></i></button>
 									<!-- <button title="<?= t('Delete Post'); ?>" class="c5dk-blog-btn-danger" type="button" onclick="c5dk.blog.editor.manager.delete('confirm', <?= $blogID; ?>)"><i class="fa fa-times"></i></button> -->
-									<a href="<?= URL::to('/c5dk/blog/delete', $blogID); ?>" title="<?= t('Delete Post'); ?>" class="c5dk-blog-btn-danger" type="button" onclick="return c5dk.blog.editor.manager.delete(<?= $blogID; ?>);"><i class="fa fa-times"></i></a>
+									<button title="<?= t('Delete Post'); ?>" class="c5dk-blog-btn-danger" onclick="c5dk.blog.editor.manager.delete(<?= $blogID; ?>);"><i class="fa fa-times"></i></a>
 								</td>
 							</tr>
 						<?php } ?>

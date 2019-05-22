@@ -46,7 +46,7 @@ $dh = Core::make('helper/form/date_time');
 					<div>
 						<!-- Post Publish Date Time -->
 						<?= $form->label('publishTime', '<h4>' . t('Publish Date Time') . '</h4>'); ?>
-						<input id="publishTime" name="publishTime" class="c5dk_datetimepicker" type="text" value="<?= $C5dkBlog->getPublishTime(); ?>" />
+						<input id="publishTime" name="publishTime" class="c5dk_datetimepicker" type="text" value="<?= $C5dkBlog->getPublishTime()->format('Y-m-d H:i'); ?>" />
 					</div>
 				<?php } ?>
 
@@ -54,7 +54,7 @@ $dh = Core::make('helper/form/date_time');
 					<div>
 						<!-- Post Unpublish Date Time -->
 						<?= $form->label('unpublishTime', '<h4>' . t('Unpublish Date Time') . '</h4>'); ?>
-						<input id="unpublishTime" name="unpublishTime" class="c5dk_datetimepicker" type="text" value="<?= $C5dkBlog->getUnpublishTime(); ?>" />
+						<input id="unpublishTime" name="unpublishTime" class="c5dk_datetimepicker" type="text" value="<?= $C5dkBlog->getUnpublishTime()->format('Y-m-d H:i'); ?>" />
 					</div>
 				<?php } ?>
 			</div>

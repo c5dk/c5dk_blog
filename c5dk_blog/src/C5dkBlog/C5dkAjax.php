@@ -82,6 +82,7 @@ class C5dkAjax extends Controller
 			$jh = $this->app->make('helper/json');
 			echo $jh->encode([
 				'url' => Page::getByID($C5dkBlog->rootID)->getCollectionLink(),
+				'status' => true,
 				'result' => $C5dkBlog->moveToTrash()
 			]);
 		}

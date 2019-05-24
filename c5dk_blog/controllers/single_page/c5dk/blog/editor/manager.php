@@ -20,7 +20,7 @@ class Manager extends PageController
 		$C5dkUser = new C5dkUser;
 
 		// Do the user have access to this page
-		if (!$C5dkUser->isEditor) {
+		if (!$C5dkUser->isEditor()) {
 			$this->redirect('/');
 		}
 

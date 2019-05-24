@@ -3,11 +3,6 @@ if (!c5dk.blog) { c5dk.blog = {}; }
 
 c5dk.blog.post = {
 
-	// rootList: <?php //= $jh->encode($BlogPost->rootList); ?>,
-	// imageList: '',
-	// imageUploadUrl: '<?= \URL::to('/blog_post/upload'); ?>',
-	// ckeditor: null,
-
 	init: function() {
 
 		// Init Image Manager fileList
@@ -24,46 +19,13 @@ c5dk.blog.post = {
 				return true;
 			},
 			submitHandler: function(form) {
-
 				// Submit form
 				$('#title').removeAttr('disabled');
 				$('input[type="submit"]').addClass('c5dk_blogpage_ButtonDisabled').removeClass('c5dk_blogpage_ButtonGreen').attr('disabled','disabled');
 
-				// // $('#c5dk_blog_content').val(CKEDITOR.instances.c5dk_blog_content.getData());
-				// var formData = new FormData(document.forms["c5dk_blog_form"]);
-				// formData.set('c5dk_blog_content', CKEDITOR.instances.c5dk_blog_content.getData());
-				// $('#c5dk_blog_content').show().val(CKEDITOR.instances.c5dk_blog_content.getData());
-
-				// if (c5dk.blog.post.thumbnail && c5dk.blog.post.thumbnail.crop_img) {
-				// 	c5dk.blog.post.thumbnail.crop_img.cropper(
-				// 		'getCroppedCanvas',
-				// 		{
-				// 			fillColor: c5dk.blog.service.data.thumbnailCropper.fillColor
-				// 		}
-				// 	).toBlob(function (blob) {
-
-				// 		formData.append('croppedImage', blob);
-				// 		c5dk.blog.post.blog.formData = formData;
-				// 		c5dk.blog.post.blog.save(formData);
-
-				// 	},
-				// 	"image/jpeg", 80
-				// 	);
-				// } else {
-				// 	c5dk.blog.post.blog.formData = formData;
-				// 	c5dk.blog.post.blog.save(formData);
-				// }
-				// c5dk.blog.post.blog.save();
-
 				return true;
 			}
 		});
-
-		// Hide Cropper buttons
-		// $("#c5dk_cropper_buttons").hide();
-
-		// Init Datetimepicker
-		// $('#c5dk-blog-package .datetimepicker').datetimepicker({ step: 15 });
 
 		// Move focus to the title field
 		$('.c5dk_blog_title input').focus();
@@ -133,50 +95,6 @@ c5dk.blog.post = {
 	},
 
 	blog: {
-
-		// mode: <?= $BlogPost->mode == C5DK_BLOG_MODE_CREATE ? C5DK_BLOG_MODE_CREATE : C5DK_BLOG_MODE_EDIT; ?>,
-		// formData: null,
-
-		save: function () {
-			// var formData = new FormData();
-			// formData.append('rootID', $('#rootID').val());
-
-			var formData = new FormData(document.forms["c5dk_blog_form"]);
-			// formData.set('c5dk_blog_content', CKEDITOR.instances.c5dk_blog_content.getData());
-			// $('#c5dk_blog_content').show().val(CKEDITOR.instances.c5dk_blog_content.getData());
-
-			// if (c5dk.blog.post.thumbnail && c5dk.blog.post.thumbnail.crop_img) {
-
-			// 	c5dk.blog.post.thumbnail.crop_img.cropper('getCroppedCanvas', {
-			// 		fillColor: c5dk.blog.service.data.thumbnailCropper.fillColor
-			// 	}).toBlob(function (blob) {
-			// 		// formData.set('croppedImage', blob);
-			// 	}, "image/jpeg", 80);
-			// }
-// 			// var formData = new FormData();
-// 			// formData.set('blogID', $('#blogID').val() ? $('#blogID').val() : 0);
-// 			var blogID = $('#blogID').val()? $('#blogID').val() : 0;
-
-			// c5dk.blog.modal.waiting("<?= t('Saving your blog'); ?>");
-			// $.ajax({
-			// 	type: "POST",
-			// 	url: c5dk.blog.data.post.url.save + '/' + blogID,
-			// 	data: formData,
-			// 	processData: false,
-			// 	// contentType: false,
-			// 	// contentType: 'multipart/form-data',
-			// 	dataType: 'json',
-			// 	success: function (result) {
-			// 		if (result.status) {
-			// 			window.location = c5dk.blog.data.post.url.root + result.redirectLink;
-			// 		}
-			// 		c5dk.blog.modal.exitModal();
-			// 	},
-			// 	error: function () {
-			// 		console.log('Upload error');
-			// 	}
-			// });
-		},
 
 		cancel: function() {
 			if (c5dk.blog.data.post.slidein) {
@@ -252,82 +170,4 @@ c5dk.blog.post = {
 		}
 
 	}
-
-	// thumbnail: {
-	//     preview:{
-	//         width: 150,
-	//         height: Math.round((150 / (<?= $C5dkConfig->blog_thumbnail_width; ?> / 100)) * (<?= $C5dkConfig->blog_thumbnail_height; ?> / 100))
-	//     },
-
-	//     save:{
-	//         width: <?= $C5dkConfig->blog_thumbnail_width; ?>,
-	//         height: <?= $C5dkConfig->blog_thumbnail_height; ?>
-	//     },
-
-	//     image:{
-	//         maxWidth: 600,
-	//         width: null,
-	//         height: null
-	//     },
-
-	//     crop_img: null,
-
-	//     remove:function () {
-	//         $('#thumbnailID').val(-1);
-	//         if (c5dk.blog.post.thumbnail.crop_img) {
-	//             c5dk.blog.post.thumbnail.crop_img.cropper('destroy');
-	//             c5dk.blog.post.thumbnail.crop_img = null;
-	//         }
-	//         $('#c5dk_blog_thumbnail, #c5dk_crop_pic').attr('src', "").hide();
-
-	//         // Hide Cropper buttons
-	//         $("#c5dk_cropper_buttons").hide();
-
-	//     },
-
-	//     useAsThumb:function (fID, src, width, height) {
-
-	//         document.getElementById('thumbnail').scrollIntoView();
-
-	//         // Hide the slide-in Image manager
-	//         c5dk.blog.post.image.hideManager();
-
-	//         // Destroy old Jcrop instance if exist
-	//         c5dk.blog.post.thumbnail.remove();
-
-	//         // Show Cropper buttons
-	//         $("#c5dk_cropper_buttons").show();
-
-	//         $('#thumbnailID').val(fID);
-
-	//         // Update
-	//         $('#c5dk_crop_pic').attr('src', src).show()
-
-	//         c5dk.blog.post.thumbnail.crop_img = $('#c5dk_crop_pic').cropper({
-	//             aspectRatio: (c5dk.blog.post.thumbnail.save.width / c5dk.blog.post.thumbnail.save.height),
-	//             responsive: true,
-	//             // movable: false,
-	//             // zoomable: true,
-	//             // rotatable: false,
-	//             // scalable: false,
-	//             preview: '#cropper_preview',
-	//             // autoCropArea: 0,
-	//             // built: function () {
-	//             //  c5dk.blog.post.thumbnail.crop_img.cropper("setCropBoxData", {
-	//             //   width: "100",
-	//             //   height: "100"
-	//             //  });
-	//             // },
-	//             crop: function(coords) {
-	//                 // Set form objects
-	//                 $('#thumbnailX').val(coords.x);
-	//                 $('#thumbnailY').val(coords.y);
-	//                 $('#thumbnailWidth').val(coords.width);
-	//                 $('#thumbnailHeight').val(coords.height);
-	//                 $('#pictureWidth').val($('#c5dk_crop_pic').width());
-	//                 $('#pictureHeight').val($('#c5dk_crop_pic').height());
-	//             }
-	//         });
-	//     }
-	// }
 }

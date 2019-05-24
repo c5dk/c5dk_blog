@@ -35,9 +35,9 @@ class C5dkRoot
 	/** @ORM\Column(type="text") */
 	protected $topicAttributeHandle = "";
 	/** @ORM\Column(type="boolean") */
-	protected $publishTimeEnabled = 0;
+	protected $publishTime = 0;
 	/** @ORM\Column(type="boolean") */
-	protected $unpublishTimeEnabled = 0;
+	protected $unpublishTime = 0;
 
 	/**
 	 * @ORM\OneToMany(targetEntity="C5dk\Blog\Entity\C5dkRootWriterGroup", mappedBy="root", cascade={"persist"})
@@ -119,21 +119,21 @@ class C5dkRoot
 	{
 		return $this->topicAttributeHandle;
 	}
-	public function setPublishTimeEnabled($publishTimeEnabled)
+	public function setPublishTime($publishTime)
 	{
-		$this->publishTimeEnabled = $publishTimeEnabled;
+		$this->publishTime = $publishTime;
 	}
-	public function getPublishTimeEnabled()
+	public function getPublishTime()
 	{
-		return $this->publishTimeEnabled;
+		return $this->publishTime;
 	}
-	public function setUnpublishTimeEnabled($unpublishTimeEnabled)
+	public function setUnpublishTime($unpublishTime)
 	{
-		$this->unpublishTimeEnabled = $unpublishTimeEnabled;
+		$this->unpublishTime = $unpublishTime;
 	}
-	public function getUnpublishTimeEnabled()
+	public function getUnpublishTime()
 	{
-		return $this->unpublishTimeEnabled;
+		return $this->unpublishTime;
 	}
 
 	public function getWriterGroups()
@@ -196,8 +196,8 @@ class C5dkRoot
 		$root->setTags(isset($request['tags']) ? 1 : 0);
 		$root->setThumbnails(isset($request['thumbnails']) ? 1 : 0);
 		$root->setTopicAttributeHandle($request['topicAttributeHandle']);
-		$root->setPublishTimeEnabled(isset($request['publishTimeEnabled']));
-		$root->setUnpublishTimeEnabled(isset($request['unpublishTimeEnabled']));
+		$root->setPublishTime(isset($request['publishTime']));
+		$root->setUnpublishTime(isset($request['unpublishTime']));
 		$root->save();
 
 		self::setEditorGroups($root, count($request['editorGroups']) ? $request['editorGroups'] : []);

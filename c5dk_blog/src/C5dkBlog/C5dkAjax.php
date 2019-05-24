@@ -19,7 +19,6 @@ use Concrete\Core\Support\Facade\Application;
 use Illuminate\Filesystem\Filesystem;
 use Concrete\Core\Tree\Node\Type\Topic as TopicTreeNode;
 use Concrete\Core\Tree\Node\Type\FileFolder as FileFolder;
-use C5dk\Blog\BlogPost as C5dkBlogPost;
 use C5dk\Blog\Service\ThumbnailCropper as ThumbnailCropper;
 
 defined('C5_EXECUTE') or die('Access Denied.');
@@ -28,32 +27,38 @@ class C5dkAjax extends Controller
 {
 	public function getForm($blogID, $rootID)
 	{
-		$C5dkBlogPost = new C5dkBlogPost; // Would like to get ridge of this object
 		$C5dkConfig = new C5dkConfig;
 		$C5dkUser = New C5dkUser;
-		$C5dkBlog = $blogID ? C5dkBlog::getByID($blogID) : new C5dkBlog();
-		$C5dkRoot = C5dkRoot::getByID($rootID);
+		$C5dkBlog = $blogID ? C5dkBlog::getByID($blogID) : new C5dkBlog;
 
-		if (($C5dkBlog instanceof C5dkBlog && $C5dkBlog->getAttribute('c5dk_blog_author_id') == $C5dkUser->getUserID()) || $C5dkUser->isEditorOfPage($blogID ? $C5dkBlog : $C5dkRoot)) {
+		// Find the root we will set as standard root.
+		if (!$rootID) {
+			$rootID = $C5dkBlog->getRootID();
+			$rootList = $C5dkUser->getRootList();
+			$rootID = (isset($rootList[$rootID])) ? $rootID : key($rootList);
+		}
+		$C5dkRoot   = C5dkRoot::getByID($rootID);
 
-			if ($blogID) {
-				$C5dkBlogPost->edit($blogID);
-			} else {
-				$C5dkBlogPost->create($blogID, $rootID);
-			}
+		if (($C5dkBlog instanceof C5dkBlog && $C5dkBlog->getAuthorID() == $C5dkUser->getUserID()) || $C5dkUser->isEditorOfPage($blogID ? $C5dkBlog : $C5dkRoot)) {
+
+			// if (!$blogID) {
+			// 	$C5dkBlogPost->edit($blogID);
+			// } else {
+			// 	$C5dkBlogPost->create($blogID, $rootID);
+			// }
 
 			$defaultThumbnailID = $C5dkConfig->blog_default_thumbnail_id;
 			$defThumbnail       = $defaultThumbnailID ? File::getByID($defaultThumbnailID) : null;
-			$Cropper            = new ThumbnailCropper($C5dkBlog->thumbnail, $defThumbnail);
+			$Cropper            = new ThumbnailCropper($C5dkBlog->getThumbnail(), $defThumbnail);
 			$Cropper->setOnSelectCallback("c5dk.blog.post.image.showManager('thumbnail')");
 			$Cropper->setOnSaveCallback('c5dk.blog.post.blog.save');
 
 			ob_start();
 			print View::element('blog_post', [
-				'BlogPost' => $C5dkBlogPost,
 				'C5dkConfig' => $C5dkConfig,
 				'C5dkUser' => $C5dkUser,
 				'C5dkBlog' => $C5dkBlog,
+				'C5dkRoot' => $C5dkRoot,
 				'ThumbnailCropper' => $Cropper,
 				'token' => $this->app->make('token'),
 				'jh' => $this->app->make('helper/json'),
@@ -81,7 +86,7 @@ class C5dkAjax extends Controller
 		if (($C5dkBlog instanceof C5dkBlog && $C5dkBlog->getAttribute('c5dk_blog_author_id') == $C5dkUser->getUserID()) || $C5dkUser->isEditorOfPage($C5dkBlog)) {
 			$jh = $this->app->make('helper/json');
 			echo $jh->encode([
-				'url' => Page::getByID($C5dkBlog->rootID)->getCollectionLink(),
+				'url' => Page::getByID($C5dkBlog->getRootID())->getCollectionLink(),
 				'status' => true,
 				'result' => $C5dkBlog->moveToTrash()
 			]);
@@ -202,6 +207,7 @@ class C5dkAjax extends Controller
 
 		$jh = $this->app->make('helper/json');
 		echo $jh->encode((object) [
+			'state' => 1,
 			'result' => $result
 		]);
 	}
@@ -219,6 +225,7 @@ class C5dkAjax extends Controller
 
 		$jh = $this->app->make('helper/json');
 		echo $jh->encode((object) [
+			'state' => 0,
 			'result' => true
 		]);
 	}

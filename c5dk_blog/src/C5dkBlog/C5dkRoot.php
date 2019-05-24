@@ -12,20 +12,20 @@ class C5dkRoot extends Page
 {
 	public $entity = null;
 
-	public $rootID           = null;
-	public $writerGroups     = [];
-	public $editorGroups	 = [];
-	public $pageTypeID       = null;
-	public $tags             = 1;
-	public $thumbnails       = 1;
-	public $topicAttributeHandle = null;
-	public $publishTimeEnabled = 0;
-	public $unpublishTimeEnabled = 0;
+	// public $rootID           = null;
+	// public $writerGroups     = [];
+	// public $editorGroups	 = [];
+	// public $pageTypeID       = null;
+	// public $tags             = 1;
+	// public $thumbnails       = 1;
+	// public $topicAttributeHandle = null;
+	// public $publishTime = 0;
+	// public $unpublishTime = 0;
 
 	public function __construct()
 	{
-		$this->entity = new C5dkRootEntity;
 		parent::__construct();
+		$this->entity = new C5dkRootEntity;
 	}
 
 	public static function getByID($rootID, $version = 'RECENT', $class = 'C5dk\Blog\C5dkRoot')
@@ -33,19 +33,19 @@ class C5dkRoot extends Page
 		// Get the C5dkRoot object and add the permissions fields
 		$C5dkRoot = parent::getByID($rootID, $version, $class);
 		$C5dkRoot->entity = C5dkRootEntity::getByRootID($rootID);
-		if (is_object($C5dkRoot)) {
-			$C5dkRoot->rootID = $rootID;
-			$C5dkRoot->writerGroups = $C5dkRoot->entity->getWriterGroups();
-			$C5dkRoot->editorGroups = $C5dkRoot->entity->getEditorGroups();
-			$C5dkRoot->pageTypeID = $C5dkRoot->entity->getPageTypeID();
-			$C5dkRoot->priorityAttributeHandle = $C5dkRoot->entity->getPriorityAttributeHandle();
-			$C5dkRoot->needsApproval = $C5dkRoot->entity->getNeedsApproval();
-			$C5dkRoot->tags = $C5dkRoot->entity->getTags();
-			$C5dkRoot->thumbnails = $C5dkRoot->entity->getThumbnails();
-			$C5dkRoot->topicAttributeHandle = $C5dkRoot->entity->getTopicAttributeHandle();
-			$C5dkRoot->publishTimeEnabled = $C5dkRoot->entity->getPublishTimeEnabled();
-			$C5dkRoot->unpublishTimeEnabled = $C5dkRoot->entity->getUnpublishTimeEnabled();
-		}
+		// if (is_object($C5dkRoot)) {
+		// 	$C5dkRoot->rootID = $rootID;
+		// 	$C5dkRoot->writerGroups = $C5dkRoot->entity->getWriterGroups();
+		// 	$C5dkRoot->editorGroups = $C5dkRoot->entity->getEditorGroups();
+		// 	$C5dkRoot->pageTypeID = $C5dkRoot->entity->getPageTypeID();
+		// 	$C5dkRoot->priorityAttributeHandle = $C5dkRoot->entity->getPriorityAttributeHandle();
+		// 	$C5dkRoot->needsApproval = $C5dkRoot->entity->getNeedsApproval();
+		// 	$C5dkRoot->tags = $C5dkRoot->entity->getTags();
+		// 	$C5dkRoot->thumbnails = $C5dkRoot->entity->getThumbnails();
+		// 	$C5dkRoot->topicAttributeHandle = $C5dkRoot->entity->getTopicAttributeHandle();
+		// 	$C5dkRoot->publishTimeEnabled = $C5dkRoot->entity->getPublishTime();
+		// 	$C5dkRoot->unpublishTimeEnabled = $C5dkRoot->entity->getUnpublishTime();
+		// }
 
 		return $C5dkRoot;
 	}
@@ -106,14 +106,14 @@ class C5dkRoot extends Page
 		return $this->entity->getTopicAttributeHandle();
 	}
 
-	public function getPublishTimeEnabled()
+	public function getPublishTime()
 	{
-		return $this->entity->getPublishTimeEnabled();
+		return $this->entity->getPublishTime();
 	}
 
-	public function getUnpublishTimeEnabled()
+	public function getUnpublishTime()
 	{
-		return $this->entity->getUnpublishTimeEnabled();
+		return $this->entity->getUnpublishTime();
 	}
 
 	public static function addRoot($rootID)

@@ -11,56 +11,66 @@ use FileSet;
 use Image;
 use Imagine\Image\Box;
 use Concrete\Core\Tree\Node\Type\FileFolder	as FileFolder;
+use Concrete\Core\Multilingual\Page\Section\Section;
 use Concrete\Core\Page\Controller\PageController;
-use C5dk\Blog\C5dkConfig as C5dkConfig;
-use C5dk\Blog\C5dkUser as C5dkUser;
-use C5dk\Blog\C5dkBlog as C5dkBlog;
-use C5dk\Blog\BlogPost as C5dkBlogPost;
-use C5dk\Blog\C5dkAjax as C5dkAjax;
+
+use C5dk\Blog\C5dkConfig;
+use C5dk\Blog\C5dkUser;
+use C5dk\Blog\C5dkAjax;
+use C5dk\Blog\C5dkBlog;
+use C5dk\Blog\C5dkRoot;
 use C5dk\Blog\Service\ThumbnailCropper as ThumbnailCropper;
 
 defined('C5_EXECUTE') or die('Access Denied.');
 
 class BlogPost extends PageController
 {
-	// Objects
-	public $C5dkConfig;
-	public $C5dkUser;
-	public $C5dkBlog;
-
-	// Variables
-	public $blogID = NULL;
-	public $rootList;
-	public $topicAttributeHandle;
-	// public $topicAttributeIDList;
-
-	// Flags
-	public $mode       = NULL;
-	public $redirectID = NULL;
-
 	public function view()
 	{
 		// Direct access is not allowed.
 		$this->redirect('/');
 	}
 
-	public function create($redirectID, $rootID)
+	public function create($blogID, $rootID, $redirectID = null)
 	{
-		$C5dkBlogPost = new C5dkBlogPost;
-		$C5dkBlogPost->create($redirectID, $rootID);
+		// Setup C5DK objects
+		$C5dkConfig = new C5dkConfig;
+		$C5dkUser   = new C5dkUser;
+		$C5dkBlog   = new C5dkBlog;
 
-		$this->init($C5dkBlogPost);
+		// Check if user can blog?
+		if (!$C5dkUser->isBlogger()) {
+			$this->redirect('/');
+		}
+
+		// Find the root we will set as standard root.
+		if (!$rootID) {
+			$rootID = $C5dkBlog->getRootID();
+			$rootList = $C5dkUser->getRootList();
+			$rootID = (isset($rootList[$rootID])) ? $rootID : key($rootList);
+		}
+		$C5dkRoot   = C5dkRoot::getByID($rootID);
+
+		$this->init($C5dkBlog, $C5dkRoot, $C5dkConfig, $C5dkUser, $redirectID);
 	}
 
-	public function edit($blogID)
+	public function edit($blogID, $rootID)
 	{
-		$C5dkBlogPost = new C5dkBlogPost;
-		$C5dkBlogPost->edit($blogID);
+		// Setup C5DK objects
+		$C5dkConfig = new C5dkConfig;
+		$C5dkUser   = new C5dkUser;
+		$C5dkBlog   = C5dkBlog::getByID($blogID);
+		$C5dkRoot   = C5DKRoot::getByID($rootID);
 
-		$this->init($C5dkBlogPost);
+		// Check if user is owner of blog?
+		if (!$C5dkBlog->getAuthorID() && $C5dkBlog->getAuthorID() != $C5dkUser->getUserID()) {
+			$this->redirect('/');
+		}
+
+		$this->init($C5dkBlog, $C5dkRoot, $C5dkConfig, $C5dkUser);
 	}
 
-	public function init($C5dkBlogPost)
+	public function init($C5dkBlog, $C5dkRoot, $C5dkConfig, $C5dkUser, $redirectID = null)
 	{
 		// Require Assets
 		$this->requireAsset('css', 'c5dk_blog_css');
@@ -80,13 +90,14 @@ class BlogPost extends PageController
 
 		// Set View variables
 		$this->set('view', new View);
-		$this->set('BlogPost', $C5dkBlogPost);
-		$this->set('C5dkConfig', $C5dkBlogPost->C5dkConfig);
-		$this->set('C5dkUser', $C5dkBlogPost->C5dkUser);
-		$this->set('C5dkBlog', $C5dkBlogPost->C5dkBlog);
-		$defaultThumbnailID = $C5dkBlogPost->C5dkConfig->blog_default_thumbnail_id;
-		$defThumbnail       = $defaultThumbnailID ? File::getByID($defaultThumbnailID) : NULL;
-		$Cropper            = new ThumbnailCropper($C5dkBlogPost->C5dkBlog->thumbnail, $defThumbnail);
+		$this->set('C5dkConfig', $C5dkConfig);
+		$this->set('C5dkUser', $C5dkUser);
+		$this->set('C5dkBlog', $C5dkBlog);
+		$this->set('C5dkRoot', $C5dkRoot);
+		$this->set('redirectID', $redirectID);
+		$defaultThumbnailID = $C5dkConfig->blog_default_thumbnail_id;
+		$defThumbnail       = $defaultThumbnailID ? File::getByID($defaultThumbnailID) : null;
+		$Cropper            = new ThumbnailCropper($C5dkBlog->getThumbnail(), $defThumbnail);
 		$Cropper->setOnSelectCallback("c5dk.blog.post.image.showManager('thumbnail')");
 		$Cropper->setOnSaveCallback('c5dk.blog.post.blog.save');
 		$this->set('ThumbnailCropper', $Cropper);
@@ -173,7 +184,7 @@ class BlogPost extends PageController
 		// 	// $image = $image->resize(new Box($C5dkConfig->blog_thumbnail_width, $C5dkConfig->blog_thumbnail_height));
 
 		// 	if ($oldThumbnail && $oldThumbnail->getFileID() != $C5dkConfig->blog_default_thumbnail_id) {
-		// 		$fv = $oldThumbnail->getVersionToModify(TRUE);
+		// 		$fv = $oldThumbnail->getVersionToModify(true);
 		// 		$fv->updateContents($image->get('jpg'));
 		// 	} else {
 		// 		// Import thumbnail into the File Manager
@@ -212,7 +223,7 @@ class BlogPost extends PageController
 	public function ping()
 	{
 		$C5dkUser = new C5dkUser;
-		$status   = ($C5dkUser->isLoggedIn()) ? TRUE : FALSE;
+		$status   = ($C5dkUser->isLoggedIn()) ? true : false;
 		$data     = [
 			'post' => $this->post(),
 			'status' => $status
@@ -222,5 +233,17 @@ class BlogPost extends PageController
 		echo $jh->encode($data);
 
 		exit;
+	}
+
+	private function getUserRootList()
+	{
+		$sectionList = Section::getList();
+
+		foreach ($this->C5dkUser->getRootList('writers') as $rootID => $C5dkRoot) {
+			$languageText = count($sectionList) ? ' (' . $C5dkRoot->getSiteTreeObject()->getLocale()->getLanguageText() . ')' : '';
+			$rootList[$rootID] = $C5dkRoot->getCollectionName() . $languageText;
+		}
+
+		return $rootList;
 	}
 }

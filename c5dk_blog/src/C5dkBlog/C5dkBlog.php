@@ -6,7 +6,7 @@ use Database;
 use Events;
 use User;
 use UserInfo;
-use Page;
+use Concrete\Core\Page\Page;
 use PageType;
 use CollectionAttributeKey;
 use Concrete\Core\Attribute\Key\CollectionKey;
@@ -33,58 +33,153 @@ class C5dkBlog extends Page
 {
 	// Data
 	public $blogID      = 0;
-	public $root        = null;
-	public $rootID      = null;
-	public $authorID    = null;
-	public $thumbnail   = null;
-	public $title       = '';
-	public $description = '';
-	public $content     = '';
-	public $tags        = null;
-	public $topics      = null;
-	public $publishTime = null;
-	public $unpublishTime = null;
-	public $priority = null;
+	// public $root        = null;
+	// public $rootID      = null;
+	// public $authorID    = null;
+	// public $thumbnail   = null;
+	// public $title       = '';
+	// public $description = '';
+	// public $content     = '';
+	// public $tags        = null;
+	// public $topics      = null;
+	// public $publishTime = null;
+	// public $unpublishTime = null;
+	// public $priority = null;
 
 	public function __construct()
 	{
-		$this->root = $this->getRoot();
-		$this->rootID = $this->getRootID();
-		$this->publishTime = new \datetime();
-		$this->unpublishTime = new \datetime("2100-01-01 00:00");
+		// $this->root = $this->getRoot();
+		// $this->rootID = $this->getRootID();
+		// $this->publishTime = new \datetime();
+		// $this->unpublishTime = new \datetime("2100-01-01 00:00");
 	}
+
 
 	public static function getByID($blogID, $version = 'RECENT', $class = 'C5dk\Blog\C5dkBlog')
 	{
 		$blog                = parent::getByID($blogID, $version, $class);
-		$blog->blogID        = $blogID;
-		$blog->root          = $blog->getRoot();
-		$blog->rootID        = $blog->getRootID();
-		$blog->title         = $blog->getCollectionName();
-		$blog->description   = $blog->getCollectionDescription();
-		$blog->authorID      = $blog->getAttribute('c5dk_blog_author_id');
-		$blog->content       = $blog->getContent();
-		$blog->thumbnail     = $blog->getAttribute('thumbnail');
-		$blog->tags          = $blog->getAttributeValueObject('tags');
-		$blog->topics        = $blog->getTopics();
-		$blog->priority      = $blog->getAttribute('c5dk_blog_priority');
-		$publishTime         = $blog->getAttribute('c5dk_blog_publish_time');
-		$blog->publishTime   = $publishTime ? $publishTime->format('Y-m-d H:i') : (new \DateTime)->format('Y-m-d H:i');
-		$unpublishTime       = $blog->getAttribute('c5dk_blog_unpublish_time');
-		$blog->unpublishTime = $unpublishTime ? $unpublishTime->format('Y-m-d H:i') : (new \DateTime)->format('Y-m-d H:i');
-		$blog->approved      = $blog->getAttribute('c5dk_blog_approved');
+		// $blog->blogID        = $blogID;
+		// $blog->root          = $blog->getRoot();
+		// $blog->rootID        = $blog->getRootID();
+		// $blog->title         = $blog->getCollectionName();
+		// $blog->description   = $blog->getCollectionDescription();
+		// $blog->authorID      = $blog->getAttribute('c5dk_blog_author_id');
+		// $blog->content       = $blog->getContent();
+		// $blog->thumbnail     = $blog->getAttribute('thumbnail');
+		// $blog->tags          = $blog->getAttributeValueObject('tags');
+		// $blog->topics        = $blog->getTopics();
+		// $blog->priority      = $blog->getAttribute('c5dk_blog_priority');
+		// $publishTime         = $blog->getAttribute('c5dk_blog_publish_time');
+		// $blog->publishTime   = $publishTime ? $publishTime->format('Y-m-d H:i') : (new \DateTime)->format('Y-m-d H:i');
+		// $unpublishTime       = $blog->getAttribute('c5dk_blog_unpublish_time');
+		// $blog->unpublishTime = $unpublishTime ? $unpublishTime->format('Y-m-d H:i') : (new \DateTime)->format('Y-m-d H:i');
+		// $blog->approved      = $blog->getAttribute('c5dk_blog_approved');
 
 		return $blog;
 	}
 
-	public function save($mode)
+	public function getAuthorID() {
+		return $this->getAttribute('c5dk_blog_author_id');
+	}
+
+	public function getTitle()
+	{
+		return $this->getCollectionName();
+	}
+
+	public function getDescription()
+	{
+		return $this->getCollectionDescription();
+	}
+
+	// Get blog content from the first content block in the main area or return empty "" string
+	public function getContent()
+	{
+		foreach ($this->getBlocks('Main') as $block) {
+			if ($block->getBlockTypeHandle() == 'content') {
+				$instance = $block->getInstance();
+				// \Log::addEntry(get_class($instance));
+				return $instance->getContent();
+			}
+		}
+
+		return '';
+	}
+
+	public function getTags()
+	{
+		return $this->getAttributeValueObject('tags');
+	}
+
+	public function getPriority()
+	{
+		return $this->getAttribute('c5dk_blog_priority');
+	}
+
+	public function getTopics()
+	{
+		if (!$this->getRootID()) {
+			return 0;
+		}
+
+		$C5dkRoot = C5dkRoot::getByID($this->getRootID());
+		if ($C5dkRoot->getTopicAttributeHandle()) {
+			return $this->getAttributeValueObject($C5dkRoot->getTopicAttributeHandle());
+		} else {
+			return 0;
+		}
+	}
+
+	public function getThumbnail()
+	{
+		return $this->getAttribute('thumbnail');
+	}
+
+	public function getApproved() {
+		return $this->getAttribute('c5dk_blog_approved');
+	}
+
+	public function getPublishTime($type = "text")
+	{
+		$publishTime = $this->getAttribute('c5dk_blog_publish_time');
+
+		if (!$publishTime) {
+			$publishTime = new \DateTime();
+		}
+
+		switch ($type) {
+			case 'text':
+				$publishTime = $publishTime->format('Y-m-d H:i');
+				break;
+		}
+		return $publishTime;
+	}
+
+	public function getUnpublishTime($type = "text")
+	{
+		$unpublishTime = $this->getAttribute('c5dk_blog_unpublish_time');
+
+		if (!$unpublishTime) {
+			$unpublishTime = new \DateTime("2100-01-01 00:00:00");
+		}
+
+		switch ($type) {
+			case 'text':
+				$unpublishTime = $unpublishTime->format('Y-m-d H:i');
+				break;
+		}
+
+		return $unpublishTime;
+	}
+
+	public function save($blogID)
 	{
 		$request = Request::getInstance();
 		$post = $request->post();
 
 		$u = new User;
-		switch ($post['mode']) {
-			case C5DK_BLOG_MODE_CREATE:
+		switch ($blogID) {
+			case 0:
 				$C5dkRoot = C5dkRoot::getByID($post['rootID']);
 				$pt       = PageType::getByID($C5dkRoot->getBlogPageTypeID());
 				$C5dkBlog     = $C5dkRoot->add($pt, [
@@ -111,7 +206,7 @@ class C5dkBlog extends Page
 				$C5dkBlog = C5dkBlog::getByID($blogID);
 				break;
 
-			case C5DK_BLOG_MODE_EDIT:
+			default:
 				$C5dkBlog = C5dkBlog::getByID($post['blogID']);
 				$C5dkRoot = $C5dkBlog->getRoot();
 				$C5dkBlog->update([
@@ -119,9 +214,6 @@ class C5dkBlog extends Page
 					'cDescription' => $post['description']
 				]);
 				break;
-
-			default:
-				return false;
 		}
 
 		// Set meta attributes
@@ -156,12 +248,12 @@ class C5dkBlog extends Page
 		}
 
 		// Set Publish/Unpublish Time
-		if ($C5dkRoot->getPublishTimeEnabled() && $post['publishTime']) {
+		if ($C5dkRoot->getPublishTime() && $post['publishTime']) {
 			$C5dkBlog->setAttribute('c5dk_blog_publish_time', new \datetime($post['publishTime']));
 		} else {
 			$C5dkBlog->setAttribute('c5dk_blog_publish_time', new \datetime());
 		}
-		if ($C5dkRoot->getUnpublishTimeEnabled() && $post['unpublishTime']) {
+		if ($C5dkRoot->getUnpublishTime() && $post['unpublishTime']) {
 			$C5dkBlog->setAttribute('c5dk_blog_unpublish_time', new \datetime($post['unpublishTime']));
 		} else {
 			$C5dkBlog->setAttribute('c5dk_blog_unpublish_time', new \datetime("2100-01-01 00:00:00"));
@@ -222,7 +314,7 @@ class C5dkBlog extends Page
 		// Remove old thumbnail from filemanager
 		$thumbnail = $this->getAttribute('thumbnail');
 		$u         = new user;
-		if (is_object($thumbnail) && $thumbnail->getRecentVersion()->getFileName() == 'C5DK_BLOG_uID-' . $u->getUserID() . '_Thumb_cID-' . $this->blogID . '.' . $thumbnail->getRecentVersion()->getExtension()) {
+		if (is_object($thumbnail) && $thumbnail->getRecentVersion()->getFileName() == 'C5DK_BLOG_uID-' . $u->getUserID() . '_Thumb_cID-' . $this->getCollectionID() . '.' . $thumbnail->getRecentVersion()->getExtension()) {
 			$thumbnail->delete();
 		}
 
@@ -234,19 +326,19 @@ class C5dkBlog extends Page
 	}
 
 	// Get the specified blogs root ID
-	private function getRootID()
+	public function getRootID()
 	{
-		$page = $this;
+		// $page = $this;
 
-		$root = $this->findRoot($page);
+		$root = $this->findRoot($this);
 		return is_object($root) ? $root->getCollectionID() : null;
 	}
 
 	public function getRoot()
 	{
-		$page = $this;
+		// $page = $this;
 
-		return $this->findRoot($page);
+		return $this->findRoot($this);
 	}
 
 	private function findRoot($page)
@@ -266,33 +358,8 @@ class C5dkBlog extends Page
 		return null;
 	}
 
-	// Get blog content from the first content block in the main area or return empty "" string
-	private function getContent()
-	{
-		foreach ($this->getBlocks('Main') as $block) {
-			if ($block->getBlockTypeHandle() == 'content') {
-				$instance = $block->getInstance();
-				// \Log::addEntry(get_class($instance));
-				return $instance->getContent();
-			}
-		}
 
-		return '';
-	}
-
-	private function getTopics()
-	{
-		if (!$this->rootID) {
-			return 0;
-		}
-
-		$C5dkRoot = C5dkRoot::getByID($this->rootID);
-		if ($C5dkRoot->getTopicAttributeHandle()) {
-			return $this->getAttributeValueObject(CollectionAttributeKey::getByHandle($C5dkRoot->getTopicAttributeHandle()));
-		} else {
-			return 0;
-		}
-	}
+	// --- Helper methods ---
 
 	private function getUrlSlug($name)
 	{
@@ -354,6 +421,38 @@ class C5dkBlog extends Page
 
 		// Is the user a member of one of the editor groups for this root.
 		return (count(array_intersect($user->getUserGroups(), $C5dkRoot->editorGroups))) ? true : false;
+	}
+
+	public function setPriority($values)
+	{
+		$topics = [];
+		foreach ($values as $value) {
+			$topics[] = TopicTreeNode::getNodeByName($value)->getTreeNodeDisplayPath();
+		}
+		if (count($topics)) {
+			$this->setAttribute('c5dk_blog_priority', $topics);
+		}
+	}
+
+	public function publish()
+	{
+		$this->setAttribute('c5dk_blog_approved', true);
+		$this->setAttribute('c5dk_blog_publish_time', new \datetime());
+
+		// TODO: Do we need to look at the unpublish time too???
+
+		return true;
+	}
+
+	public function isUnpublished()
+	{
+		$access = $this->checkGroupViewPermission('view_page', $this, GUEST_GROUP_ID);
+		// Should we grant permission because of the time
+		if ($access) {
+			return false;
+		} else {
+			return true;
+		}
 	}
 
 	public static function grantPagePermissionByGroup($permission, $page, $groupID)
@@ -429,48 +528,6 @@ class C5dkBlog extends Page
 
 		// // apply the the permissions changes
 		// $pa->markAsInUse();
-	}
-
-	public function getPublishTime()
-	{
-		return $this->publishTime ? $this->publishTime : (new \DateTime())->format('Y-m-d H:i');
-	}
-
-	public function getUnpublishTime()
-	{
-		return $this->unpublishTime ? $this->unpublishTime : (new \DateTime("2100-01-01 00:00:00"))->format('Y-m-d H:i');
-	}
-
-	public function setPriority($values)
-	{
-		$topics = [];
-		foreach ($values as $value) {
-			$topics[] = TopicTreeNode::getNodeByName($value)->getTreeNodeDisplayPath();
-		}
-		if (count($topics)) {
-			$this->setAttribute('c5dk_blog_priority', $topics);
-		}
-	}
-
-	public function publish()
-	{
-		$this->setAttribute('c5dk_blog_approved', true);
-		$this->setAttribute('c5dk_blog_publish_time', new \datetime());
-
-		// TODO: Do we need to look at the unpublish time too???
-
-		return true;
-	}
-
-	public function isUnpublished()
-	{
-		$access = $this->checkGroupViewPermission('view_page', $this, GUEST_GROUP_ID);
-		// Should we grant permission because of the time
-		if ($access) {
-			return false;
-		} else {
-			return true;
-		}
 	}
 
 	public function checkGroupViewPermission($permissionHandle, $page, $groupID)

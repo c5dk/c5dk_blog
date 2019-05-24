@@ -113,10 +113,10 @@ Core::make('help')->display(t(
 												<?= t("Thumbnails Enabled"); ?>
 											</div>
 											<div>
-												<?= $form->checkbox("root[" . $rootID . "][publishTimeEnabled]", 1, $C5dkRoot->entity->getPublishTimeEnabled()); ?>
+												<?= $form->checkbox("root[" . $rootID . "][publishTime]", 1, $C5dkRoot->entity->getPublishTime()); ?>
 												<?= t("Publish Time Enabled"); ?>
 												<br />
-												<?= $form->checkbox("root[" . $rootID . "][unpublishTimeEnabled]", 1, $C5dkRoot->entity->getUnpublishTimeEnabled()); ?>
+												<?= $form->checkbox("root[" . $rootID . "][unpublishTime]", 1, $C5dkRoot->entity->getUnpublishTime()); ?>
 												<?= t("Unpublish Time Enabled"); ?>
 											</div>
 										</div>

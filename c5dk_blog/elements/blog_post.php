@@ -1,11 +1,11 @@
 <?php defined('C5_EXECUTE') or die('Access Denied.'); ?>
 <?php
-$dh = Core::make('helper/form/date_time');
+	$blogID = $C5dkBlog->getCollectionID() ? $C5dkBlog->getCollectionID() : $C5dkBlog->blogID;
 ?>
 
 <div id="c5dk-blog-package" class="container main-wrap">
 
-	<form id="c5dk_blog_form" method="post" action="<?= \URL::to('/blog_post/save', $C5dkBlog->blogID ? $C5dkBlog->blogID : 0); ?>">
+	<form id="c5dk_blog_form" method="post" action="<?= \URL::to('/blog_post/save', $blogID); ?>">
 
 		<!-- Show errors if any -->
 		<?php if (isset($error) && $error instanceof Error && $error->has()) : ?>
@@ -18,43 +18,42 @@ $dh = Core::make('helper/form/date_time');
 			<div class="c5dk_blog_page_icon"><img src="<?= REL_DIR_PACKAGES; ?>/c5dk_blog/images/c5blog.png" alt="C5DK Blog Icon" height="40" width="40"></div>
 			<!-- Form buttons -->
 			<div class="c5dk_blog_buttons">
-				<input class="c5dk_blogpage_ButtonGreen" type="submit" value="<?= ($BlogPost->mode == C5DK_BLOG_MODE_CREATE) ? t('Post') : t('Update'); ?>" name="submit">
+				<input class="c5dk_blogpage_ButtonGreen" type="submit" value="<?= $blogID ? t('Update') : t('Post'); ?>" name="submit">
 				<input class="c5dk_blogpage_ButtonBlue" onclick="c5dk.blog.post.blog.cancel();" type="button" value="<?= t('Cancel'); ?>">
 			</div>
 		</div>
 
-		<!-- Blog Mode -->
-		<?= $form->hidden('mode', $BlogPost->mode); ?>
-
 		<!-- Blog ID -->
-		<?= $form->hidden('blogID', $C5dkBlog->blogID ? $C5dkBlog->blogID : 0); ?>
+		<?php //= $form->hidden('blogID', 1); ?>
+		<input id="blogID" name="blogID" type="hidden" value="<?= $blogID; ?>" />
 
 		<!-- Blog root -->
-		<?php if (count($BlogPost->rootList) < 2 || $BlogPost->mode == C5DK_BLOG_MODE_EDIT) { ?>
-			<?= $form->hidden('rootID', $C5dkBlog->rootID); ?>
+		<?php if (count($C5dkUser->getRootList()) < 2 || $blogID) { ?>
+			<?= $form->hidden('rootID', $C5dkRoot->getCollectionID()); ?>
 		<?php } else { ?>
 			<div class="c5dk_blog_section">
 				<?php  ?>
 				<?= $form->label('rootID', '<h4>' . t('Post your blog under') . '</h4>'); ?>
-				<?= $form->select('rootID', $BlogPost->rootList, $C5dkBlog->rootID); ?>
+				<?= $form->select('rootID', $C5dkUser->getRootList(), $C5dkBlog->getRootID()); ?>
 			</div>
 		<?php } ?>
 
-		<?php if ($BlogPost->publishTimeEnabled || $BlogPost->unpublishTimeEnabled) { ?>
+		<!-- Blog Publish/Unpublish time -->
+		<?php if ($C5dkRoot->getPublishTime() || $C5dkRoot->getUnpublishTime()) { ?>
 			<div class="c5dk_blog_section">
-				<?php if ($BlogPost->publishTimeEnabled) { ?>
+				<?php if ($C5dkRoot->getPublishTime()) { ?>
 					<div>
-						<!-- Post Publish Date Time -->
+						<!-- Post Publish Time -->
 						<?= $form->label('publishTime', '<h4>' . t('Publish Date Time') . '</h4>'); ?>
-						<input id="publishTime" name="publishTime" class="c5dk_datetimepicker" type="text" value="<?= $C5dkBlog->getPublishTime()->format('Y-m-d H:i'); ?>" />
+						<input id="publishTime" name="publishTime" class="c5dk_datetimepicker" type="text" value="<?= $C5dkBlog->getPublishTime(); ?>" />
 					</div>
 				<?php } ?>
 
-				<?php if ($BlogPost->unpublishTimeEnabled) { ?>
+				<?php if ($C5dkRoot->getUnpublishTime()) { ?>
 					<div>
-						<!-- Post Unpublish Date Time -->
+						<!-- Post Unpublish Time -->
 						<?= $form->label('unpublishTime', '<h4>' . t('Unpublish Date Time') . '</h4>'); ?>
-						<input id="unpublishTime" name="unpublishTime" class="c5dk_datetimepicker" type="text" value="<?= $C5dkBlog->getUnpublishTime()->format('Y-m-d H:i'); ?>" />
+						<input id="unpublishTime" name="unpublishTime" class="c5dk_datetimepicker" type="text" value="<?= $C5dkBlog->getUnpublishTime(); ?>" />
 					</div>
 				<?php } ?>
 			</div>
@@ -72,10 +71,10 @@ $dh = Core::make('helper/form/date_time');
 					</span>
 				</label>
 				<?php $style = ['class' => 'c5dk_bp_title c5dk-blog-full-width']; ?>
-				<?php if ($BlogPost->mode == C5DK_BLOG_MODE_EDIT && $C5dkConfig->blog_title_editable == 0) : ?>
+				<?php if ($blogID && $C5dkConfig->blog_title_editable == 0) : ?>
 				<?php $style['disabled'] = 'disabled'; ?>
 				<?php endif ?>
-				<?= $form->text('title', $C5dkBlog->title, $style); ?>
+				<?= $form->text('title', $C5dkBlog->getTitle(), $style); ?>
 			</div>
 
 			<!-- Blog Description -->
@@ -85,7 +84,7 @@ $dh = Core::make('helper/form/date_time');
 						<h4><?= t('Blog Description'); ?><sup><i style="color: #E50000; font-size: 12px;" class="fa fa-asterisk"></i></sup></h4>
 					</span>
 				</label>
-				<?= $form->textarea('description', Core::make('helper/text')->entities($C5dkBlog->description), ['class' => 'c5dk-blog-full-width', 'rows' => 4]); ?>
+				<?= $form->textarea('description', Core::make('helper/text')->entities($C5dkBlog->getDescription()), ['class' => 'c5dk-blog-full-width', 'rows' => 4]); ?>
 
 				<!-- Title and Description char counter script-->
 				<script type="text/javascript">
@@ -134,7 +133,7 @@ $dh = Core::make('helper/form/date_time');
 			<label for="c5dk_blog_content">
 				<h4><?= t('Blog Content'); ?><sup><i style="color: #E50000; font-size: 12px;" class="fa fa-asterisk"></i></sup></h4>
 			</label>
-			<?= $form->textarea('c5dk_blog_content', $C5dkBlog->content); ?>
+			<?= $form->textarea('c5dk_blog_content', $C5dkBlog->getContent()); ?>
 			<script type="text/javascript">
 				$(document).ready(function() {
 					CKEDITOR.replace('c5dk_blog_content', {
@@ -210,23 +209,23 @@ $dh = Core::make('helper/form/date_time');
 		<div class="c5dk_blog_section">
 
 			<!-- Blog Tags -->
-			<?php if ($BlogPost->tagsEnabled) { ?>
+			<?php if ($C5dkRoot->getTags()) { ?>
 				<?php $casTags = CollectionAttributeKey::getByHandle('tags'); ?>
 				<h4><?= t('Tags'); ?></h4>
-				<?= $casTags->render('form', $C5dkBlog->tags, true); ?>
+				<?= $casTags->render('form', $C5dkBlog->getTags(), true); ?>
 			<?php } ?>
 
 			<!-- Blog Topics -->
-			<?php if ($BlogPost->topicAttributeHandle) { ?>
+			<?php if ($C5dkRoot->getTopicAttributeHandle()) { ?>
 				<?= $form->label('', '<h4 style="margin-top: 25px;">' . t('Topics') . '</h4>'); ?>
-				<?= $form->hidden('topicAttributeHandle', $BlogPost->topicAttributeHandle); ?>
-				<?php $casTopics = CollectionAttributeKey::getByHandle($BlogPost->topicAttributeHandle); ?>
-				<?= $casTopics->render('form', $C5dkBlog->topics, true); ?>
+				<?= $form->hidden('topicAttributeHandle', $C5dkRoot->getTopicAttributeHandle()); ?>
+				<?php $casTopics = CollectionAttributeKey::getByHandle($C5dkRoot->getTopicAttributeHandle()); ?>
+				<?= $casTopics->render('form', $C5dkBlog->getTopics(), true); ?>
 			<?php } ?>
 		</div>
 
 		<!-- Blog Thumbnail -->
-		<?php if ($BlogPost->thumbnailsEnabled && $ThumbnailCropper) { ?>
+		<?php if ($C5dkRoot->getThumbnails() && $ThumbnailCropper) { ?>
 			<!-- Cropper Service -->
 			<?= $ThumbnailCropper->output(); ?>
 		<?php } ?>
@@ -237,7 +236,7 @@ $dh = Core::make('helper/form/date_time');
 			<!-- C5DK Blog Icon -->
 			<div class="c5dk_blog_page_icon"><img src="<?= REL_DIR_PACKAGES; ?>/c5dk_blog/images/c5blog.png" alt="C5DK Blog Icon" height="40" width="40"></div>
 			<div class="c5dk_blog_buttons">
-				<input class="c5dk_blogpage_ButtonGreen" type="submit" value="<?= ($BlogPost->mode == C5DK_BLOG_MODE_CREATE) ? t('Post') : t('Update'); ?>" name="submit">
+				<input class="c5dk_blogpage_ButtonGreen" type="submit" value="<?= $blogID ? t('Update') : t('Post'); ?>" name="submit">
 				<input class="c5dk_blogpage_ButtonBlue" onclick="c5dk.blog.post.blog.cancel();" type="button" value="<?= t('Cancel'); ?>">
 			</div>
 		</div>
@@ -275,12 +274,11 @@ $dh = Core::make('helper/form/date_time');
 	}
 
 	c5dk.blog.data.post = {
-		modeCreate: '<?= C5DK_BLOG_MODE_CREATE; ?>',
-		mode: <?= $BlogPost->mode == C5DK_BLOG_MODE_CREATE ? C5DK_BLOG_MODE_CREATE : C5DK_BLOG_MODE_EDIT; ?>,
-		slidein: <?= (int)$C5dkConfig->blog_form_slidein; ?>,
+		blogID: <?= $blogID; ?>,
+		slidein: <?= $C5dkConfig->blog_form_slidein; ?>,
 
 		url: {
-			currentPage: '<?= \URL::to('blog_post', 'create', $BlogPost->redirectID); ?>',
+			currentPage: '<?= \URL::to('blog_post', 'create', $redirectID); ?>',
 			root: '<?= \URL::to("/"); ?>',
 			save: '<?= \URL::to("/c5dk/blog/save"); ?>',
 			delete: '<?= \URL::to("/c5dk/blog/image/delete"); ?>',
@@ -315,18 +313,15 @@ $dh = Core::make('helper/form/date_time');
 		float: left;
 		overflow: hidden;
 		border: 1px solid #ccc;
-		background-color: < ?=$C5dkConfig->blog_cropper_def_bgcolor;
-		?>;
+		background-color: <?= $C5dkConfig->blog_cropper_def_bgcolor; ?>;
 		width: 150px;
-		height: < ?=intval((150 / ($C5dkConfig->blog_thumbnail_width / 100)) * ($C5dkConfig->blog_thumbnail_height / 100));
-		?>px;
+		height: <?= intval((150 / ($C5dkConfig->blog_thumbnail_width / 100)) * ($C5dkConfig->blog_thumbnail_height / 100)); ?>px;
 		/*cursor: pointer;*/
 	}
 
 	#c5dk-blog-package .c5dk_blog_thumbnail_preview img {
 		width: 150px;
-		height: < ?=intval((150 / ($C5dkConfig->blog_thumbnail_width / 100)) * ($C5dkConfig->blog_thumbnail_height / 100));
-		?>px;
+		height: <?= intval((150 / ($C5dkConfig->blog_thumbnail_width / 100)) * ($C5dkConfig->blog_thumbnail_height / 100)); ?>px;
 		max-width: none;
 	}
 

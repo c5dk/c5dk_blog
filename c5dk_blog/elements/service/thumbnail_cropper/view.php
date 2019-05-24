@@ -3,7 +3,7 @@
 <div id="c5dk-blog-package">
 	<div id="thumbnail" class="c5dk_blog_section">
 
-		<input id="thumbnailID" name="thumbnail[id]" type="hidden" value="<?= $Cropper->getThumbnailID() ? $Cropper->getThumbnailID() : 0; ?>">
+		<input id="thumbnailID" name="thumbnail[id]" type="hidden" value="<?= $Cropper->getThumbnailID() ? $Cropper->getThumbnailID() : 0; ?>" data-default="<?= $Cropper->getThumbnailID() ? $Cropper->getThumbnailID() : 0; ?>">
 		<input id="thumbnailX" name="thumbnail[x]" type="hidden" value="0">
 		<input id="thumbnailY" name="thumbnail[y]" type="hidden" value="0">
 		<input id="thumbnailWidth" name="thumbnail[width]" type="hidden" value="0">

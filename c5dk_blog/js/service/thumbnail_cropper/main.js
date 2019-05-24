@@ -82,7 +82,13 @@ c5dk.blog.service.thumbnailCropper = {
 	// },
 
 	remove: function () {
-		$('#thumbnailID').val(-1);
+		var elThumbnailID = $('#thumbnailID');
+		if (elThumbnailID.data('default')) {
+			elThumbnailID.val(-1);
+		} else {
+			elThumbnailID.val(0)
+			$('#croppedImage').val(0);
+		}
 		if (c5dk.blog.service.data.thumbnailCropper.crop_img) {
 			c5dk.blog.service.data.thumbnailCropper.crop_img.cropper('destroy');
 			c5dk.blog.service.data.thumbnailCropper.crop_img = null;

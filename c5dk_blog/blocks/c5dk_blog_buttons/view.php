@@ -1,11 +1,11 @@
 <?php defined('C5_EXECUTE') or die("Access Denied."); ?>
 
-<?php
-$c = \concrete\core\Page\Page::getCurrentPage();
-$blogID = $C5dkBlog->getCollectionID();
-?>
-
 <?php if ($C5dkBlog && !$C5dkBlog->isEditMode()) { ?>
+	<?php
+	$c = \concrete\core\Page\Page::getCurrentPage();
+	$blogID = $C5dkBlog->getCollectionID();
+	?>
+
 	<?php if ($C5dkUser->isEditor()) { ?>
 		<div id="c5dk-blog-package">
 			<div class="c5dk_blog_section">

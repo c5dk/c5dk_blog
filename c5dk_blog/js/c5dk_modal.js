@@ -1,3 +1,6 @@
+if (!c5dk) { var c5dk = {}; }
+if (!c5dk.blog) { c5dk.blog = {}; }
+
 c5dk.blog.modal = {
 
 	openModal: function (content) {

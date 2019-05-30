@@ -30,7 +30,7 @@ $date = $dh->formatDate($page->getCollectionDatePublic(), TRUE);
 		<?php endif; ?>
 
 		<?php if (is_object($C5dkUser)): ?>
-		<li><i class="fa fa-user"></i><?= ($C5dkUser->fullName ? $C5dkUser->fullName : t('(Not set)')); ?></li>
+		<li><i class="fa fa-user"></i><?= $C5dkUser->getName(); ?></li>
 		<?php endif; ?>
 	</ul>
 

@@ -136,8 +136,9 @@ $ih         = Core::make('helper/image');
 				<?php endif; ?>
 
 				<?php if (isset($includeDate) && $includeDate): ?>
-					<ul class="ccm-block-page-list-date entry-meta clearfix"><li><?= t('Posted by');
-					echo ' <i class="fa fa-user"></i> ' . ($C5dkUser->fullName ? $C5dkUser->fullName : BASE_URL) . ' - <i class="fa fa-calendar"></i> ' . $date; ?></li></ul>
+					<ul class="ccm-block-page-list-date entry-meta clearfix">
+						<li><?= t('Posted by') . ' <i class="fa fa-user"></i> ' . $C5dkUser->getName() . ' - <i class="fa fa-calendar"></i> ' . $date; ?></li>
+					</ul>
 				<?php endif; ?>
 
 				<?php if (isset($includeDescription) && $includeDescription): ?>

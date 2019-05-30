@@ -1,7 +1,6 @@
 <?php defined('C5_EXECUTE') or die("Access Denied."); ?>
 <div class="c5dk_headline">
-	<?= t('Posted by');
-	echo ' <i class="fa fa-user"></i> ' . ($C5dkUser->fullName ? $C5dkUser->fullName : t('(Not set)')) . ' - <i class="fa fa-clock-o"></i> ' . $C5dkBlog->getCollectionDatePublic(); ?>
+	<?= t('Posted by') . ' <i class="fa fa-user"></i> ' . $C5dkUser->getName() . ' - <i class="fa fa-clock-o"></i> ' . $C5dkBlog->getCollectionDatePublic(); ?>
 </div>
 
 <style type="text/css">

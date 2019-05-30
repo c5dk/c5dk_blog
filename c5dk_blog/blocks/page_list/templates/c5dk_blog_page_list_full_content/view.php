@@ -136,8 +136,9 @@ $C5dkConfig = new C5dkConfig;
 							<?php } ?>
 
 							<?php if ($includeDate) { ?>
-								<div class="c5dk_postedby_full"><?= t('Posted by');
-								echo ' <i class="fa fa-user"></i> ' . ($C5dkUser->fullName ? $C5dkUser->fullName : BASE_URL) . ' - <i class="fa fa-clock-o"></i> ' . $date; ?></div>
+								<div class="c5dk_postedby_full">
+									<?= t('Posted by') . ' <i class="fa fa-user"></i> ' . $C5dkUser->getName() . ' - <i class="fa fa-clock-o"></i> ' . $date; ?>
+								</div>
 							<?php } ?>
 
 							<?php if ($includeDescription) { ?>

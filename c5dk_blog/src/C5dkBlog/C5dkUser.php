@@ -18,12 +18,12 @@ defined('C5_EXECUTE') or die('Access Denied.');
 
 class C5dkUser extends User
 {
-	private $isBlogger = null;
-	private $isEditor  = null;
-	private $isOwner   = null;
-	private $isAdmin   = null;
+	// private $isBlogger = null;
+	// private $isEditor  = null;
+	// private $isOwner   = null;
+	// private $isAdmin   = null;
 
-	private $fullName = NULL;
+	// private $fullName = NULL;
 
 	private $rootList = [];
 
@@ -39,7 +39,7 @@ class C5dkUser extends User
 		// // Is the current user the owner of the current page
 		// if (($page = Page::getCurrentPage()) instanceof Page) {
 		// 	$C5dkBlog = C5dkBlog::getByID(Page::getCurrentPage()->getCollectionID());
-		// 	if ($C5dkBlog->authorID == $this->uID && is_numeric($this->uID)) {
+		// 	if ($C5dkBlog->getAuthorID() == $this->uID && is_numeric($this->uID)) {
 		// 		$this->isOwner = true;
 		// 	}
 		// }
@@ -47,7 +47,7 @@ class C5dkUser extends User
 		// // Is current user an Administrator
 		// $this->isAdmin = $this->isSuperUser() || $this->inGroup(Group::getByID(ADMIN_GROUP_ID)) ? true : false;
 
-		// // Get Full Name if exists
+		// Get Full Name if exists
 		// $ui = UserInfo::getByID($this->getUserID());
 		// if ($ui instanceof UserInfo) {
 		// 	$this->fullName = $ui->getAttribute('full_name');
@@ -110,6 +110,21 @@ class C5dkUser extends User
 			$this->isAdmin = $this->isSuperUser() || $this->inGroup(Group::getByID(ADMIN_GROUP_ID)) ? true : false;
 		}
 		return $this->isAdmin;
+	}
+
+	public function getName()
+	{
+		$name = t('Not set');
+
+		$ui = UserInfo::getByID($this->getUserID());
+		if (is_object($ui)) {
+			$name = $ui->getAttribute('full_name');
+			if ($name == '') {
+				$name = $this->getUserName();
+			}
+		}
+
+		return $name;
 	}
 
 	public function getRootList($mode = "writers")

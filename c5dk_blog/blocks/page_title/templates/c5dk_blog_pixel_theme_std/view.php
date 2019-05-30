@@ -17,7 +17,7 @@ $page = Page::getCurrentPage();
 $date = $dh->formatDate($page->getCollectionDatePublic(), TRUE);
 //C5DK Blog Package - Getting author name example for C5DK Blog
 		$C5dkBlog = C5dkBlog::getByID($page->getCollectionID());
-		$C5dkUser = C5dkUser::getByUserID($C5dkBlog->authorID);
+		$C5dkUser = C5dkUser::getByUserID($C5dkBlog->getAuthorID());
 ?>
 <div class="ccm-block-page-title clearfix">
 	<div class="entry-title">

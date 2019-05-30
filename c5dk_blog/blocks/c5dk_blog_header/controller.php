@@ -31,7 +31,7 @@ class Controller extends BlockController
 		// Init Objects
 		$C5dkBlog = C5dkBlog::getByID(Page::getCurrentPage()->getCollectionID());
 		$this->set('C5dkBlog', $C5dkBlog);
-		$this->set('C5dkUser', C5dkUser::getByUserID($C5dkBlog->authorID));
+		$this->set('C5dkUser', C5dkUser::getByUserID($C5dkBlog->getAuthorID()));
 		$this->set('C5dkConfig', new C5dkConfig);
 	}
 }

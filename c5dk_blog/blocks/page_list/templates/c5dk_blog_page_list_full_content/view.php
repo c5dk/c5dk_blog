@@ -72,7 +72,7 @@ $C5dkConfig = new C5dkConfig;
 
 				//C5DK Blog Package - Getting author name example for C5DK Blog
 				$C5dkBlog = C5dkBlog::getByID($page->getCollectionID());
-				$C5dkUser = C5dkUser::getByUserID($C5dkBlog->authorID);
+				$C5dkUser = C5dkUser::getByUserID($C5dkBlog->getAuthorID());
 
 				//Other useful page data...
 

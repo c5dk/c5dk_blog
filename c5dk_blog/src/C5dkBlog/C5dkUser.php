@@ -114,17 +114,17 @@ class C5dkUser extends User
 
 	public function getName()
 	{
-		$name = t('Not set');
+		$this->fullName = t('Not set');
 
 		$ui = UserInfo::getByID($this->getUserID());
 		if (is_object($ui)) {
-			$name = $ui->getAttribute('full_name');
-			if ($name == '') {
-				$name = $this->getUserName();
+			$this->fullName = $ui->getAttribute('full_name');
+			if ($this->fullName == '') {
+				$this->fullName = $this->getUserName();
 			}
 		}
 
-		return $name;
+		return $this->fullName;
 	}
 
 	public function getRootList($mode = "writers")

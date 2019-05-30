@@ -137,6 +137,11 @@
 
 	<div style="clear: both;"></div>
 
+<?php } elseif ($C5dkBlog && $C5dkBlog->isEditMode() || $C5dkUser->isAdmin()) { ?>
+	<?php // SuperAdmin/Administrator view if they aren't allowed to block or if the page is in edit mode ?>
+	<div class="c5dk_admin_frame"><?= t('C5DK Blogging Buttons: Only visible for users with blogging permissions'); ?></div>
+
+<?php } ?>
 	<script type="text/javascript">
 		if(!c5dk){ var c5dk = {}; }
 		if(!c5dk.blog){ c5dk.blog = {}; }
@@ -168,7 +173,7 @@
 							// mode: '<?= C5DK_BLOG_MODE_CREATE; ?>',
 							blogID: blogID,
 							rootID: rootID,
-							cID: <?= $c->getCollectionID(); ?>
+							cID: <?= $c ? $c->getCollectionID() : 0; ?>
 						},
 						url: '<?= \URL::to("/c5dk/blog/get/0"); ?>/' + rootID,
 						success: function(response){
@@ -336,9 +341,3 @@
 			}
 		};
 	</script>
-
-<?php } elseif ($C5dkBlog && $C5dkBlog->isEditMode() || $C5dkUser->isAdmin()) { ?>
-	<?php // SuperAdmin/Administrator view if they aren't allowed to block or if the page is in edit mode ?>
-	<div class="c5dk_admin_frame"><?= t('C5DK Blogging Buttons: Only visible for users with blogging permissions'); ?></div>
-
-<?php } ?>

@@ -6,7 +6,7 @@
 			<!-- Blogging Buttons -->
 			<div class="c5dk_blog_buttons">
 				<div class="c5dk-blog-btn-wrap">
-				<a class="c5dk_blog_ButtonGreen" href="<?= $this->url('blog_post', 'create', $C5dkBlog->getCollectionID(), $C5dkBlog->rootID); ?>"><?= t("New Post"); ?></a>
+				<a class="c5dk_blog_ButtonGreen" href="<?= $this->url('blog_post', 'create', $C5dkBlog->getCollectionID(), $C5dkBlog->getRootID()); ?>"><?= t("New Post"); ?></a>
 				</div>
 				<?php if ($C5dkUser->isOwner) { ?>
 					<div class="c5dk-blog-btn-wrap">

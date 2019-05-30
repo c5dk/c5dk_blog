@@ -31,7 +31,7 @@ class Controller extends BlockController
 		$c = Page::getCurrentPage();
 		$C5dkBlog = C5dkBlog::getByID($c->getCollectionID());
 		if ($C5dkBlog->getAttribute('c5dk_blog_author_id')) {
-			$C5dkRoot = C5dkRoot::getByID($C5dkBlog->rootID);
+			$C5dkRoot = C5dkRoot::getByID($C5dkBlog->getRootID());
 		} else {
 			$C5dkRoot = Page::getByID($c->getCollectionParentID());
 		}

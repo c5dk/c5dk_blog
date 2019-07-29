@@ -1,5 +1,7 @@
 <?php defined('C5_EXECUTE') or die("Access Denied."); ?>
-<?php if ($C5dkUser->isBlogger && !$C5dkBlog->isEditMode()) { ?>
+<?php $c = \concrete\core\Page\Page::getCurrentPage(); ?>
+<?php if (!$c->isEditMode() && !$c->isMasterCollection()) { ?>
+<?php if ($C5dkUser->isBlogger() && !$C5dkBlog->isEditMode()) { ?>
 	<div id="c5dk-blog-package-simple-one">
 		<div class="c5dk_blog_section">
 			<!-- Blogging Buttons -->
@@ -7,7 +9,7 @@
 				<div class="c5dk-blog-btn-wrap">
 				<a class="c5dk_blog_ButtonGreen" href="<?= $this->url('blog_post', 'create', $C5dkBlog->getCollectionID(), $C5dkBlog->getRootID()); ?>"><?= t("New Post"); ?></a>
 				</div>
-				<?php if ($C5dkUser->isOwner) { ?>
+				<?php if ($C5dkUser->isOwner()) { ?>
 					<div class="c5dk-blog-btn-wrap">
 					<a class="c5dk_blog_ButtonBlue" href="<?= $this->url('blog_post', 'edit', $C5dkBlog->getCollectionID()); ?>"><?= t("Edit Post"); ?></a>
 					</div>

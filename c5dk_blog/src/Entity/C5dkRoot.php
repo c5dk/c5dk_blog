@@ -200,8 +200,12 @@ class C5dkRoot
 		$root->setUnpublishTime(isset($request['unpublishTime']));
 		$root->save();
 
-		self::setEditorGroups($root, count($request['editorGroups']) ? $request['editorGroups'] : []);
-		self::setWriterGroups($root, count($request['writerGroups']) ? $request['writerGroups'] : []);
+		if (count($request['editorGroups'])) {
+			self::setEditorGroups($root, count($request['editorGroups']) ? $request['editorGroups'] : []);
+		}
+		if (count($request['writerGroups'])) {
+			self::setWriterGroups($root, count($request['writerGroups']) ? $request['writerGroups'] : []);
+		}
 
 		return $root;
 	}

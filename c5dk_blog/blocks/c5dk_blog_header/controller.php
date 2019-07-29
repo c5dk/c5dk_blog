@@ -28,10 +28,14 @@ class Controller extends BlockController
 
 	public function view()
 	{
-		// Init Objects
 		$C5dkBlog = C5dkBlog::getByID(Page::getCurrentPage()->getCollectionID());
+		$authorID = $C5dkBlog->getAuthorID();
+		$userID = $authorID? $authorID : Page::getCurrentPage()->getCollectionUserID();
+		If (!$userID) { $userID = USER_SUPER_ID; }
+
+		// Init Objects
 		$this->set('C5dkBlog', $C5dkBlog);
-		$this->set('C5dkUser', C5dkUser::getByUserID($C5dkBlog->getAuthorID()));
+		$this->set('C5dkUser', C5dkUser::getByUserID($userID));
 		$this->set('C5dkConfig', new C5dkConfig);
 	}
 }

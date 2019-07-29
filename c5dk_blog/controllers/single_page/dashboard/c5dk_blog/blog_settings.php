@@ -137,6 +137,10 @@ class BlogSettings extends DashboardPageController
 
 	public function saveThumbnail($thumbnail)
 	{
+		if ($thumbnail['id'] == $this->config->get('c5dk_blog.blog_default_thumbnail_id')) {
+			return $thumbnail['id'];
+		}
+
 		// Init objects
 		$C5dkConfig = new C5dkConfig;
 

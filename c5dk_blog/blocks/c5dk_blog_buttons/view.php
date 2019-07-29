@@ -1,7 +1,7 @@
 <?php defined('C5_EXECUTE') or die("Access Denied."); ?>
 
 <?php $c = \concrete\core\Page\Page::getCurrentPage(); ?>
-<?php if ($C5dkBlog && !$C5dkBlog->isEditMode() || !$c->isMasterCollection()) { ?>
+<?php if (!$c->isEditMode() && !$c->isMasterCollection() && $C5dkUser->isBlogger()) { ?>
 	<?php
 	$blogID = $C5dkBlog->getCollectionID();
 	?>

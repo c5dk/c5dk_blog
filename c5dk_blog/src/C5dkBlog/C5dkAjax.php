@@ -462,4 +462,20 @@ class C5dkAjax extends Controller
 			//     return $fv->getFile();
 			// }
 	}
+
+	// Keep the active login session active
+	public function ping()
+	{
+		$C5dkUser = new C5dkUser;
+		$status   = ($C5dkUser->isLoggedIn()) ? true : false;
+		$data     = [
+			'post' => $this->post(),
+			'status' => $status
+		];
+
+		$jh = $this->app->make('helper/json');
+		echo $jh->encode($data);
+
+		exit;
+	}
 }

@@ -2,15 +2,16 @@
 
 namespace Concrete\Package\C5dkBlog;
 
-use Package;
-use Page;
-use PageList;
-use Events;
-use Route;
-use AssetList;
-use Redirect;
-use Concrete\Core\Editor\Plugin;
-use Concrete\Core\Tree\Type\FileManager;
+use Concrete\Core\Package\Package as Package;
+use Concrete\Core\Page\Page as Page;
+use Concrete\Core\Page\PageList as PageList;
+use Concrete\Core\Attribute\Key\CollectionKey as CollectionAttributeKey;
+use Concrete\Core\Support\Facade\Events as Events;
+use Concrete\Core\Support\Facade\Route as Route;
+use Concrete\Core\Asset\AssetList as AssetList;
+// use Concrete\Core\Routing\Redirect as Redirect;
+// use Concrete\Core\Editor\Plugin as Plugin;
+use Concrete\Core\Tree\Type\FileManager as FileManager;
 use Concrete\Core\User\Group\Group;
 use Concrete\Core\Permission\Key\Key as PermissionKey;
 use Concrete\Core\Permission\Access\Entity\GroupEntity as GroupPermissionAccessEntity;
@@ -18,6 +19,7 @@ use Concrete\Core\Permission\Access\Entity\GroupEntity as GroupPermissionAccessE
 use C5dk\Blog\C5dkInstaller as C5dkInstaller;
 use C5dk\Blog\C5dkAjax as C5dkAjax;
 use C5dk\Blog\C5dkBlog as C5dkBlog;
+use C5dk\Blog\C5dkRoot as C5dkRoot;
 use C5dk\Blog\Entity\C5dkRoot as C5dkRootEntity;
 
 defined('C5_EXECUTE') or die('Access Denied.');
@@ -25,7 +27,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
 class Controller extends Package
 {
 	protected $appVersionRequired      = '8.2';
-	protected $pkgVersion              = '8.5.b27';
+	protected $pkgVersion              = '8.5.b28';
 	protected $pkgHandle               = 'c5dk_blog';
 	protected $pkgAutoloaderRegistries = [
 		'src/C5dkBlog' => '\C5dk\Blog',
@@ -58,11 +60,17 @@ class Controller extends Package
 	{
 		Events::addListener('on_user_delete', [$this, 'eventOnUserDelete']);
 		Events::addListener('on_before_render', [$this, 'eventAddOpenGraphMeta']);
-		Events::addListener('on_before_render', [$this, 'eventCheckPagesPublishTime']);
+		$attApproved = is_object(CollectionAttributeKey::getByHandle('c5dk_blog_approved')) ? true : false;
+		if ($attApproved) {
+		// $packageVersion = explode('.', $this->pkgVersion);
+		// if (intval($packageVersion[0]) >= 8 && intval($packageVersion[1]) >= 5 && intval($packageVersion[2]) >= 27) {
+			Events::addListener('on_before_render', [$this, 'eventCheckPagesPublishTime']);
+		}
 	}
 
 	private function registerRoutes()
 	{
+		Route::register('/c5dk/blog/ping', '\C5dk\Blog\C5dkAjax::ping');
 		Route::register('/c5dk/blog/approve/{blogID}', '\C5dk\Blog\C5dkAjax::approve');
 		Route::register('/c5dk/blog/unapprove/{blogID}', '\C5dk\Blog\C5dkAjax::unapprove');
 		Route::register('/c5dk/blog/get/{blogID}/{rootID}', '\C5dk\Blog\C5dkAjax::getForm');
@@ -87,7 +95,28 @@ class Controller extends Package
 	{
 		parent::upgrade();
 
-		$this->c5dkInstall($this);
+		$attApproved = is_object(CollectionAttributeKey::getByHandle('c5dk_blog_approved')) ? true : false;
+
+		$this->c5dkInstall($this, true);
+
+		// Set Approved page attribute on old blog pages
+		if (!$attApproved) {
+			$pl = new PageList();
+			$pl->ignorePermissions();
+			$pl->includeInactivePages();
+			$pl->filterByPageTypeID(C5dkRoot::getPageTypes());
+			$blogPages = $pl->get();
+
+			foreach ($blogPages as $index => $page) {
+				if ($page->getAttribute('c5dk_blog_author_id') > 0) {
+					$page->setAttribute('c5dk_blog_approved', 1);
+					$version = $page->getVersionObject();
+					$version->approve();
+				}
+			}
+		}
+
+		// Convert from old root db table to new
 		$this->convertOldDB();
 	}
 
@@ -96,15 +125,16 @@ class Controller extends Package
 		parent::uninstall();
 	}
 
-	private function c5dkInstall($pkg)
+	private function c5dkInstall($pkg, $upgrade = false)
 	{
 		$this->setupConfig($pkg);
-
 		$this->setupBlocks($pkg);
 		$this->setupFilesystem($pkg);
-		$this->setupSinglePages($pkg);
 		$this->setupPageAttributes($pkg);
 		$this->setupUserAttributes($pkg);
+		if (!$upgrade) {
+			$this->setupSinglePages($pkg);
+		}
 	}
 
 	private function setupConfig($pkg)
@@ -201,6 +231,12 @@ class Controller extends Package
 			'akIsSearchable' => true,
 			'akIsSearchableIndexed' => true
 		], false, $cas);
+		C5dkInstaller::installCollectionAttributeKey('boolean', [
+			'akHandle' => 'c5dk_blog_approved',
+			'akName' => t('Blog Approved'),
+			'akIsSearchable' => true,
+			'akIsSearchableIndexed' => true
+		], false, $cas);
 		C5dkInstaller::installCollectionAttributeKey('date_time', [
 			'akHandle' => 'c5dk_blog_publish_time',
 			'akName' => t('Blog Publish Time'),
@@ -215,16 +251,10 @@ class Controller extends Package
 			'akIsSearchableIndexed' => true,
 			'akUseNowIfEmpty' => true
 		], false, $cas);
-		C5dkInstaller::installCollectionAttributeKey('boolean', [
-			'akHandle' => 'c5dk_blog_approved',
-			'akName' => t('Blog Approved'),
-			'akIsSearchable' => true,
-			'akIsSearchableIndexed' => true
-		], false, $cas);
 
 		// Add Blog Priorities Topic Tree
 		$topicTree = C5dkInstaller::installTopicTree('Blog Priorities', ['Standard', 'Breaking', 'Top Story']);
-		$pageKey = C5dkInstaller::installCollectionAttributeKeyTopic('c5dk_blog_priority', 'Blog Priorities', $topicTree, true, $cas);
+		C5dkInstaller::installCollectionAttributeKeyTopic('c5dk_blog_priority', 'Blog Priorities', $topicTree, true, $cas);
 	}
 
 	private function setupUserAttributes($pkg)
@@ -290,7 +320,8 @@ class Controller extends Package
 
 	public function eventCheckPagesPublishTime()
 	{
-		$startTime = microtime(true);
+		// $startTime = microtime(true);
+
 		$pl = new PageList();
 		$pl->ignorePermissions();
 		$pl->filterByAttribute('c5dk_blog_author_id', 0, '>');
@@ -315,8 +346,8 @@ class Controller extends Package
 		$pl->filterByAttribute('c5dk_blog_approved', 1);
 		$pl->filterByAttribute('c5dk_blog_publish_time', date('Y-m-d H:i:s'), '<');
 		$pl->filterByAttribute('c5dk_blog_unpublish_time', date('Y-m-d H:i:s'), '>');
-
 		$grantPages = $pl->get();
+
 		$denyPages = array_merge($denyUnapproved, $denyPublishTime, $denyUnpublishTime);
 
 		// Grant pages
@@ -334,48 +365,10 @@ class Controller extends Package
 			}
 		}
 
-		$endTime = microtime(true);
-		$diffTime = $endTime - $startTime;
-		if ($diffTime > 0.5) {
-			\Log::addWarning('C5DK Blog: Publish/Unpublish permission event took longer then 0.5 seconds to finish: '. $diffTime);
-		}
-
-		// $r = Redirect::to(Page::getCurrentPage()->getCollectionLink());
-		// $r->send();
-
-		// $redirect = false;
-
-		// foreach ($pl->get() as $page) {
-		// 	$publishTime = $page->getAttribute('c5dk_blog_publish_time');
-		// 	if ($publishTime) {
-		// 		$publishTime = $publishTime->getTimestamp();
-		// 	} else {
-		// 		// If publish time isn't used we subtract 1 day from the current date
-		// 		$publishTime = (new \datetime)->sub(new \DateInterval('P1D'))->getTimestamp();
-		// 	}
-		// 	$unpublishTime = $page->getAttribute('c5dk_blog_unpublish_time');
-		// 	if ($unpublishTime) {
-		// 		$unpublishTime = $unpublishTime->getTimestamp();
-		// 	} else {
-		// 		// If unpublish time isn't used we add 1 day to the current date
-		// 		$unpublishTime = (new \datetime)->add(new \DateInterval('P1D'))->getTimestamp();
-		// 	}
-		// 	$time = time();
-		// 	$access = $this->checkGroupViewPermission('view_page', $page, GUEST_GROUP_ID);
-		// 	// Should we grant permission because of the time
-		// 	if ($publishTime < $time && $time < $unpublishTime && !$access) {
-		// 		$C5dkBlog = C5dkBlog::getByID($page->getCollectionID());
-		// 		$C5dkBlog->grantPagePermissionByGroup('view_page', $page, GUEST_GROUP_ID);
-		// 	}
-		// 	if ($publishTime > $time && $time < $unpublishTime && $access) {
-		// 		$C5dkBlog = C5dkBlog::getByID($page->getCollectionID());
-		// 		$C5dkBlog->denyPagePermissionByGroup('view_page', $page, GUEST_GROUP_ID);
-		// 		$redirect = true;
-		// 	}
-		// }
-
-		// We removed Guest access to a page, so we redirect to make sure that the user isn't accessing that page
-		// if ($redirect) {
+		// $endTime = microtime(true);
+		// $diffTime = $endTime - $startTime;
+		// if ($diffTime > 0.5) {
+		// 	\Log::addWarning('C5DK Blog: Publish/Unpublish permission event took longer then 0.5 seconds to finish: '. $diffTime);
 		// }
 	}
 
@@ -388,10 +381,10 @@ class Controller extends Package
 		if (!$access) {
 			return false;
 		}
-				$guestGroup = Group::getByID($groupID);
-				$entity = GroupPermissionAccessEntity::getOrCreate($guestGroup);
+		$guestGroup = Group::getByID($groupID);
+		$entity = GroupPermissionAccessEntity::getOrCreate($guestGroup);
 
-				return $access->validateAccessEntities([$entity]);
+		return $access->validateAccessEntities([$entity]);
 	}
 
 	public function registerAssets()

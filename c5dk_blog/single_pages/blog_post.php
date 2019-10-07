@@ -4,6 +4,7 @@
 print View::element('image_manager/main', ['C5dkUser' => new \C5dk\Blog\C5dkUser], 'c5dk_blog');
 
 print View::element('blog_post', [
+	'langpath' => $langpath,
 	'C5dkConfig' => $C5dkConfig,
 	'C5dkUser' => $C5dkUser,
 	'C5dkBlog' => $C5dkBlog,

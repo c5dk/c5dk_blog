@@ -18,7 +18,7 @@
 
 					<!-- Go to Editor Manager -->
 					<div class="c5dk-blog-btn-wrap">
-						<a class="c5dk_blog_ButtonGrey" href="<?= $this->url('/c5dk/blog/editor/manager'); ?>"><?= t("Manager List"); ?></a>
+						<a class="c5dk_blog_ButtonGrey" href="<?= URL::to($langpath, '/c5dk/blog/editor/manager'); ?>"><?= t("Manager List"); ?></a>
 					</div>
 
 					<?php if ($C5dkUser->isEditor() && $C5dkBlog->getAuthorID()) { ?>
@@ -41,7 +41,7 @@
 						<?php if (!$C5dkUser->isOwner()) { ?>
 							<!-- Edit Post -->
 							<div class="c5dk-blog-btn-wrap">
-								<a class="c5dk_blog_ButtonBlue" href="<?= $this->url('blog_post', 'edit', $blogID, $C5dkBlog->getRootID()); ?>"><?= t("Edit Post"); ?></a>
+								<a class="c5dk_blog_ButtonBlue" href="<?= URL::to($langpath, 'blog_post', 'edit', $blogID, $C5dkBlog->getRootID()); ?>"><?= t("Edit Post"); ?></a>
 							</div>
 
 							<!-- Delete Post -->
@@ -80,7 +80,7 @@
 							<?php if ($C5dkConfig->blog_form_slidein) { ?>
 								onclick="return c5dk.blog.buttons.create('<?= $blogID; ?>', '<?= $C5dkRoot->getCollectionID(); ?>');"
 							<?php } ?>
-							href="<?= $this->url('blog_post/create/0', $C5dkRoot->getCollectionID(), $c->getCollectionID()); ?>"><?= t("New Post"); ?></a>
+							href="<?= URL::to($langpath, 'blog_post/create/0', $C5dkRoot->getCollectionID(), $c->getCollectionID()); ?>"><?= t("New Post"); ?></a>
 					</div>
 					<?php if ($C5dkUser->isOwner()) { ?>
 						<!-- Edit Blog -->
@@ -89,7 +89,7 @@
 								<?php if ($C5dkConfig->blog_form_slidein) { ?>
 									onclick="return c5dk.blog.buttons.edit('<?= $blogID; ?>', '<?= $C5dkBlog->getRootID(); ?>);"
 								<?php } ?>
-								href="<?= $this->url('blog_post', 'edit', $blogID, $C5dkBlog->getRootID()); ?>"><?= t("Edit Post"); ?></a>
+								href="<?= URL::to($langpath, 'blog_post', 'edit', $blogID, $C5dkBlog->getRootID()); ?>"><?= t("Edit Post"); ?></a>
 						</div>
 
 						<!-- Delete blog -->
@@ -170,7 +170,7 @@
 							rootID: rootID,
 							cID: <?= $c->getCollectionID(); ?>
 						},
-						url: '<?= \URL::to("/c5dk/blog/get/0"); ?>/' + rootID,
+						url: '<?= URL::to($langpath, "/c5dk/blog/get/0"); ?>/' + rootID,
 						success: function(response){
 
 							if (response.form) {
@@ -213,7 +213,7 @@
 							blogID: blogID,
 							rootID: rootID
 						},
-						url: '<?= \URL::to("/c5dk/blog/get"); ?>/' + blogID + '/' + rootID,
+						url: '<?= URL::to($langpath, "/c5dk/blog/get"); ?>/' + blogID + '/' + rootID,
 						success: function(response){
 							if (response.form) {
 								$('#c5dk_form_slidein').html(response.form);
@@ -261,7 +261,7 @@
 						c5dk.blog.modal.waiting("<?= t('Getting blog form'); ?>");
 						$.ajax({
 							method: 'POST',
-							url: '<?= URL::to("/c5dk/blog/delete", $blogID); ?>',
+							url: '<?= URL::to($langpath, "/c5dk/blog/delete", $blogID); ?>',
 							data: { blogID: '<?= $blogID; ?>' },
 							dataType: 'json',
 							success: function(r) {
@@ -284,7 +284,7 @@
 				c5dk.blog.modal.waiting("<?= t('Getting blog form'); ?>");
 				$.ajax({
 					method: 'POST',
-					url: '<?= URL::to("/c5dk/blog/publish"); ?>/' + blogID,
+					url: '<?= URL::to($langpath, "/c5dk/blog/publish"); ?>/' + blogID,
 					data: { blogID: blogID },
 					dataType: 'json',
 					success: function(r) {
@@ -300,9 +300,9 @@
 				var approveBtn = $('#c5dk_approve');
 				console.log(approveBtn.data('approved'));
 				if (approveBtn.data('approved')) {
-					var url = '<?= URL::to('/c5dk/blog/unapprove'); ?>/' + blogID;
+					var url = '<?= URL::to($langpath, '/c5dk/blog/unapprove'); ?>/' + blogID;
 				} else {
-					var url = '<?= URL::to('/c5dk/blog/approve'); ?>/' + blogID;
+					var url = '<?= URL::to($langpath, '/c5dk/blog/approve'); ?>/' + blogID;
 				}
 
 				c5dk.blog.modal.waiting("<?= t('Getting blog form'); ?>");

@@ -91,6 +91,11 @@ class C5dkRoot extends Page
 		return $this->entity->getPageTypeID();
 	}
 
+	public function getPriorityAttributeHandle()
+	{
+		return $this->entity->getPriorityAttributeHandle();
+	}
+
 	public function getTags()
 	{
 		return $this->entity->getTags();
@@ -135,5 +140,15 @@ class C5dkRoot extends Page
 		$C5dkRoot->clearAttribute($ak);
 
 		return true;
+	}
+
+	public static function getPageTypes()
+	{
+		$pageTypes = [];
+		foreach ((new self)->entity->findAll() as $root) {
+			$pageTypes[] = $root->getPageTypeID();
+		}
+
+		return $pageTypes;
 	}
 }

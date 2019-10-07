@@ -5,7 +5,7 @@
 
 <div id="c5dk-blog-package" class="container main-wrap">
 
-	<form id="c5dk_blog_form" method="post" action="<?= \URL::to('/blog_post/save', $blogID); ?>">
+	<form id="c5dk_blog_form" method="post" action="<?= \URL::to($langpath, '/blog_post/save', $blogID); ?>">
 
 		<!-- Show errors if any -->
 		<?php if (isset($error) && $error instanceof Error && $error->has()) : ?>
@@ -275,15 +275,15 @@
 
 	c5dk.blog.data.post = {
 		blogID: <?= $blogID; ?>,
-		slidein: <?= $C5dkConfig->blog_form_slidein; ?>,
+		slidein: <?= $C5dkConfig->blog_form_slidein? 1 : 0; ?>,
 
 		url: {
-			currentPage: '<?= \URL::to('blog_post', 'create', $redirectID); ?>',
-			root: '<?= \URL::to("/"); ?>',
-			save: '<?= \URL::to("/c5dk/blog/save"); ?>',
-			delete: '<?= \URL::to("/c5dk/blog/image/delete"); ?>',
-			upload: '<?= \URL::to("/c5dk/blog/image/upload"); ?>',
-			ping: '<?= \URL::to("/blog_post/ping"); ?>'
+			currentPage: '<?= URL::to($langpath, 'blog_post', 'create', $redirectID); ?>',
+			root: '<?= URL::to($langpath); ?>',
+			save: '<?= URL::to("/c5dk/blog/save"); ?>',
+			delete: '<?= URL::to("/c5dk/blog/image/delete"); ?>',
+			upload: '<?= URL::to("/c5dk/blog/image/upload"); ?>',
+			ping: '<?= URL::to("/c5dk/blog/ping"); ?>'
 		},
 
 		text: {

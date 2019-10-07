@@ -8,11 +8,11 @@
 			<!-- Blogging Buttons -->
 			<div class="c5dk_blog_buttons">
 				<div class="c5dk-blog-btn-wrap">
-				<a class="c5dk_blog_ButtonGreen" href="<?= $this->url('blog_post', 'create', $C5dkBlog->getCollectionID(), $C5dkBlog->getRootID()); ?>"><?= t("New Post"); ?></a>
+				<a class="c5dk_blog_ButtonGreen" href="<?= URL::to($langpath, 'blog_post', 'create', $C5dkBlog->getCollectionID(), $C5dkBlog->getRootID()); ?>"><?= t("New Post"); ?></a>
 				</div>
 				<?php if ($C5dkUser->isOwner) { ?>
 					<div class="c5dk-blog-btn-wrap">
-					<a class="c5dk_blog_ButtonBlue" href="<?= $this->url('blog_post', 'edit', $C5dkBlog->getCollectionID()); ?>"><?= t("Edit Post"); ?></a>
+					<a class="c5dk_blog_ButtonBlue" href="<?= URL::to($langpath, 'blog_post', 'edit', $C5dkBlog->getCollectionID()); ?>"><?= t("Edit Post"); ?></a>
 					</div>
 					<div class="c5dk-blog-btn-wrap">
 					<a class="c5dk_blog_ButtonRed" href="javascript:c5dk.blog.buttons.delete('confirm');"><?= t("Delete Post"); ?></a>
@@ -57,7 +57,7 @@
 					case "delete":
 						$.ajax({
 							method: 'POST',
-							//url: '<?= URL::to('/blog_post/delete/page/' . $C5dkBlog->getCollectionID()); ?>',
+							//url: '<?= URL::to($langpath, '/blog_post/delete/page/' . $C5dkBlog->getCollectionID()); ?>',
 							url: '<?php  echo URL::route(['/c5dk/blog', 'c5dk_blog'], ['delete', $C5dkBlog->getCollectionID()]); ?>',
 							data: { blogID: '<?= $C5dkBlog->getCollectionID(); ?>' },
 							dataType: 'json',

@@ -153,6 +153,14 @@ class C5dkRoot
 		return $em->getRepository(get_class())->findBy($criteria, $orderBy, $limit, $offset);
 	}
 
+	public static function findAll()
+	{
+		$db = Database::connection();
+		$em = $db->getEntityManager();
+
+		return $em->getRepository(get_class())->findAll();
+	}
+
 	public static function getByID($id)
 	{
 		$db = Database::connection();
@@ -167,14 +175,6 @@ class C5dkRoot
 		$em = $db->getEntityManager();
 
 		return $em->getRepository(get_class())->findOneBy(['rootID' => $rootID]);
-	}
-
-	public static function findAll()
-	{
-		$db = Database::connection();
-		$em = $db->getEntityManager();
-
-		return $em->getRepository(get_class())->findAll();
 	}
 
 	public static function saveForm($request)
@@ -200,10 +200,10 @@ class C5dkRoot
 		$root->setUnpublishTime(isset($request['unpublishTime']));
 		$root->save();
 
-		if (count($request['editorGroups'])) {
+		if (isset($request['editorGroups']) && count($request['editorGroups'])) {
 			self::setEditorGroups($root, count($request['editorGroups']) ? $request['editorGroups'] : []);
 		}
-		if (count($request['writerGroups'])) {
+		if (isset($request['writerGroups']) && count($request['writerGroups'])) {
 			self::setWriterGroups($root, count($request['writerGroups']) ? $request['writerGroups'] : []);
 		}
 

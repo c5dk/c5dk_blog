@@ -1,16 +1,15 @@
-<?php
+<?php namespace Concrete\Package\C5dkBlog\Controller\SinglePage;
 
-namespace Concrete\Package\C5dkBlog\Controller\SinglePage;
-
-use Core;
+// use Core;
 use View;
-use CollectionAttributeKey;
+// use CollectionAttributeKey;
 use File;
-use FileImporter;
-use FileSet;
-use Image;
-use Imagine\Image\Box;
-use Concrete\Core\Tree\Node\Type\FileFolder	as FileFolder;
+// use FileImporter;
+// use FileSet;
+// use Image;
+// use Imagine\Image\Box;
+// use Concrete\Core\Tree\Node\Type\FileFolder	as FileFolder;
+use Concrete\Core\Page\Page;
 use Concrete\Core\Multilingual\Page\Section\Section;
 use Concrete\Core\Page\Controller\PageController;
 
@@ -72,6 +71,14 @@ class BlogPost extends PageController
 
 	public function init($C5dkBlog, $C5dkRoot, $C5dkConfig, $C5dkUser, $redirectID = null)
 	{
+		// Find language path if on a multilingual site
+		$c = Page::getCurrentPage();
+        $al = Section::getBySectionOfSite($c);
+        $langpath = '';
+        if (null !== $al) {
+            $langpath = $al->getCollectionHandle();
+        }
+
 		// Require Assets
 		$this->requireAsset('css', 'c5dk_blog_css');
 		$this->requireAsset('javascript', 'c5dkBlog/main');
@@ -90,6 +97,7 @@ class BlogPost extends PageController
 
 		// Set View variables
 		$this->set('view', new View);
+		$this->set('langpath', $langpath);
 		$this->set('C5dkConfig', $C5dkConfig);
 		$this->set('C5dkUser', $C5dkUser);
 		$this->set('C5dkBlog', $C5dkBlog);

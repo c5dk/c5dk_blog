@@ -3,11 +3,12 @@
 use Core;
 use Database;
 
+use Concrete\Core\Page\Page;
 use Concrete\Core\Page\PageList;
 use Concrete\Core\Page\Controller\PageController;
 
 use C5dk\Blog\C5dkUser as C5dkUser;
-use C5dk\Blog\C5dkRoot as C5dkRoot;
+// use C5dk\Blog\C5dkRoot as C5dkRoot;
 use C5dk\Blog\C5dkBlog as C5dkBlog;
 
 defined('C5_EXECUTE') or die("Access Denied.");
@@ -18,6 +19,14 @@ class Manager extends PageController
 	{
 		// Set C5DK Objects
 		$C5dkUser = new C5dkUser;
+
+		// Find language path if on a multilingual site
+		$c = Page::getCurrentPage();
+        $al = Section::getBySectionOfSite($c);
+        $langpath = '';
+        if (null !== $al) {
+            $langpath = $al->getCollectionHandle();
+        }
 
 		// Do the user have access to this page
 		if (!$C5dkUser->isEditor()) {
@@ -51,6 +60,7 @@ class Manager extends PageController
 		$this->set('jh', Core::make('helper/json'));
 
 		// Set our variables/objects
+		$this->set('langpath', $langpath);
 		$this->set('rootList', $rootList);
 		$this->set('entries', $entries);
 	}

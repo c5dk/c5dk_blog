@@ -5,6 +5,7 @@ use Core;
 use Page;
 use AssetList;
 use Concrete\Core\Block\BlockController;
+use Concrete\Core\Multilingual\Page\Section\Section;
 
 use C5dk\Blog\C5dkConfig;
 use C5dk\Blog\C5dkUser;
@@ -34,6 +35,11 @@ class Controller extends BlockController
 		$C5dkConfig = new C5dkConfig;
 		$C5dkUser = new C5dkUser;
 		$c = Page::getCurrentPage();
+        $al = Section::getBySectionOfSite($c);
+        $langpath = '';
+        if (null !== $al) {
+            $langpath = $al->getCollectionHandle();
+        }
 
 		if ($c->getAttribute('c5dk_blog_root')) {
 			$C5dkRoot = C5dkRoot::getByID($c->getCollectionID());
@@ -47,6 +53,7 @@ class Controller extends BlockController
 		$this->set('C5dkUser', $C5dkUser);
 		$this->set('C5dkBlog', $C5dkBlog);
 		$this->set('C5dkRoot', $C5dkRoot);
+		$this->set('langpath', $langpath);
 		$this->set('form', $this->app->make('helper/form'));
 
 		// Require Asset

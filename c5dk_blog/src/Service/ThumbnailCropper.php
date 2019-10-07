@@ -66,7 +66,11 @@ class ThumbnailCropper extends Controller
 
 	public function getOnSelectCallback()
 	{
-		return $this->onSelectCallback;
+		if (strpos($this->onSelectCallback, ')') === false) {
+			return $this->onSelectCallback . '()';
+		} else {
+			return $this->onSelectCallback;
+		}
 	}
 
 	public function setOnSaveCallback($onSaveCallback)

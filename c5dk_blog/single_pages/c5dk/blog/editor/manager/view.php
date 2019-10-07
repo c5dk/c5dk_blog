@@ -216,7 +216,7 @@
 		},
 
 		edit: function(id) {
-			window.location = '<?= URL::to("/blog_post/edit"); ?>/' + id;
+			window.location = '<?= URL::to($langpath, "/blog_post/edit"); ?>/' + id;
 		},
 
 		delete: function(id) {

@@ -145,7 +145,7 @@
 						extraAllowedContent: 'img[alt,!src]',
 						allowedContent: true,
 						//disallowedContent: 'img{border*,margin*,width,height,float}',
-						extraPlugins: 'c5dkimagemanager,autogrow,lineutils,widget<?= $C5dkConfig->getPlugins(); ?>',
+						extraPlugins: 'c5dkimagemanager,c5dkfilemanager,autogrow,lineutils,widget<?= $C5dkConfig->getPlugins(); ?>',
 						toolbarGroups: [{
 								name: 'tools',
 								groups: ['tools']

@@ -169,5 +169,71 @@ c5dk.blog.post = {
 			c5dk.blog.post.image.filemanager.slideReveal("hide");
 		}
 
+	},
+
+	file: {
+
+		managerMode: null,
+		currentFID: null,
+		filemanager: null,
+
+		delete: function (mode, fID) {
+
+			switch (mode) {
+
+				case "confirm":
+					c5dk.blog.post.image.currentFID = fID;
+					$.fn.dialog.open({
+						element: "#dialog-confirmDeleteImage",
+						title: c5dk.blog.data.post.text.imageDelete,
+						height: 100,
+						width: 300
+					});
+					break;
+
+				case "delete":
+					$.fn.dialog.closeTop();
+					$.ajax({
+						type: 'POST',
+						url: c5dk.blog.data.post.url.delete + '/' + c5dk.blog.post.image.currentFID,
+						dataType: 'json',
+						success: function (r) {
+							if (r.status == "success") {
+								$('#redactor-c5dkimagemanager-box').html(r.imageListHtml);
+							}
+						}
+					});
+					break;
+
+				case "close":
+					$.fn.dialog.closeTop();
+					break;
+			}
+		},
+
+		showManager: function (mode) {
+
+			c5dk.blog.post.image.managerMode = (mode == "thumbnail") ? mode : "editor";
+			$("#c5dk_filemanager_slidein").show();
+
+			$('#file').val('').show();
+			c5dk.blog.post.image.filemanager = $('#c5dk_filemanager_slidein').slideReveal({
+				width: ($(window).width() < 700) ? '100%' : '700px',
+				push: false,
+				speed: 700,
+				autoEscape: false,
+				position: "right",
+				overlay: true,
+				overlaycolor: "green",
+				zIndex: 2000
+			});
+			c5dk.blog.post.image.filemanager.slideReveal("show");
+		},
+
+		hideManager: function () {
+
+			c5dk.blog.post.image.filemanager.slideReveal("hide");
+		}
+
 	}
 }

@@ -251,12 +251,12 @@ class C5dkBlog extends Page
 		if ($C5dkRoot->getPublishTime() && $post['publishTime']) {
 			$C5dkBlog->setAttribute('c5dk_blog_publish_time', new \datetime($post['publishTime']));
 		} else {
-			$C5dkBlog->setAttribute('c5dk_blog_publish_time', new \datetime());
+			// $C5dkBlog->setAttribute('c5dk_blog_publish_time', new \datetime());
 		}
 		if ($C5dkRoot->getUnpublishTime() && $post['unpublishTime']) {
 			$C5dkBlog->setAttribute('c5dk_blog_unpublish_time', new \datetime($post['unpublishTime']));
 		} else {
-			$C5dkBlog->setAttribute('c5dk_blog_unpublish_time', new \datetime("2100-01-01 00:00:00"));
+			// $C5dkBlog->setAttribute('c5dk_blog_unpublish_time', new \datetime("2100-01-01 00:00:00"));
 		}
 
 		// Set Permissions

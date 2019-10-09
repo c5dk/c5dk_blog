@@ -32,9 +32,8 @@
 			<?= $form->hidden('rootID', $C5dkRoot->getCollectionID()); ?>
 		<?php } else { ?>
 			<div class="c5dk_blog_section">
-				<?php  ?>
 				<?= $form->label('rootID', '<h4>' . t('Post your blog under') . '</h4>'); ?>
-				<?= $form->select('rootID', $C5dkUser->getRootList(), $C5dkBlog->getRootID()); ?>
+				<?= $form->select('rootID', $C5dkUser->getRootListForSelect(), $C5dkRoot->getRootID()); ?>
 			</div>
 		<?php } ?>
 

@@ -137,6 +137,16 @@ class C5dkUser extends User
 		return $this->rootList[$mode];
 	}
 
+	public function getRootListForSelect()
+	{
+		$rootList = [];
+		foreach($this->getRootList() as $root) {
+			$rootList[$root->getRootID()] = $root->getCollectionName() . ' (' . $root->getCollectionPath(). ')';
+		}
+
+		return $rootList;
+	}
+
 	public function getImagesFromUserSet()
 	{
 		// Get helper objects

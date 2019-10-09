@@ -72,6 +72,9 @@ $ih         = Core::make('helper/image');
 		//C5DK Blog Package - Getting author name example for C5DK Blog
 		$C5dkBlog = C5dkBlog::getByID($page->getCollectionID());
 		$C5dkUser = C5dkUser::getByUserID($C5dkBlog->getAuthorID());
+				if (!is_object($C5dkUser)) {
+					$C5dkUser = new C5dkUser;
+				}
 
 
 		//Other useful page data...

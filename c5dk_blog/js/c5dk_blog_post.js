@@ -54,8 +54,8 @@ c5dk.blog.post = {
 		});
 
 		// Image upload
-		$('#c5dk_file_upload').fileupload({
-			dropZone: $("#c5dk_filemanager_slidein"),
+		$('#c5dk_image_upload').fileupload({
+			dropZone: $("#c5dk_imagemanager_slidein"),
 			url: c5dk.blog.data.post.url.upload,
 			dataType: 'json',
 			// Enable image resizing, except for Android and Opera,
@@ -67,11 +67,40 @@ c5dk.blog.post = {
 			imageMaxHeight: c5dk.blog.data.post.image.maxHeight,
 			// imageCrop: true // Force cropped images,
 		}).on('fileuploadsubmit', function (e, data) {
-
 			c5dk.blog.modal.waiting(c5dk.blog.data.post.text.fileupload);
 		}).on('fileuploaddone', function (e, data) {
 
-			$('#redactor-c5dkimagemanager-box').html(data.result.html);
+			$('#c5dkimagemanager-box').html(data.result.html);
+			$('#c5dk_image_upload').val('');
+			c5dk.blog.modal.exitModal();
+		}).on('fileuploadfail', function (e, data) {
+
+			$.each(data.files, function (index) {
+				var error = $('<span class="text-danger"/>').text('Image upload failed.');
+				$(data.context.children()[index])
+					.append('<br>')
+					.append(error);
+			});
+		});
+
+		// Image upload
+		$('#c5dk_file_upload').fileupload({
+			dropZone: $("#c5dk_filemanager_slidein"),
+			url: c5dk.blog.data.post.url.upload,
+			dataType: 'json',
+			// Enable image resizing, except for Android and Opera,
+			// which actually support image resizing, but fail to
+			// send Blob objects via XHR requests:
+			// disableImageResize: /Android(?!.*Chrome)|Opera/.test(window.navigator && navigator.userAgent),
+			// imageOrientation: true,
+			// imageMaxWidth: c5dk.blog.data.post.image.maxWidth,
+			// imageMaxHeight: c5dk.blog.data.post.image.maxHeight,
+			// imageCrop: true // Force cropped images,
+		}).on('fileuploadsubmit', function (e, data) {
+			c5dk.blog.modal.waiting(c5dk.blog.data.post.text.fileupload);
+		}).on('fileuploaddone', function (e, data) {
+
+			$('#c5dkfilemanager-box').html(data.result.html);
 			$('#c5dk_file_upload').val('');
 			c5dk.blog.modal.exitModal();
 		}).on('fileuploadfail', function (e, data) {
@@ -133,7 +162,7 @@ c5dk.blog.post = {
 						dataType: 'json',
 						success: function(r) {
 							if (r.status == "success") {
-								$('#redactor-c5dkimagemanager-box').html(r.imageListHtml);
+								$('#c5dkimagemanager-box').html(r.imageListHtml);
 							}
 						}
 					});
@@ -148,10 +177,10 @@ c5dk.blog.post = {
 		showManager: function (mode) {
 
 			c5dk.blog.post.image.managerMode = (mode == "thumbnail")? mode : "editor";
-			$("#c5dk_filemanager_slidein").show();
+			$("#c5dk_imagemanager_slidein").show();
 
 			$('#file').val('').show();
-			c5dk.blog.post.image.filemanager = $('#c5dk_filemanager_slidein').slideReveal({
+			c5dk.blog.post.image.filemanager = $('#c5dk_imagemanager_slidein').slideReveal({
 				width: ($(window).width() < 700)? '100%' : '700px',
 				push: false,
 				speed: 700,
@@ -177,15 +206,16 @@ c5dk.blog.post = {
 		currentFID: null,
 		filemanager: null,
 
-		delete: function (mode, fID) {
+		delete: function (mode, fID)
+		{
 
 			switch (mode) {
 
 				case "confirm":
-					c5dk.blog.post.image.currentFID = fID;
+					c5dk.blog.post.file.currentFID = fID;
 					$.fn.dialog.open({
 						element: "#dialog-confirmDeleteImage",
-						title: c5dk.blog.data.post.text.imageDelete,
+						title: c5dk.blog.data.post.text.fileDelete,
 						height: 100,
 						width: 300
 					});
@@ -195,11 +225,11 @@ c5dk.blog.post = {
 					$.fn.dialog.closeTop();
 					$.ajax({
 						type: 'POST',
-						url: c5dk.blog.data.post.url.delete + '/' + c5dk.blog.post.image.currentFID,
+						url: c5dk.blog.data.post.url.delete + '/' + c5dk.blog.post.file.currentFID,
 						dataType: 'json',
 						success: function (r) {
 							if (r.status == "success") {
-								$('#redactor-c5dkimagemanager-box').html(r.imageListHtml);
+								$('#c5dkimagemanager-box').html(r.fileListHtml);
 							}
 						}
 					});
@@ -211,13 +241,13 @@ c5dk.blog.post = {
 			}
 		},
 
-		showManager: function (mode) {
-
-			c5dk.blog.post.image.managerMode = (mode == "thumbnail") ? mode : "editor";
+		showManager: function (mode)
+		{
+			c5dk.blog.post.file.managerMode = (mode == "thumbnail") ? mode : "editor";
 			$("#c5dk_filemanager_slidein").show();
 
 			$('#file').val('').show();
-			c5dk.blog.post.image.filemanager = $('#c5dk_filemanager_slidein').slideReveal({
+			c5dk.blog.post.file.filemanager = $('#c5dk_filemanager_slidein').slideReveal({
 				width: ($(window).width() < 700) ? '100%' : '700px',
 				push: false,
 				speed: 700,
@@ -227,12 +257,12 @@ c5dk.blog.post = {
 				overlaycolor: "green",
 				zIndex: 2000
 			});
-			c5dk.blog.post.image.filemanager.slideReveal("show");
+			c5dk.blog.post.file.filemanager.slideReveal("show");
 		},
 
-		hideManager: function () {
-
-			c5dk.blog.post.image.filemanager.slideReveal("hide");
+		hideManager: function ()
+		{
+			c5dk.blog.post.file.filemanager.slideReveal("hide");
 		}
 
 	}

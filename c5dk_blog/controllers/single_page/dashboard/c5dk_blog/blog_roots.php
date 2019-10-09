@@ -28,8 +28,9 @@ class BlogRoots extends DashboardPageController
 	{
 		// Set all our view variables
 		$C5dkRootList = new C5dkRootList;
+		$rootList = $C5dkRootList->getResults();
 		$this->set('user',					new C5dkUser);
-		$this->set('rootList',				$C5dkRootList->getResults());
+		$this->set('rootList',				$rootList);
 
 		$this->set('groupList',				$this->getAllGroups());
 		// $this->set('editorGroupList', $this->getAllEditorGroups());

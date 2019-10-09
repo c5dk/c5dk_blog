@@ -131,6 +131,7 @@
 	<?php
 	if ($C5dkConfig->blog_form_slidein) {
 		print View::element('image_manager/main', ['C5dkUser' => new \C5dk\Blog\C5dkUser], 'c5dk_blog');
+		print View::element('file_manager/main', ['C5dkUser' => new \C5dk\Blog\C5dkUser], 'c5dk_blog');
 	}
 	?>
 

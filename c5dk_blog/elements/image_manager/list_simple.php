@@ -1,20 +1,19 @@
 <?php defined('C5_EXECUTE') or die('Access Denied.'); ?>
 
-<?php foreach ($fileList as $file) : ?>
-	<?php $deleteSpan = ($canDeleteImages) ? '<span class="fa fa-window-close-o c5dk-delete-image"></span>' : ''; ?>
-	<div data-fid="<?= $file['fID']; ?>" class="c5dk-thumb-frame">
-		<?= $deleteSpan; ?>
+<?php foreach ($imageList as $image) { ?>
+	<div data-fid="<?= $image['fID']; ?>" class="c5dk-thumb-frame">
+		<?= $canDeleteImages ? '<span class="fa fa-window-close-o c5dk-delete-image"></span>' : ''; ?>
 		<img
 			class="c5dk_image_thumbs"
-			src="<?= $file['thumbnail']->src; ?>"
-			data-fid="<?= $file['fID']; ?>"
-			data-src="<?= $file['picture']['src']; ?>"
-			data-width="<?= $file['picture']['width']; ?>"
-			data-height="<?= $file['picture']['height']; ?>"
+			src="<?= $image['thumbnail']->src; ?>"
+			data-fid="<?= $image['fID']; ?>"
+			data-src="<?= $image['picture']['src']; ?>"
+			data-width="<?= $image['picture']['width']; ?>"
+			data-height="<?= $image['picture']['height']; ?>"
 		/>
 	</div>
 
-<?php endforeach ?>
+<?php } ?>
 
 <style>
 	.c5dk-delete-image {

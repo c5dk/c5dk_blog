@@ -2,6 +2,7 @@
 
 <?php
 print View::element('image_manager/main', ['C5dkUser' => new \C5dk\Blog\C5dkUser], 'c5dk_blog');
+print View::element('file_manager/main', ['C5dkUser' => new \C5dk\Blog\C5dkUser], 'c5dk_blog');
 
 print View::element('blog_post', [
 	'langpath' => $langpath,
@@ -16,4 +17,3 @@ print View::element('blog_post', [
 	'jh' => Core::make('helper/json'),
 	'form' => Core::make('helper/form')
 ], 'c5dk_blog');
-?>

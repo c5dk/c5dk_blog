@@ -400,8 +400,8 @@ class Controller extends Package
 		$al->register('javascript', 'thumbnail_cropper/main', 'js/service/thumbnail_cropper/main.js', [], 'c5dk_blog');
 
 		// Register C5DK Blog CSS
-		$al->register('css', 'c5dk_blog_css', 'css/c5dk_blog.min.css', [], 'c5dk_blog');
-		//$al->register('css', 'c5dk_blog_css', 'css/c5dk_blog.css', [], 'c5dk_blog');
+		// $al->register('css', 'c5dk_blog_css', 'css/c5dk_blog.min.css', [], 'c5dk_blog');
+		$al->register('css', 'c5dk_blog_css', 'css/c5dk_blog.css', [], 'c5dk_blog');
 
 		// CKEditor
 		$al->register('javascript', 'c5dkckeditor', 'js/ckeditor/ckeditor.js', ['minify' => false, 'combine' => false], 'c5dk_blog');
@@ -450,6 +450,7 @@ class Controller extends Package
 		$rt = $db->Execute("SHOW TABLES LIKE 'C5dkBlogRootPermissions'");
 		if ($rt->numRows()) {
 			// Convert old permissions table to Doctrine entity
+			$root = [];
 			$rs = $db->fetchAll("SELECT rootID, groupID, pageTypeID, tags, thumbnails, topicAttributeID FROM C5dkBlogRootPermissions");
 			foreach ($rs as $row) {
 				$root[$row['rootID']]['rootID'] = $row['rootID'];

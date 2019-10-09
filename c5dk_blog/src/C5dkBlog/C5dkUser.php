@@ -10,6 +10,8 @@ use View;
 use File;
 use FileList;
 use FileSet;
+use Concrete\Core\Support\Facade\Application;
+
 use C5dk\Blog\C5dkBlog as C5dkBlog;
 use C5dk\Blog\C5dkRoot as C5dkRoot;
 use C5dk\Blog\Entity\C5dkRoot as C5dkRootEntity;
@@ -18,43 +20,12 @@ defined('C5_EXECUTE') or die('Access Denied.');
 
 class C5dkUser extends User
 {
-	// private $isBlogger = null;
-	// private $isEditor  = null;
-	// private $isOwner   = null;
-	// private $isAdmin   = null;
-
-	// private $fullName = NULL;
-
 	private $rootList = [];
 
 	public function __construct()
 	{
-		// Call Parent function
+		// Call Parent class
 		parent::__construct();
-
-		// Can the current user blog?
-		// $this->isBlogger = (count($this->getRootList('writers'))) ? true : false;
-		// $this->isEditor = (count($this->getRootList('editors'))) ? true : false;
-
-		// // Is the current user the owner of the current page
-		// if (($page = Page::getCurrentPage()) instanceof Page) {
-		// 	$C5dkBlog = C5dkBlog::getByID(Page::getCurrentPage()->getCollectionID());
-		// 	if ($C5dkBlog->getAuthorID() == $this->uID && is_numeric($this->uID)) {
-		// 		$this->isOwner = true;
-		// 	}
-		// }
-
-		// // Is current user an Administrator
-		// $this->isAdmin = $this->isSuperUser() || $this->inGroup(Group::getByID(ADMIN_GROUP_ID)) ? true : false;
-
-		// Get Full Name if exists
-		// $ui = UserInfo::getByID($this->getUserID());
-		// if ($ui instanceof UserInfo) {
-		// 	$this->fullName = $ui->getAttribute('full_name');
-		// 	if ($this->fullName == '') {
-		// 		$this->fullName = $this->getUserName();
-		// 	}
-		// }
 	}
 
 	public static function getByUserID($uID, $login = false, $cacheItemsOnLogin = true)
@@ -166,10 +137,10 @@ class C5dkUser extends User
 		return $this->rootList[$mode];
 	}
 
-	public function getFilesFromUserSet()
+	public function getImagesFromUserSet()
 	{
 		// Get helper objects
-		$app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
+		$app = Application::getFacadeApplication();
 		$im  = $app->make('helper/image');
 
 		$files = [];
@@ -208,14 +179,74 @@ class C5dkUser extends User
 
 	public function getImageListHTML()
 	{
-		$app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
+		$app = Application::getFacadeApplication();
 
 		ob_start();
 		print View::element('image_manager/list_simple', [
 			'C5dkUser' => $this,
-			'fileList' => $this->getFilesFromUserSet(),
+			'imageList' => $this->getImagesFromUserSet(),
 			'image' => $app->make('helper/image'),
 			'canDeleteImages' => true
+		], 'c5dk_blog');
+		$html = ob_get_contents();
+		ob_end_clean();
+
+		return $html;
+	}
+
+	public function getFilesFromUserSet()
+	{
+		// Get helper objects
+		$app = Application::getFacadeApplication();
+		// $im  = $app->make('helper/image');
+
+		$files = [];
+
+		if ($this->isLoggedIn()) {
+			// Is $fs a FileSet object or a FileSet handle?
+			$fs = FileSet::getByName('C5DK_BLOG_uID-' . $this->getUserID());
+			if (is_object($fs)) {
+				// Get files from FileSet
+				$fl = new FileList();
+				$fl->filterBySet($fs);
+				$fileList = array_reverse($fl->get());
+				foreach ($fileList as $key => $file) {
+					$f  = File::getByID($file->getFileID());
+					$fv = $f->getRecentVersion();
+					$fp = explode('_', $fv->getFileName());
+					if ($fp[3] != 'Thumb') {
+						$files[$key] = [
+							'fObj' => $f,
+							'fv' => $fv,
+							'fID' => $f->getFIleID(),
+							'fName' => $fv->getFileName(),
+							'fHref' => $fv->getDownloadURL()
+
+							// 'thumbnail' => $im->getThumbnail($f, 150, 150),
+							// 'picture' => [
+							// 	'src' => File::getRelativePathFromID($file->getFileID()),
+							// 	'width' => $fv->getAttribute('width'),
+							// 	'height' => $fv->getAttribute('height')
+							// ]
+						];
+					}
+				};
+			}
+		}
+
+		return $files;
+	}
+
+	public function getFileListHTML()
+	{
+		$app = Application::getFacadeApplication();
+
+		ob_start();
+		print View::element('file_manager/list_simple', [
+			'C5dkUser' => $this,
+			'fileList' => $this->getFilesFromUserSet(),
+			// 'image' => $app->make('helper/image'),
+			'canDeleteFiles' => true
 		], 'c5dk_blog');
 		$html = ob_get_contents();
 		ob_end_clean();

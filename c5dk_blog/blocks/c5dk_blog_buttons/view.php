@@ -78,7 +78,7 @@
 					<div class="c5dk-blog-btn-wrap">
 						<a class="c5dk_blog_ButtonGreen"
 							<?php if ($C5dkConfig->blog_form_slidein) { ?>
-								onclick="return c5dk.blog.buttons.create('<?= $blogID; ?>', '<?= $C5dkRoot->getCollectionID(); ?>');"
+								onclick="return c5dk.blog.buttons.create('<?= $blogID ? $blogID : 0; ?>', '<?= $C5dkRoot->getCollectionID(); ?>');"
 							<?php } ?>
 							href="<?= URL::to($langpath, 'blog_post/create/0', $C5dkRoot->getCollectionID(), $c->getCollectionID()); ?>"><?= t("New Post"); ?></a>
 					</div>
@@ -87,7 +87,7 @@
 						<div class="c5dk-blog-btn-wrap">
 							<a class="c5dk_blog_ButtonBlue"
 								<?php if ($C5dkConfig->blog_form_slidein) { ?>
-									onclick="return c5dk.blog.buttons.edit('<?= $blogID; ?>', '<?= $C5dkBlog->getRootID(); ?>);"
+									onclick="return c5dk.blog.buttons.edit('<?= $blogID; ?>', '<?= $C5dkBlog->getRootID(); ?>');"
 								<?php } ?>
 								href="<?= URL::to($langpath, 'blog_post', 'edit', $blogID, $C5dkBlog->getRootID()); ?>"><?= t("Edit Post"); ?></a>
 						</div>

@@ -256,6 +256,17 @@
 			</div>
 		</div>
 	</div>
+	<div id="dialog-confirmDeleteFile" class="c5dk-dialog" style="display:none;">
+		<div class="ccm-ui">
+			<div style="padding:20px 0 30px;">
+				<span id="dialogText"><?= t('Are you sure you want to delete this file?'); ?></span>
+			</div>
+			<div id="c5dk-setDeleteButtons" class="">
+				<input class="btn btn-default btn-danger pull-right" onclick="c5dk.blog.post.file.delete('delete')" type="button" value="<?= t('Delete'); ?>">
+				<input class="btn btn-default primary" onclick="c5dk.blog.post.file.delete('close')" type="button" value="<?= t('Cancel'); ?>">
+			</div>
+		</div>
+	</div>
 
 </div> <!-- c5dk-blog-package wrapper -->
 
@@ -280,9 +291,15 @@
 			currentPage: '<?= URL::to($langpath, 'blog_post', 'create', $redirectID); ?>',
 			root: '<?= URL::to($langpath); ?>',
 			save: '<?= URL::to("/c5dk/blog/save"); ?>',
-			delete: '<?= URL::to("/c5dk/blog/image/delete"); ?>',
-			upload: '<?= URL::to("/c5dk/blog/image/upload"); ?>',
-			ping: '<?= URL::to("/c5dk/blog/ping"); ?>'
+			ping: '<?= URL::to("/c5dk/blog/ping"); ?>',
+			image: {
+				delete: '<?= URL::to("/c5dk/blog/image/delete"); ?>',
+				upload: '<?= URL::to("/c5dk/blog/image/upload"); ?>'
+			},
+			file: {
+				delete: '<?= URL::to("/c5dk/blog/file/delete"); ?>',
+				upload: '<?= URL::to("/c5dk/blog/file/upload"); ?>'
+			}
 		},
 
 		text: {

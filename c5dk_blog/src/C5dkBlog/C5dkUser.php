@@ -117,7 +117,6 @@ class C5dkUser extends User
 						$C5dkRoot = C5dkRoot::getByID($rootSetting->getRootID());
 						$this->rootList['writers'][$rootSetting->getRootID()] = $C5dkRoot;
 						$this->rootList["all"][$rootSetting->getRootID()] = $C5dkRoot;
-
 					}
 				}
 
@@ -128,7 +127,6 @@ class C5dkUser extends User
 						$C5dkRoot = C5dkRoot::getByID($rootSetting->getRootID());
 						$this->rootList['editors'][$rootSetting->getRootID()] = $C5dkRoot;
 						$this->rootList["all"][$rootSetting->getRootID()] = $C5dkRoot;
-
 					}
 				}
 			}
@@ -140,7 +138,7 @@ class C5dkUser extends User
 	public function getRootListForSelect()
 	{
 		$rootList = [];
-		foreach($this->getRootList() as $root) {
+		foreach ($this->getRootList() as $root) {
 			$rootList[$root->getRootID()] = $root->getCollectionName() . ' (' . $root->getCollectionPath(). ')';
 		}
 
@@ -162,6 +160,7 @@ class C5dkUser extends User
 				// Get files from FileSet
 				$fl = new FileList();
 				$fl->filterBySet($fs);
+				$fl->filterByExtension('jpg');
 				$fileList = array_reverse($fl->get());
 				foreach ($fileList as $key => $file) {
 					$f  = File::getByID($file->getFileID());
@@ -208,7 +207,6 @@ class C5dkUser extends User
 	{
 		// Get helper objects
 		$app = Application::getFacadeApplication();
-		// $im  = $app->make('helper/image');
 
 		$files = [];
 
@@ -219,27 +217,18 @@ class C5dkUser extends User
 				// Get files from FileSet
 				$fl = new FileList();
 				$fl->filterBySet($fs);
+				$fl->filterByExtension('pdf');
 				$fileList = array_reverse($fl->get());
 				foreach ($fileList as $key => $file) {
 					$f  = File::getByID($file->getFileID());
 					$fv = $f->getRecentVersion();
-					$fp = explode('_', $fv->getFileName());
-					if ($fp[3] != 'Thumb') {
-						$files[$key] = [
-							'fObj' => $f,
-							'fv' => $fv,
-							'fID' => $f->getFIleID(),
-							'fName' => $fv->getFileName(),
-							'fHref' => $fv->getDownloadURL()
-
-							// 'thumbnail' => $im->getThumbnail($f, 150, 150),
-							// 'picture' => [
-							// 	'src' => File::getRelativePathFromID($file->getFileID()),
-							// 	'width' => $fv->getAttribute('width'),
-							// 	'height' => $fv->getAttribute('height')
-							// ]
-						];
-					}
+					$files[$key] = [
+						'fObj' => $f,
+						'fv' => $fv,
+						'fID' => $f->getFIleID(),
+						'fName' => $fv->getFileName(),
+						'fHref' => $fv->getDownloadURL()
+					];
 				};
 			}
 		}
@@ -255,7 +244,6 @@ class C5dkUser extends User
 		print View::element('file_manager/list_simple', [
 			'C5dkUser' => $this,
 			'fileList' => $this->getFilesFromUserSet(),
-			// 'image' => $app->make('helper/image'),
 			'canDeleteFiles' => true
 		], 'c5dk_blog');
 		$html = ob_get_contents();

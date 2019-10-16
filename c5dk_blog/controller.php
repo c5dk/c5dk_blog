@@ -78,7 +78,9 @@ class Controller extends Package
 		Route::register('/c5dk/blog/delete/{blogID}', '\C5dk\Blog\C5dkAjax::delete');
 		Route::register('/c5dk/blog/publish/{blogID}', '\C5dk\Blog\C5dkAjax::publish');
 		Route::register('/c5dk/blog/image/upload', '\C5dk\Blog\C5dkAjax::imageUpload');
-		Route::register('/c5dk/blog/image/delete/{fID}', '\C5dk\Blog\C5dkAjax::imageDelete');
+		Route::register('/c5dk/blog/image/delete', '\C5dk\Blog\C5dkAjax::imageDelete');
+		Route::register('/c5dk/blog/file/upload', '\C5dk\Blog\C5dkAjax::fileUpload');
+		Route::register('/c5dk/blog/file/delete', '\C5dk\Blog\C5dkAjax::fileDelete');
 		// Route::register('/c5dk/blog/thumbnail/upload', '\C5dk\Blog\C5dkAjax::thumbnailUpload');
 		Route::register('/c5dk/blog/ajax/editor/manager/{method}/{field}/{blogID}', '\C5dk\Blog\C5dkAjax::editor');
 	}

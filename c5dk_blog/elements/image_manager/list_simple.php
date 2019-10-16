@@ -1,8 +1,11 @@
 <?php defined('C5_EXECUTE') or die('Access Denied.'); ?>
 
+<!-- Image Manager - list_simple.php -->
 <?php foreach ($imageList as $image) { ?>
 	<div data-fid="<?= $image['fID']; ?>" class="c5dk-thumb-frame">
-		<?= $canDeleteImages ? '<span class="fa fa-window-close-o c5dk-delete-image"></span>' : ''; ?>
+		<?php if ($canDeleteImages) { ?>
+		<span class="fa fa-window-close-o c5dk-delete-image" onclick="c5dk.blog.post.image.delete('confirm', <?= $image['fID']; ?>);"></span>
+		<?php } ?>
 		<img
 			class="c5dk_image_thumbs"
 			src="<?= $image['thumbnail']->src; ?>"
@@ -33,7 +36,6 @@
 </style>
 
 <script type="text/javascript">
-
 	$(".c5dk_image_thumbs").on('click', function(event) {
 
 		switch (c5dk.blog.post.image.managerMode) {
@@ -51,9 +53,4 @@
 				break;
 		}
 	});
-
-	$(".c5dk-delete-image").on('click', function (event) {
-		c5dk.blog.post.image.delete('confirm', $(event.target).closest('div').data('fid'));
-	});
-
 </script>

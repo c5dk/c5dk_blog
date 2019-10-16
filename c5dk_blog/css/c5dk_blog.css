@@ -941,14 +941,14 @@
 		font-weight: bold;
 	}
 
-		.slider {
-			background-color: #FFFFFF;
-			color: #222222;
-			padding: 20px;
-			overflow: auto;
-		}
+	.slider {
+		background-color: #FFFFFF;
+		color: #222222;
+		padding: 20px;
+		overflow: auto;
+	}
 	/* Upload button */
-	#c5dk_file_upload {
+	#c5dk_file_upload, #c5dk_image_upload {
 		height: 0;
 		width: 0;
 	}
@@ -984,7 +984,7 @@
 		box-shadow: inset 200px 0 0 0 #019620;
 		color:#ffffff;
 	}
-	#c5dk_filemanager_slidein .c5dk-file-upload-cancel{
+	#c5dk_filemanager_slidein .c5dk-file-upload-cancel, #c5dk_imagemanager_slidein .c5dk-image-upload-cancel {
 		display: inline-block;
 		cursor: pointer;
 		color: #444;
@@ -1008,25 +1008,27 @@
 		-moz-transition: all ease .5s;
 		transition: all ease .5s;
 	}
-	#c5dk_filemanager_slidein .c5dk-file-upload-cancel:active{
+	#c5dk_filemanager_slidein .c5dk-file-upload-cancel:active {
 		position:relative;
 		top:1px;
 	}
-	#c5dk_filemanager_slidein .c5dk-file-upload-cancel:hover{
+	#c5dk_filemanager_slidein .c5dk-file-upload-cancel:hover {
 		box-shadow: inset 200px 0 0 0 #004a89;
 		color:#ffffff;
 	}
 	/* Styling slidein */
-	#c5dk_filemanager_slidein .c5dk-slidein-area-wrapper{
+	#c5dk_filemanager_slidein .c5dk-slidein-area-wrapper,
+	#c5dk_imagemanager_slidein .c5dk-slidein-area-wrapper {
 		width: 100%;
 		float: left;
 	}
-	#c5dk_filemanager_slidein .c5dk-slider-button-container{
+	#c5dk_filemanager_slidein .c5dk-slider-button-container,
+	#c5dk_imagemanager_slidein .c5dk-slider-button-container {
 		width: 100%;
 		max-width: 220px;
 		float: left;
 	}
-	#c5dk_filemanager_slidein hr{
+	#c5dk_filemanager_slidein hr, #c5dk_imagemanager_slidein hr {
 		margin: 10px 0;
 		width: 100%;
 	}

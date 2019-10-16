@@ -1,6 +1,6 @@
 <?php defined('C5_EXECUTE') or die("Access Denied."); ?>
 
-<!-- File Manager: Slide-In -->
+<!-- File Manager - main.php -->
 <div id="c5dk_filemanager_slidein" class="slider" style="z-index: 10000;">
 	<div class="c5dk-slidein-area-wrapper">
 		<div class="c5dk-slider-button-container">

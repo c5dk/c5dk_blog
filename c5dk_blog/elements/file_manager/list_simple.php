@@ -1,14 +1,17 @@
 <?php defined('C5_EXECUTE') or die('Access Denied.'); ?>
 
+<!-- File Manager - list_simple.php -->
 <?php foreach ($fileList as $file) { ?>
-	<div data-fid="<?= $file['fID']; ?>" class="c5dk-thumb-frame">
-		<?= $canDeleteFiles ? '<span class="fa fa-window-close-o c5dk-delete-file"></span>' : ''; ?>
+	<div data-fid="<?= $file['fID']; ?>" class="c5dk-thumb-frme">
+		<?php if ($canDeleteFiles) { ?>
+			<span class="fa fa-window-close-o c5dk-delete-file" onclick="c5dk.blog.post.file.delete('confirm', <?= $file['fID']; ?>);"></span>
+		<?php } ?>
 		<div
 			class="c5dk_file_line"
 			data-fid="<?= $file['fID']; ?>"
-			data-href="<?= $file['href']; ?>"
-			data-filename="<?= $files['filename']; ?>"
-		><?= $files['filename']; ?></div>
+			data-href="<?= $file['fHref']; ?>"
+			data-filename="<?= $file['fName']; ?>"
+		><?= $file['fName']; ?></div>
 	</div>
 
 <?php } ?>
@@ -32,7 +35,6 @@
 </style>
 
 <script type="text/javascript">
-
 	$(".c5dk_file_line").on('click', function(event) {
 
 		switch (c5dk.blog.post.file.managerMode) {
@@ -50,9 +52,4 @@
 				break;
 		}
 	});
-
-	$(".c5dk-delete-file").on('click', function (event) {
-		c5dk.blog.post.file.delete('confirm', $(event.target).closest('div').data('fid'));
-	});
-
 </script>

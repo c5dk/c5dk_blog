@@ -11,10 +11,11 @@ use CollectionAttributeKey;
 use Image;
 use Imagine\Image\Box;
 use Imagine\Image\ImageInterface;
-use File;
-use FileList;
-use FileImporter;
-use FileSet;
+use Concrete\Core\File\File as File;
+use Concrete\Core\File\FileList as FileList;
+use Concrete\Core\File\Set\Set as FileSet;
+use Concrete\Core\File\Importer as FileImporter;
+use Concrete\Core\Entity\File\Version as FileVersion;
 use Concrete\Core\Support\Facade\Application;
 use Illuminate\Filesystem\Filesystem;
 use Concrete\Core\Tree\Node\Type\Topic as TopicTreeNode;
@@ -28,7 +29,7 @@ class C5dkAjax extends Controller
 	public function getForm($blogID, $rootID)
 	{
 		$C5dkConfig = new C5dkConfig;
-		$C5dkUser = New C5dkUser;
+		$C5dkUser = new C5dkUser;
 		$C5dkBlog = $blogID ? C5dkBlog::getByID($blogID) : new C5dkBlog;
 
 		// Find the root we will set as standard root.
@@ -40,7 +41,6 @@ class C5dkAjax extends Controller
 		$C5dkRoot   = C5dkRoot::getByID($rootID);
 
 		if (($C5dkBlog instanceof C5dkBlog && $C5dkBlog->getAuthorID() == $C5dkUser->getUserID()) || $C5dkUser->isEditorOfPage($blogID ? $C5dkBlog : $C5dkRoot)) {
-
 			// if (!$blogID) {
 			// 	$C5dkBlogPost->edit($blogID);
 			// } else {
@@ -140,7 +140,7 @@ class C5dkAjax extends Controller
 		);
 
 		// Delete our imported file
-		$fs = new \Illuminate\Filesystem\Filesystem();
+		$fs = new Filesystem();
 		$fs->delete($tmpFolder . $filename);
 
 		if (is_object($fv)) {
@@ -168,14 +168,14 @@ class C5dkAjax extends Controller
 		exit;
 	}
 
-	public function imageDelete($fID)
+	public function imageDelete()
 	{
 		$jh = $this->app->make('helper/json');
 
 		$C5dkUser = new C5dkUser();
 		$fsUser   = FileSet::getByName('C5DK_BLOG_uID-' . $C5dkUser->getUserID());
-		$fsTrash  = FileSet::createAndGetSet('C5DK_BLOG_User-deleted-images', FileSet::TYPE_PUBLIC);
-		$file     = File::getByID($fID);
+		$fsTrash  = FileSet::createAndGetSet('C5DK_BLOG_User-deleted_UID' . $C5dkUser->getUserID(), FileSet::TYPE_PUBLIC);
+		$file     = File::getByID($this->post('fID'));
 		if (is_object($file) && $file->inFileSet($fsUser)) {
 			$fv = $file->getRecentVersion();
 			$fsUser->removeFileFromSet($fv);
@@ -188,6 +188,79 @@ class C5dkAjax extends Controller
 			$data = [
 				'status' => 'success',
 				'imageListHtml' => $C5dkUser->getImageListHTML()
+			];
+		}
+
+		echo $jh->encode($data);
+	}
+
+	public function fileUpload()
+	{
+		// Get helper objects
+		$jh       = $this->app->make('helper/json');
+		$fh       = $this->app->make('helper/file');
+		$C5dkUser = new C5dkUser();
+		$uID      = $C5dkUser->getUserID();
+
+		$error = FileImporter::E_PHP_FILE_ERROR_DEFAULT;
+		if (isset($_FILES['files']) && is_uploaded_file($_FILES['files']['tmp_name'][0])) {
+			$file     = $_FILES['files']['tmp_name'][0];
+			$filename = $_FILES['files']['name'][0];
+
+			$importer = new FileImporter();
+			$fv = $importer->import($file, $filename, FileFolder::getNodeByName('Manager'));
+			if ($fv instanceof FileVersion) {
+				$status = true;
+				// $this->redirect('/my/success/page');
+			} else {
+				$status = false;
+				$error  = $fv;
+			}
+			if (is_object($fv)) {
+				// Create and get FileSet if not exist and add file to the set
+				$fileSet = FileSet::createAndGetSet('C5DK_BLOG_uID-' . $uID, FileSet::TYPE_PUBLIC, $uID);
+				$fileSet->addFileToSet($fv);
+			}
+		} else if (isset($_FILES['files'])) {
+			$status = false;
+			$error  = $_FILES['files']['error'][0];
+		}
+
+		$data = [
+			'status' => $status,
+			'html' => $C5dkUser->getFileListHTML(),
+			'filename' => $filename
+		];
+		if (!$status) {
+			$data['error'] = FileImporter::getErrorMessage($error);
+		}
+
+		header('Content-type: application/json');
+		echo $jh->encode($data);
+
+		exit;
+	}
+
+	public function fileDelete()
+	{
+		$jh = $this->app->make('helper/json');
+
+		$C5dkUser = new C5dkUser();
+		$fsUser   = FileSet::getByName('C5DK_BLOG_uID-' . $C5dkUser->getUserID());
+		$fsTrash  = FileSet::createAndGetSet('C5DK_BLOG_User-deleted_UID_' . $C5dkUser->getUserID(), FileSet::TYPE_PUBLIC);
+		$file     = File::getByID($this->post('fID'));
+		if (is_object($file) && $file->inFileSet($fsUser)) {
+			$fv = $file->getRecentVersion();
+			$fsUser->removeFileFromSet($fv);
+			$fsTrash->addFileToSet($fv);
+
+			// Move file to trash folder
+			$trashFolder = FileFolder::getNodeByName("Trash");
+			$fv->getFile()->getFileNodeObject()->move($trashFolder);
+
+			$data = [
+				'status' => 'success',
+				'fileListHtml' => $C5dkUser->getFileListHTML()
 			];
 		}
 
@@ -252,7 +325,6 @@ class C5dkAjax extends Controller
 		$C5dkBlog = C5dkBlog::getByID($blogID);
 
 		if ($C5dkUser->isEditorOfPage($C5dkBlog)) {
-
 			switch ($method) {
 				case 'save':
 					// Load Core helper classes

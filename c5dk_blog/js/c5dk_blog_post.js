@@ -56,7 +56,7 @@ c5dk.blog.post = {
 		// Image upload
 		$('#c5dk_image_upload').fileupload({
 			dropZone: $("#c5dk_imagemanager_slidein"),
-			url: c5dk.blog.data.post.url.upload,
+			url: c5dk.blog.data.post.url.image.upload,
 			dataType: 'json',
 			// Enable image resizing, except for Android and Opera,
 			// which actually support image resizing, but fail to
@@ -83,10 +83,10 @@ c5dk.blog.post = {
 			});
 		});
 
-		// Image upload
+		// File upload
 		$('#c5dk_file_upload').fileupload({
 			dropZone: $("#c5dk_filemanager_slidein"),
-			url: c5dk.blog.data.post.url.upload,
+			url: c5dk.blog.data.post.url.file.upload,
 			dataType: 'json',
 			// Enable image resizing, except for Android and Opera,
 			// which actually support image resizing, but fail to
@@ -158,7 +158,8 @@ c5dk.blog.post = {
 					$.fn.dialog.closeTop();
 					$.ajax({
 						type: 'POST',
-						url: c5dk.blog.data.post.url.delete + '/' + c5dk.blog.post.image.currentFID,
+						data: { fID: c5dk.blog.post.image.currentFID },
+						url: c5dk.blog.data.post.url.image.delete,
 						dataType: 'json',
 						success: function(r) {
 							if (r.status == "success") {
@@ -214,7 +215,7 @@ c5dk.blog.post = {
 				case "confirm":
 					c5dk.blog.post.file.currentFID = fID;
 					$.fn.dialog.open({
-						element: "#dialog-confirmDeleteImage",
+						element: "#dialog-confirmDeleteFile",
 						title: c5dk.blog.data.post.text.fileDelete,
 						height: 100,
 						width: 300
@@ -225,11 +226,12 @@ c5dk.blog.post = {
 					$.fn.dialog.closeTop();
 					$.ajax({
 						type: 'POST',
-						url: c5dk.blog.data.post.url.delete + '/' + c5dk.blog.post.file.currentFID,
+						data: { fID: c5dk.blog.post.file.currentFID },
+						url: c5dk.blog.data.post.url.file.delete,
 						dataType: 'json',
 						success: function (r) {
 							if (r.status == "success") {
-								$('#c5dkimagemanager-box').html(r.fileListHtml);
+								$('#c5dkfilemanager-box').html(r.fileListHtml);
 							}
 						}
 					});

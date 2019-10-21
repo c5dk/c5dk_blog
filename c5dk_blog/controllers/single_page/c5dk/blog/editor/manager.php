@@ -2,7 +2,7 @@
 
 use Core;
 use Database;
-
+use Concrete\Core\Multilingual\Page\Section\Section;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Page\PageList;
 use Concrete\Core\Page\Controller\PageController;

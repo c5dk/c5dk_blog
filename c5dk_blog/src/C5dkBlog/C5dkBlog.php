@@ -399,7 +399,8 @@ class C5dkBlog extends Page
 
 	public function getTopicsArray($topics)
 	{
-		if (count($topics)) {
+		$topicsList = [];
+		if (is_array($topics)) {
 			foreach ($topics as $topic) {
 				$topicList[] = $topic->getTreeNodeDisplayName();
 			}

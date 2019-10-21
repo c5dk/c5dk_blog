@@ -56,8 +56,7 @@
 						case "delete":
 							$.ajax({
 								method: 'POST',
-								//url: '<?= URL::to($langpath, '/blog_post/delete/page/' . $C5dkBlog->getCollectionID()); ?>',
-								url: '<?php  echo URL::route(['/c5dk/blog', 'c5dk_blog'], ['delete', $C5dkBlog->getCollectionID()]); ?>',
+								url: '<?= URL::route(['/c5dk/blog', 'c5dk_blog', 'delete', $C5dkBlog->getCollectionID()]); ?>',
 								data: { blogID: '<?= $C5dkBlog->getCollectionID(); ?>' },
 								dataType: 'json',
 								success: function(r) {

@@ -17,6 +17,7 @@ use Concrete\Core\File\Set\Set as FileSet;
 use Concrete\Core\File\Importer as FileImporter;
 use Concrete\Core\Entity\File\Version as FileVersion;
 use Concrete\Core\Support\Facade\Application;
+use Concrete\Core\Multilingual\Page\Section\Section;
 use Illuminate\Filesystem\Filesystem;
 use Concrete\Core\Tree\Node\Type\Topic as TopicTreeNode;
 use Concrete\Core\Tree\Node\Type\FileFolder as FileFolder;
@@ -40,12 +41,26 @@ class C5dkAjax extends Controller
 		}
 		$C5dkRoot   = C5dkRoot::getByID($rootID);
 
-		if (($C5dkBlog instanceof C5dkBlog && $C5dkBlog->getAuthorID() == $C5dkUser->getUserID()) || $C5dkUser->isEditorOfPage($blogID ? $C5dkBlog : $C5dkRoot)) {
+		$isCreateAndBlogger = $blogID == 0 && $C5dkUser->isBlogger() ? true : false;
+		$isEditAndAuthor = $C5dkBlog instanceof C5dkBlog && $C5dkBlog->getAuthorID() == $C5dkUser->getUserID() ? true : false;
+		$isEditor = $C5dkUser->isEditorOfPage($blogID ? $C5dkBlog : $C5dkRoot);
+
+		// if (($C5dkBlog instanceof C5dkBlog && $C5dkBlog->getAuthorID() == $C5dkUser->getUserID()) || $C5dkUser->isEditorOfPage($blogID ? $C5dkBlog : $C5dkRoot)) {
+		if ($isCreateAndBlogger || $isEditAndAuthor || $isEditor) {
 			// if (!$blogID) {
 			// 	$C5dkBlogPost->edit($blogID);
 			// } else {
 			// 	$C5dkBlogPost->create($blogID, $rootID);
 			// }
+			$c = Page::getByID($this->post('cID'));
+			if (is_null($c)) {
+				$c = Page::getByID($rootID);
+			}
+			$al = Section::getBySectionOfSite($c);
+			$langpath = '';
+			if (null !== $al) {
+				$langpath = $al->getCollectionHandle();
+			}
 
 			$defaultThumbnailID = $C5dkConfig->blog_default_thumbnail_id;
 			$defThumbnail       = $defaultThumbnailID ? File::getByID($defaultThumbnailID) : null;
@@ -59,6 +74,7 @@ class C5dkAjax extends Controller
 				'C5dkUser' => $C5dkUser,
 				'C5dkBlog' => $C5dkBlog,
 				'C5dkRoot' => $C5dkRoot,
+				'langPath' => $langpath,
 				'ThumbnailCropper' => $Cropper,
 				'token' => $this->app->make('token'),
 				'jh' => $this->app->make('helper/json'),
@@ -221,7 +237,7 @@ class C5dkAjax extends Controller
 				$fileSet = FileSet::createAndGetSet('C5DK_BLOG_uID-' . $uID, FileSet::TYPE_PUBLIC, $uID);
 				$fileSet->addFileToSet($fv);
 			}
-		} else if (isset($_FILES['files'])) {
+		} elseif (isset($_FILES['files'])) {
 			$status = false;
 			$error  = $_FILES['files']['error'][0];
 		}

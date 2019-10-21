@@ -13,10 +13,10 @@ print Core::make('helper/concrete/ui')->tabs([
 <!-- Tab: Add -->
 <div id="ccm-tab-content-add" class="ccm-tab-content">
 	<div class="form-group">
-		<label class="control-label"><?php  echo t('Property to Display:')?></label>
+		<label class="control-label"><?= t('Property to Display:')?></label>
 
 		<select name="attributeHandle" class="form-control">
-		<optgroup label="<?php  echo t('User Values');?>">
+		<optgroup label="<?= t('User Values');?>">
 		<?php
 		$corePageValues = $this->controller->getAvailableUserValues();
 		foreach (array_keys($corePageValues) as $cpv) {
@@ -25,7 +25,7 @@ print Core::make('helper/concrete/ui')->tabs([
 		}
 		?>
 		</optgroup>
-		<optgroup label="<?php  echo t('User Attributes');?>">
+		<optgroup label="<?= t('User Attributes');?>">
 		<?php
 		$aks = $this->controller->getAvailableAttributes();
 		foreach ($aks as $ak) {
@@ -37,15 +37,15 @@ print Core::make('helper/concrete/ui')->tabs([
 		</select>
 	</div>
 	<div class="form-group">
-		<label class="control-label"><?php  echo t('Title Text')?></label>
-		<input type="text" class="form-control" name="attributeTitleText" value="<?php  echo $this->controller->attributeTitleText ?>"/>
+		<label class="control-label"><?= t('Title Text')?></label>
+		<input type="text" class="form-control" name="attributeTitleText" value="<?= $this->controller->attributeTitleText ?>"/>
 	</div>
 </div>
 
 <!-- Tab: Options -->
 <div class="ccm-tab-content" id="ccm-tab-content-options">
 	<div class="form-group">
-		<label class="control-label"><?php  echo t('Display property with formatting')?></label>
+		<label class="control-label"><?= t('Display property with formatting')?></label>
 		<select name="displayTag" class="form-control">
 			<option value="">- none -</option>
 			<option value="h1" <?=($this->controller->displayTag == "h1" ? "selected" : "")?>>H1 (Heading 1)</option>
@@ -60,8 +60,8 @@ print Core::make('helper/concrete/ui')->tabs([
 		</select>
 	</div>
 	<div class="form-group">
-		<label class="control-label"><?php  echo t('Format of Date Properties')?></label>
-		<input type="text" class="form-control" name="dateFormat" value="<?php  echo $this->controller->dateFormat ?>"/>
+		<label class="control-label"><?= t('Format of Date Properties')?></label>
+		<input type="text" class="form-control" name="dateFormat" value="<?= $this->controller->dateFormat ?>"/>
 		<div class="text-muted"><?= sprintf(t('See the formatting options at %s.'), '<a href="http://www.php.net/date" target="_blank">php.net/date</a>'); ?></div>
 	</div>
 	<fieldset>

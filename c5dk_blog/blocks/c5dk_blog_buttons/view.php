@@ -171,7 +171,7 @@
 							rootID: rootID,
 							cID: <?= $c->getCollectionID(); ?>
 						},
-						url: '<?= URL::to($langpath, "/c5dk/blog/get/0"); ?>/' + rootID,
+						url: '<?= URL::to("/c5dk/blog/get/0"); ?>/' + rootID,
 						success: function(response){
 
 							if (response.form) {
@@ -214,7 +214,7 @@
 							blogID: blogID,
 							rootID: rootID
 						},
-						url: '<?= URL::to($langpath, "/c5dk/blog/get"); ?>/' + blogID + '/' + rootID,
+						url: '<?= URL::to("/c5dk/blog/get"); ?>/' + blogID + '/' + rootID,
 						success: function(response){
 							if (response.form) {
 								$('#c5dk_form_slidein').html(response.form);
@@ -262,7 +262,7 @@
 						c5dk.blog.modal.waiting("<?= t('Getting blog form'); ?>");
 						$.ajax({
 							method: 'POST',
-							url: '<?= URL::to($langpath, "/c5dk/blog/delete", $blogID); ?>',
+							url: '<?= URL::to("/c5dk/blog/delete", $blogID); ?>',
 							data: { blogID: '<?= $blogID; ?>' },
 							dataType: 'json',
 							success: function(r) {
@@ -285,7 +285,7 @@
 				c5dk.blog.modal.waiting("<?= t('Getting blog form'); ?>");
 				$.ajax({
 					method: 'POST',
-					url: '<?= URL::to($langpath, "/c5dk/blog/publish"); ?>/' + blogID,
+					url: '<?= URL::to("/c5dk/blog/publish"); ?>/' + blogID,
 					data: { blogID: blogID },
 					dataType: 'json',
 					success: function(r) {
@@ -301,9 +301,9 @@
 				var approveBtn = $('#c5dk_approve');
 				console.log(approveBtn.data('approved'));
 				if (approveBtn.data('approved')) {
-					var url = '<?= URL::to($langpath, '/c5dk/blog/unapprove'); ?>/' + blogID;
+					var url = '<?= URL::to('/c5dk/blog/unapprove'); ?>/' + blogID;
 				} else {
-					var url = '<?= URL::to($langpath, '/c5dk/blog/approve'); ?>/' + blogID;
+					var url = '<?= URL::to('/c5dk/blog/approve'); ?>/' + blogID;
 				}
 
 				c5dk.blog.modal.waiting("<?= t('Getting blog form'); ?>");

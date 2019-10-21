@@ -289,7 +289,7 @@
 
 		url: {
 			currentPage: '<?= URL::to($langpath, 'blog_post', 'create', $redirectID); ?>',
-			root: '<?= URL::to($langpath); ?>',
+			// root: '<?= URL::to($langpath); ?>',
 			save: '<?= URL::to("/c5dk/blog/save"); ?>',
 			ping: '<?= URL::to("/c5dk/blog/ping"); ?>',
 			image: {

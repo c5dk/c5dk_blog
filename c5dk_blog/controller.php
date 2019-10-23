@@ -342,13 +342,22 @@ class Controller extends Package
 		$pl->filterByAttribute('c5dk_blog_unpublish_time', date('Y-m-d H:i:s'), '<');
 		$denyUnpublishTime = $pl->get();
 
-		$pl = new PageList();
-		$pl->ignorePermissions();
-		$pl->filterByAttribute('c5dk_blog_author_id', 0, '>');
-		$pl->filterByAttribute('c5dk_blog_approved', 1);
-		$pl->filterByAttribute('c5dk_blog_publish_time', date('Y-m-d H:i:s'), '<');
-		$pl->filterByAttribute('c5dk_blog_unpublish_time', date('Y-m-d H:i:s'), '>');
-		$grantPages = $pl->get();
+		// Go through all roots and find pages to grant
+		$grantPages = [];
+		foreach (C5dkRootEntity::findAll() as $root) {
+			$pl = new PageList();
+			$pl->ignorePermissions();
+			$pl->filterByAttribute('c5dk_blog_author_id', 0, '>');
+			$pl->filterByAttribute('c5dk_blog_approved', 1);
+			if ($root->getPublishTime()) {
+				$pl->filterByAttribute('c5dk_blog_publish_time', date('Y-m-d H:i:s'), '<');
+			}
+			if ($root->getUnpublishTime()) {
+				$pl->filterByAttribute('c5dk_blog_unpublish_time', date('Y-m-d H:i:s'), '>');
+			}
+			$rootGrantPages = $pl->get();
+			$grantPages = array_merge($grantPages, $rootGrantPages);
+		}
 
 		$denyPages = array_merge($denyUnapproved, $denyPublishTime, $denyUnpublishTime);
 

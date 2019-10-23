@@ -324,27 +324,25 @@ class Controller extends Package
 	{
 		// $startTime = microtime(true);
 
-		$pl = new PageList();
-		$pl->ignorePermissions();
-		$pl->filterByAttribute('c5dk_blog_author_id', 0, '>');
-		$pl->filterByAttribute('c5dk_blog_approved', 0);
-		$denyUnapproved = $pl->get();
-
-		$pl = new PageList();
-		$pl->ignorePermissions();
-		$pl->filterByAttribute('c5dk_blog_author_id', 0, '>');
-		$pl->filterByAttribute('c5dk_blog_publish_time', date('Y-m-d H:i:s'), '>');
-		$denyPublishTime = $pl->get();
-
-		$pl = new PageList();
-		$pl->ignorePermissions();
-		$pl->filterByAttribute('c5dk_blog_author_id', 0, '>');
-		$pl->filterByAttribute('c5dk_blog_unpublish_time', date('Y-m-d H:i:s'), '<');
-		$denyUnpublishTime = $pl->get();
-
-		// Go through all roots and find pages to grant
+		// Go through all roots and find pages to grant or deny
 		$grantPages = [];
+		$denyPages = [];
 		foreach (C5dkRootEntity::findAll() as $root) {
+			// Find pages to deny
+			$pl = new PageList();
+			$pl->ignorePermissions();
+			$pl->filterByAttribute('c5dk_blog_author_id', 0, '>');
+			$pl->filterByAttribute('c5dk_blog_approved', 0);
+			if ($root->getPublishTime()) {
+				$pl->filterByAttribute('c5dk_blog_publish_time', date('Y-m-d H:i:s'), '>');
+			}
+			if ($root->getUnpublishTime()) {
+				$pl->filterByAttribute('c5dk_blog_unpublish_time', date('Y-m-d H:i:s'), '<');
+			}
+			$rootDenyPages = $pl->get();
+			$denyPages = array_merge($denyPages, $rootDenyPages);
+
+			// Find pages to grant
 			$pl = new PageList();
 			$pl->ignorePermissions();
 			$pl->filterByAttribute('c5dk_blog_author_id', 0, '>');
@@ -358,8 +356,6 @@ class Controller extends Package
 			$rootGrantPages = $pl->get();
 			$grantPages = array_merge($grantPages, $rootGrantPages);
 		}
-
-		$denyPages = array_merge($denyUnapproved, $denyPublishTime, $denyUnpublishTime);
 
 		// Grant pages
 		foreach ($grantPages as $page) {
@@ -378,9 +374,9 @@ class Controller extends Package
 
 		// $endTime = microtime(true);
 		// $diffTime = $endTime - $startTime;
-		// if ($diffTime > 0.5) {
+		// // if ($diffTime > 0.5) {
 		// 	\Log::addWarning('C5DK Blog: Publish/Unpublish permission event took longer then 0.5 seconds to finish: '. $diffTime);
-		// }
+		// // }
 	}
 
 	public function checkGroupViewPermission($permissionHandle, $page, $groupID)

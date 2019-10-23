@@ -206,9 +206,9 @@ class BlogSettings extends DashboardPageController
 					FileFolder::getNodeByName('Thumbs')
 				);
 
-				if (is_object($fv) && $fileSet instanceof FileSet) {
-					$fileSet->addFileToSet($fv);
-				}
+				// if (is_object($fv) && $fileSet instanceof FileSet) {
+				// 	$fileSet->addFileToSet($fv);
+				// }
 			}
 
 			// Delete tmp file

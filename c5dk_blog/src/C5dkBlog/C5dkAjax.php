@@ -151,7 +151,7 @@ class C5dkAjax extends Controller
 		$fv = $fi->import(
 			// $_FILES['file']['tmp_name'][0],
 			$tmpFolder . $filename,
-			'C5DK_BLOG_uID-' . $uID . '_Pic_' . $fh->unfilename($_FILES['file']['name'][0]) . '.jpg',
+			'C5DK_BLOG_uID-' . $uID . '_Pic_' . $fh->unfilename($_FILES['files']['name'][0]) . '.jpg',
 			FileFolder::getNodeByName('Manager')
 		);
 

@@ -130,24 +130,24 @@ class C5dkAjax extends Controller
 				$status = false;
 				$error  = $fv;
 			}
-		if (is_object($fv)) {
-			// Get FileSet and if not exist, create it and put the file into that set
-			$fileSet = FileSet::getByName('C5DK_BLOG_uID-' . $uID);
-			if (!$fileSet instanceof FileSet) {
-				$fileSet = FileSet::create('C5DK_BLOG_uID-' . $uID);
-			}
-			$fileSet->addFileToSet($fv);
+			if (is_object($fv)) {
+				// Get FileSet and if not exist, create it and put the file into that set
+				$fileSet = FileSet::getByName('C5DK_BLOG_uID-' . $uID);
+				if (!$fileSet instanceof FileSet) {
+					$fileSet = FileSet::create('C5DK_BLOG_uID-' . $uID);
+				}
+				$fileSet->addFileToSet($fv);
 			}
 		} elseif (isset($_FILES['files'])) {
 			$status = false;
 			$error  = $_FILES['files']['error'][0];
 		}
 
-			$data = [
+		$data = [
 			'status' => $status,
 			'html' => $status ? $C5dkUser->getImageListHTML() : FileImporter::getErrorMessage($error),
-				'filename' => $filename
-			];
+			'filename' => $filename
+		];
 
 		header('Content-type: application/json');
 		echo $jh->encode($data);
@@ -159,14 +159,14 @@ class C5dkAjax extends Controller
 	{
 		$jh = $this->app->make('helper/json');
 
-		$C5dkUser = new C5dkUser();
-		$fsUser   = FileSet::getByName('C5DK_BLOG_uID-' . $C5dkUser->getUserID());
-		$fsTrash  = FileSet::createAndGetSet('C5DK_BLOG_User-deleted_UID' . $C5dkUser->getUserID(), FileSet::TYPE_PUBLIC);
-		$file     = File::getByID($this->post('fID'));
+		$C5dkUser 	= new C5dkUser();
+		$fsUser   	= FileSet::getByName('C5DK_BLOG_uID-' . $C5dkUser->getUserID());
+		$fsDeleted  = FileSet::createAndGetSet('C5DK_BLOG_User-deleted_UID-' . $C5dkUser->getUserID(), FileSet::TYPE_PUBLIC);
+		$file     	= File::getByID($this->post('fID'));
 		if (is_object($file) && $file->inFileSet($fsUser)) {
 			$fv = $file->getRecentVersion();
 			$fsUser->removeFileFromSet($fv);
-			$fsTrash->addFileToSet($fv);
+			$fsDeleted->addFileToSet($fv);
 
 			// Move file to trash folder
 			$trashFolder = FileFolder::getNodeByName("Trash");
@@ -231,14 +231,14 @@ class C5dkAjax extends Controller
 	{
 		$jh = $this->app->make('helper/json');
 
-		$C5dkUser = new C5dkUser();
-		$fsUser   = FileSet::getByName('C5DK_BLOG_uID-' . $C5dkUser->getUserID());
-		$fsTrash  = FileSet::createAndGetSet('C5DK_BLOG_User-deleted_UID_' . $C5dkUser->getUserID(), FileSet::TYPE_PUBLIC);
-		$file     = File::getByID($this->post('fID'));
+		$C5dkUser 	= new C5dkUser();
+		$fsUser   	= FileSet::getByName('C5DK_BLOG_uID-' . $C5dkUser->getUserID());
+		$fsDeleted  = FileSet::createAndGetSet('C5DK_BLOG_User-deleted_UID-' . $C5dkUser->getUserID(), FileSet::TYPE_PUBLIC);
+		$file     	= File::getByID($this->post('fID'));
 		if (is_object($file) && $file->inFileSet($fsUser)) {
 			$fv = $file->getRecentVersion();
 			$fsUser->removeFileFromSet($fv);
-			$fsTrash->addFileToSet($fv);
+			$fsDeleted->addFileToSet($fv);
 
 			// Move file to trash folder
 			$trashFolder = FileFolder::getNodeByName("Trash");

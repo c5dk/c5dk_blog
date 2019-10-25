@@ -27,7 +27,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
 class Controller extends Package
 {
 	protected $appVersionRequired      = '8.2';
-	protected $pkgVersion              = '8.5.b35';
+	protected $pkgVersion              = '8.5.b35'; // Upgrade needs to be changed to only approve old blogs on the final market place version
 	protected $pkgHandle               = 'c5dk_blog';
 	protected $pkgAutoloaderRegistries = [
 		'src/C5dkBlog' => '\C5dk\Blog',
@@ -109,7 +109,7 @@ class Controller extends Package
 			$pl->filterByPageTypeID(C5dkRoot::getPageTypes());
 			$blogPages = $pl->get();
 
-			foreach ($blogPages as $index => $page) {
+			foreach ($blogPages as $page) {
 				if ($page->getAttribute('c5dk_blog_author_id') > 0) {
 					$page->setAttribute('c5dk_blog_approved', 1);
 					$version = $page->getVersionObject();

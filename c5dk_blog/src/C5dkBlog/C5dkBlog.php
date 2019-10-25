@@ -9,20 +9,20 @@ use UserInfo;
 use Concrete\Core\Page\Page;
 use PageType;
 use CollectionAttributeKey;
-use Concrete\Core\Attribute\Key\CollectionKey;
-use Concrete\Core\Page\Type\Composer\OutputControl as PageTypeComposerOutputControl;
-use Concrete\Core\Page\Type\Composer\FormLayoutSetControl as PageTypeComposerFormLayoutSetControl;
-use Block;
-use PageTemplate;
+// use Concrete\Core\Attribute\Key\CollectionKey;
+// use Concrete\Core\Page\Type\Composer\OutputControl as PageTypeComposerOutputControl;
+// use Concrete\Core\Page\Type\Composer\FormLayoutSetControl as PageTypeComposerFormLayoutSetControl;
+// use Block;
+// use PageTemplate;
 use Concrete\Core\Tree\Type\Topic as TopicTree;
-use Concrete\Core\Tree\Node\Type\Topic as Topic;
-use Concrete\Core\Entity\Attribute\Value\Value\SelectedTopic;
-use Concrete\Core\Entity\Attribute\Value\Value\TopicsValue;
+// use Concrete\Core\Tree\Node\Type\Topic as Topic;
+// use Concrete\Core\Entity\Attribute\Value\Value\SelectedTopic;
+// use Concrete\Core\Entity\Attribute\Value\Value\TopicsValue;
 use Concrete\Core\Tree\Node\Type\Topic as TopicTreeNode;
 use Concrete\Core\User\Group\Group;
 use Concrete\Core\Permission\Key\Key as PermissionKey;
 use Concrete\Core\Permission\Access\Entity\GroupEntity as GroupPermissionAccessEntity;
-use Concrete\Core\Permission\Access\Entity\UserEntity as UserPermissionAccessEntity;
+// use Concrete\Core\Permission\Access\Entity\UserEntity as UserPermissionAccessEntity;
 
 use C5dk\Blog\C5dkRoot;
 use Concrete\Core\Http\Request;
@@ -31,29 +31,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
 
 class C5dkBlog extends Page
 {
-	// Data
-	public $blogID      = 0;
-	// public $root        = null;
-	// public $rootID      = null;
-	// public $authorID    = null;
-	// public $thumbnail   = null;
-	// public $title       = '';
-	// public $description = '';
-	// public $content     = '';
-	// public $tags        = null;
-	// public $topics      = null;
-	// public $publishTime = null;
-	// public $unpublishTime = null;
-	// public $priority = null;
-
-	public function __construct()
-	{
-		// $this->root = $this->getRoot();
-		// $this->rootID = $this->getRootID();
-		// $this->publishTime = new \datetime();
-		// $this->unpublishTime = new \datetime("2100-01-01 00:00");
-	}
-
+	public $blogID = 0;
 
 	public static function getByID($blogID, $version = 'RECENT', $class = 'C5dk\Blog\C5dkBlog')
 	{
@@ -78,7 +56,34 @@ class C5dkBlog extends Page
 		return $blog;
 	}
 
-	public function getAuthorID() {
+	public function isEditor($userID)
+	{
+		// Is this a valid request?
+		if (!$userID || !$this->rootID) {
+			return false;
+		}
+
+		// Set C5dk Objects
+		$user     = User::getByUserID($userID);
+		$C5dkRoot = C5dkRoot::getByID($this->rootID);
+
+		// Is the user a member of one of the editor groups for this root.
+		return (count(array_intersect($user->getUserGroups(), $C5dkRoot->editorGroups))) ? true : false;
+	}
+
+	public function isUnpublished()
+	{
+		$access = $this->checkGroupViewPermission('view_page', $this, GUEST_GROUP_ID);
+		// Do guests have view permissions
+		if ($access) {
+			return false;
+		} else {
+			return true;
+		}
+	}
+
+	public function getAuthorID()
+	{
 		return $this->getAttribute('c5dk_blog_author_id');
 	}
 
@@ -95,15 +100,30 @@ class C5dkBlog extends Page
 	// Get blog content from the first content block in the main area or return empty "" string
 	public function getContent()
 	{
-		foreach ($this->getBlocks('Main') as $block) {
-			if ($block->getBlockTypeHandle() == 'content') {
-				$instance = $block->getInstance();
-				// \Log::addEntry(get_class($instance));
-				return $instance->getContent();
-			}
+		// foreach ($this->getBlocks('Main') as $block) {
+		// 	if ($block->getBlockTypeHandle() == 'content') {
+		// 		$instance = $block->getInstance();
+
+		// 		return $instance->getContent();
+		// 	}
+		// }
+		$contentInstance = $this->getInstance();
+		if ($contentInstance) {
+			return $contentInstance->getContent();
 		}
 
 		return '';
+	}
+
+	public function getInstance()
+	{
+		foreach ($this->getBlocks('Main') as $block) {
+			if ($block->getBlockTypeHandle() == 'content') {
+				return $block->getInstance();
+			}
+		}
+
+		return false;
 	}
 
 	public function getTags()
@@ -135,7 +155,8 @@ class C5dkBlog extends Page
 		return $this->getAttribute('thumbnail');
 	}
 
-	public function getApproved() {
+	public function getApproved()
+	{
 		return $this->getAttribute('c5dk_blog_approved');
 	}
 
@@ -201,7 +222,6 @@ class C5dkBlog extends Page
 
 				$blogID = $C5dkBlog->getCollectionID();
 				// Set Blog Author ID
-				// $u = new User;
 				$C5dkBlog->setAttribute('c5dk_blog_author_id', $u->getUserID());
 				$C5dkBlog = C5dkBlog::getByID($blogID);
 				break;
@@ -250,13 +270,9 @@ class C5dkBlog extends Page
 		// Set Publish/Unpublish Time
 		if ($C5dkRoot->getPublishTime() && $post['publishTime']) {
 			$C5dkBlog->setAttribute('c5dk_blog_publish_time', new \datetime($post['publishTime']));
-		} else {
-			// $C5dkBlog->setAttribute('c5dk_blog_publish_time', new \datetime());
 		}
 		if ($C5dkRoot->getUnpublishTime() && $post['unpublishTime']) {
 			$C5dkBlog->setAttribute('c5dk_blog_unpublish_time', new \datetime($post['unpublishTime']));
-		} else {
-			// $C5dkBlog->setAttribute('c5dk_blog_unpublish_time', new \datetime("2100-01-01 00:00:00"));
 		}
 
 		// Set Permissions
@@ -370,17 +386,6 @@ class C5dkBlog extends Page
 		return (!$ret) ? $name : $ret;
 	}
 
-	private function getInstance()
-	{
-		foreach ($this->getBlocks('Main') as $block) {
-			if ($block->getBlockTypeHandle() == 'content') {
-				return $block->getInstance();
-			}
-		}
-
-		return false;
-	}
-
 	public function getPriorityList()
 	{
 		$tree = TopicTree::getByName('Blog Priorities');
@@ -409,21 +414,6 @@ class C5dkBlog extends Page
 		return $topicList;
 	}
 
-	public function isEditor($userID)
-	{
-		// Is this a valid request?
-		if (!$userID || !$this->rootID) {
-			return false;
-		}
-
-		// Set C5dk Objects
-		$user     = User::getByUserID($userID);
-		$C5dkRoot = C5dkRoot::getByID($this->rootID);
-
-		// Is the user a member of one of the editor groups for this root.
-		return (count(array_intersect($user->getUserGroups(), $C5dkRoot->editorGroups))) ? true : false;
-	}
-
 	public function setPriority($values)
 	{
 		$topics = [];
@@ -443,17 +433,6 @@ class C5dkBlog extends Page
 		// TODO: Do we need to look at the unpublish time too???
 
 		return true;
-	}
-
-	public function isUnpublished()
-	{
-		$access = $this->checkGroupViewPermission('view_page', $this, GUEST_GROUP_ID);
-		// Should we grant permission because of the time
-		if ($access) {
-			return false;
-		} else {
-			return true;
-		}
 	}
 
 	public static function grantPagePermissionByGroup($permission, $page, $groupID)

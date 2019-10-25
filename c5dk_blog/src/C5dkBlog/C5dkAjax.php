@@ -160,8 +160,12 @@ class C5dkAjax extends Controller
 		$fs->delete($tmpFolder . $filename);
 
 		if (is_object($fv)) {
-			// Create and get FileSet if not exist and add file to the set
-			$fileSet = FileSet::createAndGetSet('C5DK_BLOG_uID-' . $uID, FileSet::TYPE_PUBLIC, $uID);
+			// Get FileSet if not exist, create it
+			$fileSet = FileSet::getByName('C5DK_BLOG_uID-' . $uID);
+			if (!$fileSet instanceof FileSet) {
+				$fileSet = FileSet::create('C5DK_BLOG_uID-' . $uID);
+			}
+			// $fileSet = FileSet::createAndGetSet('C5DK_BLOG_uID-' . $uID, FileSet::TYPE_PUBLIC, $uID);
 			$fsf     = $fileSet->addFileToSet($fv);
 
 			// Now let's update the image
@@ -233,8 +237,12 @@ class C5dkAjax extends Controller
 				$error  = $fv;
 			}
 			if (is_object($fv)) {
-				// Create and get FileSet if not exist and add file to the set
-				$fileSet = FileSet::createAndGetSet('C5DK_BLOG_uID-' . $uID, FileSet::TYPE_PUBLIC, $uID);
+				// Get FileSet if not exist, create it
+				$fileSet = FileSet::getByName('C5DK_BLOG_uID-' . $uID);
+				if (!$fileSet instanceof FileSet) {
+					$fileSet = FileSet::create('C5DK_BLOG_uID-' . $uID);
+				}
+				// $fileSet = FileSet::createAndGetSet('C5DK_BLOG_uID-' . $uID, FileSet::TYPE_PUBLIC, $uID);
 				$fileSet->addFileToSet($fv);
 			}
 		} elseif (isset($_FILES['files'])) {

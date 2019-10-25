@@ -50,10 +50,11 @@
 							</div>
 
 							<!-- Publish Now -->
-							<div class="c5dk-blog-btn-wrap">
-								<a class="c5dk_publish_now c5dk_blog_ButtonOrange" onclick="c5dk.blog.buttons.publishNow(<?= $blogID; ?>)"><?= t("Publish Now"); ?><br /><?= $C5dkBlog->getPublishTime(); ?></a>
-							</div>
-
+							<?php if ($C5dkBlog->isUnpublished()) { ?>
+								<div class="c5dk-blog-btn-wrap">
+									<a class="c5dk_publish_now c5dk_blog_ButtonOrange" onclick="c5dk.blog.buttons.publishNow(<?= $blogID; ?>)"><?= t("Publish Now"); ?><br /><?= $C5dkBlog->getPublishTime(); ?></a>
+								</div>
+							<?php } ?>
 						<?php } ?>
 
 					<?php } ?>

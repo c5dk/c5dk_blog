@@ -17,7 +17,7 @@ use Concrete\Core\File\Importer as FileImporter;
 use Concrete\Core\Entity\File\Version as FileVersion;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Multilingual\Page\Section\Section;
-use Illuminate\Filesystem\Filesystem;
+// use Illuminate\Filesystem\Filesystem;
 // use Concrete\Core\Tree\Node\Type\Topic as TopicTreeNode;
 use Concrete\Core\Tree\Node\Type\FileFolder as FileFolder;
 use C5dk\Blog\Service\ThumbnailCropper as ThumbnailCropper;

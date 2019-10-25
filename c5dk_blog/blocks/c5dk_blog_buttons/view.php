@@ -39,7 +39,7 @@
 						<?php if (!$C5dkUser->isOwner()) { ?>
 							<!-- Edit Post -->
 							<div class="c5dk-blog-btn-wrap">
-								<a class="c5dk_blog_ButtonBlue" href="<?= URL::to($langpath, 'blog_post', 'edit', $blogID, $C5dkBlog->getRootID()); ?>"><?= t("Edit Post"); ?></a>
+								<a class="c5dk_blog_ButtonBlue" href="<?= URL::to($langpath, 'blog_post', 'edit', $blogID, $C5dkBlog->getRootID(), (new user)->getUserID()); ?>"><?= t("Edit Post"); ?></a>
 							</div>
 
 							<!-- Delete Post -->

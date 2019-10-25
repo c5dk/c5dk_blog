@@ -53,31 +53,37 @@ class BlogPost extends PageController
 		$this->init($C5dkBlog, $C5dkRoot, $C5dkConfig, $C5dkUser, $redirectID);
 	}
 
-	public function edit($blogID, $rootID)
+	public function edit($blogID, $rootID, $editor = false)
 	{
 		// Setup C5DK objects
-		$C5dkConfig = new C5dkConfig;
-		$C5dkUser   = new C5dkUser;
 		$C5dkBlog   = C5dkBlog::getByID($blogID);
 		$C5dkRoot   = C5DKRoot::getByID($rootID);
+		$C5dkConfig = new C5dkConfig;
+		$C5dkUser   = new C5dkUser;
+		if ($editor) {
+			$C5dkEditor = $C5dkUser;
+			if ($C5dkEditor->isEditor()) {
+				$C5dkUser = C5dkUser::getByUserID($C5dkBlog->getAuthorID());
+			}
+		}
 
 		// Check if user is owner of blog?
-		if (!$C5dkBlog->getAuthorID() && $C5dkBlog->getAuthorID() != $C5dkUser->getUserID()) {
+		if ($C5dkBlog->getAuthorID() && $C5dkBlog->getAuthorID() != $C5dkUser->getUserID()) {
 			$this->redirect('/');
 		}
 
 		$this->init($C5dkBlog, $C5dkRoot, $C5dkConfig, $C5dkUser);
 	}
 
-	public function init($C5dkBlog, $C5dkRoot, $C5dkConfig, $C5dkUser, $redirectID = null)
+	public function init($C5dkBlog, $C5dkRoot, $C5dkConfig, $C5dkUser, $redirectID = null, $C5dkEditor = null)
 	{
 		// Find language path if on a multilingual site
 		$c = Page::getCurrentPage();
-        $al = Section::getBySectionOfSite($c);
-        $langpath = '';
-        if (null !== $al) {
-            $langpath = $al->getCollectionHandle();
-        }
+		$al = Section::getBySectionOfSite($c);
+		$langpath = '';
+		if (null !== $al) {
+			$langpath = $al->getCollectionHandle();
+		}
 
 		// Require Assets
 		$this->requireAsset('css', 'c5dk_blog_css');
@@ -100,6 +106,7 @@ class BlogPost extends PageController
 		$this->set('langpath', $langpath);
 		$this->set('C5dkConfig', $C5dkConfig);
 		$this->set('C5dkUser', $C5dkUser);
+		$this->set('C5dkEditor', $C5dkEditor);
 		$this->set('C5dkBlog', $C5dkBlog);
 		$this->set('C5dkRoot', $C5dkRoot);
 		$this->set('redirectID', $redirectID);

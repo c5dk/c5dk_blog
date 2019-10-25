@@ -12,7 +12,7 @@
 				<div class="c5dk_blog_btn_title"><h4><?= t('Blog Editor'); ?></h4></div>
 
 				<!-- Blog Buttons -->
-				<div class="c5dk_blog_buttons">
+				<div class="c5dk_blog_btn">
 
 					<!-- Go to Editor Manager -->
 					<div class="c5dk-blog-btn-wrap">
@@ -23,7 +23,7 @@
 						<!-- Approve Blog Entry -->
 						<?php if ($C5dkRoot->getNeedsApproval()) { ?>
 							<div class="c5dk-blog-btn-wrap">
-								<button id="c5dk_approve"
+								<a id="c5dk_approve"
 									class="<?= $C5dkBlog->getApproved() ? "c5dk_blog_ButtonGreen" : "c5dk_blog_ButtonOrange"; ?>"
 									onclick="c5dk.blog.buttons.approve(<?= $blogID; ?>)"
 									data-id="<?= $blogID; ?>" data-approved="<?= $C5dkBlog->getApproved(); ?>"
@@ -32,7 +32,7 @@
 									data-unapproved-style="c5dk_blog_ButtonOrange"
 								>
 									<?= (!$C5dkBlog->getApproved())? t("Approve") : t("Unapprove"); ?>
-								</button>
+								</a>
 							</div>
 						<?php } ?>
 
@@ -50,7 +50,7 @@
 							<!-- Publish Now -->
 							<?php if ($C5dkBlog->isUnpublished()) { ?>
 								<div class="c5dk-blog-btn-wrap">
-									<button class="c5dk_publish_now c5dk_blog_ButtonOrange" onclick="c5dk.blog.buttons.publishNow(<?= $blogID; ?>)"><?= t("Publish Now"); ?><br /><?= $C5dkBlog->getPublishTime(); ?></button>
+								<a class="c5dk_publish_now c5dk_blog_ButtonOrange" onclick="c5dk.blog.buttons.publishNow(<?= $blogID; ?>)"><?= t("Publish Now"); ?><br /><?= $C5dkBlog->getPublishTime(); ?></a>
 								</div>
 							<?php } ?>
 						<?php } ?>

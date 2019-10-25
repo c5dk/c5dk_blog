@@ -26,7 +26,7 @@
 					<?php } ?>
 					<li onclick="$(this).find('ul').toggleClass('hide')">
 						<i class="fa fa-calendar-o"></i>
-						<a><?= $date['year']; ?></a>
+						<a style="cursor: pointer;"><?= $date['year']; ?></a>
 						<ul class="c5dk-date-navigation-dates<?= isset($yearTmp)? ' hide' :  ''; ?>">
 						<?php $yearTmp = $date['year']; ?>
 				<?php } ?>

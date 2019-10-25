@@ -5,7 +5,7 @@
 
 <style type="text/css">
 .c5dk_headline {
-	color: <?= $C5dkConfig->blog_headline_color; ?>
+	color: <?= $C5dkConfig->blog_headline_color; ?>;
 	font-size: <?= $C5dkConfig->blog_headline_size; ?>px;
 	margin: <?= $C5dkConfig->blog_headline_margin; ?>;
 }

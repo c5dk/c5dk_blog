@@ -836,9 +836,9 @@
 		border-color: red !important;
 	}
 	#c5dk-blog-package .c5dk_blog_box_thumbnail{
-		position: relative;
 		width: auto;
 		height: auto;
+    display: inline-block;
 	}
 	#c5dk-blog-package .c5dk_blog_box_thumbnail_header{
 		width: 100%;
@@ -909,7 +909,7 @@
 	}
 	#c5dk-blog-package .c5dk_blog_box_thumbnail_rightframe {
 		width: 100%;
-		max-width: 820px;
+		max-width: 800px;
 		max-height: 600px;
 		float: left;
 	}

@@ -58,6 +58,7 @@ c5dk.blog.post = {
 			dropZone: $("#c5dk_imagemanager_slidein"),
 			url: c5dk.blog.data.post.url.image.upload,
 			dataType: 'json',
+			formData: [{ name: 'blogID', value: c5dk.blog.data.post.blogID }],
 			// Enable image resizing, except for Android and Opera,
 			// which actually support image resizing, but fail to
 			// send Blob objects via XHR requests:
@@ -69,12 +70,10 @@ c5dk.blog.post = {
 		}).on('fileuploadsubmit', function (e, data) {
 			c5dk.blog.modal.waiting(c5dk.blog.data.post.text.fileupload);
 		}).on('fileuploaddone', function (e, data) {
-
 			$('#c5dkimagemanager-box').html(data.result.html);
 			$('#c5dk_image_upload').val('');
 			c5dk.blog.modal.exitModal();
 		}).on('fileuploadfail', function (e, data) {
-
 			$.each(data.files, function (index) {
 				var error = $('<span class="text-danger"/>').text('Image upload failed.');
 				$(data.context.children()[index])
@@ -88,23 +87,14 @@ c5dk.blog.post = {
 			dropZone: $("#c5dk_filemanager_slidein"),
 			url: c5dk.blog.data.post.url.file.upload,
 			dataType: 'json',
-			// Enable image resizing, except for Android and Opera,
-			// which actually support image resizing, but fail to
-			// send Blob objects via XHR requests:
-			// disableImageResize: /Android(?!.*Chrome)|Opera/.test(window.navigator && navigator.userAgent),
-			// imageOrientation: true,
-			// imageMaxWidth: c5dk.blog.data.post.image.maxWidth,
-			// imageMaxHeight: c5dk.blog.data.post.image.maxHeight,
-			// imageCrop: true // Force cropped images,
+			formData: [{ name: 'blogID', value: c5dk.blog.data.post.blogID }],
 		}).on('fileuploadsubmit', function (e, data) {
 			c5dk.blog.modal.waiting(c5dk.blog.data.post.text.fileupload);
 		}).on('fileuploaddone', function (e, data) {
-
 			$('#c5dkfilemanager-box').html(data.result.html);
 			$('#c5dk_file_upload').val('');
 			c5dk.blog.modal.exitModal();
 		}).on('fileuploadfail', function (e, data) {
-
 			$.each(data.files, function (index) {
 				var error = $('<span class="text-danger"/>').text('File upload failed.');
 				$(data.context.children()[index])
@@ -158,12 +148,15 @@ c5dk.blog.post = {
 					$.fn.dialog.closeTop();
 					$.ajax({
 						type: 'POST',
-						data: { fID: c5dk.blog.post.image.currentFID },
+						data: {
+							fID: c5dk.blog.post.image.currentFID,
+							blogID: c5dk.blog.data.post.blogID
+						},
 						url: c5dk.blog.data.post.url.image.delete,
 						dataType: 'json',
-						success: function(r) {
-							if (r.status == "success") {
-								$('#c5dkimagemanager-box').html(r.imageListHtml);
+						success: function(response) {
+							if (response.status) {
+								$('#c5dkimagemanager-box').html(response.imageListHtml);
 							}
 						}
 					});
@@ -226,12 +219,15 @@ c5dk.blog.post = {
 					$.fn.dialog.closeTop();
 					$.ajax({
 						type: 'POST',
-						data: { fID: c5dk.blog.post.file.currentFID },
+						data: {
+							fID: c5dk.blog.post.file.currentFID,
+							blogID: c5dk.blog.data.post.blogID
+						},
 						url: c5dk.blog.data.post.url.file.delete,
 						dataType: 'json',
-						success: function (r) {
-							if (r.status == "success") {
-								$('#c5dkfilemanager-box').html(r.fileListHtml);
+						success: function (response) {
+							if (response.status) {
+								$('#c5dkfilemanager-box').html(response.fileListHtml);
 							}
 						}
 					});

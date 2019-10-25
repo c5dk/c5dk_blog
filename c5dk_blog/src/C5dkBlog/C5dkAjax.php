@@ -235,12 +235,9 @@ class C5dkAjax extends Controller
 
 		$data = [
 			'status' => $status,
-			'html' => $C5dkUser->getFileListHTML(),
+			'html' => $status ? $C5dkUser->getFileListHTML() : FileImporter::getErrorMessage($error),
 			'filename' => $filename
 		];
-		if (!$status) {
-			$data['error'] = FileImporter::getErrorMessage($error);
-		}
 
 		header('Content-type: application/json');
 		echo $jh->encode($data);

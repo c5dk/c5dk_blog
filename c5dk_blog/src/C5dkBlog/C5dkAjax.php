@@ -2,15 +2,15 @@
 namespace C5dk\Blog;
 
 use Core;
-use Request;
-use User;
+// use Request;
+// use User;
 use Page;
 use View;
 use Controller;
 use CollectionAttributeKey;
 use Image;
-use Imagine\Image\Box;
-use Imagine\Image\ImageInterface;
+// use Imagine\Image\Box;
+// use Imagine\Image\ImageInterface;
 use Concrete\Core\File\File as File;
 use Concrete\Core\File\FileList as FileList;
 use Concrete\Core\File\Set\Set as FileSet;
@@ -19,7 +19,7 @@ use Concrete\Core\Entity\File\Version as FileVersion;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Multilingual\Page\Section\Section;
 use Illuminate\Filesystem\Filesystem;
-use Concrete\Core\Tree\Node\Type\Topic as TopicTreeNode;
+// use Concrete\Core\Tree\Node\Type\Topic as TopicTreeNode;
 use Concrete\Core\Tree\Node\Type\FileFolder as FileFolder;
 use C5dk\Blog\Service\ThumbnailCropper as ThumbnailCropper;
 
@@ -116,7 +116,6 @@ class C5dkAjax extends Controller
 		$fh = $this->app->make('helper/file');
 
 		// Get C5dk Objects
-		$C5dkConfig = new C5dkConfig;
 		$C5dkUser   = new C5dkUser();
 		$uID        = $C5dkUser->getUserID();
 
@@ -132,15 +131,6 @@ class C5dkAjax extends Controller
 		$imagine = $this->app->make(Image::getFacadeAccessor());
 		$image   = $imagine->open($_FILES['files']['tmp_name'][0]);
 
-		// Autorotate image
-		// $transformation = new Transformation($imagine);
-		// $transformation->applyFilter($image, new Autorotate());
-
-		// Resize image
-		// $width = $C5dkConfig->blog_picture_width;
-		// $height = $C5dkConfig->blog_picture_height;
-		// $image = $image->thumbnail(new Box($width, $height), ImageInterface::THUMBNAIL_INSET);
-
 		$filename = (microtime(true) * 10000) . '.jpg';
 
 		// Save image as .jpg
@@ -149,7 +139,6 @@ class C5dkAjax extends Controller
 		// Import file
 		$fi = new FileImporter();
 		$fv = $fi->import(
-			// $_FILES['file']['tmp_name'][0],
 			$tmpFolder . $filename,
 			'C5DK_BLOG_uID-' . $uID . '_Pic_' . $fh->unfilename($_FILES['files']['name'][0]) . '.jpg',
 			FileFolder::getNodeByName('Manager')
@@ -160,21 +149,17 @@ class C5dkAjax extends Controller
 		$fs->delete($tmpFolder . $filename);
 
 		if (is_object($fv)) {
-			// Get FileSet if not exist, create it
+			// Get FileSet and if not exist, create it and put the file into that set
 			$fileSet = FileSet::getByName('C5DK_BLOG_uID-' . $uID);
 			if (!$fileSet instanceof FileSet) {
 				$fileSet = FileSet::create('C5DK_BLOG_uID-' . $uID);
 			}
-			// $fileSet = FileSet::createAndGetSet('C5DK_BLOG_uID-' . $uID, FileSet::TYPE_PUBLIC, $uID);
-			$fsf     = $fileSet->addFileToSet($fv);
+			$fileSet->addFileToSet($fv);
 
 			// Now let's update the image
 			$fv->updateContents($image->get($fv->getExtension()));
 			$fv->rescanThumbnails();
 
-			// Get FileList
-			// $files = $this->getFileList($fileSet);
-			// rsort($files);
 			$data = [
 				'status' => 1,
 				'html' => $C5dkUser->getImageListHTML(),
@@ -218,7 +203,7 @@ class C5dkAjax extends Controller
 	{
 		// Get helper objects
 		$jh       = $this->app->make('helper/json');
-		$fh       = $this->app->make('helper/file');
+
 		$C5dkUser = new C5dkUser();
 		$uID      = $C5dkUser->getUserID();
 
@@ -231,18 +216,16 @@ class C5dkAjax extends Controller
 			$fv = $importer->import($file, $filename, FileFolder::getNodeByName('Manager'));
 			if ($fv instanceof FileVersion) {
 				$status = true;
-				// $this->redirect('/my/success/page');
 			} else {
 				$status = false;
 				$error  = $fv;
 			}
 			if (is_object($fv)) {
-				// Get FileSet if not exist, create it
+				// Get FileSet and if not exist, create it and put the file into that set
 				$fileSet = FileSet::getByName('C5DK_BLOG_uID-' . $uID);
 				if (!$fileSet instanceof FileSet) {
 					$fileSet = FileSet::create('C5DK_BLOG_uID-' . $uID);
 				}
-				// $fileSet = FileSet::createAndGetSet('C5DK_BLOG_uID-' . $uID, FileSet::TYPE_PUBLIC, $uID);
 				$fileSet->addFileToSet($fv);
 			}
 		} elseif (isset($_FILES['files'])) {

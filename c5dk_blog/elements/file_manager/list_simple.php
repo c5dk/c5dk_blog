@@ -4,7 +4,7 @@
 <?php foreach ($fileList as $file) { ?>
 	<div data-fid="<?= $file['fID']; ?>" class="c5dk-thumb-frme">
 		<?php if ($canDeleteFiles) { ?>
-			<span class="fa fa-window-close-o c5dk-delete-file" onclick="c5dk.blog.post.file.delete('confirm', <?= $file['fID']; ?>);"></span>
+			<i class="fa fa-window-close-o c5dk-delete-file" onclick="c5dk.blog.post.file.delete('confirm', <?= $file['fID']; ?>);"></i>
 		<?php } ?>
 		<div
 			class="c5dk_file_line"
@@ -17,6 +17,13 @@
 <?php } ?>
 
 <style>
+	.c5dk_file_line {
+		line-height: 22px;
+		cursor: pointer;
+	}
+	.c5dk_file_line:hover {
+		color: blue;
+	}
 	.c5dk-delete-file {
 		float: right;
 		/* position: absolute; */

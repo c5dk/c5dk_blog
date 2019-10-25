@@ -9,7 +9,7 @@
 			<div class="c5dk_blog_section">
 
 				<!-- Header -->
-				<div class="c5dk_blog_btn_title"><h4><?= t('Blog Editor Control'); ?></h4></div>
+				<div class="c5dk_blog_btn_title"><h4><?= t('Blog Editor'); ?></h4></div>
 
 				<!-- Blog Buttons -->
 				<div class="c5dk_blog_buttons">
@@ -48,10 +48,11 @@
 							</div>
 
 							<!-- Publish Now -->
-							<div class="c5dk-blog-btn-wrap">
-								<button class="c5dk_publish_now c5dk_blog_ButtonOrange" onclick="c5dk.blog.buttons.publishNow(<?= $blogID; ?>)"><?= t("Publish Now"); ?><br /><?= $C5dkBlog->getPublishTime(); ?></button>
-							</div>
-
+							<?php if ($C5dkBlog->isUnpublished()) { ?>
+								<div class="c5dk-blog-btn-wrap">
+									<button class="c5dk_publish_now c5dk_blog_ButtonOrange" onclick="c5dk.blog.buttons.publishNow(<?= $blogID; ?>)"><?= t("Publish Now"); ?><br /><?= $C5dkBlog->getPublishTime(); ?></button>
+								</div>
+							<?php } ?>
 						<?php } ?>
 
 					<?php } ?>
@@ -67,7 +68,7 @@
 		<div id="c5dk-blog-package">
 			<div class="c5dk_blog_section">
 
-				<div class="c5dk_blog_btn_title"><h4><?= t('Blog Editor'); ?></h4></div>
+				<div class="c5dk_blog_btn_title"><h4><?= t('Blog Writer'); ?></h4></div>
 
 				<!-- Blogging Buttons -->
 				<div class="c5dk_blog_btn">
@@ -98,7 +99,10 @@
 						<!-- Publish Now -->
 						<?php if ($C5dkBlog->isUnpublished()) { ?>
 							<div class="c5dk-blog-btn-wrap">
-								<button class="c5dk_publish_now c5dk_blog_ButtonOrange" onclick="c5dk.blog.buttons.publishNow(<?= $blogID; ?>)"><?= t("Publish Now"); ?><br /><?= $C5dkBlog->getPublishTime(); ?></button>
+								<a class="c5dk_blog_ButtonOrange c5dk_publish_now" onclick="c5dk.blog.buttons.publishNow(<?= $blogID; ?>);">
+									<?= t("Publish Now"); ?><br />
+									<?= $C5dkBlog->getPublishTime(); ?>
+								</a>
 							</div>
 						<?php } ?>
 

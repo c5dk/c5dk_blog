@@ -217,7 +217,7 @@ class C5dkUser extends User
 				// Get files from FileSet
 				$fl = new FileList();
 				$fl->filterBySet($fs);
-				$fl->filterByExtension('pdf');
+				$fl->filterByExtension(['xlsx','xls','doc','docx','ppt','pptx','txt','pdf']);
 				$fileList = array_reverse($fl->get());
 				foreach ($fileList as $key => $file) {
 					$f  = File::getByID($file->getFileID());

@@ -5,7 +5,13 @@
 	<div class="c5dk-slidein-area-wrapper">
 		<div class="c5dk-slider-button-container">
 			<form>
-				<input id="c5dk_file_upload" multiple class="c5dk-inputfile" accept="application/pdf" type="file" name="files[]" />
+				<input
+					id="c5dk_file_upload"
+					multiple class="c5dk-inputfile"
+					accept=".xlsx,.xls,.doc,.docx,.ppt,.pptx,.txt,.pdf"
+					type="file"
+					name="files[]"
+				/>
 				<label id="c5dk-upload-photo-label" for="c5dk_file_upload"><?= t('Upload Files...'); ?> </label>
 			</form>
 		</div>

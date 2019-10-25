@@ -224,10 +224,12 @@
 		</div>
 
 		<!-- Blog Thumbnail -->
-		<?php if ($C5dkRoot->getThumbnails() && $ThumbnailCropper) { ?>
-			<!-- Cropper Service -->
-			<?= $ThumbnailCropper->output(); ?>
-		<?php } ?>
+        <div class="c5dk_blog_section">
+            <?php if ($C5dkRoot->getThumbnails() && $ThumbnailCropper) { ?>
+                <!-- Cropper Service -->
+                <?= $ThumbnailCropper->output(); ?>
+            <?php } ?>
+        </div>
 
 		<!-- Footer Button Section -->
 		<div class="c5dk_blog_button_section c5dk_top_border_line">

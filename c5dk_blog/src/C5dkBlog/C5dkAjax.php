@@ -112,42 +112,24 @@ class C5dkAjax extends Controller
 	public function imageUpload()
 	{
 		// Get helper objects
-		$jh = $this->app->make('helper/json');
-		$fh = $this->app->make('helper/file');
+		$jh       = $this->app->make('helper/json');
 
-		// Get C5dk Objects
-		$C5dkUser   = new C5dkUser();
-		$uID        = $C5dkUser->getUserID();
+		$C5dkUser = new C5dkUser();
+		$uID      = $C5dkUser->getUserID();
 
-		// Data to send back if something fails
-		$data = [
-			'html' => '<div class="error-message">' . t('An error has occurred!') . '</div>',
-			'status' => 0
-		];
+		$error = FileImporter::E_PHP_FILE_ERROR_DEFAULT;
+		if (isset($_FILES['files']) && is_uploaded_file($_FILES['files']['tmp_name'][0])) {
+			$file     = $_FILES['files']['tmp_name'][0];
+			$filename = 'C5DK_BLOG_uID-' . $uID . '_Pic_' . $_FILES['files']['name'][0];
 
-		$tmpFolder = $fh->getTemporaryDirectory();
-
-		// Get image facade and open image
-		$imagine = $this->app->make(Image::getFacadeAccessor());
-		$image   = $imagine->open($_FILES['files']['tmp_name'][0]);
-
-		$filename = (microtime(true) * 10000) . '.jpg';
-
-		// Save image as .jpg
-		$image->save($tmpFolder . $filename, ['jpeg_quality' => 80]);
-
-		// Import file
-		$fi = new FileImporter();
-		$fv = $fi->import(
-			$tmpFolder . $filename,
-			'C5DK_BLOG_uID-' . $uID . '_Pic_' . $fh->unfilename($_FILES['files']['name'][0]) . '.jpg',
-			FileFolder::getNodeByName('Manager')
-		);
-
-		// Delete our imported file
-		$fs = new Filesystem();
-		$fs->delete($tmpFolder . $filename);
-
+			$importer = new FileImporter();
+			$fv = $importer->import($file, $filename, FileFolder::getNodeByName('Manager'));
+			if ($fv instanceof FileVersion) {
+				$status = true;
+			} else {
+				$status = false;
+				$error  = $fv;
+			}
 		if (is_object($fv)) {
 			// Get FileSet and if not exist, create it and put the file into that set
 			$fileSet = FileSet::getByName('C5DK_BLOG_uID-' . $uID);
@@ -155,17 +137,17 @@ class C5dkAjax extends Controller
 				$fileSet = FileSet::create('C5DK_BLOG_uID-' . $uID);
 			}
 			$fileSet->addFileToSet($fv);
-
-			// Now let's update the image
-			$fv->updateContents($image->get($fv->getExtension()));
-			$fv->rescanThumbnails();
+			}
+		} elseif (isset($_FILES['files'])) {
+			$status = false;
+			$error  = $_FILES['files']['error'][0];
+		}
 
 			$data = [
-				'status' => 1,
-				'html' => $C5dkUser->getImageListHTML(),
+			'status' => $status,
+			'html' => $status ? $C5dkUser->getImageListHTML() : FileImporter::getErrorMessage($error),
 				'filename' => $filename
 			];
-		}
 
 		header('Content-type: application/json');
 		echo $jh->encode($data);

@@ -125,12 +125,10 @@ class BlogPost extends PageController
 		if ($C5dkBlog instanceof C5dkBlog && $C5dkBlog->getAttribute('c5dk_blog_author_id') == $C5dkUser->getUserID()) {
 			$C5dkBlog = $C5dkBlog->save($blogID);
 
-			$C5dkUser = C5dkUser::getByUserID($C5dkBlog->getUserID());
-
 			$C5dkAjax = new C5dkAjax;
 			$C5dkAjax->saveThumbnail($C5dkBlog, $C5dkUser, $this->post('thumbnail'));
 		}
-		
+
 		$this->redirect($C5dkBlog->getCollectionLink());
 	}
 

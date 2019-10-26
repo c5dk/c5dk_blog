@@ -5,8 +5,8 @@
 
 <!-- If Blog post slide-in is active. Get the slide-in element -->
 <?php
-print View::element('image_manager/main', ['C5dkUser' => $C5dkUser], 'c5dk_blog');
-print View::element('file_manager/main', ['C5dkUser' => $C5dkUser], 'c5dk_blog');
+// print View::element('image_manager/main', ['C5dkUser' => $C5dkUser], 'c5dk_blog');
+// print View::element('file_manager/main', ['C5dkUser' => $C5dkUser], 'c5dk_blog');
 ?>
 
 <div id="c5dk-blog-package" class="container main-wrap">

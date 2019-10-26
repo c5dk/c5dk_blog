@@ -41,7 +41,7 @@
 		switch (c5dk.blog.post.image.managerMode) {
 
 			case "editor":
-				var element = CKEDITOR.dom.element.createFromHtml( '<img src="' + $(event.target).data('src') + '" />' );
+				var element = CKEDITOR.dom.element.createFromHtml( '<img alt="" src="' + $(event.target).data('src') + '" />' );
 				c5dk.blog.post.ckeditor.insertElement( element );
 				c5dk.blog.post.image.hideManager();
 				break;

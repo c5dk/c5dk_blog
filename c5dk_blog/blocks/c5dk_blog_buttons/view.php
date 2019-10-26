@@ -43,7 +43,8 @@
 									<?php if ($C5dkConfig->blog_form_slidein) { ?>
 										onclick="return c5dk.blog.buttons.edit('<?= $blogID; ?>', '<?= $C5dkBlog->getRootID(); ?>');"
 									<?php } ?>
-									href="<?= URL::to($langpath, 'blog_post', 'edit', $blogID, $C5dkBlog->getRootID()); ?>"><?= t("Edit Post"); ?></a>
+									href="<?= URL::to($langpath, 'blog_post', 'edit', $blogID, $C5dkBlog->getRootID()); ?>"
+								><?= t("Edit Post"); ?></a>
 							</div>
 
 							<!-- Delete Post -->
@@ -92,7 +93,8 @@
 								<?php if ($C5dkConfig->blog_form_slidein) { ?>
 									onclick="return c5dk.blog.buttons.edit('<?= $blogID; ?>', '<?= $C5dkBlog->getRootID(); ?>');"
 								<?php } ?>
-								href="<?= URL::to($langpath, 'blog_post', 'edit', $blogID, $C5dkBlog->getRootID()); ?>"><?= t("Edit Post"); ?></a>
+								href="<?= URL::to($langpath, 'blog_post', 'edit', $blogID, $C5dkBlog->getRootID()); ?>"
+							><?= t("Edit Post"); ?></a>
 						</div>
 
 						<!-- Delete blog -->
@@ -136,8 +138,8 @@
 	<!-- If Blog post slide-in is active. Get the slide-in element -->
 	<?php
 	if ($C5dkConfig->blog_form_slidein) {
-		// print View::element('image_manager/main', ['C5dkUser' => new \C5dk\Blog\C5dkUser], 'c5dk_blog');
-		// print View::element('file_manager/main', ['C5dkUser' => new \C5dk\Blog\C5dkUser], 'c5dk_blog');
+		print View::element('image_manager/main', ['C5dkUser' => \C5dk\Blog\C5dkUser::getByUserID($C5dkBlog->getAuthorID())], 'c5dk_blog');
+		print View::element('file_manager/main', ['C5dkUser' => \C5dk\Blog\C5dkUser::getByUserID($C5dkBlog->getAuthorID())], 'c5dk_blog');
 	}
 	?>
 

@@ -137,8 +137,8 @@
 	<!-- If Blog post slide-in is active. Get the slide-in element -->
 	<?php
 	if ($C5dkConfig->blog_form_slidein) {
-		print View::element('image_manager/main', ['C5dkUser' => new \C5dk\Blog\C5dkUser], 'c5dk_blog');
-		print View::element('file_manager/main', ['C5dkUser' => new \C5dk\Blog\C5dkUser], 'c5dk_blog');
+		print View::element('image_manager/main', ['C5dkUser' => \C5dk\Blog\C5dkUser::getByUserID($C5dkBlog->getAuthorID())], 'c5dk_blog');
+		print View::element('file_manager/main', ['C5dkUser' => \C5dk\Blog\C5dkUser::getByUserID($C5dkBlog->getAuthorID())], 'c5dk_blog');
 	}
 	?>
 

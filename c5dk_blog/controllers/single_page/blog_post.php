@@ -53,18 +53,15 @@ class BlogPost extends PageController
 		$this->init($C5dkBlog, $C5dkRoot, $C5dkConfig, $C5dkUser, $redirectID);
 	}
 
-	public function edit($blogID, $rootID, $editor = false)
+	public function edit($blogID, $rootID)
 	{
 		// Setup C5DK objects
 		$C5dkBlog   = C5dkBlog::getByID($blogID);
 		$C5dkRoot   = C5DKRoot::getByID($rootID);
 		$C5dkConfig = new C5dkConfig;
 		$C5dkUser   = new C5dkUser;
-		if ($editor) {
-			$C5dkEditor = $C5dkUser;
-			if ($C5dkEditor->isEditor()) {
-				$C5dkUser = C5dkUser::getByUserID($C5dkBlog->getAuthorID());
-			}
+		if ($C5dkBlog instanceof C5dkBlog && $C5dkBlog->getAttribute('c5dk_blog_author_id') != $C5dkUser->getUserID() && $C5dkUser->isEditorOfPage($C5dkBlog)) {
+			$C5dkUser = C5dkUser::getByUserID($C5dkBlog->getAuthorID());
 		}
 
 		// Check if user is owner of blog?
@@ -75,7 +72,7 @@ class BlogPost extends PageController
 		$this->init($C5dkBlog, $C5dkRoot, $C5dkConfig, $C5dkUser);
 	}
 
-	public function init($C5dkBlog, $C5dkRoot, $C5dkConfig, $C5dkUser, $redirectID = null, $C5dkEditor = null)
+	public function init($C5dkBlog, $C5dkRoot, $C5dkConfig, $C5dkUser, $redirectID = null)
 	{
 		// Find language path if on a multilingual site
 		$c = Page::getCurrentPage();
@@ -106,7 +103,6 @@ class BlogPost extends PageController
 		$this->set('langpath', $langpath);
 		$this->set('C5dkConfig', $C5dkConfig);
 		$this->set('C5dkUser', $C5dkUser);
-		$this->set('C5dkEditor', $C5dkEditor);
 		$this->set('C5dkBlog', $C5dkBlog);
 		$this->set('C5dkRoot', $C5dkRoot);
 		$this->set('redirectID', $redirectID);
@@ -121,13 +117,20 @@ class BlogPost extends PageController
 	public function save($blogID)
 	{
 		$C5dkBlog = $blogID ? C5dkBlog::getByID($blogID) : new C5dkBlog;
-		$C5dkBlog = $C5dkBlog->save($blogID);
-
 		$C5dkUser = new C5dkUser;
+		if ($C5dkBlog instanceof C5dkBlog && $C5dkBlog->getAttribute('c5dk_blog_author_id') != $C5dkUser->getUserID() && $C5dkUser->isEditorOfPage($C5dkBlog)) {
+			$C5dkUser = C5dkUser::getByUserID($C5dkBlog->getAuthorID());
+		}
 
-		$C5dkAjax = new C5dkAjax;
-		$C5dkAjax->saveThumbnail($C5dkBlog, $C5dkUser, $this->post('thumbnail'));
+		if ($C5dkBlog instanceof C5dkBlog && $C5dkBlog->getAttribute('c5dk_blog_author_id') == $C5dkUser->getUserID()) {
+			$C5dkBlog = $C5dkBlog->save($blogID);
 
+			$C5dkUser = C5dkUser::getByUserID($C5dkBlog->getUserID());
+
+			$C5dkAjax = new C5dkAjax;
+			$C5dkAjax->saveThumbnail($C5dkBlog, $C5dkUser, $this->post('thumbnail'));
+		}
+		
 		$this->redirect($C5dkBlog->getCollectionLink());
 	}
 

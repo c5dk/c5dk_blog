@@ -238,8 +238,6 @@ class C5dkUser extends User
 
 	public function getFileListHTML()
 	{
-		$app = Application::getFacadeApplication();
-
 		ob_start();
 		print View::element('file_manager/list_simple', [
 			'C5dkUser' => $this,

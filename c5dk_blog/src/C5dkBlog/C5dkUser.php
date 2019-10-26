@@ -10,6 +10,7 @@ use View;
 use File;
 use FileList;
 use FileSet;
+use Concrete\Core\Http\Request;
 use Concrete\Core\Support\Facade\Application;
 
 use C5dk\Blog\C5dkBlog as C5dkBlog;

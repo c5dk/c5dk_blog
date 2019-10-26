@@ -116,17 +116,27 @@ class BlogPost extends PageController
 
 	public function save($blogID)
 	{
-		$C5dkBlog = $blogID ? C5dkBlog::getByID($blogID) : new C5dkBlog;
-		$C5dkUser = new C5dkUser;
-		if ($C5dkBlog instanceof C5dkBlog && $C5dkBlog->getAttribute('c5dk_blog_author_id') != $C5dkUser->getUserID() && $C5dkUser->isEditorOfPage($C5dkBlog)) {
-			$C5dkUser = C5dkUser::getByUserID($C5dkBlog->getAuthorID());
-		}
+		$C5dkAjax = new C5dkAjax;
 
-		if ($C5dkBlog instanceof C5dkBlog && $C5dkBlog->getAttribute('c5dk_blog_author_id') == $C5dkUser->getUserID()) {
+		if ($blogID) {
+			// Edit
+			$C5dkBlog = C5dkBlog::getByID($blogID);
+			$C5dkRoot = $C5dkBlog->getRoot();
+			$C5dkUser = new C5dkUser;
+			if ($C5dkBlog instanceof C5dkBlog && $C5dkBlog->getAttribute('c5dk_blog_author_id') != $C5dkUser->getUserID() && $C5dkUser->isEditorOfPage($C5dkRoot)) {
+				$C5dkUser = C5dkUser::getByUserID($C5dkBlog->getAuthorID());
+			}
 			$C5dkBlog = $C5dkBlog->save($blogID);
-
-			$C5dkAjax = new C5dkAjax;
 			$C5dkAjax->saveThumbnail($C5dkBlog, $C5dkUser, $this->post('thumbnail'));
+		} else {
+			// Create
+			$C5dkBlog =  new C5dkBlog;
+			$C5dkRoot = C5dkRoot::getByID($this->post('rootID'));
+			$C5dkUser = new C5dkUser;
+			if ($C5dkUser->isBlogger()) {
+				$C5dkBlog = $C5dkBlog->save($blogID);
+				$C5dkAjax->saveThumbnail($C5dkBlog, $C5dkUser, $this->post('thumbnail'));
+			}
 		}
 
 		$this->redirect($C5dkBlog->getCollectionLink());

@@ -210,6 +210,12 @@
 #c5dk-blog-package ul.dynatree-container {
 	border: none;
 }
+#c5dk-blog-package .c5dk-blog-priority ul,
+#c5dk-blog-package .c5dk-blog-priority li {
+    margin: 0;
+}
+
+
 
 #c5dkimagemanager-box .c5dkimagemanager-box {
 	float: left;

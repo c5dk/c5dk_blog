@@ -10,6 +10,8 @@ class C5dkConfig
 	public $blog_title_editable;
 	public $blog_form_slidein;
 
+	public $blog_manager_items_per_page;
+
 	public $blog_picture_width;
 	public $blog_picture_height;
 	public $blog_thumbnail_width;
@@ -27,9 +29,12 @@ class C5dkConfig
 		$pkg    = Package::getByHandle('c5dk_blog');
 		$config = $pkg->getConfig();
 
-		// Settings
+		// Settings - Other
 		$this->blog_title_editable = $config->get('c5dk_blog.blog_title_editable');
 		$this->blog_form_slidein   = $config->get('c5dk_blog.blog_form_slidein');
+
+		// Settings - Editor Manager
+		$this->blog_manager_items_per_page = $config->get('c5dk_blog.blog_manager_items_per_page');
 
 		// Images & Thumbnails
 		$this->blog_picture_width        = $config->get('c5dk_blog.blog_picture_width');

@@ -33,6 +33,10 @@
 			<label>
 				<?= $form->checkbox('blog_form_slidein', 1, $C5dkConfig->blog_form_slidein); ?> <?= t('Make the Blog Post form as a slidein'); ?>
 			</label>
+
+			<h3><?= t('Editor Manager Settings'); ?></h3>
+			<?= $form->label('blog_manager_items_per_page', t('Blogs to show per page')); ?>
+			<?= $form->number('blog_manager_items_per_page', $C5dkConfig->blog_manager_items_per_page, ['min' => '1']); ?>
 		</div>
 
 		<!-- Tab: Image Manager -->

@@ -67,7 +67,7 @@
 			<?php } ?>
 			<?php if ($showPagination) { ?>
 				<tr>
-					<td><?= $pagination->renderDefaultView(); ?></td>
+					<td colspan="6"><?= $pagination->renderDefaultView(); ?></td>
 				</tr>
 			<?php } ?>
 		<?php } ?>

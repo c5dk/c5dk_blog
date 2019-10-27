@@ -10,6 +10,7 @@ use Concrete\Core\Page\Controller\PageController;
 use C5dk\Blog\C5dkUser as C5dkUser;
 use C5dk\Blog\C5dkRoot as C5dkRoot;
 use C5dk\Blog\C5dkBlog as C5dkBlog;
+use C5dk\Blog\C5dkConfig;
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
@@ -69,8 +70,9 @@ class Manager extends PageController
 	public function root($rootID)
 	{
 		// Set C5DK Objects
-		$C5dkUser = new C5dkUser;
-		$C5dkRoot = C5dkRoot::getByID($rootID);
+		$C5dkUser	= new C5dkUser;
+		$C5dkConfig	= new C5dkConfig;
+		$C5dkRoot	= C5dkRoot::getByID($rootID);
 
 		// Find language path if on a multilingual site
 		$al = Section::getBySectionOfSite(Page::getCurrentPage());
@@ -86,7 +88,7 @@ class Manager extends PageController
 
 		// Get all the Blog entries from every root
 		$showPagination = false;
-		$itemsPerPage = 10;
+		$itemsPerPage = $C5dkConfig->blog_manager_items_per_page;
 		$pl = new PageList();
 		$pl->ignorePermissions();
 		$pl->filterByParentID($rootID);

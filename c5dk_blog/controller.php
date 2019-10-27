@@ -142,9 +142,12 @@ class Controller extends Package
 
 	private function setupConfig($pkg)
 	{
-		// Settings
+		// Settings - Other
 		C5dkInstaller::installConfigKey('blog_title_editable', false, $pkg);
 		C5dkInstaller::installConfigKey('blog_form_slidein', false, $pkg);
+
+		// Setiings - Manager
+		C5dkInstaller::installConfigKey('blog_manager_items_per_page', 10, $pkg);
 
 		// Images & Thumbnails
 		C5dkInstaller::installConfigKey('blog_picture_width', 1200, $pkg);

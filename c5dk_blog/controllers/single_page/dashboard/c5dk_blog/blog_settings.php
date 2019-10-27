@@ -31,21 +31,18 @@ class BlogSettings extends DashboardPageController
 		// Set the C5dk object
 		$C5dkConfig = new C5dkConfig;
 		$this->set('C5dkConfig', $C5dkConfig);
-		// $this->set('sitemapGroups', $this->getSitemapGroups());
 		$this->set('pk', PermissionKey::getByHandle('access_sitemap'));
 
 		// Require Assets
 		$this->requireAsset('css', 'c5dk_blog_css');
 		$this->requireAsset('core/app');
 		$this->requireAsset('select2');
-		// $this->requireAsset('core/file-manager');
 		$this->requireAsset('javascript', 'c5dkBlog/modal');
 
 		// Set Service
 		$fID          = $C5dkConfig->blog_default_thumbnail_id;
 		$defThumbnail = $fID ? File::getByID($fID) : NULL;
 		$this->set('ThumbnailCropper', new ThumbnailCropper($defThumbnail, NULL, 'settings'));
-		// $test = $this->app->build('C5dk\Blog\Service\Test');
 
 		// Set helpers
 		$this->set('form', $this->app->make('helper/form'));
@@ -67,9 +64,12 @@ class BlogSettings extends DashboardPageController
 		$pkg          = Package::getByHandle('c5dk_blog');
 		$this->config = $pkg->getConfig();
 
-		// Settings
+		// Settings - Others
 		$this->config->save('c5dk_blog.blog_title_editable', ($this->post('blog_title_editable')) ? $this->post('blog_title_editable') : 0);
 		$this->config->save('c5dk_blog.blog_form_slidein', ($this->post('blog_form_slidein')) ? $this->post('blog_form_slidein') : 0);
+
+		// Settings - Editor Manager
+		$this->config->save('c5dk_blog.blog_manager_items_per_page', ($this->post('blog_manager_items_per_page')) ? $this->post('blog_manager_items_per_page') : 10);
 
 		// Images & Thumbnails
 		$this->config->save('c5dk_blog.blog_picture_width', ($this->post('blog_picture_width')) ? $this->post('blog_picture_width') : 1200);
@@ -150,11 +150,9 @@ class BlogSettings extends DashboardPageController
 
 		// Init variables
 		$uID          = (new User)->getUserID();
-		$fileFolder   = FileFolder::getNodeByName('Thumbs');
 		$fileName     = 'C5DK_BLOG_Default_Thumbnail.jpg';
 		$tmpFolder    = $fh->getTemporaryDirectory() . '/';
 		$tmpImagePath = $tmpFolder . $uID . '_' . $fileName;
-		$imagePath    = $tmpFolder . $fileName;
 
 		// Get old thumbnail
 		$oldThumbnail = $C5dkConfig->blog_default_thumbnail_id ? File::getByID($C5dkConfig->blog_default_thumbnail_id) : 0;
@@ -178,25 +176,15 @@ class BlogSettings extends DashboardPageController
 			$img  = str_replace('data:image/png;base64,', '', $thumbnail['croppedImage']);
 			$img  = str_replace(' ', '+', $img);
 			$data = base64_decode($img);
-			// $success = $fileservice->append($tmpImagePath, $data);
 			$fs->put($tmpImagePath, $data);
-			// $success = file_put_contents($tmpImagePath, $data);
-
-			// Get image facade and open image
-			// $imagine = $this->app->make(Image::getFacadeAccessor());
-			// $image   = $imagine->open($tmpImagePath);
 
 			// Convert to .jpg
 			$image = Image::open($tmpImagePath);
 			$image->save($tmpImagePath, ['jpeg_quality' => 80]);
 
-			// Resize image (Chg: we now do it in the browser, but needs testing)
-			// $image = $image->resize(new Box($C5dkConfig->blog_thumbnail_width, $C5dkConfig->blog_thumbnail_height));
-
 			if ($oldThumbnail) {
 				$fv = $oldThumbnail->getVersionToModify(TRUE);
 				$fv->updateContents($image->get('jpg'));
-				// $fv->refreshAttributes(); // Bug??? Do not work
 			} else {
 				// Import thumbnail into the File Manager
 				$fi = new FileImporter();
@@ -205,10 +193,6 @@ class BlogSettings extends DashboardPageController
 					$fileName,
 					FileFolder::getNodeByName('Thumbs')
 				);
-
-				// if (is_object($fv) && $fileSet instanceof FileSet) {
-				// 	$fileSet->addFileToSet($fv);
-				// }
 			}
 
 			// Delete tmp file

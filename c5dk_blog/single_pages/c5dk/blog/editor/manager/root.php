@@ -1,7 +1,8 @@
 <?php defined('C5_EXECUTE') or die("Access Denied."); ?>
 
 <div id="c5dk-blog-package" class="c5dk_blog_package_wrapper">
-	<h3><?= t('C5DK Blog Editor Manager'); ?></h3>
+	<h3 class="pull-left"><?= t('C5DK Blog Editor Manager'); ?></h3>
+	<a class="pull-right c5dk-blog-btn-primary" href="<?= URL::to('c5dk/blog/editor/manager'); ?>"><?= t('Back to list'); ?></a>
 
 	<!-- Root table -->
 	<table class="table">
@@ -9,28 +10,74 @@
 			<th class="left_round_corner"><?= t('Root'); ?></th>
 			<th><?= t('Path'); ?></th>
 			<th class="right_round_corner"><?= t('# of posts'); ?></th>
-			<th><?= t('Actions'); ?></th>
 		</tr>
 
-		<?php foreach ($rootList as $rootID => $C5dkRoot) { ?>
 		<tr class="c5dk_blog_package_root_header">
 			<td><?= $C5dkRoot->getCollectionName(); ?></td>
 			<td><a href="<?= $C5dkRoot->getCollectionLink(); ?>"><?= $C5dkRoot->getCollectionPath(); ?></a></td>
-			<td><?php //= count($entries[$rootID]); ?></td>
-			<td><a class="c5dk-blog-btn-primary" href="<?= URL::to('c5dk/blog/editor/manager/root', $C5dkRoot->getCollectionID()); ?>"><?= t('Manage Root'); ?></a></td>
+			<td><?= $pagination->getTotalResults(); ?></td>
 		</tr>
 		<tr class="c5dk_blog_package_root_content">
 			<td></td>
 			<td colspan="2">
 				<!-- Blog table -->
+				<table class="table table-striped c5dk_blog_table">
+
+					<tr class="c5dk_blog_package_header_list">
+						<th class="left_round_corner"><?= t('Title'); ?></th>
+						<th class="c5dk_blog_table_priority"><?= t('Priority'); ?></th>
+						<?php if ($C5dkRoot->getPublishTime()) { ?>
+							<th class="c5dk_blog_table_public"><?= t('Publish'); ?></th>
+						<?php } ?>
+						<?php if ($C5dkRoot->getUnpublishTime()) { ?>
+							<th class="c5dk_blog_table_public"><?= t('Unpublish'); ?></th>
+						<?php } ?>
+						<th></th>
+						<th class="c5dk_blog_table_action right_round_corner"><?= t('Action'); ?></th>
+					</tr>
+
+					<?php if (is_array($pages)) { ?>
+						<?php foreach ($pages as $blogID => $C5dkBlog) { ?>
+							<?php $approved = $C5dkBlog->getApproved() ? "1" : "0"; ?>
+							<tr id="entry_<?= $blogID; ?>" class="c5dk_blog_entry" data-id="<?= $blogID; ?>" data-approved="<?= $approved; ?>">
+								<td>
+									<a href="<?= $C5dkBlog->getCollectionLink(); ?>"><?= $C5dkBlog->getTitle(); ?></a>
+								</td>
+								<td class="c5dk-blog-priority">
+									<?php $priorities = $C5dkBlog->getTopicsArray($C5dkBlog->getPriority()); ?>
+									<?= $form->selectMultiple('entry['.$blogID.'][priorities]', $C5dkBlog->getPriorityList(), $priorities, ['class' => 'c5dk_blog_select2', 'style' => 'width: 210px;', 'data-default' => h($jh->encode($priorities), ENT_QUOTES, 'UTF-8')]); ?>
+								</td>
+								<?php if ($C5dkRoot->getPublishTime()) { ?>
+									<td class="c5dk-blog-datetime-columns">
+										<input id="entry[<?= $blogID; ?>][publishTime]" data-default="<?= $C5dkBlog->publishTime; ?>" class="c5dk_datetimepicker" type="text" value="<?= $C5dkBlog->publishTime; ?>" />
+									</td>
+								<?php } ?>
+								<?php if ($C5dkRoot->getUnpublishTime()) { ?>
+									<td class="c5dk-blog-datetime-columns">
+										<input id="entry[<?= $blogID; ?>][unpublishTime]" data-default="<?= $C5dkBlog->unpublishTime; ?>" class="c5dk_datetimepicker" type="text" value="<?= $C5dkBlog->unpublishTime; ?>" />
+									</td>
+								<?php } ?>
+								<td class="c5dk-blog-manager-save-column">
+									<button id="entrySaveBtn_<?= $blogID; ?>" class="c5dk-blog-btn-default c5dk_save" type="button" onclick="c5dk.blog.editor.manager.saveEntry(<?= $blogID; ?>)" style="display:none;"><i class="fa fa-floppy-o"></i></button>
+								</td>
+								<td class="c5dk-blog-manager-action-column">
+									<!-- <a title="<?= t('View Page'); ?>" class="c5dk-blog-btn-info" href="<?= $C5dkBlog->getCollectionLink(); ?>" target="_blank"><i class="fa fa-hand-o-left"></i></a> -->
+									<button title="<?= t('Approve/Unapprove'); ?>" class="c5dk_aprove_button <?= (!$approved) ? "c5dk-blog-btn-warning" : "c5dk-blog-btn-success"; ?> c5dk_approve" type="button" onclick="c5dk.blog.editor.manager.approve(<?= $blogID; ?>, this)"><?= (!$approved) ? '<i class="fa fa-check-circle"></i>' : '<i class="fa fa-minus-circle"></i>'; ?></button>
+									<button title="<?= t('Edit Post'); ?>" class="c5dk-blog-btn-primary" type="button" onclick="c5dk.blog.editor.manager.edit(<?= $blogID; ?>)"><i class="fa fa-pencil"></i></button>
+									<!-- <button title="<?= t('Delete Post'); ?>" class="c5dk-blog-btn-danger" type="button" onclick="c5dk.blog.editor.manager.delete('confirm', <?= $blogID; ?>)"><i class="fa fa-times"></i></button> -->
+									<button title="<?= t('Delete Post'); ?>" class="c5dk-blog-btn-danger" onclick="c5dk.blog.editor.manager.delete(<?= $blogID; ?>);"><i class="fa fa-times"></i></a>
+								</td>
+							</tr>
+						<?php } ?>
+							<tr>
+								<td><?= $showPagination ? $pagination->renderDefaultView() : ''; ?></td>
+							</tr>
+					<?php } ?>
+
+				</table>
 
 			</td>
 		</tr>
-
-		<?php
-
-	} ?>
-
 	</table>
 
 </div>

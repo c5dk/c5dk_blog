@@ -86,7 +86,7 @@ class Manager extends PageController
 
 		// Get all the Blog entries from every root
 		$showPagination = false;
-		$itemsPerPage = 2;
+		$itemsPerPage = 10;
 		$pl = new PageList();
 		$pl->ignorePermissions();
 		$pl->filterByParentID($rootID);

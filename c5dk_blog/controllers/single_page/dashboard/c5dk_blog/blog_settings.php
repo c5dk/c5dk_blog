@@ -88,6 +88,8 @@ class BlogSettings extends DashboardPageController
 		// Editor
 		$this->config->save('c5dk_blog.blog_plugin_youtube', ($this->post('blog_plugin_youtube')) ? $this->post('blog_plugin_youtube') : 0);
 		$this->config->save('c5dk_blog.blog_plugin_sitemap', ($this->post('blog_plugin_sitemap')) ? $this->post('blog_plugin_sitemap') : 0);
+		$this->config->save('c5dk_blog.image_manager_extension', ($this->post('image_manager_extension')) ? $this->post('image_manager_extension') : 'jpg');
+		$this->config->save('c5dk_blog.file_manager_extension', ($this->post('file_manager_extension')) ? $this->post('file_manager_extension') : 'txt, pdf');
 		$this->config->save('c5dk_blog.blog_format_h1', ($this->post('blog_format_h1')) ? $this->post('blog_format_h1') : 0);
 		$this->config->save('c5dk_blog.blog_format_h2', ($this->post('blog_format_h2')) ? $this->post('blog_format_h2') : 0);
 		$this->config->save('c5dk_blog.blog_format_h3', ($this->post('blog_format_h3')) ? $this->post('blog_format_h3') : 0);
@@ -202,5 +204,10 @@ class BlogSettings extends DashboardPageController
 		} else {
 			return $thumbnail['id'];
 		}
+	}
+
+	public function getFileTypes($type, $withFullStop = false)
+	{
+
 	}
 }

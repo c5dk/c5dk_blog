@@ -58,7 +58,10 @@ c5dk.blog.post = {
 			dropZone: $("#c5dk_imagemanager_slidein"),
 			url: c5dk.blog.data.post.url.image.upload,
 			dataType: 'json',
-			formData: [{ name: 'blogID', value: c5dk.blog.data.post.blogID }],
+			formData: [
+				{ name: 'blogID', value: c5dk.blog.data.post.blogID },
+				{ name: 'rootID', value: $('#rootID').val() }
+			],
 			// Enable image resizing, except for Android and Opera,
 			// which actually support image resizing, but fail to
 			// send Blob objects via XHR requests:
@@ -87,7 +90,10 @@ c5dk.blog.post = {
 			dropZone: $("#c5dk_filemanager_slidein"),
 			url: c5dk.blog.data.post.url.file.upload,
 			dataType: 'json',
-			formData: [{ name: 'blogID', value: c5dk.blog.data.post.blogID }],
+			formData: [
+				{ name: 'blogID', value: c5dk.blog.data.post.blogID },
+				{ name: 'rootID', value: $('#rootID').val() }
+			],
 		}).on('fileuploadsubmit', function (e, data) {
 			c5dk.blog.modal.waiting(c5dk.blog.data.post.text.fileupload);
 		}).on('fileuploaddone', function (e, data) {

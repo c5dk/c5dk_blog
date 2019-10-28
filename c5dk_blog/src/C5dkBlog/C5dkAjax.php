@@ -122,21 +122,27 @@ class C5dkAjax extends Controller
 		$jh			= $this->app->make('helper/json');
 		$fh			= Core::make('helper/file');
 
-		$C5dkUser	= new C5dkUser();
+		$C5dkConfig	= new C5dkConfig;
+		$C5dkUser	= new C5dkUser;
 		$C5dkBlog	= C5dkBlog::getByID($this->post('blogID'));
+		$C5dkRoot	= C5dkRoot::getByID($this->post('rootID'));
 
-		if ($C5dkBlog instanceof C5dkBlog && $C5dkBlog->getAttribute('c5dk_blog_author_id') != $C5dkUser->getUserID() && $C5dkUser->isEditorOfPage($C5dkBlog)) {
-			$C5dkUser = C5dkUser::getByUserID($C5dkBlog->getAuthorID());
+		if ($this->post('blogID') != "0") {
+			if (!$this->post('blogID') == 0 && $C5dkBlog instanceof C5dkBlog && $C5dkBlog->getAttribute('c5dk_blog_author_id') != $C5dkUser->getUserID() && $C5dkUser->isEditorOfPage($C5dkRoot)) {
+				$C5dkUser = C5dkUser::getByUserID($C5dkBlog->getAuthorID());
+			}
 		}
 
 		$uID			= $C5dkUser->getUserID();
 		$errorMessage	= '';
 
-		if (($C5dkBlog instanceof C5dkBlog && $C5dkBlog->getAttribute('c5dk_blog_author_id') == $C5dkUser->getUserID())) {
+		if (($C5dkBlog instanceof C5dkBlog && $C5dkUser->isBlogger())) {
 			$error = FileImporter::E_PHP_FILE_ERROR_DEFAULT;
 			$status = true;
 			if (isset($_FILES['files']) && is_uploaded_file($_FILES['files']['tmp_name'][0])) {
-				if (!in_array($fh->getExtension($_FILES['files']['name'][0]), ['jpg'])) {
+				$imgExt = $fh->getExtension($_FILES['files']['name'][0]);
+				$imgArray = $C5dkConfig->getExtensions('image', false, true);
+				if (!in_array($fh->getExtension($_FILES['files']['name'][0]), $C5dkConfig->getExtensions('image', false, true))) {
 					$error = FileImporter::E_FILE_INVALID_EXTENSION;
 				} else {
 					$file     = $_FILES['files']['tmp_name'][0];
@@ -221,24 +227,27 @@ class C5dkAjax extends Controller
 		$jh       = $this->app->make('helper/json');
 		$fh			= Core::make('helper/file');
 
-		$C5dkUser	= new C5dkUser();
+		$C5dkConfig	= new C5dkConfig;
+		$C5dkUser	= new C5dkUser;
 		$C5dkBlog	= C5dkBlog::getByID($this->post('blogID'));
-
-		if ($C5dkBlog instanceof C5dkBlog && $C5dkBlog->getAttribute('c5dk_blog_author_id') != $C5dkUser->getUserID() && $C5dkUser->isEditorOfPage($C5dkBlog)) {
-			$C5dkEditor = $C5dkUser;
-			if ($C5dkEditor->isEditor()) {
-				$C5dkUser = C5dkUser::getByUserID($C5dkBlog->getAuthorID());
+		$C5dkRoot	= C5dkRoot::getByID($this->post('rootID'));
+		if ($this->post('blogID') != "0") {
+			if ($C5dkBlog instanceof C5dkBlog && $C5dkBlog->getAttribute('c5dk_blog_author_id') != $C5dkUser->getUserID() && $C5dkUser->isEditorOfPage($C5dkRoot)) {
+				$C5dkEditor = $C5dkUser;
+				if ($C5dkEditor->isEditor()) {
+					$C5dkUser = C5dkUser::getByUserID($C5dkBlog->getAuthorID());
+				}
 			}
 		}
 
 		$uID		= $C5dkUser->getUserID();
 		$errorMessage = '';
 
-		if (($C5dkBlog instanceof C5dkBlog && $C5dkBlog->getAttribute('c5dk_blog_author_id') == $C5dkUser->getUserID())) {
+		if (($C5dkBlog instanceof C5dkBlog && $C5dkUser->isBlogger())) {
 			$error = FileImporter::E_PHP_FILE_ERROR_DEFAULT;
 			$status = true;
 			if (isset($_FILES['files']) && is_uploaded_file($_FILES['files']['tmp_name'][0])) {
-				if (!in_array($fh->getExtension($_FILES['files']['name'][0]), ['xlsx','xls','doc','docx','ppt','pptx','txt','pdf'])) {
+				if (!in_array($fh->getExtension($_FILES['files']['name'][0]), $C5dkConfig->getExtensions('file', false, true))) {
 					$error = FileImporter::E_FILE_INVALID_EXTENSION;
 				} else {
 					$file     = $_FILES['files']['tmp_name'][0];

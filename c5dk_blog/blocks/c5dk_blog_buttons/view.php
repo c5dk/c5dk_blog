@@ -139,8 +139,8 @@
 	<?php
 	if ($C5dkConfig->blog_form_slidein) {
 		if ($c->getAttribute('blog_author_id')) {
-			print View::element('image_manager/main', ['C5dkUser' => \C5dk\Blog\C5dkUser::getByUserID($C5dkBlog->getAuthorID())], 'c5dk_blog');
-			print View::element('file_manager/main', ['C5dkUser' => \C5dk\Blog\C5dkUser::getByUserID($C5dkBlog->getAuthorID())], 'c5dk_blog');
+			print View::element('image_manager/main', ['C5dkConfig' => $C5dkConfig, 'C5dkUser' => \C5dk\Blog\C5dkUser::getByUserID($C5dkBlog->getAuthorID())], 'c5dk_blog');
+			print View::element('file_manager/main', ['C5dkConfig' => $C5dkConfig, 'C5dkUser' => \C5dk\Blog\C5dkUser::getByUserID($C5dkBlog->getAuthorID())], 'c5dk_blog');
 		}
 	}
 	?>

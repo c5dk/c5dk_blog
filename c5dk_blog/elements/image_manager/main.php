@@ -5,7 +5,7 @@
 	<div class="c5dk-slidein-area-wrapper">
 		<div class="c5dk-slider-button-container">
 			<form>
-				<input id="c5dk_image_upload" multiple class="c5dk-inputfile" accept="image/jpeg" type="file" name="files[]" />
+				<input id="c5dk_image_upload" multiple class="c5dk-inputfile" accept="<?= $C5dkConfig->getExtensions('image', true); ?>" type="file" name="files[]" />
 				<label id="c5dk-upload-photo-label" for="c5dk_image_upload"><?= t('Upload Files...'); ?> </label>
 			</form>
 		</div>

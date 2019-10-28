@@ -151,7 +151,8 @@ class C5dkUser extends User
 		// Get helper objects
 		$app = Application::getFacadeApplication();
 		$im  = $app->make('helper/image');
-
+		$C5dkConfig = new C5dkConfig;
+		
 		$files = [];
 
 		if ($this->isLoggedIn()) {
@@ -161,7 +162,7 @@ class C5dkUser extends User
 				// Get files from FileSet
 				$fl = new FileList();
 				$fl->filterBySet($fs);
-				$fl->filterByExtension('jpg');
+				$fl->filterByExtension($C5dkConfig->getExtensions('image', false, true));
 				$fileList = array_reverse($fl->get());
 				foreach ($fileList as $key => $file) {
 					$f  = File::getByID($file->getFileID());
@@ -208,6 +209,7 @@ class C5dkUser extends User
 	{
 		// Get helper objects
 		$app = Application::getFacadeApplication();
+		$C5dkConfig = new C5dkConfig;
 
 		$files = [];
 
@@ -218,7 +220,7 @@ class C5dkUser extends User
 				// Get files from FileSet
 				$fl = new FileList();
 				$fl->filterBySet($fs);
-				$fl->filterByExtension(['xlsx','xls','doc','docx','ppt','pptx','txt','pdf']);
+				$fl->filterByExtension($C5dkConfig->getExtensions('file', false, true));
 				$fileList = array_reverse($fl->get());
 				foreach ($fileList as $key => $file) {
 					$f  = File::getByID($file->getFileID());

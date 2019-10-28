@@ -59,8 +59,10 @@
 					</td>
 					<td class="c5dk-blog-manager-action-column">
 						<!-- <a title="<?= t('View Page'); ?>" class="c5dk-blog-btn-info" href="<?= $C5dkBlog->getCollectionLink(); ?>" target="_blank"><i class="fa fa-hand-o-left"></i></a> -->
-						<button title="<?= t('Approve/Unapprove'); ?>" class="c5dk_aprove_button <?= (!$approved) ? "btn btn-warning btn-sm" : "btn btn-success btn-sm"; ?> c5dk_approve" type="button" onclick="c5dk.blog.editor.manager.approve(<?= $blogID; ?>, this)"><?= (!$approved) ? '<i class="fa fa-check-circle"></i>' : '<i class="fa fa-minus-circle"></i>'; ?></button>
 						<!-- <button title="<?= t('Edit Post'); ?>" class="btn btn-primary btn-sm" type="button" onclick="c5dk.blog.editor.manager.edit(<?= $blogID; ?>, <?= $C5dkRoot->getRootID(); ?>)"><i class="fa fa-pencil"></i></button> -->
+						<?php if ($C5dkRoot->getNeedsApproval()) { ?>
+							<button title="<?= t('Approve/Unapprove'); ?>" class="c5dk_aprove_button <?= (!$approved) ? "btn btn-warning btn-sm" : "btn btn-success btn-sm"; ?> c5dk_approve" type="button" onclick="c5dk.blog.editor.manager.approve(<?= $blogID; ?>, this)"><?= (!$approved) ? '<i class="fa fa-check-circle"></i>' : '<i class="fa fa-minus-circle"></i>'; ?></button>
+						<?php } ?>
 						<button title="<?= t('Delete Post'); ?>" class="btn btn-danger btn-sm" onclick="c5dk.blog.editor.manager.delete(<?= $blogID; ?>);"><i class="fa fa-times"></i></a>
 					</td>
 				</tr>

@@ -8,7 +8,7 @@
 				<input
 					id="c5dk_file_upload"
 					multiple class="c5dk-inputfile"
-					accept=".xlsx,.xls,.doc,.docx,.ppt,.pptx,.txt,.pdf"
+					accept="<?= $C5dkConfig->getExtensions('file', true); ?>"
 					type="file"
 					name="files[]"
 				/>

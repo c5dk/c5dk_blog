@@ -130,8 +130,11 @@
 						});
 					</script>
 				</label>
-
 			</div>
+			<?= $form->label('image_manager_extension', t('Image Manager Filetypes')); ?>
+			<?= $form->text('image_manager_extension', $C5dkConfig->image_manager_extension); ?>
+			<?= $form->label('file_manager_extension', t('File Manager Filetypes')); ?>
+			<?= $form->text('file_manager_extension', $C5dkConfig->file_manager_extension); ?>
 
 			<h3><?= t('Formats'); ?></h3>
 			<label><?= $form->checkbox('blog_format_h1', 1, $C5dkConfig->blog_format_h1); ?> <?= t('h1'); ?></label>

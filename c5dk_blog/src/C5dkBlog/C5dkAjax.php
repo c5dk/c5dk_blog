@@ -33,12 +33,33 @@ class C5dkAjax extends Controller
 {
 	public function getForm($blogID, $rootID)
 	{
-		$C5dkConfig = new C5dkConfig;
-		$C5dkBlog = $blogID ? C5dkBlog::getByID($blogID) : new C5dkBlog;
-		$C5dkUser = new C5dkUser;
-		if ($C5dkBlog instanceof C5dkBlog && $C5dkBlog->getAttribute('c5dk_blog_author_id') != $C5dkUser->getUserID() && $C5dkUser->isEditorOfPage($C5dkBlog)) {
-			$C5dkUser = C5dkUser::getByUserID($C5dkBlog->getAuthorID());
+		if ($blogID) {
+			// Edit
+			$C5dkBlog = C5dkBlog::getByID($blogID);
+			$C5dkRoot = $C5dkBlog->getRoot();
+			$C5dkUser = new C5dkUser;
+			if ($C5dkBlog instanceof C5dkBlog && $C5dkBlog->getAttribute('c5dk_blog_author_id') != $C5dkUser->getUserID() && $C5dkUser->isEditorOfPage($C5dkRoot)) {
+				$C5dkUser = C5dkUser::getByUserID($C5dkBlog->getAuthorID());
+			}
+		} else {
+			// Create
+			$C5dkBlog =  new C5dkBlog;
+			$C5dkRoot = C5dkRoot::getByID($this->post('rootID'));
+			$C5dkUser = new C5dkUser;
+			if (!$C5dkUser->isBlogger()) {
+				$this->redirect('/');
+			}
 		}
+
+
+
+
+		$C5dkConfig = new C5dkConfig;
+		// $C5dkBlog = $blogID ? C5dkBlog::getByID($blogID) : new C5dkBlog;
+		// $C5dkUser = new C5dkUser;
+		// if ($C5dkBlog instanceof C5dkBlog && $C5dkBlog->getAttribute('c5dk_blog_author_id') != $C5dkUser->getUserID() && $C5dkUser->isEditorOfPage($C5dkBlog)) {
+		// 	$C5dkUser = C5dkUser::getByUserID($C5dkBlog->getAuthorID());
+		// }
 
 		// Find the root we will set as standard root.
 		if (!$rootID) {
@@ -419,48 +440,6 @@ class C5dkAjax extends Controller
 			}
 		}
 	}
-
-	// public function getFilesFromUserSet()
-	// {
-	// 	// Get helper objects
-	// 	$im = $this->app->make('helper/image');
-
-	// 	$C5dkUser = new C5dkUser();
-	// 	if (!$C5dkUser->isLoggedIn()) {
-	// 		return '{}';
-	// 	}
-
-	// 	// Is $fs a FileSet object or a FileSet handle?
-	// 	$fs = FileSet::getByName('C5DK_BLOG_uID-' . $C5dkUser->getUserID());
-	// 	if (!is_object($fs)) {
-	// 		return '{}';
-	// 	}
-
-	// 	// Get files from FileSet
-	// 	$fl = new FileList();
-	// 	$fl->filterBySet($fs);
-	// 	$fileList = array_reverse($fl->get());
-	// 	foreach ($fileList as $key => $file) {
-	// 		$f  = File::getByID($file->getFileID());
-	// 		$fv = $f->getRecentVersion();
-	// 		$fp = explode('_', $fv->getFileName());
-	// 		if ($fp[3] != 'Thumb') {
-	// 			$files[$key] = [
-	// 				'obj' => $f,
-	// 				'fID' => $f->getFIleID(),
-	// 				'thumbnail' => $im->getThumbnail($f, 150, 150),
-	// 				'picture' => [
-	// 					'src' => File::getRelativePathFromID($file->getFileID()),
-	// 					'width' => $fv->getAttribute('width'),
-	// 					'height' => $fv->getAttribute('height')
-	// 				],
-	// 				'FileFolder' => \Concrete\Core\Tree\Node\Type\FileFolder::getNodeByName('C5DK Blog')
-	// 			];
-	// 		}
-	// 	};
-
-	// 	return $files;
-	// }
 
 	public function link($link)
 	{

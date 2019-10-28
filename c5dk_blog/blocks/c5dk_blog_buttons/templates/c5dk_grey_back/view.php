@@ -137,10 +137,8 @@
 	<!-- If Blog post slide-in is active. Get the slide-in element -->
 	<?php
 	if ($C5dkConfig->blog_form_slidein) {
-		if ($c->getAttribute('blog_author_id')) {
-			print View::element('image_manager/main', ['C5dkConfig' => $C5dkConfig, 'C5dkUser' => \C5dk\Blog\C5dkUser::getByUserID($C5dkBlog->getAuthorID())], 'c5dk_blog');
-			print View::element('file_manager/main', ['C5dkConfig' => $C5dkConfig, 'C5dkUser' => \C5dk\Blog\C5dkUser::getByUserID($C5dkBlog->getAuthorID())], 'c5dk_blog');
-		}
+		print View::element('image_manager/main', ['C5dkConfig' => $C5dkConfig, 'C5dkUser' => \C5dk\Blog\C5dkUser::getByUserID($C5dkBlog->getAuthorID())], 'c5dk_blog');
+		print View::element('file_manager/main', ['C5dkConfig' => $C5dkConfig, 'C5dkUser' => \C5dk\Blog\C5dkUser::getByUserID($C5dkBlog->getAuthorID())], 'c5dk_blog');
 	}
 	?>
 
@@ -308,7 +306,6 @@
 
 			approve: function(blogID) {
 				var approveBtn = $('#c5dk_approve');
-				console.log(approveBtn.data('approved'));
 				if (approveBtn.data('approved')) {
 					var url = '<?= URL::to('/c5dk/blog/unapprove'); ?>/' + blogID;
 				} else {

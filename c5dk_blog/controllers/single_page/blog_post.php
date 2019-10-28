@@ -157,16 +157,4 @@ class BlogPost extends PageController
 
 		exit;
 	}
-
-	// private function getUserRootList()
-	// {
-	// 	$sectionList = Section::getList();
-
-	// 	foreach ($this->C5dkUser->getRootList('writers') as $rootID => $C5dkRoot) {
-	// 		$languageText = count($sectionList) ? ' (' . $C5dkRoot->getSiteTreeObject()->getLocale()->getLanguageText() . ')' : '';
-	// 		$rootList[$rootID] = $C5dkRoot->getCollectionName() . $languageText;
-	// 	}
-
-	// 	return $rootList;
-	// }
 }

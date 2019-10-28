@@ -1,20 +1,23 @@
 <?php defined('C5_EXECUTE') or die('Access Denied.'); ?>
 
 <!-- File Manager - list_simple.php -->
-<?php foreach ($fileList as $file) { ?>
-	<div data-fid="<?= $file['fID']; ?>" class="c5dk-thumb-frme">
-		<?php if ($canDeleteFiles) { ?>
-			<i class="fa fa-window-close-o c5dk-delete-file" onclick="c5dk.blog.post.file.delete('confirm', <?= $file['fID']; ?>);"></i>
-		<?php } ?>
-		<div
-			class="c5dk_file_line"
-			data-fid="<?= $file['fID']; ?>"
-			data-href="<?= $file['fHref']; ?>"
-			data-filename="<?= $file['fName']; ?>"
-		><?= $file['fName']; ?></div>
-	</div>
-
-<?php } ?>
+<table width="100%" class="table-striped">
+	<?php foreach ($fileList as $file) { ?>
+		<tr data-fid="<?= $file['fID']; ?>" class="c5dk-thumb-frme">
+			<td>
+				<?php if ($canDeleteFiles) { ?>
+					<i class="fa fa-window-close-o c5dk-delete-file" onclick="c5dk.blog.post.file.delete('confirm', <?= $file['fID']; ?>);"></i>
+				<?php } ?>
+				<div
+					class="c5dk_file_line"
+					data-fid="<?= $file['fID']; ?>"
+					data-href="<?= $file['fHref']; ?>"
+					data-filename="<?= $file['fName']; ?>"
+				><?= $file['fName']; ?></tr>
+			</td>
+		</tr>
+	<?php } ?>
+</table>
 
 <style>
 	.c5dk_file_line {

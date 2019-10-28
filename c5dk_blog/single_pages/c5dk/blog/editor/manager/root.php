@@ -145,7 +145,6 @@
 				data: data,
 				dataType: 'json',
 				success: function(response) {
-					// console.dir({id: id, data: data});
 					$("#entry\\[" + id + "\\]\\[priorities\\]").data('default', data.priorities);
 					$('#entry\\[' + id + '\\]\\[publishTime\\]').data('default', data.publishTime);
 					$('#entry\\[' + id + '\\]\\[unpublishTime\\]').data('default', data.unpublishTime);

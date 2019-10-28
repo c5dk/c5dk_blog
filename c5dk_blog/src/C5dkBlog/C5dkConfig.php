@@ -7,23 +7,6 @@ defined('C5_EXECUTE') or die('Access Denied.');
 
 class C5dkConfig
 {
-	// public $blog_title_editable;
-	// public $blog_form_slidein;
-
-	// public $blog_manager_items_per_page;
-
-	// public $blog_picture_width;
-	// public $blog_picture_height;
-	// public $blog_thumbnail_width;
-	// public $blog_thumbnail_height;
-	// public $blog_default_thumbnail_id;
-	// public $blog_cropper_def_bgcolor;
-
-	// public $blog_headline_size;
-	// public $blog_headline_color;
-	// public $blog_headline_margin;
-	// public $blog_headline_icon_color;
-
 	public function __construct()
 	{
 		$pkg    = Package::getByHandle('c5dk_blog');

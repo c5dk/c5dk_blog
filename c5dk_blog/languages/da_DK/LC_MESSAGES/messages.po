@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: C5DK Blog v8.5.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-10-30 14:49+0100\n"
-"PO-Revision-Date: 2019-10-30 15:13+0100\n"
+"PO-Revision-Date: 2019-10-30 15:32+0100\n"
 "Last-Translator: Concrete5 Danmark <info@concrete5.dk>\n"
 "Language-Team: Concrete5 Danmark <info@concrete5.dk>\n"
 "Language: da_DK\n"
@@ -28,7 +28,7 @@ msgstr "Vise relevante blog knapper."
 #: blocks/c5dk_blog_buttons/templates/c5dk_grey_back/view.php:14
 #: blocks/c5dk_blog_buttons/view.php:12
 msgid "Blog Editor"
-msgstr "Blog Editor"
+msgstr "Blog Redaktør"
 
 #: blocks/c5dk_blog_buttons/templates/c5dk_grey_back/view.php:21
 #: blocks/c5dk_blog_buttons/view.php:19
@@ -150,7 +150,7 @@ msgstr ""
 #: blocks/c5dk_blog_buttons/templates/c5dk_old/view.php:6
 #: blocks/c5dk_blog_buttons/templates/c5dk_simple_one/view.php:5
 msgid "Blog Editor Control"
-msgstr "Blog Editor Kontrol"
+msgstr "Blog Redaktør Kontrol"
 
 #: blocks/c5dk_blog_goback/controller.php:21
 msgid "Blog Go Back"
@@ -222,7 +222,7 @@ msgstr "Indstillinger"
 
 #: blocks/c5dk_blog_user_attribute_display/form.php:16
 msgid "Property to Display:"
-msgstr "Egenskab at Vise"
+msgstr "Egenskab at Vise:"
 
 #: blocks/c5dk_blog_user_attribute_display/form.php:19
 msgid "User Values"
@@ -367,7 +367,7 @@ msgstr "Manager"
 
 #: controller.php:223
 msgid "Blog Editor Manager"
-msgstr "Blog Editor Manager"
+msgstr "Blog Redaktør Manager"
 
 #: controller.php:232
 msgid "Blog Root"
@@ -506,7 +506,7 @@ msgstr "[data-charCount-for ="
 #: single_pages/c5dk/blog/editor/manager/root.php:4
 #: single_pages/c5dk/blog/editor/manager/view.php:4
 msgid "C5DK Blog Editor Manager"
-msgstr "C5DK Blog Editor Manager"
+msgstr "C5DK Blog Redaktør Manager"
 
 #: single_pages/c5dk/blog/editor/manager/root.php:5
 msgid "Back to list"
@@ -610,7 +610,7 @@ msgstr "Sti til Blog Rod"
 
 #: single_pages/dashboard/c5dk_blog/blog_roots.php:52
 msgid " Delete root"
-msgstr "Slet blog rod"
+msgstr " Slet blog rod"
 
 #: single_pages/dashboard/c5dk_blog/blog_roots.php:53
 msgid "Are you sure you want to delete this root?"
@@ -933,7 +933,7 @@ msgstr ""
 "Som standard har vi valgt <strong>\"admin\"</strong> som den bruger, der vil "
 "eje de blog sider fra den bruger, du vil slette. Men du kan vælge hvilken "
 "som helst bruger, du ønsker skal eje disse blog sider ved at klikke på "
-"linket <strong>\"Vælg bruger\".</strong>"
+"linket \"<strong>Vælg bruger.</strong>\""
 
 #: single_pages/dashboard/c5dk_blog/user_deletion.php:27
 msgid "Delete User and Transfer Ownership of the Blog Pages!"

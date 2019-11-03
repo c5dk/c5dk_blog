@@ -153,10 +153,10 @@
 			slidein: '<?= $C5dkConfig->blog_form_slidein; ?>',
 			form: {
 
-				state: {
-					create: 0,
-					edit: 0
-				},
+				// state: {
+				// 	create: 0,
+				// 	edit: 0
+				// },
 
 				create: null,
 				edit: null
@@ -174,18 +174,15 @@
 						dataType: 'json',
 						data: {
 							slidein: 1,
-							// mode: '<?= C5DK_BLOG_MODE_CREATE; ?>',
 							blogID: blogID,
 							rootID: rootID,
 							cID: <?= $c->getCollectionID(); ?>
 						},
 						url: '<?= URL::to("/c5dk/blog/get/0"); ?>/' + rootID,
 						success: function(response){
-
 							if (response.form) {
 								$('#c5dk_form_slidein').html(response.form);
 							}
-
 							c5dk.blog.buttons.form.create = $('#c5dk_form_slidein').slideReveal({
 								width: "100%",
 								push: false,
@@ -228,7 +225,6 @@
 							if (response.form) {
 								$('#c5dk_form_slidein').html(response.form);
 							}
-
 							c5dk.blog.buttons.form.edit = $('#c5dk_form_slidein').slideReveal({
 								width: "100%",
 								push: false,

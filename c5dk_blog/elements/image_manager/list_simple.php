@@ -4,7 +4,7 @@
 <?php foreach ($imageList as $image) { ?>
 	<div data-fid="<?= $image['fID']; ?>" class="c5dk-thumb-frame">
 		<?php if ($canDeleteImages) { ?>
-		<span class="fa fa-window-close-o c5dk-delete-image" onclick="c5dk.blog.post.image.delete('confirm', <?= $image['fID']; ?>);"></span>
+			<i class="fa fa-window-close-o c5dk-delete-image" onclick="c5dk.blog.post.image.delete('confirm', <?= $image['fID']; ?>);"></i>
 		<?php } ?>
 		<img
 			class="c5dk_image_thumbs"

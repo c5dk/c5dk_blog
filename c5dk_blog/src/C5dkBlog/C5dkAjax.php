@@ -120,6 +120,35 @@ class C5dkAjax extends Controller
 		exit;
 	}
 
+	public function getManagerSlideIns($blogID)
+	{
+		$C5dkConfig = new C5dkConfig;
+
+		if ($blogID) {
+			$C5dkUser = C5dkUser::getByUserID((C5dkBlog::getByID($blogID))->getAuthorID());
+		} else {
+			$C5dkUser = new C5dkUser;
+		}
+		ob_start();
+		print View::element('image_manager/main', ['C5dkConfig' => $C5dkConfig, 'C5dkUser' => $C5dkUser], 'c5dk_blog');
+		$imageManagerContent = ob_get_contents();
+		ob_end_clean();
+
+		ob_start();
+		print View::element('file_manager/main', ['C5dkConfig' => $C5dkConfig, 'C5dkUser' => $C5dkUser], 'c5dk_blog');
+		$fileManagerContent = ob_get_contents();
+		ob_end_clean();
+
+		$jh = $this->app->make('helper/json');
+		echo $jh->encode((object) [
+			'html' => [
+				'imageManager' => $imageManagerContent,
+				'fileManager' => $fileManagerContent
+			],
+			'userID' => $C5dkUser->getUserID()
+		]);
+	}
+
 	public function delete($blogID)
 	{
 		// Set C5DK Objects

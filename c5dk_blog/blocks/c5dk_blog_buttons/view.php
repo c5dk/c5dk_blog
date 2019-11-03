@@ -135,13 +135,12 @@
 
 	<div id="c5dk_form_slidein" class="slider"></div>
 
-	<!-- If Blog post slide-in is active. Get the slide-in element -->
 	<?php
-	if ($C5dkConfig->blog_form_slidein) {
-		print View::element('image_manager/main', ['C5dkConfig' => $C5dkConfig, 'C5dkUser' => \C5dk\Blog\C5dkUser::getByUserID($C5dkBlog->getAuthorID())], 'c5dk_blog');
-		print View::element('file_manager/main', ['C5dkConfig' => $C5dkConfig, 'C5dkUser' => \C5dk\Blog\C5dkUser::getByUserID($C5dkBlog->getAuthorID())], 'c5dk_blog');
-	}
-	?>
+	if ($C5dkConfig->blog_form_slidein) { ?>
+		<!-- If Blog post slide-in is active. Get the manager slide-in elements -->
+		<div id="c5dk_manager_image_container"></div>
+		<div id="c5dk_manager_file_container"></div>
+	<?php } ?>
 
 
 	<div style="clear: both;"></div>
@@ -167,6 +166,7 @@
 				if (c5dk.blog.buttons.form.create) {
 					c5dk.blog.buttons.form.create.slideReveal("show");
 				} else {
+					c5dk.blog.buttons.manager.getSlideIns(0);
 
 					c5dk.blog.modal.waiting("<?= t('Getting blog form'); ?>");
 					$.ajax({
@@ -212,6 +212,7 @@
 				if (c5dk.blog.buttons.form.edit) {
 					c5dk.blog.buttons.form.edit.slideReveal("show");
 				} else {
+					c5dk.blog.buttons.manager.getSlideIns(blogID);
 
 					c5dk.blog.modal.waiting("<?= t('Getting blog form'); ?>");
 					$.ajax({
@@ -250,8 +251,14 @@
 			},
 
 			cancel: function() {
-				if (c5dk.blog.buttons.form.create) { c5dk.blog.buttons.form.create.slideReveal("hide"); }
-				if (c5dk.blog.buttons.form.edit) { c5dk.blog.buttons.form.edit.slideReveal("hide"); }
+				if (c5dk.blog.buttons.form.create) {
+					c5dk.blog.buttons.form.create.slideReveal("hide");
+					// c5dk.blog.buttons.form.create = null;
+				}
+				if (c5dk.blog.buttons.form.edit) {
+					c5dk.blog.buttons.form.edit.slideReveal("hide");
+					// c5dk.blog.buttons.form.edit = null;
+				}
 			},
 
 			delete:function(mode) {
@@ -341,6 +348,28 @@
 					// 	}
 					// }
 				});
+			},
+
+			manager: {
+				getSlideIns: function(blogID) {
+					$.ajax({
+						type: 'POST',
+						dataType: 'json',
+						data: {
+							slidein: 1,
+							blogID: blogID
+						},
+						url: '<?= URL::to("/c5dk/blog/manager/slideins"); ?>/' + blogID,
+						success: function(response){
+							if (response.html.imageManager) {
+								$('#c5dk_manager_image_container').html(response.html.imageManager);
+							}
+							if (response.html.fileManager) {
+								$('#c5dk_manager_file_container').html(response.html.fileManager);
+							}
+						}
+					});
+				}
 			}
 		};
 	</script>

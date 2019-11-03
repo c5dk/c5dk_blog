@@ -75,7 +75,7 @@ class Controller extends Package
 		Route::register('/c5dk/blog/approve/{blogID}', '\C5dk\Blog\C5dkAjax::approve');
 		Route::register('/c5dk/blog/unapprove/{blogID}', '\C5dk\Blog\C5dkAjax::unapprove');
 		Route::register('/c5dk/blog/get/{blogID}/{rootID}', '\C5dk\Blog\C5dkAjax::getForm');
-		// Route::register('/c5dk/blog/save/{blogID}', '\C5dk\Blog\C5dkAjax::save');
+		Route::register('/c5dk/blog/manager/slideins/{blogID}', '\C5dk\Blog\C5dkAjax::getManagerSlideIns');
 		Route::register('/c5dk/blog/delete/{blogID}', '\C5dk\Blog\C5dkAjax::delete');
 		Route::register('/c5dk/blog/publish/{blogID}', '\C5dk\Blog\C5dkAjax::publish');
 		Route::register('/c5dk/blog/image/upload', '\C5dk\Blog\C5dkAjax::imageUpload');

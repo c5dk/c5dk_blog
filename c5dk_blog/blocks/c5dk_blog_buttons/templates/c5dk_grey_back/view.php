@@ -134,13 +134,11 @@
 
 	<div id="c5dk_form_slidein" class="slider"></div>
 
-	<!-- If Blog post slide-in is active. Get the slide-in element -->
-	<?php
-	if ($C5dkConfig->blog_form_slidein) {
-		print View::element('image_manager/main', ['C5dkConfig' => $C5dkConfig, 'C5dkUser' => \C5dk\Blog\C5dkUser::getByUserID($C5dkBlog->getAuthorID())], 'c5dk_blog');
-		print View::element('file_manager/main', ['C5dkConfig' => $C5dkConfig, 'C5dkUser' => \C5dk\Blog\C5dkUser::getByUserID($C5dkBlog->getAuthorID())], 'c5dk_blog');
-	}
-	?>
+	<?php if ($C5dkConfig->blog_form_slidein) { ?>
+		<!-- If Blog post slide-in is active. Get the manager slide-in elements -->
+		<div id="c5dk_manager_image_container"></div>
+		<div id="c5dk_manager_file_container"></div>
+	<?php } ?>
 
 
 	<div style="clear: both;"></div>
@@ -153,10 +151,10 @@
 			slidein: '<?= $C5dkConfig->blog_form_slidein; ?>',
 			form: {
 
-				state: {
-					create: 0,
-					edit: 0
-				},
+				// state: {
+				// 	create: 0,
+				// 	edit: 0
+				// },
 
 				create: null,
 				edit: null
@@ -166,6 +164,7 @@
 				if (c5dk.blog.buttons.form.create) {
 					c5dk.blog.buttons.form.create.slideReveal("show");
 				} else {
+					c5dk.blog.buttons.manager.getSlideIns(0);
 
 					c5dk.blog.modal.waiting("<?= t('Getting blog form'); ?>");
 					$.ajax({
@@ -173,18 +172,15 @@
 						dataType: 'json',
 						data: {
 							slidein: 1,
-							// mode: '<?= C5DK_BLOG_MODE_CREATE; ?>',
 							blogID: blogID,
 							rootID: rootID,
 							cID: <?= $c->getCollectionID(); ?>
 						},
 						url: '<?= URL::to("/c5dk/blog/get/0"); ?>/' + rootID,
 						success: function(response){
-
 							if (response.form) {
 								$('#c5dk_form_slidein').html(response.form);
 							}
-
 							c5dk.blog.buttons.form.create = $('#c5dk_form_slidein').slideReveal({
 								width: "100%",
 								push: false,
@@ -211,6 +207,7 @@
 				if (c5dk.blog.buttons.form.edit) {
 					c5dk.blog.buttons.form.edit.slideReveal("show");
 				} else {
+					c5dk.blog.buttons.manager.getSlideIns(blogID);
 
 					c5dk.blog.modal.waiting("<?= t('Getting blog form'); ?>");
 					$.ajax({
@@ -226,7 +223,6 @@
 							if (response.form) {
 								$('#c5dk_form_slidein').html(response.form);
 							}
-
 							c5dk.blog.buttons.form.edit = $('#c5dk_form_slidein').slideReveal({
 								width: "100%",
 								push: false,
@@ -249,8 +245,14 @@
 			},
 
 			cancel: function() {
-				if (c5dk.blog.buttons.form.create) { c5dk.blog.buttons.form.create.slideReveal("hide"); }
-				if (c5dk.blog.buttons.form.edit) { c5dk.blog.buttons.form.edit.slideReveal("hide"); }
+				if (c5dk.blog.buttons.form.create) {
+					c5dk.blog.buttons.form.create.slideReveal("hide");
+					// c5dk.blog.buttons.form.create = null;
+				}
+				if (c5dk.blog.buttons.form.edit) {
+					c5dk.blog.buttons.form.edit.slideReveal("hide");
+					// c5dk.blog.buttons.form.edit = null;
+				}
 			},
 
 			delete:function(mode) {
@@ -329,17 +331,30 @@
 							approveBtn.text('<?= t('Unapprove'); ?>').addClass(approveBtn.data('approved-style')).removeClass(approveBtn.data('unapproved-style'));
 						}
 						c5dk.blog.modal.exitModal();
-					}//,
-					// error: function() {
-					// 	// Set it back to before we started
-					// 	var approveBtn = $('#c5dk_approve');
-					// 	if (approveBtn.data('approved')) {
-					// 		approveBtn.data('approved', 0);
-					// 	} else {
-					// 		approveBtn.data('approved', 1);
-					// 	}
-					// }
+					}
 				});
+			},
+
+			manager: {
+				getSlideIns: function(blogID) {
+					$.ajax({
+						type: 'POST',
+						dataType: 'json',
+						data: {
+							slidein: 1,
+							blogID: blogID
+						},
+						url: '<?= URL::to("/c5dk/blog/manager/slideins"); ?>/' + blogID,
+						success: function(response){
+							if (response.html.imageManager) {
+								$('#c5dk_manager_image_container').html(response.html.imageManager);
+							}
+							if (response.html.fileManager) {
+								$('#c5dk_manager_file_container').html(response.html.fileManager);
+							}
+						}
+					});
+				}
 			}
 		};
 	</script>

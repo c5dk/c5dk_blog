@@ -135,8 +135,7 @@
 
 	<div id="c5dk_form_slidein" class="slider"></div>
 
-	<?php
-	if ($C5dkConfig->blog_form_slidein) { ?>
+	<?php if ($C5dkConfig->blog_form_slidein) { ?>
 		<!-- If Blog post slide-in is active. Get the manager slide-in elements -->
 		<div id="c5dk_manager_image_container"></div>
 		<div id="c5dk_manager_file_container"></div>
@@ -333,16 +332,7 @@
 							approveBtn.text('<?= t('Unapprove'); ?>').addClass(approveBtn.data('approved-style')).removeClass(approveBtn.data('unapproved-style'));
 						}
 						c5dk.blog.modal.exitModal();
-					}//,
-					// error: function() {
-					// 	// Set it back to before we started
-					// 	var approveBtn = $('#c5dk_approve');
-					// 	if (approveBtn.data('approved')) {
-					// 		approveBtn.data('approved', 0);
-					// 	} else {
-					// 		approveBtn.data('approved', 1);
-					// 	}
-					// }
+					}
 				});
 			},
 

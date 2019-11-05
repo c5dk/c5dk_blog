@@ -192,7 +192,7 @@ class C5dkAjax extends Controller
 			if (isset($_FILES['files']) && is_uploaded_file($_FILES['files']['tmp_name'][0])) {
 				$imgExt = $fh->getExtension($_FILES['files']['name'][0]);
 				$imgArray = $C5dkConfig->getExtensions('image', false, true);
-				if (!in_array($fh->getExtension($_FILES['files']['name'][0]), $C5dkConfig->getExtensions('image', false, true))) {
+				if (!in_array(strtolower($fh->getExtension($_FILES['files']['name'][0])), $C5dkConfig->getExtensions('image', false, true))) {
 					$error = FileImporter::E_FILE_INVALID_EXTENSION;
 				} else {
 					$file     = $_FILES['files']['tmp_name'][0];
@@ -297,7 +297,7 @@ class C5dkAjax extends Controller
 			$error = FileImporter::E_PHP_FILE_ERROR_DEFAULT;
 			$status = true;
 			if (isset($_FILES['files']) && is_uploaded_file($_FILES['files']['tmp_name'][0])) {
-				if (!in_array($fh->getExtension($_FILES['files']['name'][0]), $C5dkConfig->getExtensions('file', false, true))) {
+				if (!in_array(strtolower($fh->getExtension($_FILES['files']['name'][0])), $C5dkConfig->getExtensions('file', false, true))) {
 					$error = FileImporter::E_FILE_INVALID_EXTENSION;
 				} else {
 					$file     = $_FILES['files']['tmp_name'][0];

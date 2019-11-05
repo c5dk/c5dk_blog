@@ -31,7 +31,7 @@
 					<div class="c5dk_blog_thumbnail_preview_subtext"><?= t('Preview'); ?></div>
 				</div>
 				<div class="c5dk_blog_box_thumbnail_buttons">
-					<a class="c5dk_blogpage_ButtonGreen c5dk_blogpage_ButtonGreen_thumb" onclick="<?= $Cropper->getOnSelectCallback(); ?>;">Select</a>
+					<a class="c5dk_blogpage_ButtonGreen c5dk_blogpage_ButtonGreen_thumb" onclick="<?= $Cropper->getOnSelectCallback(); ?>;"><?= t('Select'); ?></a>
 					<input class="c5dk_blog_ButtonRed c5dk_blogpage_ButtonRed_thumb" type="button" onclick="c5dk.blog.service.thumbnailCropper.remove()" value="<?= t('Remove'); ?>">
 				</div>
 

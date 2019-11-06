@@ -8,6 +8,7 @@ use BlockType;
 use UserAttributeKey;
 use CollectionAttributeKey;
 use AttributeSet;
+use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Entity\Attribute\Key\PageKey;
 use Concrete\Core\Entity\Attribute\Key\Settings\TopicsSettings;
 use Concrete\Core\Tree\Type\Topic as TopicTree;
@@ -20,7 +21,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
 
 class C5dkInstaller
 {
-	public static function installConfigKey($handle, $value, $pkg = FALSE, $override = FALSE)
+	public static function installConfigKey($handle, $value, $pkg = false, $override = false)
 	{
 		if (is_object($pkg)) {
 			$config = $pkg->getConfig();
@@ -32,7 +33,7 @@ class C5dkInstaller
 		}
 	}
 
-	public static function installUserAttributeKey($type, $options, $pkg = FALSE)
+	public static function installUserAttributeKey($type, $options, $pkg = false)
 	{
 		$uak = UserAttributeKey::getByHandle($options['akHandle']);
 		if (!is_object($uak)) {
@@ -68,15 +69,33 @@ class C5dkInstaller
 		return $bas;
 	}
 
-	public static function installCollectionAttributeKey($type, $options, $pkg = FALSE, $set = NULL)
+	public static function installCollectionAttributeKey($type, $options, $pkg = false, $set = NULL)
 	{
-		$cak = CollectionAttributeKey::getByHandle($options['akHandle']);
+		// $cak = CollectionAttributeKey::getByHandle($options['akHandle']);
+		// if (!is_object($cak)) {
+		// 	$cak = CollectionAttributeKey::add($type, $options, $pkg);
+		// 	if ($set) {
+		// 		$cak->setAttributeSet($set);
+		// 	}
+		// }
+
+		$app = Application::getFacadeApplication();
+		$service = $app->make('Concrete\Core\Attribute\Category\CategoryService');
+		$categoryEntity = $service->getByHandle('collection');
+		$category = $categoryEntity->getController();
+
+		$cak = $category->getByHandle($options['akHandle']);
 		if (!is_object($cak)) {
-			$cak = CollectionAttributeKey::add($type, $options, $pkg);
+			$cak = new PageKey();
+			$cak->setAttributeKeyHandle($options['akHandle']);
+			$cak->setAttributeKeyName($options['akName']);
+			$cak = $category->add($type, $cak, null, $pkg);
+
 			if ($set) {
 				$cak->setAttributeSet($set);
 			}
 		}
+
 
 		return $cak;
 	}
@@ -96,7 +115,7 @@ class C5dkInstaller
             if ($set) {
                 $pageKey->setAttributeSet($set);
             }
-			// $pageKey->setIsAttributeKeySearchable(FALSE); // Default: True
+			// $pageKey->setIsAttributeKeySearchable(false); // Default: True
 			// $pageKey->setIsAttributeKeyContentIndexed(TRUE); // Default: False
 
 			$settings = new TopicsSettings();
@@ -110,7 +129,7 @@ class C5dkInstaller
 		return $pageKey;
 	}
 
-	public static function installBlockTypeSet($handle, $name, $pkg = FALSE)
+	public static function installBlockTypeSet($handle, $name, $pkg = false)
 	{
 		$bts = BlockTypeSet::getByHandle($handle);
 		if (!is_object($bts) || $bts->isError()) {
@@ -118,7 +137,7 @@ class C5dkInstaller
 		}
 	}
 
-	public static function installBlockType($handle, $pkg = FALSE)
+	public static function installBlockType($handle, $pkg = false)
 	{
 		$bt = BlockType::getByHandle($handle);
 		if (!is_object($bt)) {

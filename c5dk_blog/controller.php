@@ -55,6 +55,26 @@ class Controller extends Package
 		$this->registerEvents();
 		$this->registerRoutes();
 		$this->registerAssets();
+
+		// Set Approved page attribute on old blog pages if config is set
+		$config = $this->getConfig();
+		if ($config->get('install.set_approved')) {
+			$pl = new PageList();
+			$pl->ignorePermissions();
+			$pl->includeInactivePages();
+			$pl->filterByPageTypeID(C5dkRoot::getPageTypes());
+			$blogPages = $pl->get();
+
+			foreach ($blogPages as $page) {
+				if ($page->getAttribute('c5dk_blog_author_id') > 0) {
+					$page->setAttribute('c5dk_blog_approved', 1);
+					$version = $page->getVersionObject();
+					$version->approve();
+				}
+			}
+			$config->save('install.set_approved', '');
+			$config->clear('install.set_approved');
+		}
 	}
 
 	private function registerEvents()
@@ -99,28 +119,16 @@ class Controller extends Package
 		parent::upgrade();
 
 		$attApproved = is_object(CollectionAttributeKey::getByHandle('c5dk_blog_approved')) ? true : false;
+		if (!$attApproved) {
+			$config = $this->getConfig();
+			$config->save('install.set_approved', true);
+		}
 
 		$this->c5dkInstall($this, true);
 
-		// Set Approved page attribute on old blog pages
-		if (!$attApproved) {
-			$pl = new PageList();
-			$pl->ignorePermissions();
-			$pl->includeInactivePages();
-			$pl->filterByPageTypeID(C5dkRoot::getPageTypes());
-			$blogPages = $pl->get();
-
-			foreach ($blogPages as $page) {
-				if ($page->getAttribute('c5dk_blog_author_id') > 0) {
-					$page->setAttribute('c5dk_blog_approved', 1);
-					$version = $page->getVersionObject();
-					$version->approve();
-				}
-			}
-		}
-
 		// Convert from old root db table to new
 		$this->convertOldDB();
+
 	}
 
 	public function uninstall()

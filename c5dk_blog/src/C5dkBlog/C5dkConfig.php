@@ -34,10 +34,13 @@ class C5dkConfig
 		$this->blog_headline_icon_color = $config->get('c5dk_blog.blog_headline_icon_color');
 
 		// Editor
-		$this->blog_plugin_youtube	= $config->get('c5dk_blog.blog_plugin_youtube');
-		$this->blog_plugin_sitemap	= $config->get('c5dk_blog.blog_plugin_sitemap');
-		$this->image_manager_extension	= $config->get('c5dk_blog.image_manager_extension');
-		$this->file_manager_extension	= $config->get('c5dk_blog.file_manager_extension');
+		$this->blog_plugin_youtube			= $config->get('c5dk_blog.blog_plugin_youtube');
+		$this->blog_plugin_sitemap			= $config->get('c5dk_blog.blog_plugin_sitemap');
+		$this->blog_plugin_emoji			= $config->get('c5dk_blog.blog_plugin_emoji');
+		$this->blog_plugin_image_manager	= $config->get('c5dk_blog.blog_plugin_image_manager');
+		$this->image_manager_extension		= $config->get('c5dk_blog.image_manager_extension');
+		$this->blog_plugin_file_manager		= $config->get('c5dk_blog.blog_plugin_file_manager');
+		$this->file_manager_extension		= $config->get('c5dk_blog.file_manager_extension');
 
 		$this->blog_format_h1  = $config->get('c5dk_blog.blog_format_h1');
 		$this->blog_format_h2  = $config->get('c5dk_blog.blog_format_h2');
@@ -83,6 +86,14 @@ class C5dkConfig
 			$plugins[] = 'concrete5link';
 		}
 
+		if ($this->blog_plugin_image_manager) {
+			$plugins[] = 'c5dkimagemanager';
+		}
+
+		if ($this->blog_plugin_file_manager) {
+			$plugins[] = 'c5dkfilemanager';
+		}
+
 		if (count($plugins)) {
 			return ',' . implode(',', $plugins);
 		} else {
@@ -100,7 +111,9 @@ class C5dkConfig
 		$configExtensions = array_map('trim', $configExtensions);
 
 		if ($withFullStop) {
-			$configExtensions = array_map(function($value) { return '.'.$value; }, $configExtensions);
+			$configExtensions = array_map(function ($value) {
+				return '.'.$value;
+			}, $configExtensions);
 		}
 
 		if ($asArray) {

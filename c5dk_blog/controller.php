@@ -174,7 +174,10 @@ class Controller extends Package
 		// Editor
 		C5dkInstaller::installConfigKey('blog_plugin_youtube', true, $pkg);
 		C5dkInstaller::installConfigKey('blog_plugin_sitemap', false, $pkg);
+		C5dkInstaller::installConfigKey('blog_plugin_emoji', false, $pkg);
+		C5dkInstaller::installConfigKey('blog_plugin_image_manager', true, $pkg);
 		C5dkInstaller::installConfigKey('image_manager_extension', 'jpg', $pkg);
+		C5dkInstaller::installConfigKey('blog_plugin_file_manager', true, $pkg);
 		C5dkInstaller::installConfigKey('file_manager_extension', 'txt, pdf', $pkg);
 
 		C5dkInstaller::installConfigKey('blog_format_h1', false, $pkg);

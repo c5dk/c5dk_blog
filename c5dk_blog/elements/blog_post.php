@@ -150,7 +150,8 @@
 						extraAllowedContent: 'img[alt,!src]',
 						allowedContent: true,
 						//disallowedContent: 'img{border*,margin*,width,height,float}',
-						extraPlugins: 'c5dkimagemanager,c5dkfilemanager,autogrow,lineutils,widget<?= $C5dkConfig->getPlugins(); ?>',
+						extraPlugins: 'autogrow,lineutils,widget<?= $C5dkConfig->getPlugins(); ?>',
+						removePlugins: '<?= $C5dkConfig->blog_plugin_emoji ? '' : 'emoji'; ?>',
 						toolbarGroups: [{
 								name: 'tools',
 								groups: ['tools']

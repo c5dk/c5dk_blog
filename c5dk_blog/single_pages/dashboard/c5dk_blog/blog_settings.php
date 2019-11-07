@@ -131,11 +131,17 @@
 					</script>
 				</label>
 			</div>
-			<?= $form->label('image_manager_extension', t('Image Manager Filetypes')); ?>
-			<?= $form->text('image_manager_extension', $C5dkConfig->image_manager_extension); ?>
-			<?= $form->label('file_manager_extension', t('File Manager Filetypes')); ?>
-			<?= $form->text('file_manager_extension', $C5dkConfig->file_manager_extension); ?>
-
+			<label><?= $form->checkbox('blog_plugin_emoji', 1, $C5dkConfig->blog_plugin_emoji); ?> <?= t('Emoji'); ?></label><br />
+			<label><?= $form->checkbox('blog_plugin_image_manager', 1, $C5dkConfig->blog_plugin_image_manager); ?> <?= t('Image Manager'); ?></label><br />
+			<div style="padding-left: 20px;">
+				<?= $form->label('image_manager_extension', t('Image Manager Filetypes')); ?>
+				<?= $form->text('image_manager_extension', $C5dkConfig->image_manager_extension); ?>
+			</div>
+			<label><?= $form->checkbox('blog_plugin_file_manager', 1, $C5dkConfig->blog_plugin_file_manager); ?> <?= t('File Manager'); ?></label><br />
+			<div style="padding-left: 20px;">
+				<?= $form->label('file_manager_extension', t('File Manager Filetypes')); ?>
+				<?= $form->text('file_manager_extension', $C5dkConfig->file_manager_extension); ?>
+			</div>
 			<h3><?= t('Formats'); ?></h3>
 			<label><?= $form->checkbox('blog_format_h1', 1, $C5dkConfig->blog_format_h1); ?> <?= t('h1'); ?></label>
 			<label><?= $form->checkbox('blog_format_h2', 1, $C5dkConfig->blog_format_h2); ?> <?= t('h2'); ?></label>

@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: C5DK Blog v8.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-10-30 14:49+0100\n"
-"PO-Revision-Date: 2019-10-30 15:32+0100\n"
+"POT-Creation-Date: 2019-11-07 11:00+0100\n"
+"PO-Revision-Date: 2019-11-07 11:00+0100\n"
 "Last-Translator: Concrete5 Danmark <info@concrete5.dk>\n"
 "Language-Team: Concrete5 Danmark <info@concrete5.dk>\n"
 "Language: da_DK\n"
@@ -36,16 +36,16 @@ msgid "Manager List"
 msgstr "Redaktør Blog Oversigt"
 
 #: blocks/c5dk_blog_buttons/templates/c5dk_grey_back/view.php:36
-#: blocks/c5dk_blog_buttons/templates/c5dk_grey_back/view.php:329
-#: blocks/c5dk_blog_buttons/view.php:34 blocks/c5dk_blog_buttons/view.php:330
+#: blocks/c5dk_blog_buttons/templates/c5dk_grey_back/view.php:328
+#: blocks/c5dk_blog_buttons/view.php:34 blocks/c5dk_blog_buttons/view.php:329
 msgid "Approve"
 msgstr "Godkend"
 
 #: blocks/c5dk_blog_buttons/templates/c5dk_grey_back/view.php:36
 #: blocks/c5dk_blog_buttons/templates/c5dk_grey_back/view.php:303
-#: blocks/c5dk_blog_buttons/templates/c5dk_grey_back/view.php:332
+#: blocks/c5dk_blog_buttons/templates/c5dk_grey_back/view.php:331
 #: blocks/c5dk_blog_buttons/view.php:34 blocks/c5dk_blog_buttons/view.php:304
-#: blocks/c5dk_blog_buttons/view.php:333
+#: blocks/c5dk_blog_buttons/view.php:332
 msgid "Unapprove"
 msgstr "Fjern Godkendelse"
 
@@ -119,14 +119,14 @@ msgstr "Annuller"
 msgid "Delete"
 msgstr "Slet"
 
-#: blocks/c5dk_blog_buttons/templates/c5dk_grey_back/view.php:172
-#: blocks/c5dk_blog_buttons/templates/c5dk_grey_back/view.php:217
+#: blocks/c5dk_blog_buttons/templates/c5dk_grey_back/view.php:169
+#: blocks/c5dk_blog_buttons/templates/c5dk_grey_back/view.php:212
 #: blocks/c5dk_blog_buttons/templates/c5dk_grey_back/view.php:271
 #: blocks/c5dk_blog_buttons/templates/c5dk_grey_back/view.php:294
-#: blocks/c5dk_blog_buttons/templates/c5dk_grey_back/view.php:318
-#: blocks/c5dk_blog_buttons/view.php:173 blocks/c5dk_blog_buttons/view.php:218
+#: blocks/c5dk_blog_buttons/templates/c5dk_grey_back/view.php:317
+#: blocks/c5dk_blog_buttons/view.php:170 blocks/c5dk_blog_buttons/view.php:213
 #: blocks/c5dk_blog_buttons/view.php:272 blocks/c5dk_blog_buttons/view.php:295
-#: blocks/c5dk_blog_buttons/view.php:319
+#: blocks/c5dk_blog_buttons/view.php:318
 msgid "Getting blog form"
 msgstr "Henter blog formular"
 
@@ -138,11 +138,11 @@ msgstr "Henter blog formular"
 msgid "Confirm Delete"
 msgstr "Bekræft sletning"
 
-#: blocks/c5dk_blog_buttons/templates/c5dk_grey_back/view.php:352
+#: blocks/c5dk_blog_buttons/templates/c5dk_grey_back/view.php:364
 #: blocks/c5dk_blog_buttons/templates/c5dk_old/view.php:81
 #: blocks/c5dk_blog_buttons/templates/c5dk_simple_one/view.php:78
 #: blocks/c5dk_blog_buttons/templates/c5dk_simple_two/view.php:79
-#: blocks/c5dk_blog_buttons/view.php:353
+#: blocks/c5dk_blog_buttons/view.php:365
 msgid "C5DK Blogging Buttons: Only visible for users with blogging permissions"
 msgstr ""
 "C5DK Blogging Knapper: Kan kun ses af brugere med tilladelser til at blogge"
@@ -353,7 +353,6 @@ msgid "Add/Edit a blog post"
 msgstr "Tilføj/Rediger et blogindlæg"
 
 #: controller.php:220
-#| msgid "C5DK Blog"
 msgid "C5DK"
 msgstr "C5DK"
 
@@ -439,8 +438,8 @@ msgid "Blog Description"
 msgstr "Blog Beskrivelse"
 
 #: elements/blog_post.php:103 elements/blog_post.php:112
-msgid "Characters Left ( [used]/[max] )"
-msgstr "Karakterer tilbage ([brugt]/[maks])"
+msgid "Characters Left"
+msgstr "Karakterer tilbage"
 
 #: elements/blog_post.php:139
 msgid "Blog Content"
@@ -491,6 +490,10 @@ msgstr "Thumbnail"
 msgid "Preview"
 msgstr "Preview"
 
+#: elements/service/thumbnail_cropper/view.php:34
+msgid "Select"
+msgstr "Vælg"
+
 #: elements/service/thumbnail_cropper/view.php:35
 msgid "Remove"
 msgstr "Fjern"
@@ -502,6 +505,67 @@ msgstr "bruger"
 #: js/Flexible-Character-Counter/jquery.character-counter.min.js:1
 msgid "[data-charcount-for="
 msgstr "[data-charCount-for ="
+
+#: js/ckeditor/plugins/tabletools/dialogs/tableCell.js:8
+msgid "width"
+msgstr "Bredde"
+
+#: js/ckeditor/plugins/tabletools/dialogs/tableCell.js:8
+msgid "height"
+msgstr "Højde"
+
+#: js/ckeditor/samples/toolbarconfigurator/lib/codemirror/codemirror.js:3
+#: js/ckeditor/samples/toolbarconfigurator/lib/codemirror/codemirror.js:4
+#: js/ckeditor/samples/toolbarconfigurator/lib/codemirror/codemirror.js:5
+#: js/ckeditor/samples/toolbarconfigurator/lib/codemirror/codemirror.js:9
+#: js/ckeditor/samples/toolbarconfigurator/lib/codemirror/codemirror.js:12
+#: js/ckeditor/samples/toolbarconfigurator/lib/codemirror/codemirror.js:17
+#: js/ckeditor/samples/toolbarconfigurator/lib/codemirror/codemirror.js:28
+#: js/ckeditor/samples/toolbarconfigurator/lib/codemirror/codemirror.js:29
+#: js/ckeditor/samples/toolbarconfigurator/lib/codemirror/codemirror.js:30
+#: js/ckeditor/samples/toolbarconfigurator/lib/codemirror/codemirror.js:31
+#: js/ckeditor/samples/toolbarconfigurator/lib/codemirror/codemirror.js:32
+#: js/ckeditor/samples/toolbarconfigurator/lib/codemirror/codemirror.js:37
+#: js/ckeditor/samples/toolbarconfigurator/lib/codemirror/codemirror.js:49
+#: js/ckeditor/samples/toolbarconfigurator/lib/codemirror/codemirror.js:50
+#: js/ckeditor/samples/toolbarconfigurator/lib/codemirror/codemirror.js:79
+#: js/ckeditor/samples/toolbarconfigurator/lib/codemirror/codemirror.js:138
+#: js/ckeditor/samples/toolbarconfigurator/lib/codemirror/codemirror.js:281
+#: js/ckeditor/samples/toolbarconfigurator/lib/codemirror/codemirror.js:282
+msgid "div"
+msgstr "div"
+
+#: js/ckeditor/samples/toolbarconfigurator/lib/codemirror/codemirror.js:36
+msgid "textarea"
+msgstr "textarea"
+
+#: js/ckeditor/samples/toolbarconfigurator/lib/codemirror/codemirror.js:56
+#: js/ckeditor/samples/toolbarconfigurator/lib/codemirror/codemirror.js:70
+#: js/ckeditor/samples/toolbarconfigurator/lib/codemirror/codemirror.js:71
+#: js/ckeditor/samples/toolbarconfigurator/lib/codemirror/codemirror.js:144
+#: single_pages/dashboard/c5dk_blog/blog_settings.php:144
+msgid "pre"
+msgstr "pre"
+
+#: js/ckeditor/samples/toolbarconfigurator/lib/codemirror/codemirror.js:61
+#: js/ckeditor/samples/toolbarconfigurator/lib/codemirror/codemirror.js:71
+#: js/ckeditor/samples/toolbarconfigurator/lib/codemirror/codemirror.js:125
+#: js/ckeditor/samples/toolbarconfigurator/lib/codemirror/codemirror.js:143
+#: js/ckeditor/samples/toolbarconfigurator/lib/codemirror/codemirror.js:149
+#: js/ckeditor/samples/toolbarconfigurator/lib/codemirror/codemirror.js:150
+#: js/ckeditor/samples/toolbarconfigurator/lib/codemirror/codemirror.js:168
+#: js/ckeditor/samples/toolbarconfigurator/lib/codemirror/codemirror.js:169
+#: js/ckeditor/samples/toolbarconfigurator/lib/codemirror/codemirror.js:221
+msgid "span"
+msgstr "span"
+
+#: js/ckeditor/samples/toolbarconfigurator/lib/codemirror/codemirror.js:70
+msgid "br"
+msgstr "br"
+
+#: js/ckeditor/samples/toolbarconfigurator/lib/codemirror/codemirror.js:89
+msgid "img"
+msgstr "img"
 
 #: single_pages/c5dk/blog/editor/manager/root.php:4
 #: single_pages/c5dk/blog/editor/manager/view.php:4
@@ -559,15 +623,15 @@ msgstr "Godkend/Godkend Ikke"
 msgid "Saving..."
 msgstr "Gemmer…"
 
-#: single_pages/c5dk/blog/editor/manager/root.php:180
+#: single_pages/c5dk/blog/editor/manager/root.php:179
 msgid "Approve Blog..."
 msgstr "Godkend blog..."
 
-#: single_pages/c5dk/blog/editor/manager/root.php:183
+#: single_pages/c5dk/blog/editor/manager/root.php:182
 msgid "Unapprove Blog..."
 msgstr "Fjerner Godkendelse af Blog..."
 
-#: single_pages/c5dk/blog/editor/manager/root.php:217
+#: single_pages/c5dk/blog/editor/manager/root.php:216
 msgid "Are you sure you want to delete this post?"
 msgstr "Er du sikker på, du vil slette dette indlæg?"
 
@@ -855,10 +919,6 @@ msgstr "h3"
 msgid "h4"
 msgstr "h4"
 
-#: single_pages/dashboard/c5dk_blog/blog_settings.php:144
-msgid "pre"
-msgstr "pre"
-
 #: single_pages/dashboard/c5dk_blog/blog_settings.php:176
 msgid "Saving your settings"
 msgstr "Gemmer dine indstillinger"
@@ -965,26 +1025,8 @@ msgstr "Ikke sat"
 #~ msgid "The Blog Content field is a required field and cannot be empty."
 #~ msgstr "Blog indholdsfeltet er et obligatorisk felt, og kan ikke være tomt."
 
-#~ msgid "Select"
-#~ msgstr "Vælg"
-
 #~ msgid "Only .jpg or .jpeg is supported at the moment."
 #~ msgstr "Kun .jpg eller .jpeg understøttes i øjeblikket."
-
-#~ msgid "div"
-#~ msgstr "div"
-
-#~ msgid "textarea"
-#~ msgstr "textarea"
-
-#~ msgid "span"
-#~ msgstr "span"
-
-#~ msgid "br"
-#~ msgstr "br"
-
-#~ msgid "img"
-#~ msgstr "img"
 
 #~ msgid "Group(s) who can blog"
 #~ msgstr "Gruppe(r), der kan blogge"

@@ -67,7 +67,7 @@
 	width: 100%;
 	height: auto;
 	float: left;
-	padding: 6px 12px;
+	padding: 6px 0;
 	margin: 0 0 20px;
 }
 #c5dk-blog-package .c5dk_blog_section h4 {
@@ -915,9 +915,9 @@
 	}
 	#c5dk-blog-package .c5dk_blog_box_thumbnail_rightframe {
 		width: 100%;
-		max-width: 800px;
+		max-width: 700px;
 		max-height: 600px;
-		float: left;
+		float: right;
 	}
 	#c5dk-blog-package .c5dk_blog_thumbnail_preview_frame {
 		float: left;

@@ -100,7 +100,7 @@
 							position: 'bottom',
 							counterclass: 'c5dk-title-char-counter',
 							alertclass: 'c5dk_blog_cnt_red',
-							textformat: '<?= t('Characters Left ( [used]/[max] )'); ?>'
+							textformat: '<?= t('Characters Left'); ?> ( [used]/[max] )'
 						});
 
 						$('#description').characterCounter({
@@ -109,7 +109,7 @@
 							position: 'bottom',
 							counterclass: 'c5dk-description-char-counter',
 							alertclass: 'c5dk_blog_cnt_red',
-							textformat: '<?= t('Characters Left ( [used]/[max] )'); ?>'
+							textformat: '<?= t('Characters Left'); ?> ( [used]/[max] )'
 						});
 
 						$(".c5dk_bp_title").focus(function() {

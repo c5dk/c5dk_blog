@@ -175,8 +175,6 @@ class BlogSettings extends DashboardPageController
 
 		// So now we only need to see if we have a new thumbnail or we keep the old one
 		if (strlen($thumbnail['croppedImage'])) {
-			$fileservice = \Core::make('helper/file');
-
 			// Get on with saving the new thumbnail
 			$img  = str_replace('data:image/png;base64,', '', $thumbnail['croppedImage']);
 			$img  = str_replace(' ', '+', $img);
@@ -188,7 +186,7 @@ class BlogSettings extends DashboardPageController
 			$image->save($tmpImagePath, ['jpeg_quality' => 80]);
 
 			if ($oldThumbnail) {
-				$fv = $oldThumbnail->getVersionToModify(TRUE);
+				$fv = $oldThumbnail->getVersionToModify(true);
 				$fv->updateContents($image->get('jpg'));
 			} else {
 				// Import thumbnail into the File Manager
@@ -207,10 +205,5 @@ class BlogSettings extends DashboardPageController
 		} else {
 			return $thumbnail['id'];
 		}
-	}
-
-	public function getFileTypes($type, $withFullStop = false)
-	{
-
 	}
 }

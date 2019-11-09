@@ -1,9 +1,9 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: C5DK Blog v8.5.0\n"
+"Project-Id-Version: C5DK Blog v8.5.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-11-07 11:00+0100\n"
-"PO-Revision-Date: 2019-11-07 11:00+0100\n"
+"POT-Creation-Date: 2019-11-08 11:19+0100\n"
+"PO-Revision-Date: 2019-11-08 11:20+0100\n"
 "Last-Translator: Concrete5 Danmark <info@concrete5.dk>\n"
 "Language-Team: Concrete5 Danmark <info@concrete5.dk>\n"
 "Language: da_DK\n"
@@ -101,11 +101,11 @@ msgstr "Er du sikker på, du vil slette dette indlæg?"
 #: blocks/c5dk_blog_buttons/templates/c5dk_simple_one/view.php:28
 #: blocks/c5dk_blog_buttons/templates/c5dk_simple_two/view.php:29
 #: blocks/c5dk_blog_buttons/view.php:126 elements/blog_post.php:28
-#: elements/blog_post.php:247 elements/blog_post.php:263
-#: elements/blog_post.php:274 elements/file_manager/main.php:19
+#: elements/blog_post.php:248 elements/blog_post.php:264
+#: elements/blog_post.php:275 elements/file_manager/main.php:19
 #: elements/image_manager/main.php:13
 #: single_pages/dashboard/c5dk_blog/blog_roots/add.php:10
-#: single_pages/dashboard/c5dk_blog/blog_settings.php:152
+#: single_pages/dashboard/c5dk_blog/blog_settings.php:158
 #: single_pages/dashboard/c5dk_blog/user_deletion.php:45
 msgid "Cancel"
 msgstr "Annuller"
@@ -114,8 +114,8 @@ msgstr "Annuller"
 #: blocks/c5dk_blog_buttons/templates/c5dk_old/view.php:31
 #: blocks/c5dk_blog_buttons/templates/c5dk_simple_one/view.php:29
 #: blocks/c5dk_blog_buttons/templates/c5dk_simple_two/view.php:30
-#: blocks/c5dk_blog_buttons/view.php:127 elements/blog_post.php:262
-#: elements/blog_post.php:273
+#: blocks/c5dk_blog_buttons/view.php:127 elements/blog_post.php:263
+#: elements/blog_post.php:274
 msgid "Delete"
 msgstr "Slet"
 
@@ -134,7 +134,7 @@ msgstr "Henter blog formular"
 #: blocks/c5dk_blog_buttons/templates/c5dk_old/view.php:51
 #: blocks/c5dk_blog_buttons/templates/c5dk_simple_one/view.php:49
 #: blocks/c5dk_blog_buttons/templates/c5dk_simple_two/view.php:50
-#: blocks/c5dk_blog_buttons/view.php:265 elements/blog_post.php:315
+#: blocks/c5dk_blog_buttons/view.php:265 elements/blog_post.php:316
 msgid "Confirm Delete"
 msgstr "Bekræft sletning"
 
@@ -212,7 +212,7 @@ msgstr "Bruger E-mail"
 msgid "User Avatar"
 msgstr "Bruger Avatar"
 
-#: blocks/c5dk_blog_user_attribute_display/form.php:8 controller.php:213
+#: blocks/c5dk_blog_user_attribute_display/form.php:8 controller.php:224
 msgid "Add"
 msgstr "Tilføj"
 
@@ -302,7 +302,7 @@ msgstr "Vis alle emner"
 msgid "No topics."
 msgstr "Ingen emner."
 
-#: controller.php:41 controller.php:211 controller.php:228
+#: controller.php:41 controller.php:222 controller.php:239
 msgid "C5DK Blog"
 msgstr "C5DK Blog"
 
@@ -312,83 +312,83 @@ msgstr ""
 "Et blog applikation til din C5 hjemmeside, så selv almindelige brugere kan "
 "blogge."
 
-#: controller.php:211
+#: controller.php:222
 msgid "Blog system for your website"
 msgstr "Blog system til din hjemmeside"
 
-#: controller.php:212
+#: controller.php:223
 msgid "Blog Roots"
 msgstr "Blog Rødder"
 
-#: controller.php:212
+#: controller.php:223
 msgid "Manage Roots"
 msgstr "Administrer Rødder"
 
-#: controller.php:213
+#: controller.php:224
 msgid "Add an existing page as a Blog Root"
 msgstr "Føj en eksisterende side til som en blog Rod"
 
-#: controller.php:214
+#: controller.php:225
 msgid "Settings"
 msgstr "Indstillinger"
 
-#: controller.php:214
+#: controller.php:225
 msgid "Manage Settings"
 msgstr "Administrer Indstillinger"
 
-#: controller.php:215
+#: controller.php:226
 msgid "User Deletion"
 msgstr "Bruger Sletning"
 
-#: controller.php:215
+#: controller.php:226
 msgid "What should we do with the users blog posts?"
 msgstr "Hvad skal vi gøre med brugerens blogindlæg?"
 
-#: controller.php:218
+#: controller.php:229
 msgid "Blog Post"
 msgstr "Blogindlæg"
 
-#: controller.php:218
+#: controller.php:229
 msgid "Add/Edit a blog post"
 msgstr "Tilføj/Rediger et blogindlæg"
 
-#: controller.php:220
+#: controller.php:231
 msgid "C5DK"
 msgstr "C5DK"
 
-#: controller.php:220
+#: controller.php:231
 msgid "Shared folder for C5DK Packages"
 msgstr "Delt mappe til C5DK-pakker"
 
-#: controller.php:223
+#: controller.php:234
 msgid "Manager"
 msgstr "Manager"
 
-#: controller.php:223
+#: controller.php:234
 msgid "Blog Editor Manager"
 msgstr "Blog Redaktør Manager"
 
-#: controller.php:232
+#: controller.php:243
 msgid "Blog Root"
 msgstr "Blog Rod"
 
-#: controller.php:238
+#: controller.php:249
 msgid "Blog Author ID"
 msgstr "Blog Forfatter ID"
 
-#: controller.php:244
+#: controller.php:255
 msgid "Blog Approved"
 msgstr "Blog Godkendelse"
 
-#: controller.php:250
+#: controller.php:261
 msgid "Blog Publish Time"
 msgstr "Tidspunkt for Udgivelse af Blog"
 
-#: controller.php:257
+#: controller.php:268
 msgid "Blog Unpublish Time"
 msgstr "Tidspunkt for Annuller Udgivelse af Blog"
 
-#: controller.php:272
+#: controller.php:283
 msgid "Full Name"
 msgstr "Fulde Navn"
 
@@ -405,15 +405,15 @@ msgstr "Blog Rod er blevet fjernet"
 msgid "None"
 msgstr "Ingen"
 
-#: controllers/single_page/dashboard/c5dk_blog/blog_settings.php:113
+#: controllers/single_page/dashboard/c5dk_blog/blog_settings.php:116
 msgid "Settings saved."
 msgstr "Indstillinger gemt."
 
-#: elements/blog_post.php:27 elements/blog_post.php:246
+#: elements/blog_post.php:27 elements/blog_post.php:247
 msgid "Update"
 msgstr "Opdater"
 
-#: elements/blog_post.php:27 elements/blog_post.php:246
+#: elements/blog_post.php:27 elements/blog_post.php:247
 msgid "Post"
 msgstr "Udgiv"
 
@@ -445,42 +445,29 @@ msgstr "Karakterer tilbage"
 msgid "Blog Content"
 msgstr "Blog Indhold"
 
-#: elements/blog_post.php:219
+#: elements/blog_post.php:220
 msgid "Tags"
 msgstr "Tags"
 
-#: elements/blog_post.php:225
+#: elements/blog_post.php:226
 msgid "Topics"
 msgstr "Emner"
 
-#: elements/blog_post.php:259
+#: elements/blog_post.php:260
 msgid "Are you sure you want to delete this image?"
 msgstr "Er du sikker på, at du vil slette dette billede?"
 
-#: elements/blog_post.php:270
+#: elements/blog_post.php:271
 msgid "Are you sure you want to delete this file?"
 msgstr "Er du sikker på, at du vil slette denne fil?"
 
-#: elements/blog_post.php:314
+#: elements/blog_post.php:315
 msgid "Uploading File(s)"
 msgstr "Uploader fil(er)"
 
 #: elements/file_manager/main.php:15 elements/image_manager/main.php:9
 msgid "Upload Files..."
 msgstr "Upload Filer..."
-
-#: elements/image_manager/list_table.php:9
-msgid "Name"
-msgstr "Navn"
-
-#: elements/image_manager/list_table.php:10
-msgid "Size"
-msgstr "Størrelse"
-
-#: elements/image_manager/list_table.php:11
-#: single_pages/c5dk/blog/editor/manager/view.php:11
-msgid "Actions"
-msgstr "Handlinger"
 
 #: elements/service/thumbnail_cropper/view.php:18
 msgid "Thumbnail"
@@ -508,64 +495,11 @@ msgstr "[data-charCount-for ="
 
 #: js/ckeditor/plugins/tabletools/dialogs/tableCell.js:8
 msgid "width"
-msgstr "Bredde"
+msgstr "bredde"
 
 #: js/ckeditor/plugins/tabletools/dialogs/tableCell.js:8
 msgid "height"
-msgstr "Højde"
-
-#: js/ckeditor/samples/toolbarconfigurator/lib/codemirror/codemirror.js:3
-#: js/ckeditor/samples/toolbarconfigurator/lib/codemirror/codemirror.js:4
-#: js/ckeditor/samples/toolbarconfigurator/lib/codemirror/codemirror.js:5
-#: js/ckeditor/samples/toolbarconfigurator/lib/codemirror/codemirror.js:9
-#: js/ckeditor/samples/toolbarconfigurator/lib/codemirror/codemirror.js:12
-#: js/ckeditor/samples/toolbarconfigurator/lib/codemirror/codemirror.js:17
-#: js/ckeditor/samples/toolbarconfigurator/lib/codemirror/codemirror.js:28
-#: js/ckeditor/samples/toolbarconfigurator/lib/codemirror/codemirror.js:29
-#: js/ckeditor/samples/toolbarconfigurator/lib/codemirror/codemirror.js:30
-#: js/ckeditor/samples/toolbarconfigurator/lib/codemirror/codemirror.js:31
-#: js/ckeditor/samples/toolbarconfigurator/lib/codemirror/codemirror.js:32
-#: js/ckeditor/samples/toolbarconfigurator/lib/codemirror/codemirror.js:37
-#: js/ckeditor/samples/toolbarconfigurator/lib/codemirror/codemirror.js:49
-#: js/ckeditor/samples/toolbarconfigurator/lib/codemirror/codemirror.js:50
-#: js/ckeditor/samples/toolbarconfigurator/lib/codemirror/codemirror.js:79
-#: js/ckeditor/samples/toolbarconfigurator/lib/codemirror/codemirror.js:138
-#: js/ckeditor/samples/toolbarconfigurator/lib/codemirror/codemirror.js:281
-#: js/ckeditor/samples/toolbarconfigurator/lib/codemirror/codemirror.js:282
-msgid "div"
-msgstr "div"
-
-#: js/ckeditor/samples/toolbarconfigurator/lib/codemirror/codemirror.js:36
-msgid "textarea"
-msgstr "textarea"
-
-#: js/ckeditor/samples/toolbarconfigurator/lib/codemirror/codemirror.js:56
-#: js/ckeditor/samples/toolbarconfigurator/lib/codemirror/codemirror.js:70
-#: js/ckeditor/samples/toolbarconfigurator/lib/codemirror/codemirror.js:71
-#: js/ckeditor/samples/toolbarconfigurator/lib/codemirror/codemirror.js:144
-#: single_pages/dashboard/c5dk_blog/blog_settings.php:144
-msgid "pre"
-msgstr "pre"
-
-#: js/ckeditor/samples/toolbarconfigurator/lib/codemirror/codemirror.js:61
-#: js/ckeditor/samples/toolbarconfigurator/lib/codemirror/codemirror.js:71
-#: js/ckeditor/samples/toolbarconfigurator/lib/codemirror/codemirror.js:125
-#: js/ckeditor/samples/toolbarconfigurator/lib/codemirror/codemirror.js:143
-#: js/ckeditor/samples/toolbarconfigurator/lib/codemirror/codemirror.js:149
-#: js/ckeditor/samples/toolbarconfigurator/lib/codemirror/codemirror.js:150
-#: js/ckeditor/samples/toolbarconfigurator/lib/codemirror/codemirror.js:168
-#: js/ckeditor/samples/toolbarconfigurator/lib/codemirror/codemirror.js:169
-#: js/ckeditor/samples/toolbarconfigurator/lib/codemirror/codemirror.js:221
-msgid "span"
-msgstr "span"
-
-#: js/ckeditor/samples/toolbarconfigurator/lib/codemirror/codemirror.js:70
-msgid "br"
-msgstr "br"
-
-#: js/ckeditor/samples/toolbarconfigurator/lib/codemirror/codemirror.js:89
-msgid "img"
-msgstr "img"
+msgstr "højde"
 
 #: single_pages/c5dk/blog/editor/manager/root.php:4
 #: single_pages/c5dk/blog/editor/manager/view.php:4
@@ -634,6 +568,10 @@ msgstr "Fjerner Godkendelse af Blog..."
 #: single_pages/c5dk/blog/editor/manager/root.php:216
 msgid "Are you sure you want to delete this post?"
 msgstr "Er du sikker på, du vil slette dette indlæg?"
+
+#: single_pages/c5dk/blog/editor/manager/view.php:11
+msgid "Actions"
+msgstr "Handlinger"
 
 #: single_pages/c5dk/blog/editor/manager/view.php:20
 msgid "Manage Root"
@@ -767,7 +705,7 @@ msgstr "Annullering af Udgivelses Tidspunkt er Aktiveret"
 
 #: single_pages/dashboard/c5dk_blog/blog_roots.php:138
 #: single_pages/dashboard/c5dk_blog/blog_roots/add.php:9
-#: single_pages/dashboard/c5dk_blog/blog_settings.php:151
+#: single_pages/dashboard/c5dk_blog/blog_settings.php:157
 msgid "Save"
 msgstr "Gem"
 
@@ -892,34 +830,54 @@ msgid "Groups to allow access"
 msgstr "Grupper der tillades adgang"
 
 #: single_pages/dashboard/c5dk_blog/blog_settings.php:134
-msgid "Image Manager Filetypes"
-msgstr "Billede Manager Filtyper"
+msgid ""
+"Emoji (to use emojies on the site the database needs to be Coallation "
+"UTF8MB4.unicode.ci)"
+msgstr ""
+"Emoji (for at bruge emojis på hjemmesiden skal databasen være sat til "
+"Coallation UTF8MB4.Unicode.CI)"
 
-#: single_pages/dashboard/c5dk_blog/blog_settings.php:136
-msgid "File Manager Filetypes"
-msgstr "Filhåndtering Filtyper"
+#: single_pages/dashboard/c5dk_blog/blog_settings.php:135
+msgid "Blog User Image Manager"
+msgstr "Billede Manager for Bloggen"
 
-#: single_pages/dashboard/c5dk_blog/blog_settings.php:139
+#: single_pages/dashboard/c5dk_blog/blog_settings.php:137
+msgid "Blog User Image Manager Filetypes"
+msgstr "Billede Manager Filtyper for Bloggen"
+
+#: single_pages/dashboard/c5dk_blog/blog_settings.php:140
+msgid "Blog User File Manager"
+msgstr "Fil Manager for Bloggen"
+
+#: single_pages/dashboard/c5dk_blog/blog_settings.php:142
+msgid "Blog User File Manager Filetypes"
+msgstr "Filhåndtering Filtyper for Bloggen"
+
+#: single_pages/dashboard/c5dk_blog/blog_settings.php:145
 msgid "Formats"
 msgstr "Formater"
 
-#: single_pages/dashboard/c5dk_blog/blog_settings.php:140
+#: single_pages/dashboard/c5dk_blog/blog_settings.php:146
 msgid "h1"
 msgstr "h1"
 
-#: single_pages/dashboard/c5dk_blog/blog_settings.php:141
+#: single_pages/dashboard/c5dk_blog/blog_settings.php:147
 msgid "h2"
 msgstr "h2"
 
-#: single_pages/dashboard/c5dk_blog/blog_settings.php:142
+#: single_pages/dashboard/c5dk_blog/blog_settings.php:148
 msgid "h3"
 msgstr "h3"
 
-#: single_pages/dashboard/c5dk_blog/blog_settings.php:143
+#: single_pages/dashboard/c5dk_blog/blog_settings.php:149
 msgid "h4"
 msgstr "h4"
 
-#: single_pages/dashboard/c5dk_blog/blog_settings.php:176
+#: single_pages/dashboard/c5dk_blog/blog_settings.php:150
+msgid "pre"
+msgstr "pre"
+
+#: single_pages/dashboard/c5dk_blog/blog_settings.php:182
 msgid "Saving your settings"
 msgstr "Gemmer dine indstillinger"
 
@@ -993,7 +951,7 @@ msgstr ""
 "Som standard har vi valgt <strong>\"admin\"</strong> som den bruger, der vil "
 "eje de blog sider fra den bruger, du vil slette. Men du kan vælge hvilken "
 "som helst bruger, du ønsker skal eje disse blog sider ved at klikke på "
-"linket \"<strong>Vælg bruger.</strong>\""
+"linket \"<strong>Vælg bruger</strong>\"."
 
 #: single_pages/dashboard/c5dk_blog/user_deletion.php:27
 msgid "Delete User and Transfer Ownership of the Blog Pages!"
@@ -1018,6 +976,30 @@ msgstr "Slet Bruger og Slette Alle Blog Sider Denne Bruger Skrev!"
 #: src/C5dkBlog/C5dkUser.php:89
 msgid "Not set"
 msgstr "Ikke sat"
+
+#~ msgid "Emoji"
+#~ msgstr "Emoji"
+
+#~ msgid "Name"
+#~ msgstr "Navn"
+
+#~ msgid "Size"
+#~ msgstr "Størrelse"
+
+#~ msgid "div"
+#~ msgstr "div"
+
+#~ msgid "textarea"
+#~ msgstr "textarea"
+
+#~ msgid "span"
+#~ msgstr "span"
+
+#~ msgid "br"
+#~ msgstr "br"
+
+#~ msgid "img"
+#~ msgstr "img"
 
 #~ msgid "The Blog Title field is a required field and cannot be empty."
 #~ msgstr "Titelfeltet er et obligatorisk felt, og kan ikke være tomt."

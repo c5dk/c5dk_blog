@@ -128,7 +128,6 @@ class Controller extends Package
 
 		// Convert from old root db table to new
 		$this->convertOldDB();
-
 	}
 
 	public function uninstall()

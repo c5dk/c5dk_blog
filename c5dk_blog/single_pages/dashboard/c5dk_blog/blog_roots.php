@@ -49,13 +49,12 @@ Core::make('help')->display(t(
 							<td><a href="<?= URL::to($C5dkRoot->cPath); ?>">
 									<?= $C5dkRoot->cPath; ?></a></td>
 							<td style="min-width:25px;">
-								<a class="btn btn-sm btn-danger delete_root" href="<?= \URL::to('/dashboard/c5dk_blog/blog_roots/delete', [$rootID]); ?>" title="<?= t(" Delete root"); ?>" onclick="return window.confirm('
-									<?= t('Are you sure you want to delete this root?'); ?>');">
+								<a class="btn btn-sm btn-danger delete_root" href="<?= \URL::to('/dashboard/c5dk_blog/blog_roots/delete', [$rootID]); ?>" title="<?= t(" Delete root"); ?>" onclick="return window.confirm('<?= t('Are you sure you want to delete this root?'); ?>');">
 									<i class="fa fa-trash"></i>
 								</a>
 							</td>
 						</tr>
-						<tr id="root_<?= $rootID; ?>" <?= count($rootList) > 1 ? 'style="display:none;"' : ''; ?>>
+						<tr id="root_<?= $rootID; ?>"<?= (count($rootList) > 1) ? ' style="display:none;"' : ''; ?>>
 							<td colspan="4">
 								<div class="ccm-tab-content" id="ccm-tab-content-header" style="display: block;">
 									<div class="well navigation">

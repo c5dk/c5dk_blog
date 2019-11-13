@@ -404,8 +404,8 @@ class Controller extends Package
 		if (!$access) {
 			return false;
 		}
-		$guestGroup = Group::getByID($groupID);
-		$entity = GroupPermissionAccessEntity::getOrCreate($guestGroup);
+		$group = Group::getByID($groupID);
+		$entity = GroupPermissionAccessEntity::getOrCreate($group);
 
 		return $access->validateAccessEntities([$entity]);
 	}

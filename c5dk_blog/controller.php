@@ -375,14 +375,16 @@ class Controller extends Package
 
 		// Grant pages
 		foreach ($grantPages as $page) {
-			$access = $this->checkGroupViewPermission('view_page', $page, GUEST_GROUP_ID);
+			$C5dkBlog = C5dkBlog::getByID($page->getCollectionID());
+			$access = $C5dkBlog->checkGroupPermission('view_page', GUEST_GROUP_ID);
 			if (!$access) {
 				C5dkBlog::grantPagePermissionByGroup('view_page', $page, GUEST_GROUP_ID);
 			}
 		}
 
 		foreach ($denyPages as $page) {
-			$access = $this->checkGroupViewPermission('view_page', $page, GUEST_GROUP_ID);
+			$C5dkBlog = C5dkBlog::getByID($page->getCollectionID());
+			$access = $C5dkBlog->checkGroupPermission('view_page', GUEST_GROUP_ID);
 			if ($access) {
 				C5dkBlog::denyPagePermissionByGroup('view_page', $page, GUEST_GROUP_ID);
 			}
@@ -395,20 +397,20 @@ class Controller extends Package
 		// // }
 	}
 
-	public function checkGroupViewPermission($permissionHandle, $page, $groupID)
-	{
-		$key = PermissionKey::getByHandle($permissionHandle);
-		$key->setPermissionObject($page);
+	// public function checkGroupViewPermission($permissionHandle, $page, $groupID)
+	// {
+	// 	$key = PermissionKey::getByHandle($permissionHandle);
+	// 	$key->setPermissionObject($page);
 
-		$access = $key->getPermissionAccessObject();
-		if (!$access) {
-			return false;
-		}
-		$group = Group::getByID($groupID);
-		$entity = GroupPermissionAccessEntity::getOrCreate($group);
+	// 	$access = $key->getPermissionAccessObject();
+	// 	if (!$access) {
+	// 		return false;
+	// 	}
+	// 	$group = Group::getByID($groupID);
+	// 	$entity = GroupPermissionAccessEntity::getOrCreate($group);
 
-		return $access->validateAccessEntities([$entity]);
-	}
+	// 	return $access->validateAccessEntities([$entity]);
+	// }
 
 	public function registerAssets()
 	{

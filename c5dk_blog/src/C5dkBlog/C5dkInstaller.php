@@ -1,13 +1,13 @@
 <?php
 namespace C5dk\Blog;
 
-use Page;
-use SinglePage;
-use BlockTypeSet;
-use BlockType;
-use UserAttributeKey;
-use CollectionAttributeKey;
-use AttributeSet;
+use Concrete\Core\Page\Page;
+use Concrete\Core\Page\Single as SinglePage;
+use Concrete\Core\Block\BlockType\Set as BlockTypeSet;
+use Concrete\Core\Block\BlockType\BlockType;
+use Concrete\Core\Attribute\Key\UserKey as UserAttributeKey;
+use Concrete\Core\Attribute\Key\CollectionKey as CollectionAttributeKey;
+use Concrete\Core\Attribute\Set as AttributeSet;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Entity\Attribute\Key\PageKey;
 use Concrete\Core\Entity\Attribute\Key\Settings\TopicsSettings;
@@ -43,7 +43,7 @@ class C5dkInstaller
 		return $uak;
 	}
 
-	public static function installSinglePage($path, $name, $description, $pkg = NULL, $attributes = [])
+	public static function installSinglePage($path, $name, $description, $pkg = null, $attributes = [])
 	{
 		$page = Page::getByPath($path);
 		if (!is_object($page) || $page->isError()) {
@@ -69,7 +69,7 @@ class C5dkInstaller
 		return $bas;
 	}
 
-	public static function installCollectionAttributeKey($type, $options, $pkg = false, $set = NULL)
+	public static function installCollectionAttributeKey($type, $options, $pkg = false, $set = null)
 	{
 		// $cak = CollectionAttributeKey::getByHandle($options['akHandle']);
 		// if (!is_object($cak)) {
@@ -100,7 +100,8 @@ class C5dkInstaller
 		return $cak;
 	}
 
-	public static function installCollectionAttributeKeyTopic($handle, $name, $topicTree, $allowMultiple = false, $set = null) {
+	public static function installCollectionAttributeKeyTopic($handle, $name, $topicTree, $allowMultiple = false, $set = null)
+	{
 		// Add
 		$app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
 		$service        = $app->make('Concrete\Core\Attribute\Category\CategoryService');
@@ -112,9 +113,9 @@ class C5dkInstaller
 			$pageKey = new PageKey();
 			$pageKey->setAttributeKeyHandle($handle);
 			$pageKey->setAttributeKeyName($name);
-            if ($set) {
-                $pageKey->setAttributeSet($set);
-            }
+			if ($set) {
+				$pageKey->setAttributeSet($set);
+			}
 			// $pageKey->setIsAttributeKeySearchable(false); // Default: True
 			// $pageKey->setIsAttributeKeyContentIndexed(TRUE); // Default: False
 
@@ -161,7 +162,7 @@ class C5dkInstaller
 		}
 	}
 
-	public static function installThumbnailType($handle, $name, $width, $height = NULL)
+	public static function installThumbnailType($handle, $name, $width, $height = null)
 	{
 		$thumbnailType = Type::getByHandle($handle);
 		if (!is_object($thumbnailType)) {
@@ -186,11 +187,11 @@ class C5dkInstaller
 		if (!is_object($topicTree)) {
 			$topicTree     = TopicTree::add($name);
 			$topicCategory = TreeNode::getByID($topicTree->getRootTreeNodeObject()->getTreeNodeID());
-            if (count($topics)) {
+			if (count($topics)) {
 				foreach ($topics as $topicName) {
 					TopicTreeNode::add($topicName, $topicCategory);
 				}
-            }
+			}
 		}
 
 		return $topicTree;

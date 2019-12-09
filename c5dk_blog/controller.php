@@ -226,11 +226,11 @@ class Controller extends Package
 
 		// Normal
 		$singlePage = C5dkInstaller::installSinglePage('/blog_post', t('Blog Post'), t('Add/Edit a blog post'), $pkg, ['exclude_nav' => 1]);
-
-		$singlePage = C5dkInstaller::installSinglePage('/c5dk', t('C5DK'), t("Shared folder for C5DK Packages"), $pkg, ['exclude_nav' => 1, 'exclude_page_list' => 1, 'exclude_search_index' => 1]);
-		// $singlePage = C5dkInstaller::installSinglePage('/c5dk/blog', t('Blog'), t("Main folder for the C5DK Blog package"), $pkg, ['exclude_nav' => 1, 'exclude_page_list' => 1]);
-		// $singlePage = C5dkInstaller::installSinglePage('/c5dk/blog/editor', t('Editor'), t("Blog Editor"), $pkg, ['exclude_nav' => 1, 'exclude_page_list' => 1]);
 		$singlePage = C5dkInstaller::installSinglePage('/c5dk/blog/editor/manager', t('Manager'), t("Blog Editor Manager"), $pkg, ['exclude_nav' => 1, 'exclude_page_list' => 1]);
+		$page = Page::getByPath('/c5dk');
+		$page->setAttribute('exclude_nav', 1);
+		$page->setAttribute('exclude_search_index', 1);
+		$page->setAttribute('exclude_page_list', 1);
 	}
 
 	private function setupPageAttributes($pkg)

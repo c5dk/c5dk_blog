@@ -510,7 +510,7 @@ class C5dkBlog extends Page
 		// $pa->markAsInUse();
 	}
 
-	public function checkGroupViewPermission($permissionHandle, $page, $groupID)
+	// public function checkGroupViewPermission($permissionHandle, $page, $groupID)
 	// {
 	// 	$key = PermissionKey::getByHandle($permissionHandle);
 	// 	$key->setPermissionObject($page);

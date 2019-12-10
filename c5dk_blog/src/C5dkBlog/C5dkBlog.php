@@ -4,11 +4,11 @@ namespace C5dk\Blog;
 use Core;
 use Database;
 use Events;
+use User;
 use UserInfo;
+use Concrete\Core\Page\Page;
 use PageType;
 use CollectionAttributeKey;
-use Concrete\Core\User\User;
-use Concrete\Core\Page\Page;
 // use Concrete\Core\Attribute\Key\CollectionKey;
 // use Concrete\Core\Page\Type\Composer\OutputControl as PageTypeComposerOutputControl;
 // use Concrete\Core\Page\Type\Composer\FormLayoutSetControl as PageTypeComposerFormLayoutSetControl;
@@ -22,7 +22,7 @@ use Concrete\Core\Tree\Node\Type\Topic as TopicTreeNode;
 use Concrete\Core\User\Group\Group;
 use Concrete\Core\Permission\Key\Key as PermissionKey;
 use Concrete\Core\Permission\Access\Entity\GroupEntity as GroupPermissionAccessEntity;
-use Concrete\Core\Permission\Access\Entity\UserEntity as UserPermissionAccessEntity;
+// use Concrete\Core\Permission\Access\Entity\UserEntity as UserPermissionAccessEntity;
 
 use C5dk\Blog\C5dkRoot;
 use Concrete\Core\Http\Request;
@@ -73,7 +73,7 @@ class C5dkBlog extends Page
 
 	public function isUnpublished()
 	{
-		$access = $this->checkGroupPermission('view_page', GUEST_GROUP_ID);
+		$access = $this->checkGroupViewPermission('view_page', $this, GUEST_GROUP_ID);
 		// Do guests have view permissions
 		if ($access) {
 			return false;
@@ -279,7 +279,7 @@ class C5dkBlog extends Page
 		foreach ($C5dkRoot->getEditorGroupsArray() as $groupID) {
 			$this::grantPagePermissionByGroup('view_page', $C5dkBlog, $groupID);
 		}
-		$this::grantPagePermissionByUser('view_page', $C5dkBlog, $u->getUserID());
+		$this::grantPagePermissionByUser('view_page', $C5dkBlog, $u->getUserInfoObject()->getUserID());
 
 		// Set the Approve page attribute if the root don't require approval
 		if (!$C5dkBlog->root->needsApproval) {
@@ -510,7 +510,7 @@ class C5dkBlog extends Page
 		// $pa->markAsInUse();
 	}
 
-	// public function checkGroupViewPermission($permissionHandle, $page, $groupID)
+	public function checkGroupViewPermission($permissionHandle, $page, $groupID)
 	// {
 	// 	$key = PermissionKey::getByHandle($permissionHandle);
 	// 	$key->setPermissionObject($page);
@@ -543,15 +543,15 @@ class C5dkBlog extends Page
 	public function checkUserPermission($permissionHandle, $userID)
 	{
 		$key = PermissionKey::getByHandle($permissionHandle);
-		$key->setPermissionObject($this);
+		$key->setPermissionObject($page);
 
 		$access = $key->getPermissionAccessObject();
 		if (!$access) {
 			return false;
 		}
-		$user = User::getByID($userID);
-		$entity = UserPermissionAccessEntity::getOrCreate($user);
+				$guestGroup = Group::getByID($groupID);
+				$entity = GroupPermissionAccessEntity::getOrCreate($guestGroup);
 
-		return $access->validateAccessEntities([$entity]);
+				return $access->validateAccessEntities([$entity]);
 	}
 }

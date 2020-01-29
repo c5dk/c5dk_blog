@@ -325,12 +325,14 @@ class C5dkBlog extends Page
 		// }
 	}
 
-	public function deleteThumbnail()
+	public function deleteThumbnail($user = null)
 	{
 		// Remove old thumbnail from filemanager
 		$thumbnail = $this->getAttribute('thumbnail');
-		$u         = new user;
-		if (is_object($thumbnail) && $thumbnail->getRecentVersion()->getFileName() == 'C5DK_BLOG_uID-' . $u->getUserID() . '_Thumb_cID-' . $this->getCollectionID() . '.' . $thumbnail->getRecentVersion()->getExtension()) {
+		if (!is_object($user)) {
+			$user = new User;
+		}
+		if (is_object($thumbnail) && $thumbnail->getRecentVersion()->getFileName() == 'C5DK_BLOG_uID-' . $user->getUserID() . '_Thumb_cID-' . $this->getCollectionID() . '.' . $thumbnail->getRecentVersion()->getExtension()) {
 			$thumbnail->delete();
 		}
 

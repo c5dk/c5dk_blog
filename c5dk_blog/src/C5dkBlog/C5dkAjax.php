@@ -478,13 +478,25 @@ class C5dkAjax extends Controller
 	// TODO: This function should be moved
 	public function saveThumbnail($C5dkBlog, $C5dkUser, $thumbnail)
 	{
-			$app = Application::getFacadeApplication();
-			// Init objects
-			$C5dkConfig = new C5dkConfig;
+		$app = Application::getFacadeApplication();
+		// Init objects
+		$C5dkConfig = new C5dkConfig;
 
-			// Init Helpers
-			$fh = $app->make('helper/file');
+		// Init Helpers
+		$fh = $app->make('helper/file');
 
+		// Get old thumbnail
+		$oldThumbnail = $C5dkBlog->getAttribute('thumbnail'); //$C5dkBlog->thumbnail ? $C5dkBlog->thumbnail : 0;
+
+			// User wants the thumbnail to be deleted
+		if ($thumbnail['id'] == -1 || $thumbnail['croppedImage'] || $oldThumbnail->getFileID() != $thumbnail['id']) {
+			$C5dkBlog->deleteThumbnail($C5dkUser);
+		} elseif ($thumbnail['id']) {
+			$file = File::getByID($thumbnail['id']);
+		}
+
+		// So now we only need to see if we have a new thumbnail or we keep the old one
+		if ($thumbnail['croppedImage']) {
 			// Init variables
 			$uID          = $C5dkUser->getUserID();
 			$fileName     = 'C5DK_BLOG_uID-' . $uID . '_Thumb_cID-' . $C5dkBlog->getCollectionID() . '.jpg';
@@ -494,16 +506,6 @@ class C5dkAjax extends Controller
 			$tmpImagePath = $tmpFolder . $uID . '_' . $fileName;
 			$imagePath    = $tmpFolder . $fileName;
 
-			// Get old thumbnail
-			$oldThumbnail = $C5dkBlog->thumbnail ? $C5dkBlog->thumbnail : 0;
-
-			// User wants the thumbnail to be deleted
-		if ($thumbnail['id'] == -1) {
-			$C5dkBlog->deleteThumbnail();
-		}
-
-			// So now we only need to see if we have a new thumbnail or we keep the old one
-		if ($thumbnail['croppedImage']) {
 			$fs = new \Illuminate\Filesystem\Filesystem();
 
 			// Get on with saving the new thumbnail
@@ -521,31 +523,30 @@ class C5dkAjax extends Controller
 			$image = Image::open($tmpImagePath);
 			$image->save($tmpImagePath, ['jpeg_quality' => 80]);
 
-			// Resize image (Chg: we now do it in the browser, but needs testing)
-			// $image = $image->resize(new Box($C5dkConfig->blog_thumbnail_width, $C5dkConfig->blog_thumbnail_height));
+			// Import thumbnail into the File Manager
+			$fi = new FileImporter();
+			$fv = $fi->import(
+				$tmpImagePath,
+				$fileName,
+				$fileFolder
+			);
 
-			if ($oldThumbnail && $oldThumbnail->getFileID() != $C5dkConfig->blog_default_thumbnail_id) {
-				$fv = $oldThumbnail->getVersionToModify(true);
-				$fv->updateContents($image->get('jpg'));
-			} else {
-				// Import thumbnail into the File Manager
-				$fi = new FileImporter();
-				$fv = $fi->import(
-					$tmpImagePath,
-					$fileName,
-					$fileFolder
-				);
-
-				if (is_object($fv) && $fileSet instanceof FileSet) {
-					$fileSet->addFileToSet($fv);
-				}
+			if (is_object($fv) && $fileSet instanceof FileSet) {
+				$fileSet->addFileToSet($fv);
 			}
+			// }
 
 			// Delete tmp file
 			$fs->delete($tmpImagePath);
 
 			$file = File::getByID($fv->getFileID());
-		} else {
+		}
+		
+		if (!is_object($file) && $thumbnail['id']) {
+			$file = File::getByID($thumbnail['id']);
+		}
+
+		if (!is_object($file) && $C5dkConfig->blog_default_thumbnail_id) {
 			$file = File::getByID($C5dkConfig->blog_default_thumbnail_id);
 		}
 
@@ -556,48 +557,6 @@ class C5dkAjax extends Controller
 			$C5dkBlog->refreshCache();
 			$C5dkBlog->getVersionObject()->approve();
 		}
-
-			// // Get helper objects
-			// $fh = $this->app->make('helper/file');
-			// $fi = new FileImporter();
-
-			// // Get C5dk Objects
-			// $C5dkConfig = new C5dkConfig;
-			// $C5dkUser = new C5dkUser;
-			// $uID = $C5dkUser->getUserID();
-
-			// $tmpFolder = $fh->getTemporaryDirectory();
-			// $filename = (microtime(true) * 10000) . '.jpg';
-
-			// // Get image facade and open image
-			// $imagine = $this->app->make(Image::getFacadeAccessor());
-			// $image = $imagine->open($_FILES['croppedImage']['tmp_name']);
-
-			// // Resize image
-			// $image = $image->resize(new Box($C5dkConfig->blog_thumbnail_width, $C5dkConfig->blog_thumbnail_height));
-
-			// // Save image as .jpg
-			// $image->save($tmpFolder . $filename, ['jpeg_quality' => 80]);
-
-			// // Import thumbnail into the File Manager
-			// $fv = $fi->import(
-			//     $tmpFolder . $filename,
-			//     'C5DK_BLOG_uID-' . $C5dkUser->getUserID() . '_Thumb_cID-' . $C5dkBlog->getCollectionID() . '.jpg',
-			//     FileFolder::getNodeByName('Thumbs')
-			// );
-
-			// if (is_object($fv)) {
-			//     // Create and get FileSet if not exist and add file to the set
-			//     $fs = FileSet::createAndGetSet('C5DK_BLOG_uID-' . $C5dkUser->getUserID(), FileSet::TYPE_PUBLIC, $C5dkUser->getUserID());
-			//     $fsf = $fs->addFileToSet($fv);
-
-			//     // Delete tmp file
-			//     $fs = new \Illuminate\Filesystem\Filesystem();
-			//     $fs->delete($tmpFolder . $filename);
-
-			//     // Return the File Object
-			//     return $fv->getFile();
-			// }
 	}
 
 	// Keep the active login session active

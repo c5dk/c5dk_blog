@@ -73,7 +73,7 @@ class C5dkBlog extends Page
 
 	public function isUnpublished()
 	{
-		$access = $this->checkGroupViewPermission('view_page', $this, GUEST_GROUP_ID);
+		$access = $this->checkGroupPermission('view_page', GUEST_GROUP_ID);
 		// Do guests have view permissions
 		if ($access) {
 			return false;

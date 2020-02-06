@@ -10,6 +10,7 @@ use Concrete\Core\Support\Facade\Events as Events;
 use Concrete\Core\Support\Facade\Route as Route;
 use Concrete\Core\Asset\AssetList as AssetList;
 use Concrete\Core\Tree\Type\FileManager as FileManager;
+use Concrete\Core\Multilingual\Page\Section\Section;
 // use Concrete\Core\Routing\Redirect as Redirect;
 // use Concrete\Core\Editor\Plugin as Plugin;
 // use Concrete\Core\User\Group\Group;
@@ -227,7 +228,14 @@ class Controller extends Package
 		// Normal
 		$singlePage = C5dkInstaller::installSinglePage('/blog_post', t('Blog Post'), t('Add/Edit a blog post'), $pkg, ['exclude_nav' => 1]);
 		$singlePage = C5dkInstaller::installSinglePage('/c5dk/blog/editor/manager', t('Manager'), t("Blog Editor Manager"), $pkg, ['exclude_nav' => 1, 'exclude_page_list' => 1]);
-		$page = Page::getByPath('/c5dk');
+
+		$page = Page::getByID(1);
+		$al = Section::getBySectionOfSite($page);
+		$langpath = '';
+		if (null !== $al) {
+			$langpath = $al->getCollectionHandle();
+		}
+		$page = Page::getByPath('/' . $langpath . '/c5dk');
 		$page->setAttribute('exclude_nav', 1);
 		$page->setAttribute('exclude_search_index', 1);
 		$page->setAttribute('exclude_page_list', 1);

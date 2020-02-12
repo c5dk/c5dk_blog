@@ -489,7 +489,7 @@ class C5dkAjax extends Controller
 		$oldThumbnail = $C5dkBlog->getAttribute('thumbnail'); //$C5dkBlog->thumbnail ? $C5dkBlog->thumbnail : 0;
 
 			// User wants the thumbnail to be deleted
-		if ($thumbnail['id'] == -1 || $thumbnail['croppedImage'] || $oldThumbnail->getFileID() != $thumbnail['id']) {
+		if ($thumbnail['id'] == -1 || $thumbnail['croppedImage'] || ($oldThumbnail && $oldThumbnail->getFileID() != $thumbnail['id'])) {
 			$C5dkBlog->deleteThumbnail($C5dkUser);
 		} elseif ($thumbnail['id']) {
 			$file = File::getByID($thumbnail['id']);

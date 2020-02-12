@@ -7,13 +7,13 @@
 	</div>
 
 	<?php
-	if ($mode == 'S' && is_object($tree)):
+	if ($mode == 'S' && is_object($tree)) :
 		$node = $tree->getRootTreeNodeObject();
 		$node->populateChildren();
 		if (is_object($node)) {
 			print '<ul class="c5dk-topic-list-list">';
 			print '<li class="c5dk_showAll"><i class="fa fa-files-o"></i> <a href="' . $view->controller->getTopicLink($topic) . '" class="c5dk-topic-list-topic-selected">' . t('Show All Topics') . '</a></li>';
-			$walk = function($node) use (&$walk, &$view, $selectedTopicID) {
+			$walk = function ($node) use (&$walk, &$view, $selectedTopicID) {
 				print '<ul class="c5dk-topic-list-list">';
 
 				foreach ($node->getChildNodes() as $topic) {
@@ -35,8 +35,8 @@
 		}
 	endif;
 
-	if ($mode == 'P'): ?>
-		<?php if (count($topics)) { ?>
+	if ($mode == 'P') : ?>
+		<?php if (isset($topics) && count($topics)) { ?>
 			<ul class="c5dk-topic-list-page-topics">
 			<?php foreach ($topics as $topic) { ?>
 				<li><a href="<?= $view->controller->getTopicLink($topic)?>"><?= $topic->getTreeNodeDisplayName()?></a></li>

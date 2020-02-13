@@ -37,7 +37,7 @@ class C5dkBlog extends Page
 	public static function getByID($blogID, $version = 'RECENT', $class = 'C5dk\Blog\C5dkBlog')
 	{
 		$blog                = parent::getByID($blogID, $version, $class);
-		// $blog->blogID        = $blogID;
+		$blog->blogID        = $blog->getCollectionID();
 		// $blog->root          = $blog->getRoot();
 		// $blog->rootID        = $blog->getRootID();
 		// $blog->title         = $blog->getCollectionName();

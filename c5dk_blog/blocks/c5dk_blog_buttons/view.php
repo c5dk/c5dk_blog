@@ -43,7 +43,7 @@
 									<?php if ($C5dkConfig->blog_form_slidein) { ?>
 										onclick="return c5dk.blog.buttons.edit('<?= $blogID; ?>', '<?= $C5dkBlog->getRootID(); ?>');"
 									<?php } ?>
-									href="<?= URL::to($langpath, 'blog_post', 'edit', $c->getCollectionID(), $C5dkBlog->getRootID()); ?>"
+									href="<?= URL::to($langpath, 'blog_post', 'edit', $blogID, $C5dkBlog->getRootID()); ?>"
 								><?= t("Edit Post"); ?></a>
 							</div>
 
@@ -97,7 +97,7 @@
 								<?php if ($C5dkConfig->blog_form_slidein) { ?>
 									onclick="return c5dk.blog.buttons.edit('<?= $blogID; ?>', '<?= $C5dkBlog->getRootID(); ?>');"
 								<?php } ?>
-								href="<?= URL::to($langpath, 'blog_post', 'edit', $c->getCollectionID(), $C5dkBlog->getRootID()); ?>"
+								href="<?= URL::to($langpath, 'blog_post', 'edit', $blogID, $C5dkBlog->getRootID()); ?>"
 							><?= t("Edit Post"); ?></a>
 						</div>
 

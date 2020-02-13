@@ -53,7 +53,11 @@
 							</div>
 
 							<!-- Publish Now -->
-							<?php if ($C5dkBlog->isUnpublished()) { ?>
+							<?php
+								$now = date('Y-m-d G:i:s');
+								$publishTime = $C5dkBlog->getAttribute('c5dk_blog_publish_time')->format('Y-m-d G:i:s');
+							?>
+							<?php if ($now < $publishTime) { ?>
 								<div class="c5dk-blog-btn-wrap">
 								<a class="c5dk_publish_now c5dk_blog_ButtonOrange" onclick="c5dk.blog.buttons.publishNow(<?= $blogID; ?>)"><?= t("Publish Now"); ?><br /><?= $C5dkBlog->getPublishTime(); ?></a>
 								</div>

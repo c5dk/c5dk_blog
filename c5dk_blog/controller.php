@@ -351,31 +351,80 @@ class Controller extends Package
 		// Go through all roots and find pages to grant or deny
 		$grantPages = [];
 		$denyPages = [];
+
+		$now = date('Y-m-d G:i:s');
+
 		foreach (C5dkRootEntity::findAll() as $root) {
-			// Find pages to deny
+			$rootID = $root->getRootID();
+
+
+			// // Find unpublished pages to deny
+			// if ($root->getPublishTime()$root->getUnpublishTime()) {
+			// 	$pl = new PageList();
+			// 	$pl->ignorePermissions();
+			// 	$pl->filterByParentID($rootID);
+			// 	$pl->filterByAttribute('c5dk_blog_author_id', 0, '>');
+			// 	if ($root->getPublishTime()) {
+			// 		$pl->filterByAttribute('c5dk_blog_publish_time', $now, '>');
+			// 	}
+			// 	if ($root->getUnpublishTime()) {
+			// 		$pl->filterByAttribute('c5dk_blog_unpublish_time', $now, '<');
+			// 	}
+			// 	$publishPages = $pl->get();
+			// 	$denyPages = array_merge($denyPages, $publishPages);
+			// }
+
+			// Find unpublished pages to deny
+			if ($root->getPublishTime()) {
+				$pl = new PageList();
+				$pl->ignorePermissions();
+				$pl->filterByParentID($rootID);
+				$pl->filterByAttribute('c5dk_blog_author_id', 0, '>');
+				if ($root->getPublishTime()) {
+					$pl->filterByAttribute('c5dk_blog_publish_time', $now, '>');
+				}
+				$publishPages = $pl->get();
+				$denyPages = array_merge($denyPages, $publishPages);
+			}
+
+			// Find unpublished pages to deny
+			if ($root->getUnpublishTime()) {
+				$pl = new PageList();
+				$pl->ignorePermissions();
+				$pl->filterByParentID($rootID);
+				$pl->filterByAttribute('c5dk_blog_author_id', 0, '>');
+				if ($root->getUnpublishTime()) {
+					$pl->filterByAttribute('c5dk_blog_unpublish_time', $now, '<');
+				}
+				$unpublishPages = $pl->get();
+				$denyPages = array_merge($denyPages, $unpublishPages);
+			}
+
+			// Remove duplicates
+			if ($root->getPublishTime() && $root->getUnpublishTime()) {
+				$denyPages = array_unique($denyPages, SORT_REGULAR);
+			}
+
+			// Find unapproved pages to deny
 			$pl = new PageList();
 			$pl->ignorePermissions();
+			$pl->filterByParentID($rootID);
 			$pl->filterByAttribute('c5dk_blog_author_id', 0, '>');
 			$pl->filterByAttribute('c5dk_blog_approved', 0);
-			if ($root->getPublishTime()) {
-				$pl->filterByAttribute('c5dk_blog_publish_time', date('Y-m-d H:i:s'), '>');
-			}
-			if ($root->getUnpublishTime()) {
-				$pl->filterByAttribute('c5dk_blog_unpublish_time', date('Y-m-d H:i:s'), '<');
-			}
-			$rootDenyPages = $pl->get();
-			$denyPages = array_merge($denyPages, $rootDenyPages);
+			$unapprovedPages = $pl->get();
+			$denyPages = array_merge($denyPages, $unapprovedPages);
 
 			// Find pages to grant
 			$pl = new PageList();
 			$pl->ignorePermissions();
+			$pl->filterByParentID($rootID);
 			$pl->filterByAttribute('c5dk_blog_author_id', 0, '>');
 			$pl->filterByAttribute('c5dk_blog_approved', 1);
 			if ($root->getPublishTime()) {
-				$pl->filterByAttribute('c5dk_blog_publish_time', date('Y-m-d H:i:s'), '<');
+				$pl->filterByAttribute('c5dk_blog_publish_time', $now, '<');
 			}
 			if ($root->getUnpublishTime()) {
-				$pl->filterByAttribute('c5dk_blog_unpublish_time', date('Y-m-d H:i:s'), '>');
+				$pl->filterByAttribute('c5dk_blog_unpublish_time', $now, '>');
 			}
 			$rootGrantPages = $pl->get();
 			$grantPages = array_merge($grantPages, $rootGrantPages);

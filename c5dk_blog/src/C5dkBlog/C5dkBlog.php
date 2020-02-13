@@ -4,12 +4,13 @@ namespace C5dk\Blog;
 use Core;
 use Database;
 use Events;
-use User;
-use UserInfo;
+use Concrete\Core\User\User;
+use Concrete\Core\User\UserInfo;
 use Concrete\Core\Page\Page;
-use PageType;
-use CollectionAttributeKey;
-// use Concrete\Core\Attribute\Key\CollectionKey;
+use Concrete\Core\Page\Type\Type as PageType;
+// use PageType;
+use Concrete\Core\Attribute\Key\CollectionKey as CollectionAttributeKey;
+// use CollectionAttributeKey;
 // use Concrete\Core\Page\Type\Composer\OutputControl as PageTypeComposerOutputControl;
 // use Concrete\Core\Page\Type\Composer\FormLayoutSetControl as PageTypeComposerFormLayoutSetControl;
 // use Block;
@@ -22,7 +23,7 @@ use Concrete\Core\Tree\Node\Type\Topic as TopicTreeNode;
 use Concrete\Core\User\Group\Group;
 use Concrete\Core\Permission\Key\Key as PermissionKey;
 use Concrete\Core\Permission\Access\Entity\GroupEntity as GroupPermissionAccessEntity;
-// use Concrete\Core\Permission\Access\Entity\UserEntity as UserPermissionAccessEntity;
+use Concrete\Core\Permission\Access\Entity\UserEntity as UserPermissionAccessEntity;
 
 use C5dk\Blog\C5dkRoot;
 use Concrete\Core\Http\Request;
@@ -442,18 +443,20 @@ class C5dkBlog extends Page
 		// enable access by a group
 		$g = Group::getByID($groupID);
 		if (is_object($g)) {
-			// $page->setPermissionsToOverride();
-			$page-> assignPermissions($g, [$permission], PermissionKey::ACCESS_TYPE_INCLUDE, false);
-		}
-			// $pk = PermissionKey::getByHandle($permission);
-			// $pk->setPermissionObject($page);
-			// $pa = $pk->getPermissionAccessObject();
-			// $pae = GroupPermissionAccessEntity::getOrCreate($g);
-			// $pa->addListItem($pae, false, PermissionKey::ACCESS_TYPE_INCLUDE);
+			// // $page->setPermissionsToOverride();
+			// $page->assignPermissions($g, [$permission], PermissionKey::ACCESS_TYPE_INCLUDE, false);
 
-			// apply the the permissions changes
-			// $pa->markAsInUse();
-		// }
+			// New way
+			$pk = PermissionKey::getByHandle($permission);
+			$pk->setPermissionObject($page);
+			$pa = $pk->getPermissionAccessObject();
+
+			$pae = GroupPermissionAccessEntity::getOrCreate($g);
+			$pa->addListItem($pae, false, PermissionKey::ACCESS_TYPE_INCLUDE);
+
+			// Apply the the permissions changes
+			$pa->markAsInUse();
+		}
 	}
 
 	public static function denyPagePermissionByGroup($permission, $page, $groupID)
@@ -462,54 +465,62 @@ class C5dkBlog extends Page
 		$g = Group::getByID($groupID);
 		if (is_object($g)) {
 			$page->setPermissionsToOverride();
-			$page->removePermissions($g, [$permission]);
-		}
-		// $pk = PermissionKey::getByHandle($permission);
-		// $pk->setPermissionObject($page);
-		// $pa = $pk->getPermissionAccessObject();
-		// $pe = GroupPermissionAccessEntity::getOrCreate(Group::getByID($groupID));
-		// $pa->removeListItem($pe);
+			// $page->removePermissions($g, [$permission]);
 
-		// // apply the the permissions changes
-		// $pa->markAsInUse();
+			// New way
+			$pk = PermissionKey::getByHandle($permission);
+			$pk->setPermissionObject($page);
+			$pa = $pk->getPermissionAccessObject();
+			$pe = GroupPermissionAccessEntity::getOrCreate($g);
+			$pa->removeListItem($pe);
+
+			// Apply the the permissions changes
+			$pa->markAsInUse();
+		}
 	}
 
+	// DEPRECATED: Look above for how to set/remove permission
 	public static function grantPagePermissionByUser($permission, $page, $userID)
 	{
 		// enable access by user
 		$ui = UserInfo::getByID($userID);
-		if (is_object($ui)) {
-			// $page->setPermissionsToOverride();
-			$page-> assignPermissions($ui, [$permission], PermissionKey::ACCESS_TYPE_INCLUDE, false);
-		}
 		// if (is_object($ui)) {
-		// 	$pk = PermissionKey::getByHandle($permission);
-		// 	$pk->setPermissionObject($page);
-		// 	$pa = $pk->getPermissionAccessObject();
-		// 	$pae = UserPermissionAccessEntity::getOrCreate($ui);
-		// 	$pa->addListItem($pae, false, PermissionKey::ACCESS_TYPE_INCLUDE);
+		// 	// $page->setPermissionsToOverride();
+		// 	// $page-> assignPermissions($ui, [$permission], PermissionKey::ACCESS_TYPE_INCLUDE, false);
 		// }
 
-		// // apply the the permissions changes
-		// $pa->markAsInUse();
+		if (is_object($ui)) {
+			$pk = PermissionKey::getByHandle($permission);
+			$pk->setPermissionObject($page);
+			$pa = $pk->getPermissionAccessObject();
+			$pae = UserPermissionAccessEntity::getOrCreate($ui);
+			$pa->addListItem($pae, false, PermissionKey::ACCESS_TYPE_INCLUDE);
+
+			// Apply the the permissions changes
+			$pa->markAsInUse();
+		}
 	}
 
+	// DEPRECATED: Look above for how to set/remove permission
 	public static function denyPagePermissionByUser($permission, $page, $userID)
 	{
 		// remove user access
 		$ui = UserInfo::getByID($userID);
-		if (is_object($ui)) {
-			$page->setPermissionsToOverride();
-			$page->removePermissions($ui, [$permission]);
-		}
-		// $pk = PermissionKey::getByHandle($permission);
-		// $pk->setPermissionObject($page);
-		// $pa = $pk->getPermissionAccessObject();
-		// $pe = UserPermissionAccessEntity::getOrCreate(UserInfo::getByID($userID));
-		// $pa->removeListItem($pe);
+		// if (is_object($ui)) {
+		// 	$page->setPermissionsToOverride();
+		// 	// $page->removePermissions($ui, [$permission]);
+		// }
 
-		// // apply the the permissions changes
-		// $pa->markAsInUse();
+		if (is_object($ui)) {
+			$pk = PermissionKey::getByHandle($permission);
+			$pk->setPermissionObject($page);
+			$pa = $pk->getPermissionAccessObject();
+			$pe = UserPermissionAccessEntity::getOrCreate(UserInfo::getByID($userID));
+			$pa->removeListItem($pe);
+
+			// Apply  the the permissions changes
+			$pa->markAsInUse();
+		}
 	}
 
 	// public function checkGroupViewPermission($permissionHandle, $page, $groupID)

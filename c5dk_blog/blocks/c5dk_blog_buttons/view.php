@@ -2,7 +2,7 @@
 
 <?php $c = \concrete\core\Page\Page::getCurrentPage(); ?>
 <?php if (!$c->isEditMode() && !$c->isMasterCollection() && ($C5dkUser->isBlogger() || $C5dkUser->isEditor())) { ?>
-	<?php $blogID = $C5dkBlog->getCollectionID(); ?>
+	<?php $blogID = $C5dkBlog->blogID; ?>
 
 	<?php if ($C5dkUser->isEditor()) { ?>
 		<div id="c5dk-blog-package">

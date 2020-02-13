@@ -419,6 +419,9 @@ class C5dkAjax extends Controller
 		// Delete the blog if the current user is the owner
 		if ($C5dkBlog instanceof C5dkBlog && ($C5dkBlog->getAttribute('c5dk_blog_author_id') == $C5dkUser->getUserID() || $C5dkUser->isEditorOfPage($C5dkBlog))) {
 			$jh = $this->app->make('helper/json');
+
+			$C5dkBlog->setAttribute('c5dk_blog_publish_time', new \datetime('NOW'));
+
 			echo $jh->encode([
 				'result' => $C5dkBlog->publish()
 			]);

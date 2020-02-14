@@ -553,18 +553,19 @@ class C5dkBlog extends Page
 		return $access->validateAccessEntities([$entity]);
 	}
 
-	public function checkUserPermission($permissionHandle, $userID)
-	{
-		$key = PermissionKey::getByHandle($permissionHandle);
-		$key->setPermissionObject($page);
+	// Not used and have some problems that should be fixed ($page, $groupID)
+	// public function checkUserPermission($permissionHandle, $userID)
+	// {
+	// 	$key = PermissionKey::getByHandle($permissionHandle);
+	// 	$key->setPermissionObject($page);
 
-		$access = $key->getPermissionAccessObject();
-		if (!$access) {
-			return false;
-		}
-				$guestGroup = Group::getByID($groupID);
-				$entity = GroupPermissionAccessEntity::getOrCreate($guestGroup);
+	// 	$access = $key->getPermissionAccessObject();
+	// 	if (!$access) {
+	// 		return false;
+	// 	}
+	// 			$guestGroup = Group::getByID($groupID);
+	// 			$entity = GroupPermissionAccessEntity::getOrCreate($guestGroup);
 
-				return $access->validateAccessEntities([$entity]);
-	}
+	// 			return $access->validateAccessEntities([$entity]);
+	// }
 }

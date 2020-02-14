@@ -357,23 +357,6 @@ class Controller extends Package
 		foreach (C5dkRootEntity::findAll() as $root) {
 			$rootID = $root->getRootID();
 
-
-			// // Find unpublished pages to deny
-			// if ($root->getPublishTime()$root->getUnpublishTime()) {
-			// 	$pl = new PageList();
-			// 	$pl->ignorePermissions();
-			// 	$pl->filterByParentID($rootID);
-			// 	$pl->filterByAttribute('c5dk_blog_author_id', 0, '>');
-			// 	if ($root->getPublishTime()) {
-			// 		$pl->filterByAttribute('c5dk_blog_publish_time', $now, '>');
-			// 	}
-			// 	if ($root->getUnpublishTime()) {
-			// 		$pl->filterByAttribute('c5dk_blog_unpublish_time', $now, '<');
-			// 	}
-			// 	$publishPages = $pl->get();
-			// 	$denyPages = array_merge($denyPages, $publishPages);
-			// }
-
 			// Find unpublished pages to deny
 			if ($root->getPublishTime()) {
 				$pl = new PageList();
@@ -400,11 +383,6 @@ class Controller extends Package
 				$denyPages = array_merge($denyPages, $unpublishPages);
 			}
 
-			// Remove duplicates
-			if ($root->getPublishTime() && $root->getUnpublishTime()) {
-				$denyPages = array_unique($denyPages, SORT_REGULAR);
-			}
-
 			// Find unapproved pages to deny
 			$pl = new PageList();
 			$pl->ignorePermissions();
@@ -413,6 +391,9 @@ class Controller extends Package
 			$pl->filterByAttribute('c5dk_blog_approved', 0);
 			$unapprovedPages = $pl->get();
 			$denyPages = array_merge($denyPages, $unapprovedPages);
+
+			// Make the array unique
+			$denyPages = array_unique($denyPages, SORT_REGULAR);
 
 			// Find pages to grant
 			$pl = new PageList();

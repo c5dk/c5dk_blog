@@ -1,6 +1,11 @@
 <?php defined('C5_EXECUTE') or die("Access Denied."); ?>
 
-<?php $c = \concrete\core\Page\Page::getCurrentPage(); ?>
+<?php
+	$c = \concrete\core\Page\Page::getCurrentPage();
+
+	$now = date('Y-m-d H:i:s');
+	$publishTime = $C5dkBlog->getAttribute('c5dk_blog_publish_time')->format('Y-m-d G:i:s');
+?>
 <?php if (!$c->isEditMode() && !$c->isMasterCollection() && ($C5dkUser->isBlogger() || $C5dkUser->isEditor())) { ?>
 	<?php $blogID = $C5dkBlog->blogID; ?>
 
@@ -53,10 +58,6 @@
 							</div>
 
 							<!-- Publish Now -->
-							<?php
-								$now = date('Y-m-d G:i:s');
-								$publishTime = $C5dkBlog->getAttribute('c5dk_blog_publish_time')->format('Y-m-d G:i:s');
-							?>
 							<?php if ($now < $publishTime) { ?>
 								<div class="c5dk-blog-btn-wrap">
 								<a class="c5dk_publish_now c5dk_blog_ButtonOrange" onclick="c5dk.blog.buttons.publishNow(<?= $blogID; ?>)"><?= t("Publish Now"); ?><br /><?= $C5dkBlog->getPublishTime(); ?></a>
@@ -107,7 +108,8 @@
 						</div>
 
 						<!-- Publish Now -->
-						<?php if ($C5dkBlog->isUnpublished()) { ?>
+						<?php if ($now < $publishTime) { ?>
+						<?php //if ($C5dkBlog->isUnpublished()) { ?>
 							<div class="c5dk-blog-btn-wrap">
 								<a class="c5dk_blog_ButtonOrange c5dk_publish_now" onclick="c5dk.blog.buttons.publishNow(<?= $blogID; ?>);">
 									<?= t("Publish Now"); ?><br />

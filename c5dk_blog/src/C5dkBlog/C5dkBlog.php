@@ -438,44 +438,46 @@ class C5dkBlog extends Page
 		return true;
 	}
 
-	public static function grantPagePermissionByGroup($permission, $page, $groupID)
+	public static function grantPagePermissionByGroup($permission = ['view_page'], $page, $groupID)
 	{
 		// enable access by a group
 		$g = Group::getByID($groupID);
 		if (is_object($g)) {
-			// // $page->setPermissionsToOverride();
-			// $page->assignPermissions($g, [$permission], PermissionKey::ACCESS_TYPE_INCLUDE, false);
+			$page->setPermissionsToOverride();
+			$page->assignPermissions($g, $permission, PermissionKey::ACCESS_TYPE_INCLUDE, false);
 
-			// New way
-			$pk = PermissionKey::getByHandle($permission);
-			$pk->setPermissionObject($page);
-			$pa = $pk->getPermissionAccessObject();
+			// Advanced way: Not usre if it has a problem
+			// $pk = PermissionKey::getByHandle($permission);
+			// $pk->setPermissionObject($page);
+			// $pa = $pk->getPermissionAccessObject();
 
-			$pae = GroupPermissionAccessEntity::getOrCreate($g);
-			$pa->addListItem($pae, false, PermissionKey::ACCESS_TYPE_INCLUDE);
+			// $pae = GroupPermissionAccessEntity::getOrCreate($g);
+			// $pa->addListItem($pae, false, PermissionKey::ACCESS_TYPE_INCLUDE);
 
-			// Apply the the permissions changes
-			$pa->markAsInUse();
+			// // Apply the the permissions changes
+			// $pa->markAsInUse();
+			// \Log::addEntry('GrantGroup: ' . $page->getCollectionID());
 		}
 	}
 
-	public static function denyPagePermissionByGroup($permission, $page, $groupID)
+	public static function denyPagePermissionByGroup($permission = ['view_page'], $page, $groupID)
 	{
 		// remove Guest access
 		$g = Group::getByID($groupID);
 		if (is_object($g)) {
 			$page->setPermissionsToOverride();
-			// $page->removePermissions($g, [$permission]);
+			$page->removePermissions($g, $permission);
 
-			// New way
-			$pk = PermissionKey::getByHandle($permission);
-			$pk->setPermissionObject($page);
-			$pa = $pk->getPermissionAccessObject();
-			$pe = GroupPermissionAccessEntity::getOrCreate($g);
-			$pa->removeListItem($pe);
+			// Advanced way: Not usre if it has a problem
+			// $pk = PermissionKey::getByHandle($permission);
+			// $pk->setPermissionObject($page);
+			// $pa = $pk->getPermissionAccessObject();
+			// $pe = GroupPermissionAccessEntity::getOrCreate($g);
+			// $pa->removeListItem($pe);
 
-			// Apply the the permissions changes
-			$pa->markAsInUse();
+			// // Apply the the permissions changes
+			// $pa->markAsInUse();
+			// \Log::addEntry('DenyGroup: ' . $page->getCollectionID());
 		}
 	}
 
@@ -484,12 +486,13 @@ class C5dkBlog extends Page
 	{
 		// enable access by user
 		$ui = UserInfo::getByID($userID);
+		
 		// if (is_object($ui)) {
-		// 	// $page->setPermissionsToOverride();
-		// 	// $page-> assignPermissions($ui, [$permission], PermissionKey::ACCESS_TYPE_INCLUDE, false);
-		// }
-
+			// }
+			
 		if (is_object($ui)) {
+			// $page-> assignPermissions($ui, [$permission], PermissionKey::ACCESS_TYPE_INCLUDE, false);
+			$page->setPermissionsToOverride();
 			$pk = PermissionKey::getByHandle($permission);
 			$pk->setPermissionObject($page);
 			$pa = $pk->getPermissionAccessObject();
@@ -498,45 +501,32 @@ class C5dkBlog extends Page
 
 			// Apply the the permissions changes
 			$pa->markAsInUse();
+			\Log::addEntry('GrantUser: ' . $page->getCollectionID());
 		}
 	}
 
-	// DEPRECATED: Look above for how to set/remove permission
-	public static function denyPagePermissionByUser($permission, $page, $userID)
-	{
-		// remove user access
-		$ui = UserInfo::getByID($userID);
-		// if (is_object($ui)) {
-		// 	$page->setPermissionsToOverride();
-		// 	// $page->removePermissions($ui, [$permission]);
+	// DEPRECATED: Look above for how to set/remove permission (Not used)
+		// public static function denyPagePermissionByUser($permission, $page, $userID)
+		// {
+		// 	// remove user access
+		// 	$ui = UserInfo::getByID($userID);
+		// 	// if (is_object($ui)) {
+		// 		// $page->setPermissionsToOverride();
+		// 	// 	// $page->removePermissions($ui, [$permission]);
+		// 	// }
+
+		// 	if (is_object($ui)) {
+		// 		$pk = PermissionKey::getByHandle($permission);
+		// 		$pk->setPermissionObject($page);
+		// 		$pa = $pk->getPermissionAccessObject();
+		// 		$pe = UserPermissionAccessEntity::getOrCreate(UserInfo::getByID($userID));
+		// 		$pa->removeListItem($pe);
+
+		// 		// Apply  the the permissions changes
+		// 		$pa->markAsInUse();
+		// 		\Log::addEntry('DenyUser: ' . $page->getCollectionID());
+		// 	}
 		// }
-
-		if (is_object($ui)) {
-			$pk = PermissionKey::getByHandle($permission);
-			$pk->setPermissionObject($page);
-			$pa = $pk->getPermissionAccessObject();
-			$pe = UserPermissionAccessEntity::getOrCreate(UserInfo::getByID($userID));
-			$pa->removeListItem($pe);
-
-			// Apply  the the permissions changes
-			$pa->markAsInUse();
-		}
-	}
-
-	// public function checkGroupViewPermission($permissionHandle, $page, $groupID)
-	// {
-	// 	$key = PermissionKey::getByHandle($permissionHandle);
-	// 	$key->setPermissionObject($page);
-
-	// 	$access = $key->getPermissionAccessObject();
-	// 	if (!$access) {
-	// 		return false;
-	// 	}
-	// 	$guestGroup = Group::getByID($groupID);
-	// 	$entity = GroupPermissionAccessEntity::getOrCreate($guestGroup);
-
-	// 	return $access->validateAccessEntities([$entity]);
-	// }
 
 	public function checkGroupPermission($permissionHandle, $groupID)
 	{
@@ -554,18 +544,34 @@ class C5dkBlog extends Page
 	}
 
 	// Not used and have some problems that should be fixed ($page, $groupID)
-	// public function checkUserPermission($permissionHandle, $userID)
-	// {
-	// 	$key = PermissionKey::getByHandle($permissionHandle);
-	// 	$key->setPermissionObject($page);
+		// public function checkUserPermission($permissionHandle, $userID)
+		// {
+		// 	$key = PermissionKey::getByHandle($permissionHandle);
+		// 	$key->setPermissionObject($page);
 
-	// 	$access = $key->getPermissionAccessObject();
-	// 	if (!$access) {
-	// 		return false;
-	// 	}
-	// 			$guestGroup = Group::getByID($groupID);
-	// 			$entity = GroupPermissionAccessEntity::getOrCreate($guestGroup);
+		// 	$access = $key->getPermissionAccessObject();
+		// 	if (!$access) {
+		// 		return false;
+		// 	}
+		// 			$guestGroup = Group::getByID($groupID);
+		// 			$entity = GroupPermissionAccessEntity::getOrCreate($guestGroup);
 
-	// 			return $access->validateAccessEntities([$entity]);
-	// }
+		// 			return $access->validateAccessEntities([$entity]);
+		// }
+
+	// Not used and may have problems. See above.
+		// public function checkGroupViewPermission($permissionHandle, $page, $groupID)
+		// {
+		// 	$key = PermissionKey::getByHandle($permissionHandle);
+		// 	$key->setPermissionObject($page);
+
+		// 	$access = $key->getPermissionAccessObject();
+		// 	if (!$access) {
+		// 		return false;
+		// 	}
+		// 	$guestGroup = Group::getByID($groupID);
+		// 	$entity = GroupPermissionAccessEntity::getOrCreate($guestGroup);
+
+		// 	return $access->validateAccessEntities([$entity]);
+		// }
 }

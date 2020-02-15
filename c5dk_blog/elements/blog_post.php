@@ -89,7 +89,7 @@
 						<h4><?= t('Blog Description'); ?><sup><i style="color: #E50000; font-size: 12px;" class="fa fa-asterisk"></i></sup></h4>
 					</span>
 				</label>
-				<?= $form->textarea('description', Core::make('helper/text')->entities($C5dkBlog->getDescription()), ['class' => 'c5dk-blog-full-width', 'rows' => 4]); ?>
+				<textarea name="description" id="description" class="c5dk-blog-full-width" required><?= Core::make('helper/text')->entities($C5dkBlog->getDescription()); ?></textarea>
 
 				<!-- Title and Description char counter script-->
 				<script type="text/javascript">
@@ -138,7 +138,9 @@
 			<label for="c5dk_blog_content">
 				<h4><?= t('Blog Content'); ?><sup><i style="color: #E50000; font-size: 12px;" class="fa fa-asterisk"></i></sup></h4>
 			</label>
-			<?= $form->textarea('c5dk_blog_content', $C5dkBlog->getContent()); ?>
+			<textarea name="c5dk_blog_content" id="c5dk_blog_content" required><?= $C5dkBlog->getContent(); ?></textarea>
+
+			<!-- CKEditor: -->
 			<script type="text/javascript">
 				$(document).ready(function() {
 					CKEDITOR.replace('c5dk_blog_content', {

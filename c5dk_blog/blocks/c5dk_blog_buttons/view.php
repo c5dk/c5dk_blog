@@ -7,7 +7,7 @@
 <?php if (!$c->isEditMode() && !$c->isMasterCollection() && ($C5dkUser->isBlogger() || $C5dkUser->isEditor())) { ?>
 	<?php $blogID = $C5dkBlog->blogID; ?>
 
-	<?php if ($C5dkUser->isEditor() && ($blogID && is_object($C5dkBlog->getRoot()))) { ?>
+	<?php if ($C5dkUser->isEditor()) { ?>
 		<div id="c5dk-blog-package">
 			<div class="c5dk_blog_section">
 
@@ -22,7 +22,7 @@
 						<a class="c5dk_blog_ButtonGrey" href="<?= URL::to($langpath, '/c5dk/blog/editor/manager'); ?>"><?= t("Manager List"); ?></a>
 					</div>
 
-					<?php if ($C5dkUser->isEditor() && $C5dkBlog->getAuthorID()) { ?>
+					<?php if ($C5dkUser->isEditor() && $blogID && $C5dkBlog->getAuthorID()) { ?>
 						<!-- Approve Blog Entry -->
 						<?php if ($C5dkRoot->getNeedsApproval()) { ?>
 							<div class="c5dk-blog-btn-wrap">
@@ -62,17 +62,17 @@
 								<a class="c5dk_publish_now c5dk_blog_ButtonOrange" onclick="c5dk.blog.buttons.publishNow(<?= $blogID; ?>)"><?= t("Publish Now"); ?><br /><?= $C5dkBlog->getPublishTime(); ?></a>
 								</div>
 							<?php } ?>
-                            
-                            <!-- Unpublish Time -->
-                            <?php $unpublishTime = $C5dkBlog->getAttribute('c5dk_blog_unpublish_time')->format('Y-m-d H:i:s'); ?>
-                            <?php if ($now > $unpublishTime) { ?>
-                                <div class="c5dk-blog-btn-wrap">
-                                    <p style="text-align: center;">
-                                        <?= t("Page went Unpublished"); ?><br />
-                                        <?= $C5dkBlog->getUnpublishTime(); ?>
-                                    </p>
-                                </div>
-                            <?php } ?>
+							
+							<!-- Unpublish Time -->
+							<?php $unpublishTime = $C5dkBlog->getAttribute('c5dk_blog_unpublish_time')->format('Y-m-d H:i:s'); ?>
+							<?php if ($now > $unpublishTime) { ?>
+								<div class="c5dk-blog-btn-wrap">
+									<p style="text-align: center;">
+										<?= t("Page was Unpublished"); ?><br />
+										<?= $C5dkBlog->getUnpublishTime(); ?>
+									</p>
+								</div>
+							<?php } ?>
 						<?php } ?>
 
 					<?php } ?>
@@ -127,13 +127,13 @@
 								</a>
 							</div>
 						<?php } ?>
-                        
-                        <!-- Unpublish Time -->
+						
+						<!-- Unpublish Time -->
 						<?php $unpublishTime = $C5dkBlog->getAttribute('c5dk_blog_unpublish_time')->format('Y-m-d H:i:s'); ?>
 						<?php if ($now > $unpublishTime) { ?>
 							<div class="c5dk-blog-btn-wrap">
 								<p style="text-align: center;">
-									<?= t("Page went Unpublished"); ?><br />
+									<?= t("Page was Unpublished"); ?><br />
 									<?= $C5dkBlog->getUnpublishTime(); ?>
 								</p>
 							</div>

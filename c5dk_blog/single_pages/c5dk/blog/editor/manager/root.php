@@ -46,12 +46,12 @@
 					</td>
 					<?php if ($C5dkRoot->getPublishTime()) { ?>
 						<td class="c5dk-blog-datetime-columns">
-							<input id="entry[<?= $blogID; ?>][publishTime]" data-default="<?= $C5dkBlog->publishTime; ?>" class="c5dk_datetimepicker" type="text" value="<?= $C5dkBlog->publishTime; ?>" />
+							<input id="entry[<?= $blogID; ?>][publishTime]" data-default="<?= $C5dkBlog->getPublishTime(); ?>" class="c5dk_datetimepicker" type="text" value="<?= $C5dkBlog->getPublishTime(); ?>" />
 						</td>
 					<?php } ?>
 					<?php if ($C5dkRoot->getUnpublishTime()) { ?>
 						<td class="c5dk-blog-datetime-columns">
-							<input id="entry[<?= $blogID; ?>][unpublishTime]" data-default="<?= $C5dkBlog->unpublishTime; ?>" class="c5dk_datetimepicker" type="text" value="<?= $C5dkBlog->unpublishTime; ?>" />
+							<input id="entry[<?= $blogID; ?>][unpublishTime]" data-default="<?= $C5dkBlog->getUnpublishTime(); ?>" class="c5dk_datetimepicker" type="text" value="<?= $C5dkBlog->getUnpublishTime(); ?>" />
 						</td>
 					<?php } ?>
 					<td class="c5dk-blog-manager-save-column">

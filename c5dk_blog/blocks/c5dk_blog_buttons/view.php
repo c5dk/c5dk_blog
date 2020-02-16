@@ -7,7 +7,7 @@
 <?php if (!$c->isEditMode() && !$c->isMasterCollection() && ($C5dkUser->isBlogger() || $C5dkUser->isEditor())) { ?>
 	<?php $blogID = $C5dkBlog->blogID; ?>
 
-	<?php if ($C5dkUser->isEditor() && ($blogID || is_object($C5dkBlog->getRoot()))) { ?>
+	<?php if ($C5dkUser->isEditor() && ($blogID && is_object($C5dkBlog->getRoot()))) { ?>
 		<div id="c5dk-blog-package">
 			<div class="c5dk_blog_section">
 
@@ -97,9 +97,9 @@
 					<div class="c5dk-blog-btn-wrap">
 						<a class="c5dk_blog_ButtonGreen"
 							<?php if ($C5dkConfig->blog_form_slidein) { ?>
-								onclick="return c5dk.blog.buttons.create('<?= $blogID ? $blogID : 0; ?>', '<?= $C5dkRoot->getCollectionID(); ?>');"
+								onclick="return c5dk.blog.buttons.create('<?= $blogID ? $blogID : 0; ?>', '<?= is_object($C5dkRoot) ?$C5dkRoot->getCollectionID() : ''; ?>');"
 							<?php } ?>
-							href="<?= URL::to($langpath, 'blog_post/create/0', $C5dkRoot->getCollectionID(), $c->getCollectionID()); ?>"><?= t("New Post"); ?></a>
+							href="<?= URL::to($langpath, 'blog_post/create/0', is_object($C5dkRoot) ? $C5dkRoot->getCollectionID() : '0', $c->getCollectionID()); ?>"><?= t("New Post"); ?></a>
 					</div>
 					<?php if ($C5dkUser->isOwner() && ($blogID || is_object($C5dkBlog->getRoot()))) { ?>
 						<!-- Edit Blog -->

@@ -182,7 +182,7 @@ class C5dkBlog extends Page
 		$unpublishTime = $this->getAttribute('c5dk_blog_unpublish_time');
 
 		if (!$unpublishTime) {
-			$unpublishTime = new \DateTime("2100-01-01 00:00:00");
+			$unpublishTime = new \DateTime("2099-01-01 00:00:00");
 		}
 
 		switch ($type) {

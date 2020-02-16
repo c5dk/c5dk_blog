@@ -7,7 +7,7 @@
 <?php if (!$c->isEditMode() && !$c->isMasterCollection() && ($C5dkUser->isBlogger() || $C5dkUser->isEditor())) { ?>
 	<?php $blogID = $C5dkBlog->blogID; ?>
 
-	<?php if ($C5dkUser->isEditor()) { ?>
+	<?php if ($C5dkUser->isEditor() && ($blogID || is_object($C5dkBlog->getRoot()))) { ?>
 		<div id="c5dk-blog-package">
 			<div class="c5dk_blog_section">
 
@@ -101,7 +101,7 @@
 							<?php } ?>
 							href="<?= URL::to($langpath, 'blog_post/create/0', $C5dkRoot->getCollectionID(), $c->getCollectionID()); ?>"><?= t("New Post"); ?></a>
 					</div>
-					<?php if ($C5dkUser->isOwner()) { ?>
+					<?php if ($C5dkUser->isOwner() && ($blogID || is_object($C5dkBlog->getRoot()))) { ?>
 						<!-- Edit Blog -->
 						<div class="c5dk-blog-btn-wrap">
 							<a class="c5dk_blog_ButtonBlue"

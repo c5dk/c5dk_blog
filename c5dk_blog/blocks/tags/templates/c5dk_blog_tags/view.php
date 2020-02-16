@@ -6,7 +6,7 @@ $this->requireAsset('javascript', 'tagcanvas');
 
 ?>
 
-<?php if (count($options) > 0): ?>
+<?php if (isset($options) && count($options) > 0) { ?>
 <div class="ccm-block-tags-wrapper">
 
 	<?php if ($title): ?>
@@ -72,4 +72,4 @@ $this->requireAsset('javascript', 'tagcanvas');
 		});
 		</script>
 <div style="clear: both"></div>
-<?php endif; ?>
+<?php } ?>

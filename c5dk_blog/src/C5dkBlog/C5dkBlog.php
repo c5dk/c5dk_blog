@@ -283,7 +283,7 @@ class C5dkBlog extends Page
 		$this::grantPagePermissionByUser(['view_page'], $C5dkBlog, $u->getUserInfoObject()->getUserID());
 
 		// Set the Approve page attribute if the root don't require approval
-		if (!$C5dkBlog->root->needsApproval) {
+		if (!$C5dkBlog->getRoot()->getNeedsApproval()) {
 			$C5dkBlog->setAttribute('c5dk_blog_approved', true);
 		} else {
 			// If the Blog needs approval we need to remove the guest access

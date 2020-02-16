@@ -75,6 +75,8 @@ $ih         = Core::make('helper/image');
 				if (!is_object($C5dkUser)) {
 					$C5dkUser = new C5dkUser;
 				}
+                
+        $isUnublished = $C5dkBlog->isUnpublished();
 
 
 		//Other useful page data...
@@ -110,7 +112,7 @@ $ih         = Core::make('helper/image');
 
 		/* The HTML from here through "endforeach" is repeated for every item in the list... */ ?>
 
-		<div class="<?= $entryClasses?> entry clearfix">
+		<div class="<?= $entryClasses?> entry clearfix" <?= $isUnublished ? 'style="background-color: #eadece;"' : ''; ?>>
 
 		<?php if (is_object($thumbnail)): ?>
 			<?php
@@ -146,7 +148,7 @@ $ih         = Core::make('helper/image');
 
 				<?php if (isset($includeDescription) && $includeDescription): ?>
 					<div class="ccm-block-page-list-description entry-content">
-						<?= $description ?>
+						<?= $description ?><?= $isUnublished ? '<br><strong><i>' . t('This article is unpublished or unapproved!') . '</i></strong>' : ''; ?>
 					</div>
 				<?php endif; ?>
 

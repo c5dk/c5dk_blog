@@ -39,9 +39,9 @@ $C5dkConfig = new C5dkConfig;
 		<div class="ccm-block-page-list-pages">
 
 			<?php
-			$includeEntryText = FALSE;
+			$includeEntryText = false;
 			if ($includeName || $includeDescription || $useButtonForLink) {
-				$includeEntryText = TRUE;
+				$includeEntryText = true;
 			}
 
 			foreach ($pages as $page) {
@@ -55,7 +55,7 @@ $C5dkConfig = new C5dkConfig;
 				$description   = $page->getCollectionDescription();
 				$description   = $controller->truncateSummaries ? $th->wordSafeShortText($description, $controller->truncateChars) : $description;
 				$description   = $th->entities($description);
-				$thumbnail     = FALSE;
+				$thumbnail     = false;
 				if ($displayThumbnail) {
 					$thumbnail = $page->getAttribute('thumbnail');
 				}
@@ -64,7 +64,7 @@ $C5dkConfig = new C5dkConfig;
 					$entryClasses = 'ccm-block-page-list-page-entry-horizontal';
 				}
 
-				$date = $dh->formatDateTime($page->getCollectionDatePublic(), TRUE);
+				$date = $dh->formatDateTime($page->getCollectionDatePublic(), true);
 
 				//C5DK Blog Package - Getting author name example for C5DK Blog
 				$C5dkBlog = C5dkBlog::getByID($page->getCollectionID());
@@ -72,6 +72,8 @@ $C5dkConfig = new C5dkConfig;
 				if (!is_object($C5dkUser)) {
 					$C5dkUser = new C5dkUser;
 				}
+
+				$isUnublished = $C5dkBlog->isUnpublished();
 
 				//Other useful page data...
 
@@ -106,54 +108,54 @@ $C5dkConfig = new C5dkConfig;
 
 				/* The HTML from here through "endforeach" is repeated for every item in the list... */ ?>
 
-			<div class="<?= $entryClasses?>">
+				<div class="<?= $entryClasses?>"<?= $isUnublished ? 'style="background-color: #eadece;"' : ''; ?>>
 
-				<?php if (is_object($thumbnail)) { ?>
-				<div class="ccm-block-page-list-page-entry-thumbnail">
-					<?php
-					$img = Core::make('html/image', [$thumbnail]);
-					$tag = $img->getTag();
-					$tag->addClass('img-responsive');
-					$tag->alt(t('Thumbnail for') . " " . $title);
-					$tag->title(t('Thumbnail for') . " " . $title);
-					?>
-					<a href="<?= $url ?>" target="<?= $target ?>"><?php print $tag; ?></a>
-				</div>
-				<?php } ?>
-
-				<?php if ($includeEntryText) { ?>
-				<div class="ccm-block-page-list-page-entry-text">
-
-					<?php if ($includeName) { ?>
-					<div class="ccm-block-page-list-title">
-						<?php if ($useButtonForLink) { ?>
-						<?= $title; ?>
-						<?php } else { ?>
-						<a href="<?= $url ?>" target="<?= $target ?>"><?= $title ?></a>
-						<?php } ?>
+					<?php if (is_object($thumbnail)) { ?>
+					<div class="ccm-block-page-list-page-entry-thumbnail">
+						<?php
+						$img = Core::make('html/image', [$thumbnail]);
+						$tag = $img->getTag();
+						$tag->addClass('img-responsive');
+						$tag->alt(t('Thumbnail for') . " " . $title);
+						$tag->title(t('Thumbnail for') . " " . $title);
+						?>
+						<a href="<?= $url ?>" target="<?= $target ?>"><?php print $tag; ?></a>
 					</div>
 					<?php } ?>
 
-					<?php if ($includeDate) { ?>
-						<div class="c5dk_postedby">
-							<?= t('Posted by') . ' <i class="fa fa-user"></i> ' . $C5dkUser->getName() . ' - <i class="fa fa-clock-o"></i> ' . $date; ?>
-						</div>
-					<?php } ?>
+					<?php if ($includeEntryText) { ?>
+					<div class="ccm-block-page-list-page-entry-text"<?= $isUnublished ? ' style="border: 1px solid orange;"' : ''; ?>>
 
-					<?php if ($includeDescription) { ?>
-						<div class="ccm-block-page-list-description">
-							<?= $description ?>
+						<?php if ($includeName) { ?>
+						<div class="ccm-block-page-list-title">
+							<?php if ($useButtonForLink) { ?>
+							<?= $title; ?>
+							<?php } else { ?>
+							<a href="<?= $url ?>" target="<?= $target ?>"><?= $title ?></a>
+							<?php } ?>
 						</div>
-					<?php } ?>
+						<?php } ?>
 
-					<?php if ($useButtonForLink) { ?>
-						<div class="ccm-block-page-list-page-entry-read-more">
-							<a href="<?= $url?>" class="<?= $buttonClasses?>"><?= $buttonLinkText?></a>
-						</div>
-					<?php } ?>
+						<?php if ($includeDate) { ?>
+							<div class="c5dk_postedby">
+								<?= t('Posted by') . ' <i class="fa fa-user"></i> ' . $C5dkUser->getName() . ' - <i class="fa fa-clock-o"></i> ' . $date; ?>
+							</div>
+						<?php } ?>
 
-				</div>
-				<?php } ?>
+						<?php if ($includeDescription) { ?>
+							<div class="ccm-block-page-list-description">
+								<?= $description ?><?= $isUnublished ? '<br><strong><i>' . t('This article is unpublished or unapproved!') . '</i></strong>' : ''; ?>
+							</div>
+						<?php } ?>
+
+						<?php if ($useButtonForLink) { ?>
+							<div class="ccm-block-page-list-page-entry-read-more">
+								<a href="<?= $url?>" class="<?= $buttonClasses?>"><?= $buttonLinkText?></a>
+							</div>
+						<?php } ?>
+
+					</div>
+					<?php } ?>
 
 				</div>
 

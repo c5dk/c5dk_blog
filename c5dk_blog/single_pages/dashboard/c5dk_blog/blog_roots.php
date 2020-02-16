@@ -100,7 +100,7 @@ Core::make('help')->display(t(
 											</div>
 											<div class="col-xs-4">
 												<div>
-													<?= $form->checkbox("root[" . $rootID . "][needsApproval]", 1, $C5dkRoot->needsApproval); ?>
+													<?= $form->checkbox("root[" . $rootID . "][needsApproval]", 1, $C5dkRoot->getNeedsApproval()); ?>
 													<?= t("Posts needs approval"); ?>
 												</div>
 												<div>

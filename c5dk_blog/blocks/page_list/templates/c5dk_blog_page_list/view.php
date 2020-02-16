@@ -124,7 +124,7 @@ $C5dkConfig = new C5dkConfig;
 					<?php } ?>
 
 					<?php if ($includeEntryText) { ?>
-					<div class="ccm-block-page-list-page-entry-text"<?= $isUnublished ? ' style="border: 1px solid orange;"' : ''; ?>>
+					<div class="ccm-block-page-list-page-entry-text">
 
 						<?php if ($includeName) { ?>
 						<div class="ccm-block-page-list-title">

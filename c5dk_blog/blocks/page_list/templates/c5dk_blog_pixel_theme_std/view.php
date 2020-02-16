@@ -38,12 +38,7 @@ $ih         = Core::make('helper/image');
 	<?php
 
 	$includeEntryText = FALSE;
-	if ((isset($includeName) && $includeName)
-		||
-		(isset($includeDescription) && $includeDescription)
-		||
-		(isset($useButtonForLink) && $useButtonForLink)
-	) {
+	if ((isset($includeName) && $includeName) || (isset($includeDescription) && $includeDescription) || (isset($useButtonForLink) && $useButtonForLink)) {
 		$includeEntryText = TRUE;
 	}
 

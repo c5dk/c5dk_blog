@@ -233,12 +233,12 @@
 		</div>
 
 		<!-- Blog Thumbnail -->
-        <div class="c5dk_blog_section">
-            <?php if ($C5dkRoot->getThumbnails() && $ThumbnailCropper) { ?>
-                <!-- Cropper Service -->
-                <?= $ThumbnailCropper->output(); ?>
-            <?php } ?>
-        </div>
+		<div class="c5dk_blog_section">
+			<?php if ($C5dkRoot->getThumbnails() && $ThumbnailCropper) { ?>
+				<!-- Cropper Service -->
+				<?= $ThumbnailCropper->output(); ?>
+			<?php } ?>
+		</div>
 
 		<!-- Footer Button Section -->
 		<div class="c5dk_blog_button_section c5dk_top_border_line">
@@ -296,10 +296,11 @@
 
 	c5dk.blog.data.post = {
 		blogID: <?= $blogID; ?>,
+		redirectID: <?= $redirectID; ?>,
 		slidein: <?= $C5dkConfig->blog_form_slidein? 1 : 0; ?>,
 
 		url: {
-			currentPage: '<?= URL::to($langpath, 'blog_post', 'create', $redirectID); ?>',
+			currentPage: '<?= URL::to($langpath, 'blog_post', 'create', 0); ?>',
 			// root: '<?= URL::to($langpath); ?>',
 			save: '<?= URL::to("/c5dk/blog/save"); ?>',
 			ping: '<?= URL::to("/c5dk/blog/ping"); ?>',

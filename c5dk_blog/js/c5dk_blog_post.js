@@ -49,7 +49,7 @@ c5dk.blog.post = {
 					c5dk.blog.buttons.edit($('#blogID').val(), $('#rootID').val());
 				}
 			} else {
-				window.location = c5dk.blog.data.post.url.currentPage + "/" + $('#rootID').val();
+				window.location = c5dk.blog.data.post.url.currentPage + "/" + $('#rootID').val() + "/" + c5dk.blog.data.post.redirectID;
 			}
 		});
 

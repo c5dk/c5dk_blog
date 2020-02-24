@@ -118,8 +118,8 @@
 						</div>
 
 						<!-- Publish Now -->
-						<?php $publishTime = $C5dkBlog->getAttribute('c5dk_blog_publish_time')->format('Y-m-d H:i:s'); ?>
-						<?php if ($now < $publishTime) { ?>
+						<?php $publishTime = $C5dkBlog->getAttribute('c5dk_blog_publish_time'); ?>
+						<?php if ($publishTime && $now < $publishTime->format('Y-m-d H:i:s')) { ?>
 							<div class="c5dk-blog-btn-wrap">
 								<a class="c5dk_blog_ButtonOrange c5dk_publish_now" onclick="c5dk.blog.buttons.publishNow(<?= $blogID; ?>);">
 									<?= t("Publish Now"); ?><br />
@@ -129,8 +129,8 @@
 						<?php } ?>
 						
 						<!-- Unpublish Time -->
-						<?php $unpublishTime = $C5dkBlog->getAttribute('c5dk_blog_unpublish_time')->format('Y-m-d H:i:s'); ?>
-						<?php if ($now > $unpublishTime) { ?>
+						<?php $unpublishTime = $C5dkBlog->getAttribute('c5dk_blog_unpublish_time'); ?>
+						<?php if ($unpublishTime && $now > $unpublishTime->format('Y-m-d H:i:s')) { ?>
 							<div class="c5dk-blog-btn-wrap">
 								<p style="text-align: center;">
 									<?= t("Page was Unpublished"); ?><br />

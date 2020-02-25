@@ -2,7 +2,7 @@
 
 <div id="c5dk-blog-package" class="c5dk_blog_package_wrapper">
 	<h3 class="pull-left"><?= t('C5DK Blog Editor Manager'); ?></h3>
-	<a class="pull-right btn btn-primary btn-sm" href="<?= URL::to('c5dk/blog/editor/manager'); ?>"><?= t('Back to list'); ?></a>
+	<a class="pull-right btn btn-primary btn-sm" href="<?= URL::to($langpath . '/c5dk/blog/editor/manager'); ?>"><?= t('Back to list'); ?></a>
 
 	<!-- Root table -->
 	<table class="table">

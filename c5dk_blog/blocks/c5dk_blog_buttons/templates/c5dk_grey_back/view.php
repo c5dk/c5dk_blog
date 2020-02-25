@@ -1,10 +1,15 @@
 <?php defined('C5_EXECUTE') or die("Access Denied."); ?>
 
-<?php $c = \concrete\core\Page\Page::getCurrentPage(); ?>
-<?php if (!$c->isEditMode() && !$c->isMasterCollection() && $C5dkUser->isBlogger()) { ?>
-	<?php
-	$blogID = $C5dkBlog->getCollectionID();
-	?>
+<?php
+	$now = date('Y-m-d H:i:s');
+
+	$c = \concrete\core\Page\Page::getCurrentPage();
+	$cID = $c->getCollectionID();
+	$blogID = $C5dkBlog->blogID? $C5dkBlog->blogID : 0;
+	$rootID = $C5dkRoot->getCollectionID();
+?>
+
+<?php if (!$c->isEditMode() && !$c->isMasterCollection() && ($C5dkUser->isBlogger() || $C5dkUser->isEditor())) { ?>
 
 	<?php if ($C5dkUser->isEditor()) { ?>
 		<div id="c5dk-blog-package" class="grey-frame">
@@ -21,9 +26,10 @@
 						<a class="c5dk_blog_ButtonGrey" href="<?= URL::to($langpath, '/c5dk/blog/editor/manager'); ?>"><?= t("Manager List"); ?></a>
 					</div>
 
-					<?php if ($C5dkUser->isEditor() && $C5dkBlog->getAuthorID()) { ?>
-						<!-- Approve Blog Entry -->
+					<?php if ($C5dkUser->isEditor() && $blogID && $C5dkBlog->getAuthorID()) { ?>
+						<!-- Is on a blog page and is the owner or editor -->
 						<?php if ($C5dkRoot->getNeedsApproval()) { ?>
+							<!-- Approve Blog Entry -->
 							<div class="c5dk-blog-btn-wrap">
 								<a id="c5dk_approve"
 									class="<?= $C5dkBlog->getApproved() ? "c5dk_blog_ButtonGreen" : "c5dk_blog_ButtonOrange"; ?>"
@@ -43,21 +49,33 @@
 							<div class="c5dk-blog-btn-wrap">
 								<a class="c5dk_blog_ButtonBlue"
 									<?php if ($C5dkConfig->blog_form_slidein) { ?>
-										onclick="return c5dk.blog.buttons.edit('<?= $blogID; ?>', '<?= $C5dkBlog->getRootID(); ?>');"
+										onclick="return c5dk.blog.buttons.edit('<?= $blogID; ?>', '<?= $rootID; ?>');"
 									<?php } ?>
-									href="<?= URL::to($langpath, 'blog_post', 'edit', $blogID, $C5dkBlog->getRootID()); ?>"
+									href="<?= URL::to($langpath, 'blog_post', 'edit', $blogID, $rootID); ?>"
 								><?= t("Edit Post"); ?></a>
 							</div>
 
 							<!-- Delete Post -->
 							<div class="c5dk-blog-btn-wrap">
-								<a class="c5dk_blog_ButtonRed" href="javascript:c5dk.blog.buttons.delete('confirm');"><?= t("Delete Post"); ?></a>
+								<a class="c5dk_blog_ButtonRed" onclick="c5dk.blog.buttons.delete('confirm');"><?= t("Delete Post"); ?></a>
 							</div>
 
 							<!-- Publish Now -->
-							<?php if ($C5dkBlog->isUnpublished()) { ?>
+							<?php $publishTime = $C5dkBlog->getAttribute('c5dk_blog_publish_time')->format('Y-m-d H:i:s'); ?>
+							<?php if ($now < $publishTime) { ?>
 								<div class="c5dk-blog-btn-wrap">
 									<a class="c5dk_publish_now c5dk_blog_ButtonOrange" onclick="c5dk.blog.buttons.publishNow(<?= $blogID; ?>)"><?= t("Publish Now"); ?><br /><?= $C5dkBlog->getPublishTime(); ?></a>
+								</div>
+							<?php } ?>
+							
+							<!-- Unpublish Time -->
+							<?php $unpublishTime = $C5dkBlog->getAttribute('c5dk_blog_unpublish_time')->format('Y-m-d H:i:s'); ?>
+							<?php if ($now > $unpublishTime) { ?>
+								<div class="c5dk-blog-btn-wrap">
+									<p style="text-align: center;">
+										<?= t("Page was Unpublished"); ?><br />
+										<?= $C5dkBlog->getUnpublishTime(); ?>
+									</p>
 								</div>
 							<?php } ?>
 						<?php } ?>
@@ -84,18 +102,18 @@
 					<div class="c5dk-blog-btn-wrap">
 						<a class="c5dk_blog_ButtonGreen"
 							<?php if ($C5dkConfig->blog_form_slidein) { ?>
-								onclick="return c5dk.blog.buttons.create('<?= $blogID ? $blogID : 0; ?>', '<?= $C5dkRoot->getCollectionID(); ?>');"
+								onclick="return c5dk.blog.buttons.create('<?= $blogID; ?>', '<?= is_object($C5dkRoot) ? $rootID : ''; ?>');"
 							<?php } ?>
-							href="<?= URL::to($langpath, 'blog_post/create/0', $C5dkRoot->getCollectionID(), $c->getCollectionID()); ?>"><?= t("New Post"); ?></a>
+							href="<?= URL::to($langpath, 'blog_post/create/0', is_object($C5dkRoot) ? $rootID : '0', $cID); ?>"><?= t("New Post"); ?></a>
 					</div>
-					<?php if ($C5dkUser->isOwner()) { ?>
+					<?php if ($C5dkUser->isOwner() && ($blogID || is_object($C5dkBlog->getRoot()))) { ?>
 						<!-- Edit Blog -->
 						<div class="c5dk-blog-btn-wrap">
 							<a class="c5dk_blog_ButtonBlue"
 								<?php if ($C5dkConfig->blog_form_slidein) { ?>
-									onclick="return c5dk.blog.buttons.edit('<?= $blogID; ?>', '<?= $C5dkBlog->getRootID(); ?>');"
+									onclick="return c5dk.blog.buttons.edit('<?= $blogID; ?>', '<?= $rootID; ?>');"
 								<?php } ?>
-								href="<?= URL::to($langpath, 'blog_post', 'edit', $blogID, $C5dkBlog->getRootID()); ?>"
+								href="<?= URL::to($langpath, 'blog_post', 'edit', $blogID, $rootID); ?>"
 							><?= t("Edit Post"); ?></a>
 						</div>
 
@@ -105,9 +123,24 @@
 						</div>
 
 						<!-- Publish Now -->
-						<?php if ($C5dkBlog->isUnpublished()) { ?>
+						<?php $publishTime = $C5dkBlog->getAttribute('c5dk_blog_publish_time'); ?>
+						<?php if ($publishTime && $now < $publishTime->format('Y-m-d H:i:s')) { ?>
 							<div class="c5dk-blog-btn-wrap">
-								<button class="c5dk_publish_now c5dk_blog_ButtonOrange" onclick="c5dk.blog.buttons.publishNow(<?= $blogID; ?>)"><?= t("Publish Now"); ?><br /><?= $C5dkBlog->getPublishTime(); ?></button>
+								<a class="c5dk_blog_ButtonOrange c5dk_publish_now" onclick="c5dk.blog.buttons.publishNow(<?= $blogID; ?>);">
+									<?= t("Publish Now"); ?><br />
+									<?= $C5dkBlog->getPublishTime(); ?>
+								</a>
+							</div>
+						<?php } ?>
+						
+						<!-- Unpublish Time -->
+						<?php $unpublishTime = $C5dkBlog->getAttribute('c5dk_blog_unpublish_time'); ?>
+						<?php if ($unpublishTime && $now > $unpublishTime->format('Y-m-d H:i:s')) { ?>
+							<div class="c5dk-blog-btn-wrap">
+								<p style="text-align: center;">
+									<?= t("Page was Unpublished"); ?><br />
+									<?= $C5dkBlog->getUnpublishTime(); ?>
+								</p>
 							</div>
 						<?php } ?>
 
@@ -174,7 +207,7 @@
 							slidein: 1,
 							blogID: blogID,
 							rootID: rootID,
-							cID: <?= $c->getCollectionID(); ?>
+							cID: <?= $cID; ?>
 						},
 						url: '<?= URL::to("/c5dk/blog/get/0"); ?>/' + rootID,
 						success: function(response){

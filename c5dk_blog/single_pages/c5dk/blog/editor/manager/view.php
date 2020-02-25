@@ -27,15 +27,3 @@
 </div>
 
 <div style="clear: both;"></div>
-
-<style type="text/css">
-.c5dk-blog-priority {
-}
-/* Both the publish and unpublish datetime columns */
-.c5dk-blog-datetime-columns {
-}
-.c5dk-blog-manager-save-column {
-}
-.c5dk-blog-manager-action-column {
-}
-</style>

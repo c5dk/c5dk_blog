@@ -45,9 +45,9 @@
 
 		<!-- Blog Publish/Unpublish time -->
 		<?php if ($C5dkRoot->getPublishTime() || $C5dkRoot->getUnpublishTime()) { ?>
-			<div class="c5dk_blog_section">
+			<div class="c5dk_blog_section c5dk_blog_section_frame">
 				<?php if ($C5dkRoot->getPublishTime()) { ?>
-					<div>
+					<div class="c5dk_blog_section_two_column c5dk_blog_section_left">
 						<!-- Post Publish Time -->
 						<?= $form->label('publishTime', '<h4>' . t('Publish Date Time') . '</h4>'); ?>
 						<input id="publishTime" name="publishTime" class="c5dk_datetimepicker" type="text" value="<?= $C5dkBlog->getPublishTime(); ?>" />
@@ -55,7 +55,7 @@
 				<?php } ?>
 
 				<?php if ($C5dkRoot->getUnpublishTime()) { ?>
-					<div>
+					<div class="c5dk_blog_section_two_column c5dk_blog_section_right">
 						<!-- Post Unpublish Time -->
 						<?= $form->label('unpublishTime', '<h4>' . t('Unpublish Date Time') . '</h4>'); ?>
 						<input id="unpublishTime" name="unpublishTime" class="c5dk_datetimepicker" type="text" value="<?= $C5dkBlog->getUnpublishTime(); ?>" />
@@ -337,6 +337,21 @@
 </script>
 
 <style type="text/css">
+    #c5dk-blog-package .c5dk_blog_section_frame {
+        border: solid 1px #eeeeee;
+        border-radius: 6px;
+        padding: 10px;
+    }
+    #c5dk-blog-package .c5dk_blog_section_two_column {
+        width: 50%;
+    }
+    #c5dk-blog-package .c5dk_blog_section_left {
+        float: left;
+    }
+    #c5dk-blog-package .c5dk_blog_section_right {
+        float: right;
+    }
+    
 	#c5dk-blog-package .c5dk_blog_thumbnail_preview {
 		float: left;
 		overflow: hidden;

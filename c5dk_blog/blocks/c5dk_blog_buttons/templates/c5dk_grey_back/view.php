@@ -1,12 +1,14 @@
 <?php defined('C5_EXECUTE') or die("Access Denied."); ?>
 
 <?php
-	$now = date('Y-m-d H:i:s');
-
 	$c = \concrete\core\Page\Page::getCurrentPage();
-	$cID = $c->getCollectionID();
-	$blogID = $C5dkBlog->blogID? $C5dkBlog->blogID : 0;
-	$rootID = $C5dkRoot->getCollectionID();
+	if (!$c->isEditMode() && !$c->isMasterCollection()) {
+		$now = date('Y-m-d H:i:s');
+
+		$cID = $c->getCollectionID();
+		$blogID = $C5dkBlog->blogID? $C5dkBlog->blogID : 0;
+		$rootID = $C5dkRoot->getCollectionID();
+	}
 ?>
 
 <?php if (!$c->isEditMode() && !$c->isMasterCollection() && ($C5dkUser->isBlogger() || $C5dkUser->isEditor())) { ?>

@@ -28,7 +28,7 @@ $C5dkConfig = new C5dkConfig;
 
 		<?php if (isset($pageListTitle) && $pageListTitle) { ?>
 			<div class="ccm-block-page-list-header">
-			<h5><?= h($pageListTitle)?></h5>
+				<h5><?= h($pageListTitle)?></h5>
 			</div>
 		<?php } ?>
 
@@ -83,26 +83,26 @@ $C5dkConfig = new C5dkConfig;
 				//$original_author = Page::getByID($page->getCollectionID(), 1)->getVersionObject()->getVersionAuthorUserName();
 
 				/* CUSTOM ATTRIBUTE EXAMPLES:
-				* $example_value = $page->getAttribute('example_attribute_handle');
-				*
-				* HOW TO USE IMAGE ATTRIBUTES:
-				* 1) Uncomment the "$ih = Core::make('helper/image');" line up top.
-				* 2) Put in some code here like the following 2 lines:
-				*      $img = $page->getAttribute('example_image_attribute_handle');
-				*      $thumb = $ih->getThumbnail($img, 64, 9999, false);
-				*    (Replace "64" with max width, "9999" with max height. The "9999" effectively means "no maximum size" for that particular dimension.)
-				*    (Change the last argument from false to true if you want thumbnails cropped.)
-				* 3) Output the image tag below like this:
-				*      <img src="<?= $thumb->src ?>" width="<?= $thumb->width ?>" height="<?= $thumb->height ?>" alt="" />
-				*
-				* ~OR~ IF YOU DO NOT WANT IMAGES TO BE RESIZED:
-				* 1) Put in some code here like the following 2 lines:
-				*      $img_src = $img->getRelativePath();
-				*      $img_width = $img->getAttribute('width');
-				*      $img_height = $img->getAttribute('height');
-				* 2) Output the image tag below like this:
-				*      <img src="<?= $img_src ?>" width="<?= $img_width ?>" height="<?= $img_height ?>" alt="" />
-				*/
+				 * $example_value = $page->getAttribute('example_attribute_handle');
+				 *
+				 * HOW TO USE IMAGE ATTRIBUTES:
+				 * 1) Uncomment the "$ih = Core::make('helper/image');" line up top.
+				 * 2) Put in some code here like the following 2 lines:
+				 *      $img = $page->getAttribute('example_image_attribute_handle');
+				 *      $thumb = $ih->getThumbnail($img, 64, 9999, false);
+				 *    (Replace "64" with max width, "9999" with max height. The "9999" effectively means "no maximum size" for that particular dimension.)
+				 *    (Change the last argument from false to true if you want thumbnails cropped.)
+				 * 3) Output the image tag below like this:
+				 *      <img src="<?= $thumb->src ?>" width="<?= $thumb->width ?>" height="<?= $thumb->height ?>" alt="" />
+				 *
+				 * ~OR~ IF YOU DO NOT WANT IMAGES TO BE RESIZED:
+				 * 1) Put in some code here like the following 2 lines:
+				 *      $img_src = $img->getRelativePath();
+				 *      $img_width = $img->getAttribute('width');
+				 *      $img_height = $img->getAttribute('height');
+				 * 2) Output the image tag below like this:
+				 *      <img src="<?= $img_src ?>" width="<?= $img_width ?>" height="<?= $img_height ?>" alt="" />
+				 */
 
 				/* End data preparation. */
 
@@ -113,13 +113,13 @@ $C5dkConfig = new C5dkConfig;
 					<?php if (is_object($thumbnail)) { ?>
 					<div class="ccm-block-page-list-page-entry-thumbnail">
 						<?php
-						$img = Core::make('html/image', [$thumbnail]);
-						$tag = $img->getTag();
-						$tag->addClass('img-responsive');
-						$tag->alt(t('Thumbnail for') . " " . $title);
-						$tag->title(t('Thumbnail for') . " " . $title);
+							$img = Core::make('html/image', [$thumbnail]);
+							$tag = $img->getTag();
+							$tag->addClass('img-responsive');
+							$tag->alt(t('Thumbnail for') . " " . $title);
+							$tag->title(t('Thumbnail for') . " " . $title);
 						?>
-						<a href="<?= $url ?>" target="<?= $target ?>"><?php print $tag; ?></a>
+						<a href="<?= $url ?>" target="<?= $target ?>"><?= $tag; ?></a>
 					</div>
 					<?php } ?>
 

@@ -39,9 +39,9 @@ $C5dkConfig = new C5dkConfig;
 		<div class="ccm-block-page-list-pages">
 
 			<?php
-			$includeEntryText = FALSE;
+			$includeEntryText = false;
 			if ($includeName || $includeDescription || $useButtonForLink) {
-				$includeEntryText = TRUE;
+				$includeEntryText = true;
 			}
 
 			foreach ($pages as $page) {
@@ -59,7 +59,7 @@ $C5dkConfig = new C5dkConfig;
 				$description     = $controller->truncateSummaries ? $th->wordSafeShortText($description, $controller->truncateChars) : $description;
 				$description     = $th->entities($description);
 				$C5dkfullContent = $C5dkBlog->content; /* Special for C5DK Blog to grap the full content to show instead of description */
-				$thumbnail       = FALSE;
+				$thumbnail     = false;
 				if ($displayThumbnail) {
 					$thumbnail = $page->getAttribute('thumbnail');
 				}
@@ -68,7 +68,7 @@ $C5dkConfig = new C5dkConfig;
 					$entryClasses = 'ccm-block-page-list-page-entry-horizontal';
 				}
 
-				$date = $dh->formatDateTime($page->getCollectionDatePublic(), TRUE);
+				$date = $dh->formatDateTime($page->getCollectionDatePublic(), true);
 
 				//C5DK Blog Package - Getting author name example for C5DK Blog
 				$C5dkBlog = C5dkBlog::getByID($page->getCollectionID());
@@ -76,6 +76,8 @@ $C5dkConfig = new C5dkConfig;
 				if (!is_object($C5dkUser)) {
 					$C5dkUser = new C5dkUser;
 				}
+
+				$isUnublished = $C5dkBlog->isUnpublished();
 
 				//Other useful page data...
 
@@ -110,7 +112,7 @@ $C5dkConfig = new C5dkConfig;
 
 				/* The HTML from here through "endforeach" is repeated for every item in the list... */ ?>
 
-				<div class="<?= $entryClasses?>">
+				<div class="<?= $entryClasses?>"<?= $isUnublished ? 'style="background-color: #eadece;"' : ''; ?>>
 
 					<?php if (is_object($thumbnail)) { ?>
 						<div class="ccm-block-page-list-page-entry-thumbnail">
@@ -120,8 +122,8 @@ $C5dkConfig = new C5dkConfig;
 							$tag->addClass('img-responsive');
 							$tag->alt(t('Thumbnail for') . " " . $title);
 							$tag->title(t('Thumbnail for') . " " . $title);
-							print $tag;
-							?>
+						?>
+						<a href="<?= $url ?>" target="<?= $target ?>"><?= $tag; ?></a>
 						</div>
 					<?php } ?>
 

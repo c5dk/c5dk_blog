@@ -14,7 +14,7 @@ canvas#c5dkCanvasImageBackground {
 	background-color:#20BDE8;
 	background-image:url('images/c5-bg-320.jpg');
 	background-repeat: no-repeat;
-	background-size: auto auto;
+	background-size: 100% auto;
 	margin-bottom: 10px;
 	border: 2px solid #DDD;
 	border-radius:6px;

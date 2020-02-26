@@ -58,7 +58,7 @@ $C5dkConfig = new C5dkConfig;
 				$description     = $page->getCollectionDescription();
 				$description     = $controller->truncateSummaries ? $th->wordSafeShortText($description, $controller->truncateChars) : $description;
 				$description     = $th->entities($description);
-				$C5dkfullContent = $C5dkBlog->content; /* Special for C5DK Blog to grap the full content to show instead of description */
+				$C5dkfullContent = $C5dkBlog->getContent(); /* Special for C5DK Blog to grap the full content to show instead of description */
 				$thumbnail     = false;
 				if ($displayThumbnail) {
 					$thumbnail = $page->getAttribute('thumbnail');
@@ -149,6 +149,9 @@ $C5dkConfig = new C5dkConfig;
 							<?php if ($includeDescription) { ?>
 								<div class="ccm-block-page-list-description">
 									<?= $C5dkfullContent ?>
+									<?php if ($isUnublished) { ?>
+										<div><strong><i><?= t('This article is unpublished or unapproved!'); ?></i></strong></div>
+									<?php } ?>
 								</div>
 							<?php } ?>
 

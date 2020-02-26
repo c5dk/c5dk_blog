@@ -53,6 +53,7 @@ class Controller extends BlockController
 		$this->set('C5dkUser', $C5dkUser);
 		$this->set('C5dkBlog', $C5dkBlog);
 		$this->set('C5dkRoot', $C5dkRoot);
+		$this->set('redirectID', $c->getCollectionID());
 		$this->set('langpath', $langpath);
 		$this->set('form', $this->app->make('helper/form'));
 

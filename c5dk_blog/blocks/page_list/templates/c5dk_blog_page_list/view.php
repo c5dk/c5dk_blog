@@ -144,7 +144,10 @@ $C5dkConfig = new C5dkConfig;
 
 						<?php if ($includeDescription) { ?>
 							<div class="ccm-block-page-list-description">
-								<?= $description ?><?= $isUnublished ? '<br><strong><i>' . t('This article is unpublished or unapproved!') . '</i></strong>' : ''; ?>
+								<div><?= $description ?></div>
+								<?php if ($isUnublished) { ?>
+									<div><strong><i><?= t('This article is unpublished or unapproved!'); ?></i></strong></div>
+								<?php } ?>
 							</div>
 						<?php } ?>
 

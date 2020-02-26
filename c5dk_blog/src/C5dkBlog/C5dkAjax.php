@@ -31,7 +31,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
 
 class C5dkAjax extends Controller
 {
-	public function getForm($blogID, $rootID)
+	public function getForm($blogID, $rootID, $redirectID)
 	{
 		if ($blogID) {
 			// Edit
@@ -102,6 +102,7 @@ class C5dkAjax extends Controller
 				'C5dkUser' => $C5dkUser,
 				'C5dkBlog' => $C5dkBlog,
 				'C5dkRoot' => $C5dkRoot,
+				'redirectID' => $redirectID,
 				'langPath' => $langpath,
 				'ThumbnailCropper' => $Cropper,
 				'token' => $this->app->make('token'),

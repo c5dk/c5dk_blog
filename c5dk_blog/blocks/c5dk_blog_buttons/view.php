@@ -211,7 +211,7 @@
 							rootID: rootID,
 							cID: <?= $cID; ?>
 						},
-						url: '<?= URL::to("/c5dk/blog/get/0"); ?>/' + rootID,
+						url: '<?= URL::to("/c5dk/blog/get/0"); ?>/' + rootID + '/<?= $redirectID; ?>',
 						success: function(response){
 							if (response.form) {
 								$('#c5dk_form_slidein').html(response.form);
@@ -253,7 +253,7 @@
 							blogID: blogID,
 							rootID: rootID
 						},
-						url: '<?= URL::to("/c5dk/blog/get"); ?>/' + blogID + '/' + rootID,
+						url: '<?= URL::to("/c5dk/blog/get"); ?>/' + blogID + '/' + rootID + '/<?= $redirectID; ?>',
 						success: function(response){
 							if (response.form) {
 								$('#c5dk_form_slidein').html(response.form);

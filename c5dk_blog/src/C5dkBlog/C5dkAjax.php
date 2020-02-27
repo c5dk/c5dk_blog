@@ -126,7 +126,8 @@ class C5dkAjax extends Controller
 		$C5dkConfig = new C5dkConfig;
 
 		if ($blogID) {
-			$C5dkUser = C5dkUser::getByUserID((C5dkBlog::getByID($blogID))->getAuthorID());
+			$C5dkBlog = C5dkBlog::::getByID($blogID);
+			$C5dkUser = C5dkUser::getByUserID($C5dkBlog->getAuthorID());
 		} else {
 			$C5dkUser = new C5dkUser;
 		}

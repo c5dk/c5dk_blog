@@ -30,7 +30,7 @@ class BlogPost extends PageController
 		$this->redirect('/');
 	}
 
-	public function create($blogID, $rootID, $redirectID = null)
+	public function create($blogID, $rootID, $redirectID)
 	{
 		// Setup C5DK objects
 		$C5dkConfig = new C5dkConfig;
@@ -53,7 +53,7 @@ class BlogPost extends PageController
 		$this->init($C5dkBlog, $C5dkRoot, $C5dkConfig, $C5dkUser, $redirectID);
 	}
 
-	public function edit($blogID, $rootID)
+	public function edit($blogID, $rootID, $redirectID)
 	{
 		// Setup C5DK objects
 		$C5dkBlog   = C5dkBlog::getByID($blogID);
@@ -69,10 +69,10 @@ class BlogPost extends PageController
 			$this->redirect('/');
 		}
 
-		$this->init($C5dkBlog, $C5dkRoot, $C5dkConfig, $C5dkUser);
+		$this->init($C5dkBlog, $C5dkRoot, $C5dkConfig, $C5dkUser, $redirectID);
 	}
 
-	public function init($C5dkBlog, $C5dkRoot, $C5dkConfig, $C5dkUser, $redirectID = null)
+	public function init($C5dkBlog, $C5dkRoot, $C5dkConfig, $C5dkUser, $redirectID)
 	{
 		// Find language path if on a multilingual site
 		$c = Page::getCurrentPage();

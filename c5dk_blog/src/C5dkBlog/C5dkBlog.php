@@ -57,19 +57,20 @@ class C5dkBlog extends Page
 		return $blog;
 	}
 
-	public function isEditor($userID)
+	public function isEditor($userID = null)
 	{
-		// Is this a valid request?
-		if (!$userID || !$this->rootID) {
-			return false;
+		if ($userID) {
+			$user = User::getByUserID($userID);
+		} else {
+			$user = new User;
 		}
 
 		// Set C5dk Objects
-		$user     = User::getByUserID($userID);
-		$C5dkRoot = C5dkRoot::getByID($this->rootID);
-
+		$C5dkRoot = $this->getRoot();
+		$editorGroups = $C5dkRoot->getEditorGroupsArray();
+		$userGroups = $user->getUserGroups();
 		// Is the user a member of one of the editor groups for this root.
-		return (count(array_intersect($user->getUserGroups(), $C5dkRoot->editorGroups))) ? true : false;
+		return (count(array_intersect($userGroups, $editorGroups))) ? true : false;
 	}
 
 	public function isUnpublished()

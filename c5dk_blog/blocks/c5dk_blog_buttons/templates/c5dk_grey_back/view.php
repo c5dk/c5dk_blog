@@ -63,16 +63,16 @@
 							</div>
 
 							<!-- Publish Now -->
-							<?php $publishTime = $C5dkBlog->getAttribute('c5dk_blog_publish_time')->format('Y-m-d H:i:s'); ?>
-							<?php if ($now < $publishTime) { ?>
+							<?php $publishTime = $C5dkBlog->getAttribute('c5dk_blog_publish_time'); ?>
+							<?php if ($now < $publishTime->format('Y-m-d H:i:s')) { ?>
 								<div class="c5dk-blog-btn-wrap">
 									<a class="c5dk_publish_now c5dk_blog_ButtonOrange" onclick="c5dk.blog.buttons.publishNow(<?= $blogID; ?>)"><?= t("Publish Now"); ?><br /><?= $C5dkBlog->getPublishTime(); ?></a>
 								</div>
 							<?php } ?>
 							
 							<!-- Unpublish Time -->
-							<?php $unpublishTime = $C5dkBlog->getAttribute('c5dk_blog_unpublish_time')->format('Y-m-d H:i:s'); ?>
-							<?php if ($now > $unpublishTime) { ?>
+							<?php $unpublishTime = $C5dkBlog->getAttribute('c5dk_blog_unpublish_time'); ?>
+							<?php if ($now > $unpublishTime->format('Y-m-d H:i:s')) { ?>
 								<div class="c5dk-blog-btn-wrap">
 									<p style="text-align: center;">
 										<?= t("Page was Unpublished"); ?><br />
@@ -211,7 +211,7 @@
 							rootID: rootID,
 							cID: <?= $cID; ?>
 						},
-						url: '<?= URL::to("/c5dk/blog/get/0"); ?>/' + rootID,
+						url: '<?= URL::to("/c5dk/blog/get/0"); ?>/' + rootID + '/<?= $redirectID; ?>',
 						success: function(response){
 							if (response.form) {
 								$('#c5dk_form_slidein').html(response.form);
@@ -253,7 +253,7 @@
 							blogID: blogID,
 							rootID: rootID
 						},
-						url: '<?= URL::to("/c5dk/blog/get"); ?>/' + blogID + '/' + rootID,
+						url: '<?= URL::to("/c5dk/blog/get"); ?>/' + blogID + '/' + rootID + '/<?= $redirectID; ?>',
 						success: function(response){
 							if (response.form) {
 								$('#c5dk_form_slidein').html(response.form);

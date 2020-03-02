@@ -455,7 +455,7 @@ class C5dkAjax extends Controller
 						// 	break;
 
 						case 'all':
-							$C5dkBlog->setPriority($this->post("priorities"));
+							$C5dkBlog->setPriority(is_null($this->post('priorities')) ? $this->post('priorities') : []);
 							$publishTime = $this->post('publishTime');
 							$C5dkBlog->setAttribute('c5dk_blog_publish_time', $publishTime ? new \datetime($publishTime) : new \datetime());
 							$unpublishTime = $this->post('unpublishTime');

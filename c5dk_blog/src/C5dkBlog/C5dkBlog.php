@@ -418,15 +418,13 @@ class C5dkBlog extends Page
 		return $topicList;
 	}
 
-	public function setPriority($values)
+	public function setPriority($values = [])
 	{
 		$topics = [];
 		foreach ($values as $value) {
 			$topics[] = TopicTreeNode::getNodeByName($value)->getTreeNodeDisplayPath();
 		}
-		if (count($topics)) {
-			$this->setAttribute('c5dk_blog_priority', $topics);
-		}
+		$this->setAttribute('c5dk_blog_priority', $topics);
 	}
 
 	public function publish()

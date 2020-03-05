@@ -455,11 +455,16 @@ class C5dkAjax extends Controller
 						// 	break;
 
 						case 'all':
-							$C5dkBlog->setPriority(is_null($this->post('priorities')) ? $this->post('priorities') : []);
+							$priorities = $this->post('priorities');
+							if (!empty($priorities)) {
+								$C5dkBlog->setPriority($priorities);
+							} else {
+								$C5dkBlog->setPriority([]);
+							}
 							$publishTime = $this->post('publishTime');
 							$C5dkBlog->setAttribute('c5dk_blog_publish_time', $publishTime ? new \datetime($publishTime) : new \datetime());
 							$unpublishTime = $this->post('unpublishTime');
-							$C5dkBlog->setAttribute('c5dk_blog_unpublish_time', $unpublishTime ? new \datetime($unpublishTime) : new \datetime("2100-01-01"));
+							$C5dkBlog->setAttribute('c5dk_blog_unpublish_time', $unpublishTime ? new \datetime($unpublishTime) : new \datetime("2099-01-01"));
 							$state = 1;
 							break;
 					}

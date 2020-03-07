@@ -7,7 +7,7 @@
 
 		$cID = $c->getCollectionID();
 		$blogID = $C5dkBlog->blogID? $C5dkBlog->blogID : 0;
-		$rootID = $C5dkRoot->getCollectionID();
+		$rootID = $C5dkRoot instanceof \C5dk\Blog\C5dkRoot ? $C5dkRoot->getCollectionID() : 0;
 	}
 ?>
 
@@ -28,7 +28,7 @@
 						<a class="c5dk_blog_ButtonGrey" href="<?= URL::to($langpath, '/c5dk/blog/editor/manager'); ?>"><?= t("Manager List"); ?></a>
 					</div>
 
-					<?php if ($C5dkUser->isEditor() && $blogID && $C5dkBlog->getAuthorID()) { ?>
+					<?php if ($blogID && $C5dkBlog->isEditor() && $C5dkBlog->getAuthorID()) { ?>
 						<!-- Is on a blog page and is the owner or editor -->
 						<?php if ($C5dkRoot->getNeedsApproval()) { ?>
 							<!-- Approve Blog Entry -->
@@ -51,9 +51,9 @@
 							<div class="c5dk-blog-btn-wrap">
 								<a class="c5dk_blog_ButtonBlue"
 									<?php if ($C5dkConfig->blog_form_slidein) { ?>
-										onclick="return c5dk.blog.buttons.edit('<?= $blogID; ?>', '<?= $rootID; ?>');"
+										onclick="return c5dk.blog.buttons.edit('<?= $blogID; ?>', '<?= $rootID; ?>', <?= $redirectID; ?>);"
 									<?php } ?>
-									href="<?= URL::to($langpath, 'blog_post', 'edit', $blogID, $rootID); ?>"
+									href="<?= URL::to($langpath, 'blog_post', 'edit', $blogID, $rootID, $redirectID); ?>"
 								><?= t("Edit Post"); ?></a>
 							</div>
 
@@ -104,18 +104,18 @@
 					<div class="c5dk-blog-btn-wrap">
 						<a class="c5dk_blog_ButtonGreen"
 							<?php if ($C5dkConfig->blog_form_slidein) { ?>
-								onclick="return c5dk.blog.buttons.create('<?= $blogID; ?>', '<?= is_object($C5dkRoot) ? $rootID : ''; ?>');"
+								onclick="return c5dk.blog.buttons.create('<?= $blogID; ?>', '<?= $rootID; ?>', <?= $redirectID; ?>);"
 							<?php } ?>
-							href="<?= URL::to($langpath, 'blog_post/create/0', is_object($C5dkRoot) ? $rootID : '0', $cID); ?>"><?= t("New Post"); ?></a>
+							href="<?= URL::to($langpath, 'blog_post/create/0', $rootID, $redirectID); ?>"><?= t("New Post"); ?></a>
 					</div>
 					<?php if ($C5dkUser->isOwner() && ($blogID || is_object($C5dkBlog->getRoot()))) { ?>
 						<!-- Edit Blog -->
 						<div class="c5dk-blog-btn-wrap">
 							<a class="c5dk_blog_ButtonBlue"
 								<?php if ($C5dkConfig->blog_form_slidein) { ?>
-									onclick="return c5dk.blog.buttons.edit('<?= $blogID; ?>', '<?= $rootID; ?>');"
+									onclick="return c5dk.blog.buttons.edit('<?= $blogID; ?>', '<?= $rootID; ?>', <?= $redirectID; ?>);"
 								<?php } ?>
-								href="<?= URL::to($langpath, 'blog_post', 'edit', $blogID, $rootID); ?>"
+								href="<?= URL::to($langpath, 'blog_post', 'edit', $blogID, $rootID, $redirectID); ?>"
 							><?= t("Edit Post"); ?></a>
 						</div>
 
@@ -195,7 +195,7 @@
 				edit: null
 			},
 
-			create: function(blogID, rootID) {
+			create: function(blogID, rootID, redirectID) {
 				if (c5dk.blog.buttons.form.create) {
 					c5dk.blog.buttons.form.create.slideReveal("show");
 				} else {
@@ -211,7 +211,7 @@
 							rootID: rootID,
 							cID: <?= $cID; ?>
 						},
-						url: '<?= URL::to("/c5dk/blog/get/0"); ?>/' + rootID + '/<?= $redirectID; ?>',
+						url: '<?= URL::to("/c5dk/blog/get/0"); ?>/' + rootID + '/' + redirectID,
 						success: function(response){
 							if (response.form) {
 								$('#c5dk_form_slidein').html(response.form);
@@ -237,7 +237,7 @@
 				return false;
 			},
 
-			edit: function(blogID, rootID) {
+			edit: function(blogID, rootID, redirectID) {
 
 				if (c5dk.blog.buttons.form.edit) {
 					c5dk.blog.buttons.form.edit.slideReveal("show");
@@ -253,7 +253,7 @@
 							blogID: blogID,
 							rootID: rootID
 						},
-						url: '<?= URL::to("/c5dk/blog/get"); ?>/' + blogID + '/' + rootID + '/<?= $redirectID; ?>',
+						url: '<?= URL::to("/c5dk/blog/get"); ?>/' + blogID + '/' + rootID + '/' + redirectID,
 						success: function(response){
 							if (response.form) {
 								$('#c5dk_form_slidein').html(response.form);

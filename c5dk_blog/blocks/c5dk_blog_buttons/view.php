@@ -1,18 +1,18 @@
-<?php
-defined('C5_EXECUTE') or die("Access Denied."); ?>
+<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
 
 <?php
 	$c = \concrete\core\Page\Page::getCurrentPage();
-if (!$c->isEditMode() && !$c->isMasterCollection()) {
-	$now = date('Y-m-d H:i:s');
+	if (!$c->isEditMode() && !$c->isMasterCollection()) {
+		$now = date('Y-m-d H:i:s');
 
-	$cID = $c->getCollectionID();
-	$blogID = $C5dkBlog->blogID? $C5dkBlog->blogID : 0;
-	$rootID = $C5dkRoot instanceof \C5dk\Blog\C5dkRoot ? $C5dkRoot->getCollectionID() : 0;
-}
+		$cID = $c->getCollectionID();
+		$blogID = $C5dkBlog->blogID? $C5dkBlog->blogID : 0;
+		$rootID = $C5dkRoot instanceof \C5dk\Blog\C5dkRoot ? $C5dkRoot->getCollectionID() : 0;
+	}
 ?>
 
 <?php if (!$c->isEditMode() && !$c->isMasterCollection() && ($C5dkUser->isBlogger() || $C5dkUser->isEditor())) { ?>
+
 	<?php if ($C5dkUser->isEditor()) { ?>
 		<div id="c5dk-blog-package">
 			<div class="c5dk_blog_section">

@@ -244,7 +244,7 @@ class Controller extends Package
 				$langpath = $langpath . '/';
 			}
 		}
-		$page = Page::getByPath('/' . $langpath . '/c5dk');
+		$page = Page::getByPath('/' . $langpath . 'c5dk');
 		$page->setAttribute('exclude_nav', 1);
 		$page->setAttribute('exclude_search_index', 1);
 		$page->setAttribute('exclude_page_list', 1);

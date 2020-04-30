@@ -53,39 +53,45 @@ class Controller extends Package
 		defined('C5DK_BLOG_MODE_CREATE') or define('C5DK_BLOG_MODE_CREATE', '1');
 		defined('C5DK_BLOG_MODE_EDIT') or define('C5DK_BLOG_MODE_EDIT', '2');
 
-		$this->registerEvents();
-		$this->registerRoutes();
-		$this->registerAssets();
+		// Get around the problem with not been able to access Page::getCurrentPage()
+		Events::addListener('on_start', function($event) {
 
-		// Set Approved page attribute on old blog pages if config is set
-		$config = $this->getConfig();
-		if ($config->get('install.set_approved')) {
-			$pl = new PageList();
-			$pl->ignorePermissions();
-			$pl->includeInactivePages();
-			$pl->filterByPageTypeID(C5dkRoot::getPageTypes());
-			$blogPages = $pl->get();
-
-			foreach ($blogPages as $page) {
-				if ($page->getAttribute('c5dk_blog_author_id') > 0) {
-					$page->setAttribute('c5dk_blog_approved', 1);
-					$version = $page->getVersionObject();
-					$version->approve();
+			$page = Page::getCurrentPage();
+			if (!$page->isAdminArea()) {
+				$this->registerEvents();
+				$this->registerRoutes();
+				$this->registerAssets();
+				
+				// Set Approved page attribute on old blog pages if config is set
+				$config = $this->getConfig();
+				if ($config->get('install.set_approved')) {
+					$pl = new PageList();
+					$pl->ignorePermissions();
+					$pl->includeInactivePages();
+					$pl->filterByPageTypeID(C5dkRoot::getPageTypes());
+					$blogPages = $pl->get();
+					
+					foreach ($blogPages as $page) {
+						if ($page->getAttribute('c5dk_blog_author_id') > 0) {
+							$page->setAttribute('c5dk_blog_approved', 1);
+							$version = $page->getVersionObject();
+							$version->approve();
+						}
+					}
+					$config->save('install.set_approved', '');
+					$config->clear('install.set_approved');
 				}
 			}
-			$config->save('install.set_approved', '');
-			$config->clear('install.set_approved');
-		}
+		});
 	}
 
 	private function registerEvents()
 	{
 		Events::addListener('on_user_delete', [$this, 'eventOnUserDelete']);
 		Events::addListener('on_before_render', [$this, 'eventAddOpenGraphMeta']);
+
 		$attApproved = is_object(CollectionAttributeKey::getByHandle('c5dk_blog_approved')) ? true : false;
 		if ($attApproved) {
-		// $packageVersion = explode('.', $this->pkgVersion);
-		// if (intval($packageVersion[0]) >= 8 && intval($packageVersion[1]) >= 5 && intval($packageVersion[2]) >= 27) {
 			Events::addListener('on_before_render', [$this, 'eventCheckPagesPublishTime']);
 		}
 	}
@@ -234,6 +240,9 @@ class Controller extends Package
 		$langpath = '';
 		if (null !== $al) {
 			$langpath = $al->getCollectionHandle();
+			if ($langpath != '') {
+				$langpath = $langpath . '/';
+			}
 		}
 		$page = Page::getByPath('/' . $langpath . '/c5dk');
 		$page->setAttribute('exclude_nav', 1);

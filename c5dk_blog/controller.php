@@ -53,11 +53,11 @@ class Controller extends Package
 		defined('C5DK_BLOG_MODE_CREATE') or define('C5DK_BLOG_MODE_CREATE', '1');
 		defined('C5DK_BLOG_MODE_EDIT') or define('C5DK_BLOG_MODE_EDIT', '2');
 
-		// Get around the problem with not been able to access Page::getCurrentPage()
+		// Get around the problem with not being able to access Page::getCurrentPage()
 		Events::addListener('on_start', function($event) {
 
 			$page = Page::getCurrentPage();
-			if (!$page->isAdminArea()) {
+			if ($page instanceof Page && !$page->isAdminArea()) {
 				$this->registerEvents();
 				$this->registerRoutes();
 				$this->registerAssets();

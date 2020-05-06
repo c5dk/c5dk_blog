@@ -28,7 +28,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
 class Controller extends Package
 {
 	protected $appVersionRequired      = '8.2';
-	protected $pkgVersion              = '8.5.2.1.2';		// Upgrade needs to be changed to only approve old blogs on the final market place version
+	protected $pkgVersion              = '8.5.2.2';		// Upgrade needs to be changed to only approve old blogs on the final market place version
 														// Register asset blog css should be minified and set to load
 	protected $pkgHandle               = 'c5dk_blog';
 	protected $pkgAutoloaderRegistries = [
@@ -54,7 +54,7 @@ class Controller extends Package
 		defined('C5DK_BLOG_MODE_EDIT') or define('C5DK_BLOG_MODE_EDIT', '2');
 
 		// Get around the problem with not being able to access Page::getCurrentPage()
-		Events::addListener('on_start', function($event) {
+		Events::addListener('on_start', function ($event) {
 
 			$page = Page::getCurrentPage();
 			if ($page instanceof Page && !$page->isAdminArea()) {

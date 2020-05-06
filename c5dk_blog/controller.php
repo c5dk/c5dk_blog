@@ -493,8 +493,8 @@ class Controller extends Package
 		$al->register('javascript', 'character-counter/main', 'js/Flexible-Character-Counter/jquery.character-counter.min.js', [], 'c5dk_blog');
 
 		// Register jQuery datetimepicker (MIT License) plugin
-		$al->register('javascript', 'datetimepicker/plugin', 'js/datetimepicker/jquery.datetimepicker.full.min.js', [], 'c5dk_blog');
 		$al->register('css', 'datetimepicker/css', 'css/jquery.datetimepicker/jquery.datetimepicker.min.css', [], 'c5dk_blog');
+		$al->register('javascript', 'datetimepicker/plugin', 'js/datetimepicker/jquery.datetimepicker.full.min.js', [], 'c5dk_blog');
 		$al->registerGroup('xdan/datetimepicker', [
 			['css', 'datetimepicker/css'],
 			['javascript', 'datetimepicker/plugin']

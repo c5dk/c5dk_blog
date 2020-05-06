@@ -95,8 +95,16 @@ class BlogPost extends PageController
 		$this->requireAsset('javascript', 'validation');
 		$this->requireAsset('javascript', 'slide-in-panel/main');
 		$this->requireAsset('javascript', 'character-counter/main');
-		$this->requireAsset('c5dkFileupload/all');
-		$this->requireAsset('xdan/datetimepicker');
+		//$this->requireAsset('xdan/datetimepicker');
+		$this->requireAsset('css', 'datetimepicker/css');
+		$this->requireAsset('javascript', 'datetimepicker/plugin');
+		//$this->requireAsset('c5dkFileupload/thisl');
+		$this->requireAsset('javascript', 'c5dkFileupload/loadImage');
+		$this->requireAsset('javascript', 'c5dkFileupload/canvastoblob');
+		$this->requireAsset('javascript', 'c5dkFileupload/iframeTransport');
+		$this->requireAsset('javascript', 'c5dkFileupload/fileupload');
+		$this->requireAsset('javascript', 'c5dkFileupload/fileuploadProcess');
+		$this->requireAsset('javascript', 'c5dkFileupload/fileuploadImage');
 
 		// Set View variables
 		$this->set('view', new View);

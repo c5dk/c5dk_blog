@@ -76,8 +76,17 @@ class Controller extends BlockController
 			$this->requireAsset('javascript', 'validation');
 			$this->requireAsset('javascript', 'slide-in-panel/main');
 			$this->requireAsset('javascript', 'character-counter/main');
-			$this->requireAsset('c5dkFileupload/all');
-			$this->requireAsset('xdan/datetimepicker');
+			// $this->requireAsset('c5dkFileupload/all');
+			$this->requireAsset('javascript', 'c5dkFileupload/loadImage');
+			$this->requireAsset('javascript', 'c5dkFileupload/canvastoblob');
+			$this->requireAsset('javascript', 'c5dkFileupload/iframeTransport');
+			$this->requireAsset('javascript', 'c5dkFileupload/fileupload');
+			$this->requireAsset('javascript', 'c5dkFileupload/fileuploadProcess');
+			$this->requireAsset('javascript', 'c5dkFileupload/fileuploadImage');
+			// $this->requireAsset('xdan/datetimepicker');
+			$this->requireAsset('css', 'datetimepicker/css');
+			$this->requireAsset('javascript', 'datetimepicker/plugin');
+
 		}
 	}
 }

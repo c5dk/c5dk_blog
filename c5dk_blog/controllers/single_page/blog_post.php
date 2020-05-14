@@ -98,7 +98,7 @@ class BlogPost extends PageController
 		//$this->requireAsset('xdan/datetimepicker');
 		$this->requireAsset('css', 'datetimepicker/css');
 		$this->requireAsset('javascript', 'datetimepicker/plugin');
-		//$this->requireAsset('c5dkFileupload/thisl');
+		//$this->requireAsset('c5dkFileupload/all');
 		$this->requireAsset('javascript', 'c5dkFileupload/loadImage');
 		$this->requireAsset('javascript', 'c5dkFileupload/canvastoblob');
 		$this->requireAsset('javascript', 'c5dkFileupload/iframeTransport');

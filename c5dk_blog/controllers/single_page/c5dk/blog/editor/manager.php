@@ -54,7 +54,9 @@ class Manager extends PageController
 		$this->requireAsset('javascript', 'c5dkBlog/modal');
 		$this->requireAsset('jquery/ui');
 		$this->requireAsset('select2');
-		$this->requireAsset('xdan/datetimepicker');
+		// $this->requireAsset('xdan/datetimepicker');
+		$this->requireAsset('css', 'datetimepicker/css');
+		$this->requireAsset('javascript', 'datetimepicker/plugin');
 
 		// Set Core helper objects
 		$this->set('form', Core::make('helper/form'));
@@ -118,7 +120,9 @@ class Manager extends PageController
 		$this->requireAsset('javascript', 'c5dkBlog/modal');
 		$this->requireAsset('jquery/ui');
 		$this->requireAsset('select2');
-		$this->requireAsset('xdan/datetimepicker');
+		// $this->requireAsset('xdan/datetimepicker');
+		$this->requireAsset('css', 'datetimepicker/css');
+		$this->requireAsset('javascript', 'datetimepicker/plugin');
 
 		// Set Core helper objects
 		$this->set('form', Core::make('helper/form'));

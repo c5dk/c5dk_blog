@@ -141,7 +141,7 @@
 			c5dk.blog.modal.waiting("<?= t('Saving...'); ?>");
 			$.ajax({
 				method: 'POST',
-				url: '<?= URL::to('/c5dk/blog/ajax/editor/manager/save/all'); ?>/' + id,
+				url: '<?= URL::to($langpath, '/c5dk/blog/ajax/editor/manager/save/all'); ?>/' + id,
 				data: data,
 				dataType: 'json',
 				success: function(response) {
@@ -175,11 +175,11 @@
 		approve: function(id, el) {
 			var tr = $(el).closest('.c5dk_blog_entry');
 			if (tr.data('approved') == 0) {
-				var url = '<?= \URL::to('/c5dk/blog/approve'); ?>';
+				var url = '<?= \URL::to($langpath, '/c5dk/blog/approve'); ?>';
 				var text = '<?= t('Approve Blog...'); ?>';
 			} else {
 				var url = '<?= \URL::to('/c5dk/blog/unapprove'); ?>';
-				var text = '<?= t('Unapprove Blog...'); ?>';
+				var text = '<?= t($langpath, 'Unapprove Blog...'); ?>';
 			}
 
 			// Send the request
@@ -216,7 +216,7 @@
 			if (window.confirm('<?= t('Are you sure you want to delete this post?'); ?>')) {
 				$.ajax({
 					method: 'GET',
-					url: '<?= URL::to('/c5dk/blog/delete'); ?>' + '/' + id,
+					url: '<?= URL::to($langpath, '/c5dk/blog/delete'); ?>' + '/' + id,
 					dataType: 'json',
 					success: function(r) {
 						if (r.status) {

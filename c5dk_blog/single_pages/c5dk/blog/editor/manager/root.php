@@ -185,7 +185,7 @@
 			// Send the request
 			c5dk.blog.modal.waiting(text);
 			$.ajax({
-				method: 'GET',
+				method: 'POST',
 				url: url + '/' + id,
 				dataType: 'json',
 				success: function(r) {
@@ -215,8 +215,8 @@
 		delete: function(id) {
 			if (window.confirm('<?= t('Are you sure you want to delete this post?'); ?>')) {
 				$.ajax({
-					method: 'GET',
-					url: '<?= URL::to($langpath, '/c5dk/blog/delete'); ?>' + '/' + id,
+					method: 'POST',
+					url: '<?= URL::to('/c5dk/blog/delete'); ?>' + '/' + id,
 					dataType: 'json',
 					success: function(r) {
 						if (r.status) {

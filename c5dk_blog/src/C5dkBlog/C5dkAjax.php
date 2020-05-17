@@ -51,9 +51,6 @@ class C5dkAjax extends Controller
 			}
 		}
 
-
-
-
 		$C5dkConfig = new C5dkConfig;
 		// $C5dkBlog = $blogID ? C5dkBlog::getByID($blogID) : new C5dkBlog;
 		// $C5dkUser = new C5dkUser;

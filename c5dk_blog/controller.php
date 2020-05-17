@@ -34,9 +34,9 @@ class Controller extends Package
 	protected $pkgHandle               = 'c5dk_blog';
 	protected $pkgAutoloaderRegistries = [
 		'src/' => 'C5dk',
-		'src/C5dkBlog/' => 'C5dk\\Blog',
-		'src/Entity/' => 'C5dk\\Blog\\Entity',
-		'src/Service/' => 'C5dk\\Blog\\Service'
+		'src/C5dkBlog/' => '\C5dk\Blog',
+		'src/Entity/' => '\C5dk\Blog\Entity',
+		'src/Service/' => '\C5dk\Blog\Service'
 	];
 
 	public function getPackageName()

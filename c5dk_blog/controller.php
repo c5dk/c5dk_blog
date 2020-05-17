@@ -29,7 +29,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
 class Controller extends Package
 {
 	protected $appVersionRequired      = '8.2';
-	protected $pkgVersion              = '8.5.2.3.2';		// Upgrade needs to be changed to only approve old blogs on the final market place version
+	protected $pkgVersion              = '8.5.2.3.3';		// Upgrade needs to be changed to only approve old blogs on the final market place version
 														// Register asset blog css should be minified and set to load
 	protected $pkgHandle               = 'c5dk_blog';
 	protected $pkgAutoloaderRegistries = [

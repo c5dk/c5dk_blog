@@ -477,6 +477,7 @@ class C5dkAjax extends Controller
 		}
 	}
 
+	// Used in eventOnUserDelete in package controller to redirect
 	public function link($link)
 	{
 		$this->redirect($link);

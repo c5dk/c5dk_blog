@@ -57,6 +57,7 @@ c5dk.blog.post = {
 		$('#c5dk_image_upload').fileupload({
 			dropZone: $("#c5dk_imagemanager_slidein"),
 			url: c5dk.blog.data.post.url.image.upload,
+			type: 'POST',
 			dataType: 'json',
 			formData: [
 				{ name: 'blogID', value: c5dk.blog.data.post.blogID },
@@ -89,6 +90,7 @@ c5dk.blog.post = {
 		$('#c5dk_file_upload').fileupload({
 			dropZone: $("#c5dk_filemanager_slidein"),
 			url: c5dk.blog.data.post.url.file.upload,
+			type: 'POST',
 			dataType: 'json',
 			formData: [
 				{ name: 'blogID', value: c5dk.blog.data.post.blogID },

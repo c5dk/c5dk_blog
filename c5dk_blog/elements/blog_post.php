@@ -10,8 +10,7 @@
 ?>
 
 <div id="c5dk-blog-package" class="container main-wrap">
-
-	<form id="c5dk_blog_form" method="post" action="<?= \URL::to($langpath, '/blog_post/save', $blogID); ?>">
+	<form id="c5dk_blog_form" method="post" action="<?= \URL::to($langpath . '/blog_post/save/' . $blogID); ?>">
 
 		<!-- Show errors if any -->
 		<?php if (isset($error) && $error instanceof Error && $error->has()) : ?>
@@ -302,15 +301,21 @@
 		url: {
 			currentPage: '<?= URL::to($langpath, 'blog_post', 'create', 0); ?>',
 			// root: '<?= URL::to($langpath); ?>',
-			save: '<?= URL::to("/c5dk/blog/save"); ?>',
-			ping: '<?= URL::to("/c5dk/blog/ping"); ?>',
+			// save: '<?= URL::to("/c5dk/blog/save"); ?>',
+			save: '<?= URL::to($langpath . "/blog_post/save"); ?>',
+			// ping: '<?= URL::to("/c5dk/blog/ping"); ?>',
+			ping: '<?= URL::to($langpath . '/blog_post/ping'); ?>',
 			image: {
-				delete: '<?= URL::to("/c5dk/blog/image/delete"); ?>',
-				upload: '<?= URL::to("/c5dk/blog/image/upload"); ?>'
+				// delete: '<?= URL::to("/c5dk/blog/image/delete"); ?>',
+				// upload: '<?= URL::to("/c5dk/blog/image/upload"); ?>'
+				delete: '<?= URL::to($langpath . "/blog_post/image/delete"); ?>',
+				upload: '<?= URL::to($langpath . "/blog_post/image/upload"); ?>'
 			},
 			file: {
-				delete: '<?= URL::to("/c5dk/blog/file/delete"); ?>',
-				upload: '<?= URL::to("/c5dk/blog/file/upload"); ?>'
+				// delete: '<?= URL::to("/c5dk/blog/file/delete"); ?>',
+				// upload: '<?= URL::to("/c5dk/blog/file/upload"); ?>'
+				delete: '<?= URL::to($langpath . "/blog_post/filedelete"); ?>',
+				upload: '<?= URL::to($langpath . "/blog_post/fileupload"); ?>'
 			}
 		},
 
@@ -337,50 +342,50 @@
 </script>
 
 <style type="text/css">
-    #c5dk-blog-package .c5dk_blog_section_frame {
-        border: solid 1px #eeeeee;
-        border-radius: 6px;
-        padding: 10px;
-    }
-    #c5dk-blog-package .c5dk_blog_section_two_column {
-        width: 50%;
-    }
-    #c5dk-blog-package .c5dk_blog_section_left {
-        float: left;
-    }
-    #c5dk-blog-package .c5dk_blog_section_right {
-        float: right;
-    }
-    #c5dk-blog-package .c5dk_datetimepicker {
-        display: block;
-        width: 200px;
-        height: 34px;
-        padding: 6px 12px;
-        font-size: 14px;
-        line-height: 1.42857143;
-        color: #555;
-        background-color: #fff;
-        background-image: none;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
-        box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
-        -webkit-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
-        -o-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
-        -webkit-transition: border-color ease-in-out .15s,-webkit-box-shadow ease-in-out .15s;
-        transition: border-color ease-in-out .15s,-webkit-box-shadow ease-in-out .15s;
-        transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
-        transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s,-webkit-box-shadow ease-in-out .15s;
-        text-align: center;
-    }
-    
-    #c5dk-blog-package .c5dk_datetimepicker:focus {
-        border-color: #66afe9;
-        outline: 0;
-        -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(102,175,233,.6);
-        box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(102,175,233,.6);
-    }
-    
+	#c5dk-blog-package .c5dk_blog_section_frame {
+		border: solid 1px #eeeeee;
+		border-radius: 6px;
+		padding: 10px;
+	}
+	#c5dk-blog-package .c5dk_blog_section_two_column {
+		width: 50%;
+	}
+	#c5dk-blog-package .c5dk_blog_section_left {
+		float: left;
+	}
+	#c5dk-blog-package .c5dk_blog_section_right {
+		float: right;
+	}
+	#c5dk-blog-package .c5dk_datetimepicker {
+		display: block;
+		width: 200px;
+		height: 34px;
+		padding: 6px 12px;
+		font-size: 14px;
+		line-height: 1.42857143;
+		color: #555;
+		background-color: #fff;
+		background-image: none;
+		border: 1px solid #ccc;
+		border-radius: 4px;
+		-webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+		box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+		-webkit-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+		-o-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+		-webkit-transition: border-color ease-in-out .15s,-webkit-box-shadow ease-in-out .15s;
+		transition: border-color ease-in-out .15s,-webkit-box-shadow ease-in-out .15s;
+		transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+		transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s,-webkit-box-shadow ease-in-out .15s;
+		text-align: center;
+	}
+	
+	#c5dk-blog-package .c5dk_datetimepicker:focus {
+		border-color: #66afe9;
+		outline: 0;
+		-webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(102,175,233,.6);
+		box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(102,175,233,.6);
+	}
+	
 	#c5dk-blog-package .c5dk_blog_thumbnail_preview {
 		float: left;
 		overflow: hidden;

@@ -141,7 +141,8 @@
 			c5dk.blog.modal.waiting("<?= t('Saving...'); ?>");
 			$.ajax({
 				method: 'POST',
-				url: '<?= URL::to('/c5dk/blog/ajax/editor/manager/save/all'); ?>/' + id,
+				// url: '<?= URL::to('/c5dk/blog/ajax/editor/manager/save/all'); ?>/' + id,
+				url: '<?= URL::to($langpath . '/blog_post/editor/save/all'); ?>/' + id,
 				data: data,
 				dataType: 'json',
 				success: function(response) {
@@ -216,7 +217,7 @@
 			if (window.confirm('<?= t('Are you sure you want to delete this post?'); ?>')) {
 				$.ajax({
 					method: 'POST',
-					url: '<?= URL::to('/c5dk/blog/delete'); ?>' + '/' + id,
+					url: '<?= URL::to($langpath . '/blog_post/delete'); ?>' + '/' + id,
 					dataType: 'json',
 					success: function(r) {
 						if (r.status) {

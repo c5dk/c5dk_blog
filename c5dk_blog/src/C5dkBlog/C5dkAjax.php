@@ -8,6 +8,8 @@ use View;
 use Controller;
 use CollectionAttributeKey;
 use Image;
+use Concrete\Core\Support\Facade\Application;
+use Concrete\Core\Http\Request;
 // use Imagine\Image\Box;
 // use Imagine\Image\ImageInterface;
 use Concrete\Core\File\File as File;
@@ -15,7 +17,6 @@ use Concrete\Core\File\FileList as FileList;
 use Concrete\Core\File\Set\Set as FileSet;
 use Concrete\Core\File\Importer as FileImporter;
 use Concrete\Core\Entity\File\Version as FileVersion;
-use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Multilingual\Page\Section\Section;
 // use Illuminate\Filesystem\Filesystem;
 // use Concrete\Core\Tree\Node\Type\Topic as TopicTreeNode;
@@ -72,11 +73,8 @@ class C5dkAjax extends Controller
 
 		// if (($C5dkBlog instanceof C5dkBlog && $C5dkBlog->getAuthorID() == $C5dkUser->getUserID()) || $C5dkUser->isEditorOfPage($blogID ? $C5dkBlog : $C5dkRoot)) {
 		if ($isCreateAndBlogger || $isEditAndAuthor || $isEditor) {
-			// if (!$blogID) {
-			// 	$C5dkBlogPost->edit($blogID);
-			// } else {
-			// 	$C5dkBlogPost->create($blogID, $rootID);
-			// }
+			$app = $this->getApplication();
+
 			$c = Page::getByID($this->post('cID'));
 			if (is_null($c)) {
 				$c = Page::getByID($rootID);
@@ -102,14 +100,14 @@ class C5dkAjax extends Controller
 				'redirectID' => $redirectID,
 				'langPath' => $langpath,
 				'ThumbnailCropper' => $Cropper,
-				'token' => $this->app->make('token'),
-				'jh' => $this->app->make('helper/json'),
-				'form' => $this->app->make('helper/form')
+				'token' => $app->make('token'),
+				'jh' => $app->make('helper/json'),
+				'form' => $app->make('helper/form')
 			], 'c5dk_blog');
 			$content = ob_get_contents();
 			ob_end_clean();
 
-			$jh = $this->app->make('helper/json');
+			$jh = $app->make('helper/json');
 			echo $jh->encode((object) [
 				'form' => $content
 			]);
@@ -138,7 +136,8 @@ class C5dkAjax extends Controller
 		$fileManagerContent = ob_get_contents();
 		ob_end_clean();
 
-		$jh = $this->app->make('helper/json');
+		$app = $this->getApplication();
+		$jh = $app->make('helper/json');
 		echo $jh->encode((object) [
 			'html' => [
 				'imageManager' => $imageManagerContent,
@@ -156,7 +155,8 @@ class C5dkAjax extends Controller
 
 		// Delete the blog if the current user is the owner
 		if (($C5dkBlog instanceof C5dkBlog && $C5dkBlog->getAttribute('c5dk_blog_author_id') == $C5dkUser->getUserID()) || $C5dkUser->isEditorOfPage($C5dkBlog)) {
-			$jh = $this->app->make('helper/json');
+			$app = $this->getApplication();
+			$jh = $app->make('helper/json');
 			echo $jh->encode([
 				'url' => Page::getByID($C5dkBlog->getRootID())->getCollectionLink(),
 				'status' => true,
@@ -168,7 +168,8 @@ class C5dkAjax extends Controller
 	public function imageUpload()
 	{
 		// Get helper objects
-		$jh			= $this->app->make('helper/json');
+		$app = $this->getApplication();
+		$jh			= $app->make('helper/json');
 		$fh			= Core::make('helper/file');
 
 		$C5dkConfig	= new C5dkConfig;
@@ -236,7 +237,8 @@ class C5dkAjax extends Controller
 
 	public function imageDelete()
 	{
-		$jh = $this->app->make('helper/json');
+		$app = $this->getApplication();
+		$jh = $app->make('helper/json');
 
 		$C5dkUser 	= new C5dkUser();
 		$C5dkBlog	= C5dkBlog::getByID($this->post('blogID'));
@@ -273,8 +275,9 @@ class C5dkAjax extends Controller
 	public function fileUpload()
 	{
 		// Get helper objects
-		$jh       = $this->app->make('helper/json');
-		$fh			= Core::make('helper/file');
+		$app = $this->getApplication();
+		$jh = $app->make('helper/json');
+		$fh = Core::make('helper/file');
 
 		$C5dkConfig	= new C5dkConfig;
 		$C5dkUser	= new C5dkUser;
@@ -289,7 +292,7 @@ class C5dkAjax extends Controller
 			}
 		}
 
-		$uID		= $C5dkUser->getUserID();
+		$uID = $C5dkUser->getUserID();
 		$errorMessage = '';
 
 		if (($C5dkBlog instanceof C5dkBlog && $C5dkUser->isBlogger())) {
@@ -339,7 +342,8 @@ class C5dkAjax extends Controller
 
 	public function fileDelete()
 	{
-		$jh = $this->app->make('helper/json');
+		$app = $this->getApplication();
+		$jh = $app->make('helper/json');
 
 		$C5dkUser 	= new C5dkUser();
 		$C5dkBlog	= C5dkBlog::getByID($this->post('blogID'));
@@ -384,7 +388,8 @@ class C5dkAjax extends Controller
 			$result = true;
 		}
 
-		$jh = $this->app->make('helper/json');
+		$app = $this->getApplication();
+		$jh = $app->make('helper/json');
 		echo $jh->encode((object) [
 			'state' => 1,
 			'result' => $result
@@ -402,22 +407,24 @@ class C5dkAjax extends Controller
 			$result = true;
 		}
 
-		$jh = $this->app->make('helper/json');
+		$app = $this->getApplication();
+		$jh = $app->make('helper/json');
 		echo $jh->encode((object) [
 			'state' => 0,
 			'result' => true
 		]);
 	}
 
-	public function publish($blogID)
+	public function publish()
 	{
 		// Set C5DK Objects
 		$C5dkUser = new C5dkUser();
-		$C5dkBlog = C5dkBlog::getByID($blogID);
-
+		$C5dkBlog = C5dkBlog::getByID($this->post('blogID'));
+		
 		// Delete the blog if the current user is the owner
 		if ($C5dkBlog instanceof C5dkBlog && ($C5dkBlog->getAttribute('c5dk_blog_author_id') == $C5dkUser->getUserID() || $C5dkUser->isEditorOfPage($C5dkBlog))) {
-			$jh = $this->app->make('helper/json');
+			$app = $this->getApplication();
+			$jh = $app->make('helper/json');
 
 			$C5dkBlog->setAttribute('c5dk_blog_publish_time', new \datetime('NOW'));
 
@@ -481,6 +488,34 @@ class C5dkAjax extends Controller
 	public function link($link)
 	{
 		$this->redirect($link);
+	}
+
+	// Keep the active login session active
+	public function ping()
+	{
+		$C5dkUser = new C5dkUser;
+		$status   = ($C5dkUser->isLoggedIn()) ? true : false;
+		$data     = [
+			'post' => $this->post(),
+			'status' => $status
+		];
+
+		$app = $this->getApplication();
+		$jh = $app->make('helper/json');
+
+		echo $jh->encode($data);
+
+		exit;
+	}
+
+	public function getApplication()
+	{
+		if (is_object($this->app)) {
+			$app = $this->app;
+		} else {
+			$app = Application::getFacadeApplication();
+		}
+		return $app;
 	}
 
 	// TODO: This function should be moved
@@ -565,21 +600,5 @@ class C5dkAjax extends Controller
 			$C5dkBlog->refreshCache();
 			$C5dkBlog->getVersionObject()->approve();
 		}
-	}
-
-	// Keep the active login session active
-	public function ping()
-	{
-		$C5dkUser = new C5dkUser;
-		$status   = ($C5dkUser->isLoggedIn()) ? true : false;
-		$data     = [
-			'post' => $this->post(),
-			'status' => $status
-		];
-
-		$jh = $this->app->make('helper/json');
-		echo $jh->encode($data);
-
-		exit;
 	}
 }

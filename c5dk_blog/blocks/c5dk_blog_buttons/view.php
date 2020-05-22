@@ -211,7 +211,8 @@
 							rootID: rootID,
 							cID: <?= $cID; ?>
 						},
-						url: '<?= URL::to("/c5dk/blog/get/0"); ?>/' + rootID + '/' + redirectID,
+						// url: '<?= URL::to("/c5dk/blog/get/0"); ?>/' + rootID + '/' + redirectID,
+						url: '<?= URL::to("/blog_post/getForm/0"); ?>/' + rootID + '/' + redirectID,
 						success: function(response){
 							if (response.form) {
 								$('#c5dk_form_slidein').html(response.form);
@@ -253,7 +254,8 @@
 							blogID: blogID,
 							rootID: rootID
 						},
-						url: '<?= URL::to("/c5dk/blog/get"); ?>/' + blogID + '/' + rootID + '/' + redirectID,
+						// url: '<?= URL::to("/c5dk/blog/get"); ?>/' + blogID + '/' + rootID + '/' + redirectID,
+						url: '<?= URL::to("/blog_post/getForm"); ?>/' + blogID + '/' + rootID + '/' + redirectID,
 						success: function(response){
 							if (response.form) {
 								$('#c5dk_form_slidein').html(response.form);
@@ -306,7 +308,7 @@
 						c5dk.blog.modal.waiting("<?= t('Getting blog form'); ?>");
 						$.ajax({
 							method: 'POST',
-							url: '<?= URL::to("/c5dk/blog/delete", $blogID); ?>',
+							url: '<?= URL::to($langpath . "/blog_post/delete", $blogID); ?>',
 							data: { blogID: '<?= $blogID; ?>' },
 							dataType: 'json',
 							success: function(r) {
@@ -329,7 +331,8 @@
 				c5dk.blog.modal.waiting("<?= t('Getting blog form'); ?>");
 				$.ajax({
 					method: 'POST',
-					url: '<?= URL::to("/c5dk/blog/publish"); ?>/' + blogID,
+					// url: '<?= URL::to("/c5dk/blog/publish"); ?>/' + blogID,
+					url: '<?= URL::to($langpath . "/blog_post/publish"); ?>',
 					data: { blogID: blogID },
 					dataType: 'json',
 					success: function(r) {
@@ -344,9 +347,11 @@
 			approve: function(blogID) {
 				var approveBtn = $('#c5dk_approve');
 				if (approveBtn.data('approved')) {
-					var url = '<?= URL::to('/c5dk/blog/unapprove'); ?>/' + blogID;
+					// var url = '<?= URL::to('/c5dk/blog/unapprove'); ?>/' + blogID;
+					var url = '<?= URL::to($langpath . '/blog_post/unapprove'); ?>/' + blogID;
 				} else {
-					var url = '<?= URL::to('/c5dk/blog/approve'); ?>/' + blogID;
+					// var url = '<?= URL::to('/c5dk/blog/approve'); ?>/' + blogID;
+					var url = '<?= URL::to($langpath . '/blog_post/approve'); ?>/' + blogID;
 				}
 
 				c5dk.blog.modal.waiting("<?= t('Getting blog form'); ?>");
@@ -379,7 +384,8 @@
 							slidein: 1,
 							blogID: blogID
 						},
-						url: '<?= URL::to("/c5dk/blog/manager/slideins"); ?>/' + blogID,
+						// url: '<?= URL::to("/c5dk/blog/manager/slideins"); ?>/' + blogID,
+						url: '<?= URL::to("/blog_post/getManagerslideins"); ?>/' + blogID,
 						success: function(response){
 							if (response.html.imageManager) {
 								$('#c5dk_manager_image_container').html(response.html.imageManager);

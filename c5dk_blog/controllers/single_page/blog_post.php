@@ -19,6 +19,7 @@ use C5dk\Blog\C5dkAjax;
 use C5dk\Blog\C5dkBlog;
 use C5dk\Blog\C5dkRoot;
 use C5dk\Blog\Service\ThumbnailCropper as ThumbnailCropper;
+use GuzzleHttp\RedirectMiddleware;
 
 defined('C5_EXECUTE') or die('Access Denied.');
 
@@ -155,75 +156,115 @@ class BlogPost extends PageController
 	// Keep the active login session active
 	public function ping()
 	{
-		$C5dkUser = new C5dkUser;
-		$status   = ($C5dkUser->isLoggedIn()) ? true : false;
-		$data     = [
-			'post' => $this->post(),
-			'status' => $status
-		];
-
-		$jh = $this->app->make('helper/json');
-		echo $jh->encode($data);
-
-		exit;
+		$ajax = new C5dkAjax;
+		$ajax->ping();
 	}
 
 	public function approve($blogID)
 	{
+		$ajax = new C5dkAjax;
+		$ajax->approve($blogID);
+
+		exit;
 	}
 
 	public function unapprove($blogID)
 	{
+		$ajax = new C5dkAjax;
+		$ajax->unapprove($blogID);
+
+		exit;
 	}
 
 	public function getForm($blogID, $rootID, $redirectID)
 	{
+		$ajax = new C5dkAjax;
+		$ajax->getForm($blogID, $rootID, $redirectID);
+
+		exit;
 	}
 
-	public function ()
+	public function getManagerSlideIns($blogID)
 	{
+		$ajax = new C5dkAjax;
+		$ajax->getManagerSlideIns($blogID);
+
+		exit;
 	}
 
-	public function ()
+	public function delete($blogID)
 	{
+		$ajax = new C5dkAjax;
+		$ajax->delete($blogID);
+
+		exit;
 	}
 
-	public function ()
+	public function publish()
 	{
+		$ajax = new C5dkAjax;
+		$ajax->publish();
+
+		exit;
 	}
 
-	public function ()
+	public function image($type)
 	{
+		$ajax = new C5dkAjax;
+		if ($type == "upload") {
+			$ajax->imageUpload();
+		}
+
+		if ($type == "delete") {
+			$ajax->imageDelete();
+		}
+
+		exit;
 	}
 
-	public function ()
+	public function imagedelete()
 	{
+		$ajax = new C5dkAjax;
+		$ajax->fileUpload();
+
+		exit;
 	}
 
-	public function ()
+	public function fileupload()
 	{
+		$ajax = new C5dkAjax;
+		$ajax->fileUpload();
+
+		exit;
 	}
 
-	public function ()
+	public function filedelete()
 	{
+		$ajax = new C5dkAjax;
+		$ajax->fileDelete();
+
+		exit;
 	}
 
-	public function ()
+	public function editor($method, $field, $blogID)
 	{
+		$ajax = new C5dkAjax;
+		$ajax->editor($method, $field, $blogID);
+
+		exit;
 	}
 
-	// $router->post('/c5dk/blog/ping', '\C5dk\Blog\C5dkAjax::ping');
-	$router->post('/c5dk/blog/approve/{blogID}', '\C5dk\Blog\C5dkAjax::approve');
-	$router->post('/c5dk/blog/unapprove/{blogID}', '\C5dk\Blog\C5dkAjax::unapprove');
-	$router->post('/c5dk/blog/get/{blogID}/{rootID}/{redirectID}', '\C5dk\Blog\C5dkAjax::getForm');
-	$router->post('/c5dk/blog/manager/slideins/{blogID}', '\C5dk\Blog\C5dkAjax::getManagerSlideIns');
-	$router->post('/c5dk/blog/delete/{blogID}', '\C5dk\Blog\C5dkAjax::delete');
-	$router->post('/c5dk/blog/publish/{blogID}', '\C5dk\Blog\C5dkAjax::publish');
-	$router->post('/c5dk/blog/image/upload', '\C5dk\Blog\C5dkAjax::imageUpload');
-	$router->post('/c5dk/blog/image/delete', '\C5dk\Blog\C5dkAjax::imageDelete');
-	$router->post('/c5dk/blog/file/upload', '\C5dk\Blog\C5dkAjax::fileUpload');
-	$router->post('/c5dk/blog/file/delete', '\C5dk\Blog\C5dkAjax::fileDelete');
-	// $router->post('/c5dk/blog/thumbnail/upload', '\C5dk\Blog\C5dkAjax::thumbnailUpload');
-	$router->post('/c5dk/blog/ajax/editor/manager/{method}/{field}/{blogID}', '\C5dk\Blog\C5dkAjax::editor');
-
+	// // $router->post('/c5dk/blog/ping', '\C5dk\Blog\C5dkAjax::ping');
+	// $router->post('/c5dk/blog/approve/{blogID}', '\C5dk\Blog\C5dkAjax::approve');
+	// $router->post('/c5dk/blog/unapprove/{blogID}', '\C5dk\Blog\C5dkAjax::unapprove');
+	// $router->post('/c5dk/blog/get/{blogID}/{rootID}/{redirectID}', '\C5dk\Blog\C5dkAjax::getForm');
+	// $router->post('/c5dk/blog/manager/slideins/{blogID}', '\C5dk\Blog\C5dkAjax::getManagerSlideIns');
+	// $router->post('/c5dk/blog/delete/{blogID}', '\C5dk\Blog\C5dkAjax::delete');
+	// $router->post('/c5dk/blog/publish/{blogID}', '\C5dk\Blog\C5dkAjax::publish');
+	// $router->post('/c5dk/blog/image/upload', '\C5dk\Blog\C5dkAjax::imageUpload');
+	// $router->post('/c5dk/blog/image/delete', '\C5dk\Blog\C5dkAjax::imageDelete');
+	// $router->post('/c5dk/blog/file/upload', '\C5dk\Blog\C5dkAjax::fileUpload');
+	// $router->post('/c5dk/blog/file/delete', '\C5dk\Blog\C5dkAjax::fileDelete');
+	// // $router->post('/c5dk/blog/thumbnail/upload', '\C5dk\Blog\C5dkAjax::thumbnailUpload');
+	// $router->post('/c5dk/blog/ajax/editor/manager/{method}/{field}/{blogID}', '\C5dk\Blog\C5dkAjax::editor');
 }

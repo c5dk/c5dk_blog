@@ -17,7 +17,7 @@ use Concrete\Core\Multilingual\Page\Section\Section;
 // use Concrete\Core\Permission\Key\Key as PermissionKey;
 // use Concrete\Core\Permission\Access\Entity\GroupEntity as GroupPermissionAccessEntity;
 
-use C5dk\RouteList as RouteList;
+// use C5dk\RouteList as RouteList;
 use C5dk\Blog\C5dkInstaller as C5dkInstaller;
 use C5dk\Blog\C5dkAjax as C5dkAjax;
 use C5dk\Blog\C5dkBlog as C5dkBlog;
@@ -55,7 +55,6 @@ class Controller extends Package
 		defined('C5DK_BLOG_MODE_CREATE') or define('C5DK_BLOG_MODE_CREATE', '1');
 		defined('C5DK_BLOG_MODE_EDIT') or define('C5DK_BLOG_MODE_EDIT', '2');
 	
-		$this->registerRoutes();
 		$this->registerAssets();
 
 		// Get around the problem with not being able to access Page::getCurrentPage()
@@ -96,27 +95,6 @@ class Controller extends Package
 		if ($attApproved) {
 			Events::addListener('on_before_render', [$this, 'eventCheckPagesPublishTime']);
 		}
-	}
-
-	private function registerRoutes()
-	{
-		$router = $this->app->make('router');
-		$list = new RouteList();
-		$list->loadRoutes($router);
-
-		// Route::register('/c5dk/blog/ping', '\C5dk\Blog\C5dkAjax::ping');
-		// Route::register('/c5dk/blog/approve/{blogID}', '\C5dk\Blog\C5dkAjax::approve');
-		// Route::register('/c5dk/blog/unapprove/{blogID}', '\C5dk\Blog\C5dkAjax::unapprove');
-		// Route::register('/c5dk/blog/get/{blogID}/{rootID}/{redirectID}', '\C5dk\Blog\C5dkAjax::getForm');
-		// Route::register('/c5dk/blog/manager/slideins/{blogID}', '\C5dk\Blog\C5dkAjax::getManagerSlideIns');
-		// Route::register('/c5dk/blog/delete/{blogID}', '\C5dk\Blog\C5dkAjax::delete');
-		// Route::register('/c5dk/blog/publish/{blogID}', '\C5dk\Blog\C5dkAjax::publish');
-		// Route::register('/c5dk/blog/image/upload', '\C5dk\Blog\C5dkAjax::imageUpload');
-		// Route::register('/c5dk/blog/image/delete', '\C5dk\Blog\C5dkAjax::imageDelete');
-		// Route::register('/c5dk/blog/file/upload', '\C5dk\Blog\C5dkAjax::fileUpload');
-		// Route::register('/c5dk/blog/file/delete', '\C5dk\Blog\C5dkAjax::fileDelete');
-		// // Route::register('/c5dk/blog/thumbnail/upload', '\C5dk\Blog\C5dkAjax::thumbnailUpload');
-		// Route::register('/c5dk/blog/ajax/editor/manager/{method}/{field}/{blogID}', '\C5dk\Blog\C5dkAjax::editor');
 	}
 
 	public function install()

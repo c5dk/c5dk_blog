@@ -130,7 +130,7 @@ class C5dkBlog extends Page
 
 	public function getTags()
 	{
-		return $this->getAttributeValueObject('tags');
+		return $this->getAttributeValue('tags');
 	}
 
 	public function getPriority()

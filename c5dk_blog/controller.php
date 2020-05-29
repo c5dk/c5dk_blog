@@ -79,7 +79,7 @@ class Controller extends Package
 							$version->approve();
 						}
 					}
-					$config->save('install.set_approved', '');
+					$config->save('install.set_approved', 0);
 					$config->clear('install.set_approved');
 				}
 			}

@@ -79,7 +79,10 @@ Core::make('help')->display(t(
 												<?= t("Page Type"); ?>
 												<?= $form->select("root[" . $rootID . "][pageTypeID]", $pageTypeList, $C5dkRoot->getBlogPageTypeID(), ['style' => 'width:360px; width:100%;']); ?>
 												<div style="margin: 2px 0 15px 0; min-height: 65px;">
-													<small><?= t('Please choose a default page type for the blog pages on this blog root.'); ?></small>
+													<small>
+														<?= t('Please choose a default page type for the blog pages on this blog root.'); ?>
+														<div style="clear: both; color: red;"><?= t('Only Page Types that has a content block as explained in our documentation will be shown.'); ?></div>
+													</small>
 												</div>
 											</div>
 										</div>

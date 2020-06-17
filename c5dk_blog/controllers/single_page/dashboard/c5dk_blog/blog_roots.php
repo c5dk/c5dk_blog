@@ -6,6 +6,7 @@ use Database;
 use Session;
 use Page;
 use PageType;
+use PageTemplate;
 use GroupList;
 use CollectionAttributeKey;
 use Concrete\Core\Attribute\Type as attributeType;
@@ -29,13 +30,14 @@ class BlogRoots extends DashboardPageController
 		// Set all our view variables
 		$C5dkRootList = new C5dkRootList;
 		$rootList = $C5dkRootList->getResults();
-		$this->set('user',					new C5dkUser);
-		$this->set('rootList',				$rootList);
+		$this->set('user', new C5dkUser);
+		$this->set('rootList', $rootList);
 
-		$this->set('groupList',				$this->getAllGroups());
+		$this->set('groupList', $this->getAllGroups());
 		// $this->set('editorGroupList', $this->getAllEditorGroups());
-		$this->set('pageTypeList',			$this->getAllPageTypes());
-		$this->set('topicAttributeList',	$this->getTopicsAttributeList());
+		$pageTypes = $this->getAllPageTypes();
+		$this->set('pageTypeList', $pageTypes);
+		$this->set('topicAttributeList', $this->getTopicsAttributeList());
 
 		// Set helpers
 		$this->set('form', $this->app->make('helper/form'));
@@ -89,17 +91,24 @@ class BlogRoots extends DashboardPageController
 		asort($groups);
 
 		return $groups;
-
 	}
 
 	public function getAllPageTypes()
 	{
 		foreach (PageType::getList() as $index => $pageType) {
-			$pageTypeList[$pageType->ptID] = $pageType->ptName;
+			$pageTypeDefaultTemplateID = $pageType->getPageTypeDefaultPageTemplateID();
+			$template = PageTemplate::getByID($pageTypeDefaultTemplateID);
+			$c = $pageType->getPageTypePageTemplateDefaultPageObject($template);
+
+			foreach ($c->getBlocks('Main') as $block) {
+				$blockType = $block->getBlockTypeObject();
+				if ($blockType->getBlockTypeHandle() == "core_page_type_composer_control_output") {
+					$pageTypeList[$pageType->getPageTypeID()] = $pageType->getPageTypeDisplayName();
+				}
+			}
 		}
 
 		return $pageTypeList;
-
 	}
 
 	public function getTopicsAttributeList()
@@ -120,26 +129,24 @@ class BlogRoots extends DashboardPageController
 		return $attributeKeys;
 	}
 
-    public function topicTreeList()
-    {
+	public function topicTreeList()
+	{
 
-        // Get the Topics Attribute Type object
-        $atTopics = AttributeType::getByHandle('topics');
+		// Get the Topics Attribute Type object
+		$atTopics = AttributeType::getByHandle('topics');
 
-        // Set our default value
-        $topicTreeList = [0 => t("None")];
+		// Set our default value
+		$topicTreeList = [0 => t("None")];
 
-        if ($atTopics instanceof AttributeType) {
+		if ($atTopics instanceof AttributeType) {
+			$atTopicsID = $atTopics->getAttributeTypeID();
+			foreach (CollectionAttributeKey::getList() as $attribute) {
+				if ($attribute->atID == $atTopicsID) {
+					$topicTreeList[$attribute->getAttributeKeyID()] = $attribute->getAttributeKeyName();
+				}
+			}
+		}
 
-            $atTopicsID = $atTopics->getAttributeTypeID();
-            foreach (CollectionAttributeKey::getList() as $attribute) {
-                if ($attribute->atID == $atTopicsID) {
-                    $topicTreeList[$attribute->getAttributeKeyID()] = $attribute->getAttributeKeyName();
-                }
-            }
-        }
-
-        return $topicTreeList;
-    }
-
+		return $topicTreeList;
+	}
 }

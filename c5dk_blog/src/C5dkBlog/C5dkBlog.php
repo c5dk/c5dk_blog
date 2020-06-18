@@ -124,6 +124,9 @@ class C5dkBlog extends Page
 			if ($block->getBlockName() == "C5DK Blog Content") {
 				return $block->getInstance();
 			}
+			if ($block->getBlockTypeHandle() == 'content') {
+				$validBlock = $block->getInstance();
+			}
 		}
 
 		// If we didn't find a blog already then search for a composer content block
@@ -133,6 +136,10 @@ class C5dkBlog extends Page
 			}
 		}
 
+		if ($validBlock) {
+			return $validBlock;
+		}
+		
 		return false;
 	}
 

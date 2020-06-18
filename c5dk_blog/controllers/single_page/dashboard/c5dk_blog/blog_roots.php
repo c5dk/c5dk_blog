@@ -95,22 +95,28 @@ class BlogRoots extends DashboardPageController
 
 	public function getAllPageTypes()
 	{
+		$pageTypeList = [];
+
 		foreach (PageType::getList() as $index => $pageType) {
 			$pageTypeDefaultTemplateID = $pageType->getPageTypeDefaultPageTemplateID();
 			$template = PageTemplate::getByID($pageTypeDefaultTemplateID);
 			$c = $pageType->getPageTypePageTemplateDefaultPageObject($template);
 
 			// Find a block named "C5DK Blog Content"
-			$pageBlocks = $c->getBlocks();
-			foreach ($pageBlocks as $block) {
+			foreach ($c->getBlocks() as $block) {
 				$blockType = $block->getBlockTypeObject();
 				if ($block->getBlockName() == "C5DK Blog Content") {
 					$pageTypeList[$pageType->getPageTypeID()] = $pageType->getPageTypeDisplayName();
 					continue 2;
 				}
+
+				if ($blockType->getBlockTypeHandle() == "core_page_type_composer_control_output") {
+					$pageTypeList[$pageType->getPageTypeID()] = $pageType->getPageTypeDisplayName();
+					continue 2;
+				}
 			}
 
-			// If we didn't find a blog already then search for a composer content block
+			// If we didn't find a content block already then search for a composer content block
 			foreach ($c->getBlocks('Main') as $block) {
 				$blockType = $block->getBlockTypeObject();
 				if ($blockType->getBlockTypeHandle() == "core_page_type_composer_control_output") {

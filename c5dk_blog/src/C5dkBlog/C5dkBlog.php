@@ -119,6 +119,14 @@ class C5dkBlog extends Page
 
 	public function getInstance()
 	{
+		// Find a block named "C5DK Blog Content"
+		foreach ($this->getBlocks() as $block) {
+			if ($block->getBlockName() == "C5DK Blog Content") {
+				return $block->getInstance();
+			}
+		}
+
+		// If we didn't find a blog already then search for a composer content block
 		foreach ($this->getBlocks('Main') as $block) {
 			if ($block->getBlockTypeHandle() == 'content') {
 				return $block->getInstance();

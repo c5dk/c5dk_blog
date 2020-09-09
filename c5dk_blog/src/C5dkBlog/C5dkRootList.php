@@ -15,18 +15,9 @@ defined('C5_EXECUTE') or die("Access Denied.");
 class C5dkRootList extends DatabaseItemList implements PermissionableListItemInterface
 {
 
-	public function getPermissionsChecker()
-	{
-	}
-
-	public function enablePermissions()
-	{
-	}
-
 	protected function getAttributeKeyClassName()
 	{
 		return '\\Concrete\\Core\\Attribute\\Key\\CollectionKey';
-
 	}
 
 	public function createQuery()
@@ -56,7 +47,6 @@ class C5dkRootList extends DatabaseItemList implements PermissionableListItemInt
 		}
 
 		return $roots;
-
 	}
 
 	public function getTotalResults()
@@ -69,7 +59,6 @@ class C5dkRootList extends DatabaseItemList implements PermissionableListItemInt
 		} else {
 			return -1; // unknown
 		}
-
 	}
 
 	protected function createPaginationObject()
@@ -85,7 +74,6 @@ class C5dkRootList extends DatabaseItemList implements PermissionableListItemInt
 		}
 
 		return $pagination;
-
 	}
 
 	/**
@@ -110,7 +98,6 @@ class C5dkRootList extends DatabaseItemList implements PermissionableListItemInt
 
 			return $c;
 		}
-
 	}
 
 	public function setPermissionsChecker(\Closure $checker)
@@ -136,5 +123,13 @@ class C5dkRootList extends DatabaseItemList implements PermissionableListItemInt
 		$cp = new \Permissions($mixed);
 
 		return $cp->canViewPage();
+	}
+
+	public function getPermissionsChecker()
+	{
+	}
+	
+	public function enablePermissions()
+	{
 	}
 }

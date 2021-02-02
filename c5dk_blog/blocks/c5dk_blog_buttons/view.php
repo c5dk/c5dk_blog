@@ -1,7 +1,7 @@
 <?php defined('C5_EXECUTE') or die("Access Denied."); ?>
 
 <?php
-	$c = \concrete\core\Page\Page::getCurrentPage();
+$c = \concrete\core\Page\Page::getCurrentPage();
 if (!$c->isEditMode() && !$c->isMasterCollection()) {
 	$now = date('Y-m-d H:i:s');
 

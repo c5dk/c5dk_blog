@@ -112,9 +112,9 @@ class C5dkInstaller
 			$pageKey = new PageKey();
 			$pageKey->setAttributeKeyHandle($handle);
 			$pageKey->setAttributeKeyName($name);
-            if ($set) {
-                $pageKey->setAttributeSet($set);
-            }
+			if ($set) {
+				$pageKey->setAttributeSet($set);
+			}
 			// $pageKey->setIsAttributeKeySearchable(false); // Default: True
 			// $pageKey->setIsAttributeKeyContentIndexed(TRUE); // Default: False
 
@@ -186,11 +186,11 @@ class C5dkInstaller
 		if (!is_object($topicTree)) {
 			$topicTree     = TopicTree::add($name);
 			$topicCategory = TreeNode::getByID($topicTree->getRootTreeNodeObject()->getTreeNodeID());
-            if (count($topics)) {
+			if (count($topics)) {
 				foreach ($topics as $topicName) {
 					TopicTreeNode::add($topicName, $topicCategory);
 				}
-            }
+			}
 		}
 
 		return $topicTree;

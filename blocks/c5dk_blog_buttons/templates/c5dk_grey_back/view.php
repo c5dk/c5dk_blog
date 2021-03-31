@@ -27,7 +27,7 @@ if (!$c->isEditMode() && !$c->isMasterCollection()) {
 						<a class="c5dk_blog_ButtonGrey" href="<?= URL::to($langpath, '/c5dk/blog/editor/manager'); ?>"><?= t("Manager List"); ?></a>
 					</div>
 
-					<?php if ($blogID && $C5dkBlog->isEditor() && $C5dkBlog->getAuthorID()) { ?>
+					<?php if ($blogID && $C5dkUser->isEditor() && $C5dkBlog->getAuthorID()) { ?>
 						<!-- Is on a blog page and is the owner or editor -->
 						<?php if ($C5dkRoot->getNeedsApproval()) { ?>
 							<!-- Approve Blog Entry -->

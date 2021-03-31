@@ -176,10 +176,12 @@
 		approve: function(id, el) {
 			var tr = $(el).closest('.c5dk_blog_entry');
 			if (tr.data('approved') == 0) {
-				var url = '<?= \URL::to('/c5dk/blog/approve'); ?>';
+				// var url = '<?= \URL::to($langpath .'/c5dk/blog/approve'); ?>';
+				var url = '<?= \URL::to($langpath . '/blog_post/approve'); ?>';
 				var text = '<?= t('Approve Blog...'); ?>';
 			} else {
-				var url = '<?= \URL::to('/c5dk/blog/unapprove'); ?>';
+				// var url = '<?= \URL::to($langpath .'/c5dk/blog/unapprove'); ?>';
+				var url = '<?= \URL::to($langpath . '/blog_post/unapprove'); ?>';
 				var text = '<?= t('Unapprove Blog...'); ?>';
 			}
 
